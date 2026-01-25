@@ -5,7 +5,7 @@ use crate::grammar::{
     evaluate_function, evaluate_indefinite_integral, is_math_function, DateTimeGrammar, Lexer,
     NumberGrammar, Token, TokenKind,
 };
-use crate::types::{BinaryOp, CurrencyDatabase, Decimal, Expression, Unit, Value};
+use crate::types::{BinaryOp, CurrencyDatabase, DateTime, Decimal, Expression, Unit, Value, ValueKind};
 
 /// Parser for calculator expressions.
 #[derive(Debug, Default)]
@@ -13,6 +13,8 @@ pub struct ExpressionParser {
     number_grammar: NumberGrammar,
     datetime_grammar: DateTimeGrammar,
     currency_db: CurrencyDatabase,
+    /// Current date context for historical currency conversions (set by AtTime expressions).
+    current_date_context: Option<DateTime>,
 }
 
 impl ExpressionParser {
@@ -23,7 +25,13 @@ impl ExpressionParser {
             number_grammar: NumberGrammar::new(),
             datetime_grammar: DateTimeGrammar::new(),
             currency_db: CurrencyDatabase::new(),
+            current_date_context: None,
         }
+    }
+
+    /// Returns a mutable reference to the currency database.
+    pub fn currency_db_mut(&mut self) -> &mut CurrencyDatabase {
+        &mut self.currency_db
     }
 
     /// Parses and evaluates an expression, returning the result, steps, and lino representation.
@@ -100,10 +108,26 @@ impl ExpressionParser {
             }
             Expression::Group(inner) => self.evaluate_expr(inner),
             Expression::AtTime { value, time } => {
-                // For now, just evaluate the value
-                // In the future, this would use the time for currency conversion
-                let _time_val = self.evaluate_expr(time)?;
-                self.evaluate_expr(value)
+                // Evaluate the time expression to get a DateTime
+                let time_val = self.evaluate_expr(time)?;
+
+                // Extract the DateTime for use in currency conversions
+                let date_context = match &time_val.kind {
+                    ValueKind::DateTime(dt) => Some(dt.clone()),
+                    _ => None,
+                };
+
+                // Set the date context for this evaluation
+                let old_context = self.current_date_context.take();
+                self.current_date_context = date_context;
+
+                // Evaluate the value expression with the date context
+                let result = self.evaluate_expr(value);
+
+                // Restore the old context
+                self.current_date_context = old_context;
+
+                result
             }
             Expression::FunctionCall { name, args } => {
                 let name_lower = name.to_lowercase();
@@ -225,7 +249,24 @@ impl ExpressionParser {
             Expression::AtTime { value, time } => {
                 let time_val = self.evaluate_expr_with_steps(time, steps)?;
                 steps.push(format!("At time: {}", time_val.to_display_string()));
-                self.evaluate_expr_with_steps(value, steps)
+
+                // Extract the DateTime for use in currency conversions
+                let date_context = match &time_val.kind {
+                    ValueKind::DateTime(dt) => Some(dt.clone()),
+                    _ => None,
+                };
+
+                // Set the date context for this evaluation
+                let old_context = self.current_date_context.take();
+                self.current_date_context = date_context;
+
+                // Evaluate the value expression with the date context
+                let result = self.evaluate_expr_with_steps(value, steps);
+
+                // Restore the old context
+                self.current_date_context = old_context;
+
+                result
             }
             Expression::FunctionCall { name, args } => {
                 let name_lower = name.to_lowercase();
@@ -316,8 +357,8 @@ impl ExpressionParser {
         right: &Value,
     ) -> Result<Value, CalculatorError> {
         match op {
-            BinaryOp::Add => left.add(right, &mut self.currency_db),
-            BinaryOp::Subtract => left.subtract(right, &mut self.currency_db),
+            BinaryOp::Add => left.add_at_date(right, &mut self.currency_db, self.current_date_context.as_ref()),
+            BinaryOp::Subtract => left.subtract_at_date(right, &mut self.currency_db, self.current_date_context.as_ref()),
             BinaryOp::Multiply => left.multiply(right),
             BinaryOp::Divide => left.divide(right),
         }

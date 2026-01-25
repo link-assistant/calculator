@@ -1,6 +1,6 @@
 rate:
   from USD
   to RUB
-  value 89.30
+  value 77.5159
   date 2026-01-22
-  source 'fawazahmed0/currency-api'
+  source 'cbr.ru (Central Bank of Russia)'

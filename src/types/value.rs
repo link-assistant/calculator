@@ -92,9 +92,19 @@ impl Value {
         other: &Self,
         currency_db: &mut CurrencyDatabase,
     ) -> Result<Self, CalculatorError> {
+        self.add_at_date(other, currency_db, None)
+    }
+
+    /// Adds two values with optional date context for historical currency conversion.
+    pub fn add_at_date(
+        &self,
+        other: &Self,
+        currency_db: &mut CurrencyDatabase,
+        date: Option<&DateTime>,
+    ) -> Result<Self, CalculatorError> {
         match (&self.kind, &other.kind) {
             (ValueKind::Number(a), ValueKind::Number(b)) => {
-                self.add_numbers(*a, *b, other, currency_db)
+                self.add_numbers(*a, *b, other, currency_db, date)
             }
             (ValueKind::DateTime(dt), ValueKind::Duration { seconds }) => {
                 Ok(Value::datetime(dt.add_duration(*seconds)))
@@ -120,6 +130,7 @@ impl Value {
         b: Decimal,
         other: &Self,
         currency_db: &mut CurrencyDatabase,
+        date: Option<&DateTime>,
     ) -> Result<Self, CalculatorError> {
         match (&self.unit, &other.unit) {
             (Unit::None, Unit::None) => Ok(Value::number(a + b)),
@@ -128,8 +139,12 @@ impl Value {
             }
             (Unit::Currency(c1), Unit::Currency(c2)) if c1 == c2 => Ok(Value::currency(a + b, c1)),
             (Unit::Currency(c1), Unit::Currency(c2)) => {
-                // Convert c2 to c1
-                let converted = currency_db.convert(b.to_f64(), c2, c1)?;
+                // Convert c2 to c1, using historical rate if date is provided
+                let converted = if let Some(dt) = date {
+                    currency_db.convert_at_date(b.to_f64(), c2, c1, dt)?
+                } else {
+                    currency_db.convert(b.to_f64(), c2, c1)?
+                };
                 let converted_decimal = Decimal::from_f64(converted);
                 Ok(Value::currency(a + converted_decimal, c1))
             }
@@ -148,9 +163,19 @@ impl Value {
         other: &Self,
         currency_db: &mut CurrencyDatabase,
     ) -> Result<Self, CalculatorError> {
+        self.subtract_at_date(other, currency_db, None)
+    }
+
+    /// Subtracts two values with optional date context for historical currency conversion.
+    pub fn subtract_at_date(
+        &self,
+        other: &Self,
+        currency_db: &mut CurrencyDatabase,
+        date: Option<&DateTime>,
+    ) -> Result<Self, CalculatorError> {
         match (&self.kind, &other.kind) {
             (ValueKind::Number(a), ValueKind::Number(b)) => {
-                self.subtract_numbers(*a, *b, other, currency_db)
+                self.subtract_numbers(*a, *b, other, currency_db, date)
             }
             (ValueKind::DateTime(dt1), ValueKind::DateTime(dt2)) => {
                 let diff = dt1.subtract(dt2);
@@ -176,6 +201,7 @@ impl Value {
         b: Decimal,
         other: &Self,
         currency_db: &mut CurrencyDatabase,
+        date: Option<&DateTime>,
     ) -> Result<Self, CalculatorError> {
         match (&self.unit, &other.unit) {
             (Unit::None, Unit::None) => Ok(Value::number(a - b)),
@@ -183,8 +209,12 @@ impl Value {
             (Unit::None, unit) => Ok(Value::number_with_unit(a - b, unit.clone())),
             (Unit::Currency(c1), Unit::Currency(c2)) if c1 == c2 => Ok(Value::currency(a - b, c1)),
             (Unit::Currency(c1), Unit::Currency(c2)) => {
-                // Convert c2 to c1
-                let converted = currency_db.convert(b.to_f64(), c2, c1)?;
+                // Convert c2 to c1, using historical rate if date is provided
+                let converted = if let Some(dt) = date {
+                    currency_db.convert_at_date(b.to_f64(), c2, c1, dt)?
+                } else {
+                    currency_db.convert(b.to_f64(), c2, c1)?
+                };
                 let converted_decimal = Decimal::from_f64(converted);
                 Ok(Value::currency(a - converted_decimal, c1))
             }

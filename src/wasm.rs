@@ -141,6 +141,82 @@ pub fn fetch_historical_rates(base_currency: String, date: String) -> Promise {
     })
 }
 
+/// Parses a .lino rate file content and returns the rate data as JSON.
+/// This allows the web app to parse .lino files without loading them into the calculator.
+///
+/// # Arguments
+/// * `content` - The .lino file content
+///
+/// # Returns
+/// A JSON string with the parsed rate information
+#[wasm_bindgen]
+pub fn parse_lino_rate(content: String) -> String {
+    #[derive(serde::Serialize)]
+    struct ParsedRate {
+        success: bool,
+        from: Option<String>,
+        to: Option<String>,
+        value: Option<f64>,
+        date: Option<String>,
+        source: Option<String>,
+        error: Option<String>,
+    }
+
+    let mut from_currency: Option<String> = None;
+    let mut to_currency: Option<String> = None;
+    let mut value: Option<f64> = None;
+    let mut date: Option<String> = None;
+    let mut source: Option<String> = None;
+
+    for line in content.lines() {
+        let line = line.trim();
+        if line.is_empty() || line == "rate:" {
+            continue;
+        }
+
+        if let Some(rest) = line.strip_prefix("from ") {
+            from_currency = Some(rest.trim().to_uppercase());
+        } else if let Some(rest) = line.strip_prefix("to ") {
+            to_currency = Some(rest.trim().to_uppercase());
+        } else if let Some(rest) = line.strip_prefix("value ") {
+            value = rest.trim().parse().ok();
+        } else if let Some(rest) = line.strip_prefix("date ") {
+            date = Some(rest.trim().to_string());
+        } else if let Some(rest) = line.strip_prefix("source ") {
+            let src = rest.trim();
+            let src = src.trim_start_matches('\'').trim_end_matches('\'');
+            let src = src.trim_start_matches('"').trim_end_matches('"');
+            source = Some(src.to_string());
+        }
+    }
+
+    let result = if from_currency.is_some() && to_currency.is_some() && value.is_some() && date.is_some() {
+        ParsedRate {
+            success: true,
+            from: from_currency,
+            to: to_currency,
+            value,
+            date,
+            source,
+            error: None,
+        }
+    } else {
+        ParsedRate {
+            success: false,
+            from: from_currency,
+            to: to_currency,
+            value,
+            date,
+            source,
+            error: Some("Missing required fields".to_string()),
+        }
+    };
+
+    serde_json::to_string(&result).unwrap_or_else(|_| {
+        r#"{"success":false,"error":"Serialization failed"}"#.to_string()
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -155,5 +231,38 @@ mod tests {
     #[test]
     fn test_health_check() {
         assert!(health_check());
+    }
+
+    #[test]
+    fn test_parse_lino_rate() {
+        let content = r#"rate:
+  from USD
+  to EUR
+  value 0.92
+  date 2026-01-25
+  source 'fawazahmed0/currency-api'"#;
+
+        let result = parse_lino_rate(content.to_string());
+        let parsed: serde_json::Value = serde_json::from_str(&result).unwrap();
+
+        assert_eq!(parsed["success"], true);
+        assert_eq!(parsed["from"], "USD");
+        assert_eq!(parsed["to"], "EUR");
+        assert_eq!(parsed["value"], 0.92);
+        assert_eq!(parsed["date"], "2026-01-25");
+        assert_eq!(parsed["source"], "fawazahmed0/currency-api");
+    }
+
+    #[test]
+    fn test_parse_lino_rate_missing_fields() {
+        let content = r#"rate:
+  from USD
+  to EUR"#;
+
+        let result = parse_lino_rate(content.to_string());
+        let parsed: serde_json::Value = serde_json::from_str(&result).unwrap();
+
+        assert_eq!(parsed["success"], false);
+        assert!(parsed["error"].as_str().unwrap().contains("Missing"));
     }
 }
