@@ -133,7 +133,7 @@ impl CalculationResult {
     /// Creates a symbolic result (e.g., for indefinite integrals).
     #[must_use]
     pub fn symbolic(
-        expression: String,
+        expression: &str,
         result: String,
         latex_input: String,
         latex_result: String,
@@ -141,7 +141,7 @@ impl CalculationResult {
     ) -> Self {
         Self {
             result,
-            lino_interpretation: expression.clone(),
+            lino_interpretation: expression.to_string(),
             steps: vec![
                 format!("Input: {}", expression),
                 "Computed symbolic result".to_string(),
@@ -279,7 +279,7 @@ impl Calculator {
                 // Generate plot data for the integrand function
                 let plot_data = self.generate_plot_data_for_integral(input);
                 CalculationResult::symbolic(
-                    expression,
+                    &expression,
                     result,
                     latex_input,
                     latex_result,
@@ -305,13 +305,13 @@ impl Calculator {
             let mut y_values = Vec::new();
 
             // Generate points from -10 to 10 with 200 steps
-            let num_points = 200;
+            let num_points: i32 = 200;
             let x_min = -10.0;
             let x_max = 10.0;
-            let step = (x_max - x_min) / (num_points as f64);
+            let step = (x_max - x_min) / f64::from(num_points);
 
             for i in 0..=num_points {
-                let x = x_min + (i as f64) * step;
+                let x = f64::from(i).mul_add(step, x_min);
 
                 // Skip x = 0 for functions like sin(x)/x to avoid division issues
                 if x.abs() < 1e-10 {
@@ -351,7 +351,7 @@ impl Calculator {
         var: &str,
         value: f64,
     ) -> Result<f64, CalculatorError> {
-        let substituted = self.substitute_variable(expr, var, value);
+        let substituted = Self::substitute_variable(expr, var, value);
         let result = self.parser.evaluate(&substituted)?;
         result
             .as_decimal()
@@ -360,12 +360,7 @@ impl Calculator {
     }
 
     /// Substitutes a variable with a numeric value in an expression.
-    fn substitute_variable(
-        &self,
-        expr: &types::Expression,
-        var: &str,
-        value: f64,
-    ) -> types::Expression {
+    fn substitute_variable(expr: &types::Expression, var: &str, value: f64) -> types::Expression {
         use types::{Decimal, Expression};
 
         match expr {
@@ -376,35 +371,35 @@ impl Calculator {
             Expression::Number { .. } => expr.clone(),
             Expression::DateTime(_) => expr.clone(),
             Expression::Binary { left, op, right } => Expression::binary(
-                self.substitute_variable(left, var, value),
+                Self::substitute_variable(left, var, value),
                 *op,
-                self.substitute_variable(right, var, value),
+                Self::substitute_variable(right, var, value),
             ),
             Expression::Negate(inner) => {
-                Expression::negate(self.substitute_variable(inner, var, value))
+                Expression::negate(Self::substitute_variable(inner, var, value))
             }
             Expression::Group(inner) => {
-                Expression::group(self.substitute_variable(inner, var, value))
+                Expression::group(Self::substitute_variable(inner, var, value))
             }
             Expression::Power { base, exponent } => Expression::power(
-                self.substitute_variable(base, var, value),
-                self.substitute_variable(exponent, var, value),
+                Self::substitute_variable(base, var, value),
+                Self::substitute_variable(exponent, var, value),
             ),
             Expression::FunctionCall { name, args } => Expression::function_call(
                 name.clone(),
                 args.iter()
-                    .map(|a| self.substitute_variable(a, var, value))
+                    .map(|a| Self::substitute_variable(a, var, value))
                     .collect(),
             ),
             Expression::AtTime { value: v, time } => Expression::at_time(
-                self.substitute_variable(v, var, value),
-                self.substitute_variable(time, var, value),
+                Self::substitute_variable(v, var, value),
+                Self::substitute_variable(time, var, value),
             ),
             Expression::IndefiniteIntegral {
                 integrand,
                 variable,
             } => Expression::indefinite_integral(
-                self.substitute_variable(integrand, var, value),
+                Self::substitute_variable(integrand, var, value),
                 variable.clone(),
             ),
         }

@@ -235,7 +235,7 @@ impl ExpressionParser {
                 // Indefinite integrals return a symbolic result
                 // For now, we return an error directing users to use definite integrals for numeric results
                 // or display the symbolic representation
-                self.evaluate_indefinite_integral(integrand, variable)
+                Self::evaluate_indefinite_integral(integrand, variable)
             }
         }
     }
@@ -361,7 +361,7 @@ impl ExpressionParser {
                     "Indefinite integral: ∫ {} d{}",
                     integrand, variable
                 ));
-                let result = self.evaluate_indefinite_integral(integrand, variable)?;
+                let result = Self::evaluate_indefinite_integral(integrand, variable)?;
                 steps.push(format!("= {}", result.to_display_string()));
                 Ok(result)
             }
@@ -560,18 +560,17 @@ impl ExpressionParser {
     /// For known special integrals, returns symbolic result.
     /// For others, returns an informational message.
     fn evaluate_indefinite_integral(
-        &self,
         integrand: &Expression,
         variable: &str,
     ) -> Result<Value, CalculatorError> {
         // Check for known special integrals
-        let symbolic_result = self.try_symbolic_integral(integrand, variable);
+        let symbolic_result = Self::try_symbolic_integral(integrand, variable);
 
         if let Some(result) = symbolic_result {
             // Return a special value that indicates symbolic result
             // For now, we'll create an error with the symbolic result as a message
             // since the Value type doesn't support symbolic results yet
-            let latex_result = self.symbolic_result_to_latex(&result);
+            let latex_result = Self::symbolic_result_to_latex(&result);
             Err(CalculatorError::SymbolicResult {
                 expression: format!("∫ {} d{}", integrand, variable),
                 result,
@@ -590,7 +589,7 @@ impl ExpressionParser {
     }
 
     /// Tries to compute a symbolic integral for known special cases.
-    fn try_symbolic_integral(&self, integrand: &Expression, variable: &str) -> Option<String> {
+    fn try_symbolic_integral(integrand: &Expression, variable: &str) -> Option<String> {
         // Pattern: sin(x)/x -> Si(x) + C (Sine Integral)
         if let Expression::Binary {
             left,
@@ -641,10 +640,9 @@ impl ExpressionParser {
                             // Not x^(-1)
                             let new_exp = n + 1.0;
                             return Some(format!("{}^{}/({}) + C", variable, new_exp, new_exp));
-                        } else {
-                            // x^(-1) = 1/x -> ln|x| + C
-                            return Some(format!("ln|{}| + C", variable));
                         }
+                        // x^(-1) = 1/x -> ln|x| + C
+                        return Some(format!("ln|{}| + C", variable));
                     }
                 }
             }
@@ -682,14 +680,13 @@ impl ExpressionParser {
     }
 
     /// Converts a symbolic result to LaTeX.
-    fn symbolic_result_to_latex(&self, result: &str) -> String {
+    fn symbolic_result_to_latex(result: &str) -> String {
         // Basic conversions
         result
             .replace("Si(", "\\text{Si}(")
             .replace("Ci(", "\\text{Ci}(")
             .replace("ln|", "\\ln|")
             .replace("²", "^{2}")
-            .replace(" + C", " + C")
     }
 }
 
@@ -948,13 +945,10 @@ impl<'a> TokenParser<'a> {
         }
 
         // If we didn't find d<var>, return an error with helpful message
-        let (end_pos, var) = match (integrand_end_pos, var_name) {
-            (Some(end), Some(v)) => (end, v),
-            _ => {
-                return Err(CalculatorError::parse(
-                    "Invalid integration syntax. Expected: integrate <expression> d<var> (e.g., integrate sin(x)/x dx)"
-                ));
-            }
+        let (Some(end_pos), Some(var)) = (integrand_end_pos, var_name) else {
+            return Err(CalculatorError::parse(
+                "Invalid integration syntax. Expected: integrate <expression> d<var> (e.g., integrate sin(x)/x dx)"
+            ));
         };
 
         // Reset position and parse the integrand expression

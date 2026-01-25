@@ -295,7 +295,7 @@ impl Expression {
                         } else {
                             let args_str = args
                                 .iter()
-                                .map(|a| a.to_latex())
+                                .map(Expression::to_latex)
                                 .collect::<Vec<_>>()
                                 .join(", ");
                             format!("\\{name_lower}\\left({args_str} \\right)")
@@ -307,7 +307,7 @@ impl Expression {
                         } else {
                             let args_str = args
                                 .iter()
-                                .map(|a| a.to_latex())
+                                .map(Expression::to_latex)
                                 .collect::<Vec<_>>()
                                 .join(", ");
                             format!("\\sqrt{{{args_str}}}")
@@ -319,7 +319,7 @@ impl Expression {
                         } else {
                             let args_str = args
                                 .iter()
-                                .map(|a| a.to_latex())
+                                .map(Expression::to_latex)
                                 .collect::<Vec<_>>()
                                 .join(", ");
                             format!("\\left| {args_str} \\right|")
@@ -339,7 +339,7 @@ impl Expression {
                         } else {
                             let args_str = args
                                 .iter()
-                                .map(|a| a.to_latex())
+                                .map(Expression::to_latex)
                                 .collect::<Vec<_>>()
                                 .join(", ");
                             format!("\\text{{integrate}}({args_str})")
@@ -348,7 +348,7 @@ impl Expression {
                     _ => {
                         let args_str = args
                             .iter()
-                            .map(|a| a.to_latex())
+                            .map(Expression::to_latex)
                             .collect::<Vec<_>>()
                             .join(", ");
                         format!("\\text{{{name}}}({args_str})")
