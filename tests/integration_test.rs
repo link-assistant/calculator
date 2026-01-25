@@ -9,7 +9,7 @@ mod calculator_tests {
 
     #[test]
     fn test_calculator_creation() {
-        let mut calculator = Calculator::new();
+        let calculator = Calculator::new();
         let _ = calculator;
     }
 
