@@ -448,7 +448,10 @@ mod indefinite_integral_tests {
 
         // The result should be a symbolic result with Si(x) + C
         assert!(result.success, "integrate sin(x)/x dx should succeed");
-        assert!(result.is_symbolic.unwrap_or(false), "Result should be symbolic");
+        assert!(
+            result.is_symbolic.unwrap_or(false),
+            "Result should be symbolic"
+        );
         assert!(
             result.result.contains("Si(x)"),
             "Result should contain Si(x): got '{}'",
@@ -472,7 +475,10 @@ mod indefinite_integral_tests {
         let result = calculator.calculate_internal("integrate x^2 dx");
 
         assert!(result.success, "integrate x^2 dx should succeed");
-        assert!(result.is_symbolic.unwrap_or(false), "Result should be symbolic");
+        assert!(
+            result.is_symbolic.unwrap_or(false),
+            "Result should be symbolic"
+        );
         // x^2 integrates to x^3/3 + C
         assert!(
             result.result.contains("3") && result.result.contains("C"),
@@ -487,7 +493,10 @@ mod indefinite_integral_tests {
         let result = calculator.calculate_internal("integrate sin(x) dx");
 
         assert!(result.success, "integrate sin(x) dx should succeed");
-        assert!(result.is_symbolic.unwrap_or(false), "Result should be symbolic");
+        assert!(
+            result.is_symbolic.unwrap_or(false),
+            "Result should be symbolic"
+        );
         // sin(x) integrates to -cos(x) + C
         assert!(
             result.result.contains("cos") && result.result.contains("C"),
@@ -502,7 +511,10 @@ mod indefinite_integral_tests {
         let result = calculator.calculate_internal("integrate cos(x) dx");
 
         assert!(result.success, "integrate cos(x) dx should succeed");
-        assert!(result.is_symbolic.unwrap_or(false), "Result should be symbolic");
+        assert!(
+            result.is_symbolic.unwrap_or(false),
+            "Result should be symbolic"
+        );
         // cos(x) integrates to sin(x) + C
         assert!(
             result.result.contains("sin") && result.result.contains("C"),
@@ -517,7 +529,10 @@ mod indefinite_integral_tests {
         let result = calculator.calculate_internal("integrate x dx");
 
         assert!(result.success, "integrate x dx should succeed");
-        assert!(result.is_symbolic.unwrap_or(false), "Result should be symbolic");
+        assert!(
+            result.is_symbolic.unwrap_or(false),
+            "Result should be symbolic"
+        );
         // x integrates to x^2/2 + C
         assert!(
             result.result.contains("2") && result.result.contains("C"),
@@ -532,10 +547,15 @@ mod indefinite_integral_tests {
         let result = calculator.calculate_internal("integrate 5 dx");
 
         assert!(result.success, "integrate 5 dx should succeed");
-        assert!(result.is_symbolic.unwrap_or(false), "Result should be symbolic");
+        assert!(
+            result.is_symbolic.unwrap_or(false),
+            "Result should be symbolic"
+        );
         // 5 integrates to 5x + C
         assert!(
-            result.result.contains("5") && result.result.contains("x") && result.result.contains("C"),
+            result.result.contains("5")
+                && result.result.contains("x")
+                && result.result.contains("C"),
             "Result should contain 5 * x + C: got '{}'",
             result.result
         );
@@ -547,7 +567,10 @@ mod indefinite_integral_tests {
         let result = calculator.calculate_internal("integrate exp(x) dx");
 
         assert!(result.success, "integrate exp(x) dx should succeed");
-        assert!(result.is_symbolic.unwrap_or(false), "Result should be symbolic");
+        assert!(
+            result.is_symbolic.unwrap_or(false),
+            "Result should be symbolic"
+        );
         // exp(x) integrates to exp(x) + C
         assert!(
             result.result.contains("exp") && result.result.contains("C"),
@@ -562,7 +585,10 @@ mod indefinite_integral_tests {
         let result = calculator.calculate_internal("integrate sin(t) dt");
 
         assert!(result.success, "integrate sin(t) dt should succeed");
-        assert!(result.is_symbolic.unwrap_or(false), "Result should be symbolic");
+        assert!(
+            result.is_symbolic.unwrap_or(false),
+            "Result should be symbolic"
+        );
         assert!(
             result.result.contains("cos") && result.result.contains("t"),
             "Result should contain -cos(t) + C: got '{}'",

@@ -224,7 +224,10 @@ impl Expression {
                     exponent.to_lino_internal(false)
                 )
             }
-            Self::IndefiniteIntegral { integrand, variable } => {
+            Self::IndefiniteIntegral {
+                integrand,
+                variable,
+            } => {
                 format!(
                     "(integrate ({}) d{})",
                     integrand.to_lino_internal(false),
@@ -284,13 +287,17 @@ impl Expression {
             Self::FunctionCall { name, args } => {
                 let name_lower = name.to_lowercase();
                 match name_lower.as_str() {
-                    "sin" | "cos" | "tan" | "cot" | "sec" | "csc" |
-                    "sinh" | "cosh" | "tanh" | "coth" | "sech" | "csch" |
-                    "arcsin" | "arccos" | "arctan" | "ln" | "log" | "exp" => {
+                    "sin" | "cos" | "tan" | "cot" | "sec" | "csc" | "sinh" | "cosh" | "tanh"
+                    | "coth" | "sech" | "csch" | "arcsin" | "arccos" | "arctan" | "ln" | "log"
+                    | "exp" => {
                         if args.len() == 1 {
                             format!("\\{name_lower}\\left({} \\right)", args[0].to_latex())
                         } else {
-                            let args_str = args.iter().map(|a| a.to_latex()).collect::<Vec<_>>().join(", ");
+                            let args_str = args
+                                .iter()
+                                .map(|a| a.to_latex())
+                                .collect::<Vec<_>>()
+                                .join(", ");
                             format!("\\{name_lower}\\left({args_str} \\right)")
                         }
                     }
@@ -298,7 +305,11 @@ impl Expression {
                         if args.len() == 1 {
                             format!("\\sqrt{{{}}}", args[0].to_latex())
                         } else {
-                            let args_str = args.iter().map(|a| a.to_latex()).collect::<Vec<_>>().join(", ");
+                            let args_str = args
+                                .iter()
+                                .map(|a| a.to_latex())
+                                .collect::<Vec<_>>()
+                                .join(", ");
                             format!("\\sqrt{{{args_str}}}")
                         }
                     }
@@ -306,7 +317,11 @@ impl Expression {
                         if args.len() == 1 {
                             format!("\\left| {} \\right|", args[0].to_latex())
                         } else {
-                            let args_str = args.iter().map(|a| a.to_latex()).collect::<Vec<_>>().join(", ");
+                            let args_str = args
+                                .iter()
+                                .map(|a| a.to_latex())
+                                .collect::<Vec<_>>()
+                                .join(", ");
                             format!("\\left| {args_str} \\right|")
                         }
                     }
@@ -322,12 +337,20 @@ impl Expression {
                                 args[1].to_latex()
                             )
                         } else {
-                            let args_str = args.iter().map(|a| a.to_latex()).collect::<Vec<_>>().join(", ");
+                            let args_str = args
+                                .iter()
+                                .map(|a| a.to_latex())
+                                .collect::<Vec<_>>()
+                                .join(", ");
                             format!("\\text{{integrate}}({args_str})")
                         }
                     }
                     _ => {
-                        let args_str = args.iter().map(|a| a.to_latex()).collect::<Vec<_>>().join(", ");
+                        let args_str = args
+                            .iter()
+                            .map(|a| a.to_latex())
+                            .collect::<Vec<_>>()
+                            .join(", ");
                         format!("\\text{{{name}}}({args_str})")
                     }
                 }
@@ -338,11 +361,16 @@ impl Expression {
                 let exp_latex = exponent.to_latex();
                 // Wrap base in braces if it's complex
                 match base.as_ref() {
-                    Self::Number { .. } | Self::Variable(_) => format!("{base_latex}^{{{exp_latex}}}"),
+                    Self::Number { .. } | Self::Variable(_) => {
+                        format!("{base_latex}^{{{exp_latex}}}")
+                    }
                     _ => format!("\\left({base_latex}\\right)^{{{exp_latex}}}"),
                 }
             }
-            Self::IndefiniteIntegral { integrand, variable } => {
+            Self::IndefiniteIntegral {
+                integrand,
+                variable,
+            } => {
                 format!("\\int {} \\, d{}", integrand.to_latex(), variable)
             }
         }
@@ -374,7 +402,10 @@ impl fmt::Display for Expression {
             }
             Self::Variable(name) => write!(f, "{name}"),
             Self::Power { base, exponent } => write!(f, "{base}^{exponent}"),
-            Self::IndefiniteIntegral { integrand, variable } => {
+            Self::IndefiniteIntegral {
+                integrand,
+                variable,
+            } => {
                 write!(f, "integrate {integrand} d{variable}")
             }
         }

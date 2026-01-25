@@ -228,7 +228,10 @@ impl ExpressionParser {
 
                 Ok(Value::number(Decimal::from_f64(result)))
             }
-            Expression::IndefiniteIntegral { integrand, variable } => {
+            Expression::IndefiniteIntegral {
+                integrand,
+                variable,
+            } => {
                 // Indefinite integrals return a symbolic result
                 // For now, we return an error directing users to use definite integrals for numeric results
                 // or display the symbolic representation
@@ -350,8 +353,14 @@ impl ExpressionParser {
                 steps.push(format!("= {}", val.to_display_string()));
                 Ok(val)
             }
-            Expression::IndefiniteIntegral { integrand, variable } => {
-                steps.push(format!("Indefinite integral: ∫ {} d{}", integrand, variable));
+            Expression::IndefiniteIntegral {
+                integrand,
+                variable,
+            } => {
+                steps.push(format!(
+                    "Indefinite integral: ∫ {} d{}",
+                    integrand, variable
+                ));
                 let result = self.evaluate_indefinite_integral(integrand, variable)?;
                 steps.push(format!("= {}", result.to_display_string()));
                 Ok(result)
@@ -539,12 +548,10 @@ impl ExpressionParser {
 
                 Ok(Value::number(Decimal::from_f64(result)))
             }
-            Expression::IndefiniteIntegral { .. } => {
-                Err(CalculatorError::invalid_args(
-                    "nested integration",
-                    "nested indefinite integrals are not supported",
-                ))
-            }
+            Expression::IndefiniteIntegral { .. } => Err(CalculatorError::invalid_args(
+                "nested integration",
+                "nested indefinite integrals are not supported",
+            )),
         }
     }
 
@@ -585,7 +592,12 @@ impl ExpressionParser {
     /// Tries to compute a symbolic integral for known special cases.
     fn try_symbolic_integral(&self, integrand: &Expression, variable: &str) -> Option<String> {
         // Pattern: sin(x)/x -> Si(x) + C (Sine Integral)
-        if let Expression::Binary { left, op: BinaryOp::Divide, right } = integrand {
+        if let Expression::Binary {
+            left,
+            op: BinaryOp::Divide,
+            right,
+        } = integrand
+        {
             if let Expression::FunctionCall { name, args } = left.as_ref() {
                 if name.to_lowercase() == "sin" && args.len() == 1 {
                     if let Expression::Variable(v) = &args[0] {
@@ -600,7 +612,12 @@ impl ExpressionParser {
         }
 
         // Pattern: cos(x)/x -> Ci(x) + C (Cosine Integral)
-        if let Expression::Binary { left, op: BinaryOp::Divide, right } = integrand {
+        if let Expression::Binary {
+            left,
+            op: BinaryOp::Divide,
+            right,
+        } = integrand
+        {
             if let Expression::FunctionCall { name, args } = left.as_ref() {
                 if name.to_lowercase() == "cos" && args.len() == 1 {
                     if let Expression::Variable(v) = &args[0] {
@@ -973,7 +990,10 @@ impl<'a> TokenParser<'a> {
     }
 
     /// Parse integrand with awareness of the boundary.
-    fn parse_integrand_expression(&mut self, boundary: usize) -> Result<Expression, CalculatorError> {
+    fn parse_integrand_expression(
+        &mut self,
+        boundary: usize,
+    ) -> Result<Expression, CalculatorError> {
         self.parse_integrand_additive(boundary)
     }
 
@@ -997,7 +1017,10 @@ impl<'a> TokenParser<'a> {
         Ok(left)
     }
 
-    fn parse_integrand_multiplicative(&mut self, boundary: usize) -> Result<Expression, CalculatorError> {
+    fn parse_integrand_multiplicative(
+        &mut self,
+        boundary: usize,
+    ) -> Result<Expression, CalculatorError> {
         let mut left = self.parse_integrand_power(boundary)?;
 
         while self.pos < boundary {

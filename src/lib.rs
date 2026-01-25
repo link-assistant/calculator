@@ -142,7 +142,10 @@ impl CalculationResult {
         Self {
             result,
             lino_interpretation: expression.clone(),
-            steps: vec![format!("Input: {}", expression), "Computed symbolic result".to_string()],
+            steps: vec![
+                format!("Input: {}", expression),
+                "Computed symbolic result".to_string(),
+            ],
             success: true,
             error: None,
             issue_link: None,
@@ -275,7 +278,13 @@ impl Calculator {
             }) => {
                 // Generate plot data for the integrand function
                 let plot_data = self.generate_plot_data_for_integral(input);
-                CalculationResult::symbolic(expression, result, latex_input, latex_result, plot_data)
+                CalculationResult::symbolic(
+                    expression,
+                    result,
+                    latex_input,
+                    latex_result,
+                    plot_data,
+                )
             }
             Err(e) => CalculationResult::failure(e.to_string(), input),
         }
@@ -286,7 +295,11 @@ impl Calculator {
         // Try to parse and extract the integrand for plotting
         let expr = self.parser.parse(input).ok()?;
 
-        if let types::Expression::IndefiniteIntegral { integrand, variable } = expr {
+        if let types::Expression::IndefiniteIntegral {
+            integrand,
+            variable,
+        } = expr
+        {
             // Generate plot points for the integrand
             let mut x_values = Vec::new();
             let mut y_values = Vec::new();
@@ -387,12 +400,13 @@ impl Calculator {
                 self.substitute_variable(v, var, value),
                 self.substitute_variable(time, var, value),
             ),
-            Expression::IndefiniteIntegral { integrand, variable } => {
-                Expression::indefinite_integral(
-                    self.substitute_variable(integrand, var, value),
-                    variable.clone(),
-                )
-            }
+            Expression::IndefiniteIntegral {
+                integrand,
+                variable,
+            } => Expression::indefinite_integral(
+                self.substitute_variable(integrand, var, value),
+                variable.clone(),
+            ),
         }
     }
 
