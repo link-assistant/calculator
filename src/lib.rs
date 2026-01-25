@@ -668,12 +668,12 @@ mod tests {
     #[test]
     fn test_load_rate_from_lino() {
         let mut calc = Calculator::new();
-        let content = r#"rate:
+        let content = "rate:
   from USD
   to EUR
   value 0.85
   date 1999-01-04
-  source 'frankfurter.dev (ECB)'"#;
+  source 'frankfurter.dev (ECB)'";
 
         let result = calc.load_rate_from_lino(content);
         assert!(result.is_ok());
@@ -686,19 +686,19 @@ mod tests {
     #[test]
     fn test_load_rates_batch() {
         let mut calc = Calculator::new();
-        let content1 = r#"rate:
+        let content1 = "rate:
   from USD
   to EUR
   value 0.85
   date 1999-01-04
-  source 'test'"#;
+  source 'test'";
 
-        let content2 = r#"rate:
+        let content2 = "rate:
   from EUR
   to USD
   value 1.18
   date 1999-01-04
-  source 'test'"#;
+  source 'test'";
 
         let result = calc.load_rates_batch(&[content1, content2]);
         assert!(result.is_ok());

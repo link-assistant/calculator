@@ -236,12 +236,12 @@ mod tests {
 
     #[test]
     fn test_parse_lino_rate() {
-        let content = r#"rate:
+        let content = "rate:
   from USD
   to EUR
   value 0.92
   date 2026-01-25
-  source 'fawazahmed0/currency-api'"#;
+  source 'fawazahmed0/currency-api'";
 
         let result = parse_lino_rate(content.to_string());
         let parsed: serde_json::Value = serde_json::from_str(&result).unwrap();
@@ -256,9 +256,9 @@ mod tests {
 
     #[test]
     fn test_parse_lino_rate_missing_fields() {
-        let content = r#"rate:
+        let content = "rate:
   from USD
-  to EUR"#;
+  to EUR";
 
         let result = parse_lino_rate(content.to_string());
         let parsed: serde_json::Value = serde_json::from_str(&result).unwrap();
