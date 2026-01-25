@@ -175,6 +175,79 @@ mod error_handling_tests {
     }
 }
 
+mod advanced_math_tests {
+    use super::*;
+
+    #[test]
+    fn test_integrate_expression_suggests_wolfram() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("integrate sin(x)/x dx");
+        assert!(!result.success);
+        assert!(result.error.is_some());
+        let error = result.error.unwrap();
+        assert!(error.contains("Advanced math expression detected"));
+        assert!(result.issue_link.is_some());
+        let link = result.issue_link.unwrap();
+        assert!(link.contains("wolframalpha.com"));
+        assert!(link.contains("integrate"));
+    }
+
+    #[test]
+    fn test_differentiate_expression_suggests_wolfram() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("differentiate x^2");
+        assert!(!result.success);
+        let link = result.issue_link.unwrap();
+        assert!(link.contains("wolframalpha.com"));
+    }
+
+    #[test]
+    fn test_solve_expression_suggests_wolfram() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("solve x^2 = 4");
+        assert!(!result.success);
+        let link = result.issue_link.unwrap();
+        assert!(link.contains("wolframalpha.com"));
+    }
+
+    #[test]
+    fn test_limit_expression_suggests_wolfram() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("limit x -> 0 sin(x)/x");
+        assert!(!result.success);
+        let link = result.issue_link.unwrap();
+        assert!(link.contains("wolframalpha.com"));
+    }
+
+    #[test]
+    fn test_sin_expression_suggests_wolfram() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("sin(45)");
+        assert!(!result.success);
+        let link = result.issue_link.unwrap();
+        assert!(link.contains("wolframalpha.com"));
+    }
+
+    #[test]
+    fn test_sqrt_expression_suggests_wolfram() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("sqrt(16)");
+        assert!(!result.success);
+        let link = result.issue_link.unwrap();
+        assert!(link.contains("wolframalpha.com"));
+    }
+
+    #[test]
+    fn test_wolfram_url_contains_original_input() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("integrate sin(x)/x dx");
+        let link = result.issue_link.unwrap();
+        // URL-encoded version should contain the input
+        assert!(link.contains("integrate"));
+        assert!(link.contains("sin"));
+    }
+}
+
 mod version_tests {
     use super::*;
 

@@ -22,6 +22,7 @@
     (workerFailed "Échec de l'initialisation du worker")
     (calculationFailed 'Échec du calcul')
     (reportIssue 'Signaler ce problème')
+    (tryWolframAlpha 'Essayer Wolfram Alpha')
   ))
   (footer (
     (poweredBy 'Propulsé par Rust + WebAssembly')

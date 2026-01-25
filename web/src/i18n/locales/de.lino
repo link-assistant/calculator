@@ -22,6 +22,7 @@
     (workerFailed 'Worker-Initialisierung fehlgeschlagen')
     (calculationFailed 'Berechnung fehlgeschlagen')
     (reportIssue 'Dies als Problem melden')
+    (tryWolframAlpha 'Wolfram Alpha ausprobieren')
   ))
   (footer (
     (poweredBy 'Powered by Rust + WebAssembly')

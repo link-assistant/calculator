@@ -22,6 +22,7 @@
     (workerFailed 工作线程初始化失败)
     (calculationFailed 计算失败)
     (reportIssue 报告此问题)
+    (tryWolframAlpha '试试 Wolfram Alpha')
   ))
   (footer (
     (poweredBy '由 Rust + WebAssembly 驱动')

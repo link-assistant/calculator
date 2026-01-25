@@ -89,6 +89,19 @@ impl CalculationResult {
             issue_link: Some(issue_link),
         }
     }
+
+    /// Creates a failed calculation result with a custom link (e.g., Wolfram Alpha).
+    #[must_use]
+    pub fn failure_with_link(error: String, link: String) -> Self {
+        Self {
+            result: String::new(),
+            lino_interpretation: String::new(),
+            steps: Vec::new(),
+            success: false,
+            error: Some(error),
+            issue_link: Some(link),
+        }
+    }
 }
 
 /// Generates a GitHub issue link for unrecognized input.
@@ -186,7 +199,14 @@ impl Calculator {
             Ok((value, steps, lino)) => {
                 CalculationResult::success(value.to_display_string(), lino, steps)
             }
-            Err(e) => CalculationResult::failure(e.to_string(), input),
+            Err(e) => {
+                // Check if this is an unsupported math expression - use Wolfram Alpha link
+                if let Some(wolfram_url) = e.wolfram_url() {
+                    CalculationResult::failure_with_link(e.to_string(), wolfram_url.to_string())
+                } else {
+                    CalculationResult::failure(e.to_string(), input)
+                }
+            }
         }
     }
 

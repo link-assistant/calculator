@@ -22,6 +22,7 @@
     (workerFailed 'वर्कर प्रारंभ करने में विफल')
     (calculationFailed 'गणना विफल')
     (reportIssue 'इस समस्या की रिपोर्ट करें')
+    (tryWolframAlpha 'Wolfram Alpha आज़माएं')
   ))
   (footer (
     (poweredBy 'Rust + WebAssembly द्वारा संचालित')

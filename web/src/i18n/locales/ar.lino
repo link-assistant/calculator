@@ -22,6 +22,7 @@
     (workerFailed 'فشل في تهيئة العامل')
     (calculationFailed 'فشل الحساب')
     (reportIssue 'الإبلاغ عن هذه المشكلة')
+    (tryWolframAlpha 'جرب Wolfram Alpha')
   ))
   (footer (
     (poweredBy 'مدعوم بـ Rust + WebAssembly')

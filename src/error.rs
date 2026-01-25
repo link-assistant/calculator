@@ -64,6 +64,14 @@ pub enum CalculatorError {
     /// Empty input error.
     #[error("Empty input")]
     EmptyInput,
+
+    /// Unsupported advanced mathematical expression (e.g., integration, differentiation).
+    #[error("{message}")]
+    UnsupportedMathExpression {
+        message: String,
+        original_input: String,
+        wolfram_url: String,
+    },
 }
 
 impl CalculatorError {
@@ -96,6 +104,51 @@ impl CalculatorError {
     pub fn eval(msg: impl Into<String>) -> Self {
         Self::EvaluationError(msg.into())
     }
+
+    /// Creates an unsupported math expression error with Wolfram Alpha suggestion.
+    pub fn unsupported_math(keyword: &str, original_input: &str) -> Self {
+        let wolfram_url = generate_wolfram_url(original_input);
+        Self::UnsupportedMathExpression {
+            message: format!(
+                "Advanced math expression detected: '{}'. This calculator supports basic arithmetic, currency conversion, and datetime operations. For advanced math like integration, differentiation, and symbolic computation, try Wolfram Alpha.",
+                keyword
+            ),
+            original_input: original_input.to_string(),
+            wolfram_url,
+        }
+    }
+
+    /// Returns the Wolfram Alpha URL if this is an unsupported math expression.
+    #[must_use]
+    pub fn wolfram_url(&self) -> Option<&str> {
+        match self {
+            Self::UnsupportedMathExpression { wolfram_url, .. } => Some(wolfram_url),
+            _ => None,
+        }
+    }
+}
+
+/// Generates a Wolfram Alpha URL for the given input expression.
+fn generate_wolfram_url(input: &str) -> String {
+    let encoded = urlencoding_encode(input.trim());
+    format!("https://www.wolframalpha.com/input?i={}", encoded)
+}
+
+/// URL-encodes a string for use in query parameters.
+fn urlencoding_encode(s: &str) -> String {
+    let mut result = String::new();
+    for c in s.chars() {
+        match c {
+            'A'..='Z' | 'a'..='z' | '0'..='9' | '-' | '_' | '.' | '~' => result.push(c),
+            ' ' => result.push('+'),
+            _ => {
+                for byte in c.to_string().as_bytes() {
+                    result.push_str(&format!("%{:02X}", byte));
+                }
+            }
+        }
+    }
+    result
 }
 
 #[cfg(test)]

@@ -22,6 +22,7 @@
     (workerFailed 'Не удалось инициализировать воркер')
     (calculationFailed 'Ошибка вычисления')
     (reportIssue 'Сообщить о проблеме')
+    (tryWolframAlpha 'Попробовать Wolfram Alpha')
   ))
   (footer (
     (poweredBy 'На базе Rust + WebAssembly')

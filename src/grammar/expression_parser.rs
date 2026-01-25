@@ -127,9 +127,15 @@ impl ExpressionParser {
 
     /// Parses an expression string into an Expression AST.
     pub fn parse(&self, input: &str) -> Result<Expression, CalculatorError> {
+        // Pre-check for advanced math expressions before tokenizing
+        // This catches cases where special characters (^, =, >) would cause parse errors
+        if let Some(keyword) = detect_advanced_math_keyword(input) {
+            return Err(CalculatorError::unsupported_math(keyword, input));
+        }
+
         let mut lexer = Lexer::new(input);
         let tokens = lexer.tokenize()?;
-        let mut parser = TokenParser::new(&tokens, &self.number_grammar);
+        let mut parser = TokenParser::new(&tokens, &self.number_grammar, input);
         parser.parse_expression()
     }
 
@@ -241,19 +247,109 @@ impl ExpressionParser {
     }
 }
 
+/// Keywords that indicate advanced mathematical expressions.
+/// These are not supported by this calculator but can be handled by Wolfram Alpha.
+const ADVANCED_MATH_KEYWORDS: &[&str] = &[
+    "integrate",
+    "integral",
+    "differentiate",
+    "derivative",
+    "diff",
+    "solve",
+    "limit",
+    "lim",
+    "sum",
+    "product",
+    "series",
+    "taylor",
+    "fourier",
+    "laplace",
+    "simplify",
+    "expand",
+    "factor",
+    "roots",
+    "zeros",
+    "plot",
+    "graph",
+    "sin",
+    "cos",
+    "tan",
+    "log",
+    "ln",
+    "exp",
+    "sqrt",
+    "abs",
+    "mod",
+    "gcd",
+    "lcm",
+    "prime",
+    "factorial",
+    "permutation",
+    "combination",
+    "matrix",
+    "determinant",
+    "eigenvalue",
+    "eigenvector",
+];
+
+/// Checks if an identifier is an advanced math keyword.
+fn is_advanced_math_keyword(id: &str) -> bool {
+    ADVANCED_MATH_KEYWORDS
+        .iter()
+        .any(|&keyword| id.to_lowercase() == keyword)
+}
+
+/// Detects advanced math keywords in the input string.
+/// Returns the first keyword found, or None if no advanced math keyword is detected.
+fn detect_advanced_math_keyword(input: &str) -> Option<&'static str> {
+    let input_lower = input.to_lowercase();
+
+    for &keyword in ADVANCED_MATH_KEYWORDS {
+        // Check if the keyword appears as a word (not part of another word)
+        if let Some(pos) = input_lower.find(keyword) {
+            // Check that it's a word boundary (start of string or preceded by non-alphanumeric)
+            let is_word_start = pos == 0
+                || !input_lower[..pos]
+                    .chars()
+                    .last()
+                    .is_some_and(char::is_alphanumeric);
+
+            // Check that it's followed by a word boundary (end of string, space, or punctuation)
+            let end_pos = pos + keyword.len();
+            let is_word_end = end_pos >= input_lower.len()
+                || !input_lower[end_pos..]
+                    .chars()
+                    .next()
+                    .is_some_and(char::is_alphanumeric);
+
+            if is_word_start && is_word_end {
+                return Some(keyword);
+            }
+        }
+    }
+
+    None
+}
+
 /// Internal token-based parser.
 struct TokenParser<'a> {
     tokens: &'a [Token],
     pos: usize,
     number_grammar: &'a NumberGrammar,
+    original_input: &'a str,
 }
 
 impl<'a> TokenParser<'a> {
-    const fn new(tokens: &'a [Token], number_grammar: &'a NumberGrammar) -> Self {
+    const fn new(
+        tokens: &'a [Token],
+        number_grammar: &'a NumberGrammar,
+        original_input: &'a str,
+    ) -> Self {
         Self {
             tokens,
             pos: 0,
             number_grammar,
+            original_input,
         }
     }
 
@@ -339,6 +435,11 @@ impl<'a> TokenParser<'a> {
             // If it looks like a datetime start (month name), try to parse more
             if DateTimeGrammar::looks_like_datetime(&id) {
                 return self.try_parse_datetime_from_tokens(&id);
+            }
+
+            // Check if this looks like an advanced math expression
+            if is_advanced_math_keyword(&id) {
+                return Err(CalculatorError::unsupported_math(&id, self.original_input));
             }
 
             // Otherwise it's probably just an identifier/unit
