@@ -1,28 +1,41 @@
 [package]
-name = "my-package"
+name = "link-calculator"
 version = "0.1.0"
 edition = "2021"
-description = "A Rust package template for AI-driven development"
+description = "A Rust WebAssembly calculator with grammar-based expression parsing using links-notation"
 readme = "README.md"
 license = "Unlicense"
-keywords = ["template", "rust", "ai-driven"]
-categories = ["development-tools"]
-repository = "https://github.com/link-foundation/rust-ai-driven-development-pipeline-template"
-documentation = "https://github.com/link-foundation/rust-ai-driven-development-pipeline-template"
+keywords = ["calculator", "wasm", "grammar", "links-notation", "expression-parser"]
+categories = ["wasm", "parsing", "mathematics"]
+repository = "https://github.com/link-assistant/calculator"
+documentation = "https://github.com/link-assistant/calculator"
 rust-version = "1.70"
 
 [lib]
-name = "my_package"
+name = "link_calculator"
 path = "src/lib.rs"
+crate-type = ["cdylib", "rlib"]
 
 [[bin]]
-name = "my-package"
+name = "link-calculator"
 path = "src/main.rs"
 
 [dependencies]
-tokio = { version = "1.0", features = ["rt-multi-thread", "macros", "time"] }
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+js-sys = "0.3"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+console_error_panic_hook = "0.1"
+chrono = { version = "0.4", default-features = false, features = ["alloc", "std", "serde", "clock", "wasmbind"] }
+rust_decimal = { version = "1.33", features = ["serde"] }
+thiserror = "1.0"
+lazy_static = "1.4"
+regex = "1.10"
 
 [dev-dependencies]
+wasm-bindgen-test = "0.3"
+tokio = { version = "1.0", features = ["rt-multi-thread", "macros", "time"] }
 tokio-test = "0.4"
 
 [lints.rust]
@@ -39,7 +52,14 @@ too_many_lines = "allow"
 missing_errors_doc = "allow"
 missing_panics_doc = "allow"
 
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false
+
 [profile.release]
 lto = true
 codegen-units = 1
 strip = true
+opt-level = "s"
+
+[profile.release.package."*"]
+opt-level = "s"

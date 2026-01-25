@@ -1,79 +1,182 @@
-//! Integration tests for my-package.
+//! Integration tests for Link Calculator.
 //!
 //! These tests verify the public API works correctly.
 
-use my_package::{add, delay, multiply};
+use link_calculator::{Calculator, VERSION};
 
-mod add_integration_tests {
+mod calculator_tests {
     use super::*;
 
     #[test]
-    fn test_add_returns_correct_sum() {
-        assert_eq!(add(10, 20), 30);
+    fn test_calculator_creation() {
+        let calculator = Calculator::new();
+        let _ = calculator;
     }
 
     #[test]
-    fn test_add_handles_large_numbers() {
-        assert_eq!(add(1_000_000_000, 2_000_000_000), 3_000_000_000);
+    fn test_simple_addition() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("2 + 3");
+        assert!(result.success);
+        assert_eq!(result.result, "5");
     }
 
     #[test]
-    fn test_add_handles_negative_result() {
-        assert_eq!(add(-100, 50), -50);
+    fn test_simple_subtraction() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("10 - 4");
+        assert!(result.success);
+        assert_eq!(result.result, "6");
+    }
+
+    #[test]
+    fn test_simple_multiplication() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("3 * 4");
+        assert!(result.success);
+        assert_eq!(result.result, "12");
+    }
+
+    #[test]
+    fn test_simple_division() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("15 / 3");
+        assert!(result.success);
+        assert_eq!(result.result, "5");
+    }
+
+    #[test]
+    fn test_division_by_zero() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("10 / 0");
+        assert!(!result.success);
+        assert!(result.error.is_some());
+        assert!(result.error.unwrap().contains("zero"));
+    }
+
+    #[test]
+    fn test_decimal_numbers() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("3.14 + 2.86");
+        assert!(result.success);
+        assert_eq!(result.result, "6");
+    }
+
+    #[test]
+    fn test_negative_numbers() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("-5 + 3");
+        assert!(result.success);
+        assert_eq!(result.result, "-2");
+    }
+
+    #[test]
+    fn test_parentheses() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("(2 + 3) * 4");
+        assert!(result.success);
+        assert_eq!(result.result, "20");
+    }
+
+    #[test]
+    fn test_operator_precedence() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("2 + 3 * 4");
+        assert!(result.success);
+        assert_eq!(result.result, "14"); // 2 + (3 * 4) = 14
     }
 }
 
-mod multiply_integration_tests {
+mod currency_tests {
     use super::*;
 
     #[test]
-    fn test_multiply_returns_correct_product() {
-        assert_eq!(multiply(10, 20), 200);
+    fn test_currency_value() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("100 USD");
+        assert!(result.success);
+        assert!(result.result.contains("100"));
+        assert!(result.result.contains("USD"));
     }
 
     #[test]
-    fn test_multiply_handles_large_numbers() {
-        assert_eq!(multiply(1_000, 1_000_000), 1_000_000_000);
+    fn test_same_currency_addition() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("100 USD + 50 USD");
+        assert!(result.success);
+        assert!(result.result.contains("150"));
     }
 
     #[test]
-    fn test_multiply_handles_negative_numbers() {
-        assert_eq!(multiply(-10, -20), 200);
+    fn test_currency_conversion() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("84 USD - 34 EUR");
+        assert!(result.success);
+        // Should convert EUR to USD and perform subtraction
+        assert!(result.result.contains("USD"));
     }
 }
 
-mod delay_integration_tests {
+mod datetime_tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_delay_waits_minimum_time() {
-        let start = std::time::Instant::now();
-        delay(0.05).await;
-        let elapsed = start.elapsed();
+    #[test]
+    fn test_datetime_subtraction() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)");
+        assert!(result.success);
+        // Should be approximately 1 day, 20 hours
+        assert!(result.result.contains("day"));
+    }
+}
 
-        assert!(
-            elapsed.as_secs_f64() >= 0.05,
-            "Delay should wait at least 0.05 seconds, but waited {:.4}s",
-            elapsed.as_secs_f64()
-        );
+mod lino_tests {
+    use super::*;
+
+    #[test]
+    fn test_lino_representation_simple() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("2 + 3");
+        assert!(result.success);
+        assert!(!result.lino_interpretation.is_empty());
+        assert!(result.lino_interpretation.contains('+'));
     }
 
-    #[tokio::test]
-    async fn test_delay_zero_completes_quickly() {
-        let start = std::time::Instant::now();
-        delay(0.0).await;
-        let elapsed = start.elapsed();
+    #[test]
+    fn test_lino_representation_currency() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("84 USD - 34 EUR");
+        assert!(result.success);
+        assert!(result.lino_interpretation.contains("USD"));
+        assert!(result.lino_interpretation.contains("EUR"));
+    }
+}
 
-        assert!(
-            elapsed.as_secs_f64() < 0.1,
-            "Zero delay should complete quickly, but took {:.4}s",
-            elapsed.as_secs_f64()
-        );
+mod error_handling_tests {
+    use super::*;
+
+    #[test]
+    fn test_empty_input() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("");
+        assert!(!result.success);
+        assert!(result.error.is_some());
+    }
+
+    #[test]
+    fn test_invalid_input_generates_issue_link() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("???invalid???");
+        assert!(!result.success);
+        assert!(result.issue_link.is_some());
+        let link = result.issue_link.unwrap();
+        assert!(link.contains("github.com"));
+        assert!(link.contains("issues/new"));
     }
 }
 
 mod version_tests {
-    use my_package::VERSION;
+    use super::*;
 
     #[test]
     fn test_version_is_not_empty() {
