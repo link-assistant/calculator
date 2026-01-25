@@ -60,3 +60,7 @@ web/node_modules/
 web/dist/
 web/pkg/
 web/.vite/
+
+# Playwright test artifacts
+web/playwright-report/
+web/test-results/
