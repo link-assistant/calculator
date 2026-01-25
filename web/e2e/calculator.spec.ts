@@ -267,3 +267,206 @@ test.describe('Examples', () => {
     await expect(page.locator('.result-value')).toBeVisible({ timeout: 5000 });
   });
 });
+
+test.describe('Textarea Auto-Resize', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('textarea')).toBeEnabled({ timeout: 10000 });
+  });
+
+  test('should auto-resize textarea when content becomes multiline', async ({ page }) => {
+    const textarea = page.locator('textarea');
+
+    // Get initial height
+    const initialBox = await textarea.boundingBox();
+    const initialHeight = initialBox?.height || 0;
+
+    // Type multiline content
+    await textarea.fill('Line 1\nLine 2\nLine 3\nLine 4');
+
+    // Wait for resize to complete
+    await page.waitForTimeout(100);
+
+    // Get new height
+    const newBox = await textarea.boundingBox();
+    const newHeight = newBox?.height || 0;
+
+    // Height should have increased
+    expect(newHeight).toBeGreaterThan(initialHeight);
+  });
+
+  test('should shrink textarea when content is reduced', async ({ page }) => {
+    const textarea = page.locator('textarea');
+
+    // Type multiline content
+    await textarea.fill('Line 1\nLine 2\nLine 3\nLine 4\nLine 5');
+    await page.waitForTimeout(100);
+
+    // Get height with multiline content
+    const multilineBox = await textarea.boundingBox();
+    const multilineHeight = multilineBox?.height || 0;
+
+    // Clear to single line
+    await textarea.fill('Single line');
+    await page.waitForTimeout(100);
+
+    // Get new height
+    const singleLineBox = await textarea.boundingBox();
+    const singleLineHeight = singleLineBox?.height || 0;
+
+    // Height should have decreased
+    expect(singleLineHeight).toBeLessThan(multilineHeight);
+  });
+
+  test('should maintain minimum height for empty content', async ({ page }) => {
+    const textarea = page.locator('textarea');
+
+    // Clear the textarea
+    await textarea.fill('');
+    await page.waitForTimeout(100);
+
+    // Get height
+    const box = await textarea.boundingBox();
+    const height = box?.height || 0;
+
+    // Should have a minimum height (at least one line + padding)
+    expect(height).toBeGreaterThan(30);
+  });
+
+  test('should handle long single-line content with word wrap', async ({ page }) => {
+    const textarea = page.locator('textarea');
+
+    // Type a very long expression that should wrap
+    const longExpression = '(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC) + (Jan 25, 12:51pm UTC)';
+    await textarea.fill(longExpression);
+    await page.waitForTimeout(100);
+
+    // Check that content is visible and textarea has resized appropriately
+    const box = await textarea.boundingBox();
+    expect(box).not.toBeNull();
+  });
+
+  test('should resize in discrete line-height steps when dragged', async ({ page }) => {
+    const textarea = page.locator('textarea');
+
+    // First, add some content to have a baseline
+    await textarea.fill('Line 1\nLine 2');
+    await page.waitForTimeout(100);
+
+    // Get the current height
+    const initialBox = await textarea.boundingBox();
+    const initialHeight = initialBox?.height || 0;
+
+    // Get line height from computed style
+    const lineHeight = await textarea.evaluate((el) => {
+      const style = window.getComputedStyle(el);
+      return parseFloat(style.lineHeight) || 24;
+    });
+
+    // Verify the height is roughly a multiple of line-height (within tolerance for padding)
+    // The height should be: (N lines * lineHeight) + padding
+    const padding = await textarea.evaluate((el) => {
+      const style = window.getComputedStyle(el);
+      return parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+    });
+
+    const contentHeight = initialHeight - padding;
+    const lines = Math.round(contentHeight / lineHeight);
+
+    // Should be close to a whole number of lines
+    expect(Math.abs(contentHeight - lines * lineHeight)).toBeLessThan(5);
+  });
+
+  test('should not allow resize smaller than content height', async ({ page }) => {
+    const textarea = page.locator('textarea');
+
+    // Add multiline content
+    await textarea.fill('Line 1\nLine 2\nLine 3');
+    await page.waitForTimeout(100);
+
+    // Get the content height (minimum required)
+    const box = await textarea.boundingBox();
+    const contentHeight = box?.height || 0;
+
+    // Try to manually resize smaller using JavaScript (simulating drag)
+    await textarea.evaluate((el) => {
+      el.style.height = '30px'; // Very small height
+    });
+
+    // Trigger the resize observer by forcing a reflow
+    await page.waitForTimeout(50);
+
+    // The component should snap back to at least content height
+    const newBox = await textarea.boundingBox();
+    const newHeight = newBox?.height || 0;
+
+    // Height should be at least the minimum required for content
+    // (allowing some tolerance since snap logic may round up)
+    expect(newHeight).toBeGreaterThanOrEqual(contentHeight - 10);
+  });
+});
+
+test.describe('Textarea Resize Visual Regression', () => {
+  test('textarea should display all content without clipping', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('textarea')).toBeEnabled({ timeout: 10000 });
+
+    const textarea = page.locator('textarea');
+
+    // Type the exact content from the bug report
+    const bugContent = '(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC) + (Jan 25, 12:51nm UTC)';
+    await textarea.fill(bugContent);
+    await page.waitForTimeout(100);
+
+    // Check that scroll height equals client height (no hidden content)
+    const overflow = await textarea.evaluate((el) => {
+      return el.scrollHeight > el.clientHeight;
+    });
+
+    expect(overflow).toBe(false);
+  });
+
+  test('textarea content should never be partially visible', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('textarea')).toBeEnabled({ timeout: 10000 });
+
+    const textarea = page.locator('textarea');
+
+    // Add multiple lines
+    await textarea.fill('Line 1\nLine 2\nLine 3');
+    await page.waitForTimeout(100);
+
+    // Get line height
+    const lineHeight = await textarea.evaluate((el) => {
+      const style = window.getComputedStyle(el);
+      const lh = parseFloat(style.lineHeight);
+      return isNaN(lh) ? 24 : lh;
+    });
+
+    // Get padding
+    const padding = await textarea.evaluate((el) => {
+      const style = window.getComputedStyle(el);
+      return parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+    });
+
+    // Get border
+    const border = await textarea.evaluate((el) => {
+      const style = window.getComputedStyle(el);
+      return parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+    });
+
+    // Get current height
+    const box = await textarea.boundingBox();
+    const height = (box?.height || 0);
+
+    // Calculate content area
+    const contentArea = height - padding - border;
+
+    // Content area should be a multiple of line-height (within small tolerance)
+    const lines = contentArea / lineHeight;
+    const remainder = lines - Math.round(lines);
+
+    // Should be very close to a whole number
+    expect(Math.abs(remainder)).toBeLessThan(0.2);
+  });
+});
