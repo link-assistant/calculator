@@ -17,6 +17,21 @@ errors:
   workerFailed 'वर्कर प्रारंभ करने में विफल'
   calculationFailed 'गणना विफल'
   reportIssue 'इस समस्या की रिपोर्ट करें'
+  parseError 'पार्स त्रुटि: {{message}}'
+  unexpectedToken 'स्थान {{position}} पर अप्रत्याशित टोकन "{{found}}", {{expected}} अपेक्षित था'
+  unitMismatch '"{{leftUnit}}" और "{{rightUnit}}" को {{operation}} नहीं कर सकते'
+  evaluationError 'मूल्यांकन त्रुटि: {{message}}'
+  divisionByZero 'शून्य से विभाजन'
+  invalidDateTime 'अमान्य दिनांक/समय प्रारूप: {{format}}'
+  unknownCurrency 'अज्ञात मुद्रा: {{currency}}'
+  currencyConversion '{{from}} को {{to}} में परिवर्तित नहीं कर सकते: {{reason}}'
+  noHistoricalRate '{{date}} को {{currency}} के लिए विनिमय दर उपलब्ध नहीं है'
+  overflow 'संख्यात्मक ओवरफ्लो'
+  invalidOperation 'अमान्य ऑपरेशन: {{message}}'
+  emptyInput 'खाली इनपुट'
+  unknownFunction 'अज्ञात फ़ंक्शन: {{name}}'
+  invalidFunctionArgs 'फ़ंक्शन "{{function}}" के लिए अमान्य तर्क: {{reason}}'
+  domainError 'डोमेन त्रुटि: {{message}}'
 footer:
   poweredBy 'Rust + WebAssembly द्वारा संचालित'
   viewOnGitHub 'GitHub पर देखें'
@@ -30,3 +45,43 @@ settings:
 share:
   copyLink 'लिंक कॉपी करें'
   copied 'कॉपी किया गया!'
+steps:
+  inputExpression 'इनपुट अभिव्यक्ति: {{expression}}'
+  literalValue 'शाब्दिक मान: {{value}}'
+  dateTimeValue 'दिनांक/समय मान: {{value}}'
+  compute 'गणना: {{left}} {{op}} {{right}}'
+  equals '= {{value}}'
+  negate 'नकारात्मक: -{{value}} = {{result}}'
+  evaluateGroup 'समूहित अभिव्यक्ति का मूल्यांकन करें:'
+  atTime 'समय पर: {{time}}'
+  callFunction 'फ़ंक्शन कॉल: {{name}}({{args}})'
+  computePower 'गणना: {{base}} ^ {{exponent}}'
+  numericalIntegration 'संख्यात्मक एकीकरण: {{name}}(...)'
+  parseFirstDatetime 'पहला दिनांक/समय पार्स करें: {{datetime}}'
+  parseSecondDatetime 'दूसरा दिनांक/समय पार्स करें: {{datetime}}'
+  calculateDifference 'अंतर की गणना करें: {{dt1}} - {{dt2}}'
+  result 'परिणाम: {{value}}'
+  finalResult 'अंतिम परिणाम: {{value}}'
+issueReport:
+  environment वातावरण
+  version संस्करण
+  url URL
+  userAgent 'यूज़र एजेंट'
+  theme थीम
+  language भाषा
+  wasmReady 'WASM तैयार'
+  timestamp 'समय चिह्न'
+  input इनपुट
+  resultSection परिणाम
+  resultLabel परिणाम
+  linksNotation 'लिंक्स नोटेशन'
+  stepsLabel चरण
+  errorLabel त्रुटि
+  description विवरण
+  descriptionPlaceholder 'कृपया आपको जो समस्या आई उसका वर्णन करें'
+  issueTitle 'अभिव्यक्ति में समस्या: {{expression}}'
+  defaultIssueTitle 'समस्या रिपोर्ट'
+common:
+  yes हाँ
+  no नहीं
+  unknown अज्ञात

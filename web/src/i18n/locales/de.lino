@@ -17,6 +17,21 @@ errors:
   workerFailed 'Worker-Initialisierung fehlgeschlagen'
   calculationFailed 'Berechnung fehlgeschlagen'
   reportIssue 'Dies als Problem melden'
+  parseError 'Analysefehler: {{message}}'
+  unexpectedToken 'Unerwartetes Token "{{found}}" an Position {{position}}, erwartet {{expected}}'
+  unitMismatch 'Kann "{{leftUnit}}" und "{{rightUnit}}" nicht {{operation}}'
+  evaluationError 'Auswertungsfehler: {{message}}'
+  divisionByZero 'Division durch Null'
+  invalidDateTime 'Ungültiges Datum/Zeit-Format: {{format}}'
+  unknownCurrency 'Unbekannte Währung: {{currency}}'
+  currencyConversion 'Kann {{from}} nicht in {{to}} umrechnen: {{reason}}'
+  noHistoricalRate 'Kein Wechselkurs für {{currency}} am {{date}} verfügbar'
+  overflow 'Numerischer Überlauf'
+  invalidOperation 'Ungültige Operation: {{message}}'
+  emptyInput 'Leere Eingabe'
+  unknownFunction 'Unbekannte Funktion: {{name}}'
+  invalidFunctionArgs 'Ungültige Argumente für Funktion "{{function}}": {{reason}}'
+  domainError 'Definitionsbereichsfehler: {{message}}'
 footer:
   poweredBy 'Powered by Rust + WebAssembly'
   viewOnGitHub 'Auf GitHub ansehen'
@@ -30,3 +45,43 @@ settings:
 share:
   copyLink 'Link kopieren'
   copied Kopiert!
+steps:
+  inputExpression 'Eingabeausdruck: {{expression}}'
+  literalValue 'Literalwert: {{value}}'
+  dateTimeValue 'Datums-/Zeitwert: {{value}}'
+  compute 'Berechne: {{left}} {{op}} {{right}}'
+  equals '= {{value}}'
+  negate 'Negation: -{{value}} = {{result}}'
+  evaluateGroup 'Gruppierten Ausdruck auswerten:'
+  atTime 'Zum Zeitpunkt: {{time}}'
+  callFunction 'Funktionsaufruf: {{name}}({{args}})'
+  computePower 'Berechne: {{base}} ^ {{exponent}}'
+  numericalIntegration 'Numerische Integration: {{name}}(...)'
+  parseFirstDatetime 'Erstes Datum/Zeit analysieren: {{datetime}}'
+  parseSecondDatetime 'Zweites Datum/Zeit analysieren: {{datetime}}'
+  calculateDifference 'Differenz berechnen: {{dt1}} - {{dt2}}'
+  result 'Ergebnis: {{value}}'
+  finalResult 'Endergebnis: {{value}}'
+issueReport:
+  environment Umgebung
+  version Version
+  url URL
+  userAgent Benutzeragent
+  theme Design
+  language Sprache
+  wasmReady 'WASM bereit'
+  timestamp Zeitstempel
+  input Eingabe
+  resultSection Ergebnis
+  resultLabel Ergebnis
+  linksNotation Links-Notation
+  stepsLabel Schritte
+  errorLabel Fehler
+  description Beschreibung
+  descriptionPlaceholder 'Bitte beschreiben Sie das aufgetretene Problem'
+  issueTitle 'Problem mit Ausdruck: {{expression}}'
+  defaultIssueTitle Problembericht
+common:
+  yes Ja
+  no Nein
+  unknown Unbekannt

@@ -17,6 +17,21 @@ errors:
   workerFailed "Échec de l'initialisation du worker"
   calculationFailed 'Échec du calcul'
   reportIssue 'Signaler ce problème'
+  parseError "Erreur d'analyse : {{message}}"
+  unexpectedToken 'Jeton inattendu "{{found}}" à la position {{position}}, attendu {{expected}}'
+  unitMismatch 'Impossible de {{operation}} "{{leftUnit}}" et "{{rightUnit}}"'
+  evaluationError "Erreur d'évaluation : {{message}}"
+  divisionByZero 'Division par zéro'
+  invalidDateTime 'Format de date/heure invalide : {{format}}'
+  unknownCurrency 'Devise inconnue : {{currency}}'
+  currencyConversion 'Impossible de convertir {{from}} en {{to}} : {{reason}}'
+  noHistoricalRate 'Aucun taux de change disponible pour {{currency}} le {{date}}'
+  overflow 'Dépassement numérique'
+  invalidOperation 'Opération invalide : {{message}}'
+  emptyInput 'Entrée vide'
+  unknownFunction 'Fonction inconnue : {{name}}'
+  invalidFunctionArgs 'Arguments invalides pour la fonction "{{function}}" : {{reason}}'
+  domainError 'Erreur de domaine : {{message}}'
 footer:
   poweredBy 'Propulsé par Rust + WebAssembly'
   viewOnGitHub 'Voir sur GitHub'
@@ -30,3 +45,43 @@ settings:
 share:
   copyLink 'Copier le lien'
   copied 'Copié !'
+steps:
+  inputExpression "Expression d'entrée : {{expression}}"
+  literalValue 'Valeur littérale : {{value}}'
+  dateTimeValue 'Valeur date/heure : {{value}}'
+  compute 'Calculer : {{left}} {{op}} {{right}}'
+  equals '= {{value}}'
+  negate 'Négation : -{{value}} = {{result}}'
+  evaluateGroup "Évaluer l'expression groupée :"
+  atTime 'Au moment : {{time}}'
+  callFunction 'Appel de fonction : {{name}}({{args}})'
+  computePower 'Calculer : {{base}} ^ {{exponent}}'
+  numericalIntegration 'Intégration numérique : {{name}}(...)'
+  parseFirstDatetime 'Analyser la première date/heure : {{datetime}}'
+  parseSecondDatetime 'Analyser la deuxième date/heure : {{datetime}}'
+  calculateDifference 'Calculer la différence : {{dt1}} - {{dt2}}'
+  result 'Résultat : {{value}}'
+  finalResult 'Résultat final : {{value}}'
+issueReport:
+  environment Environnement
+  version Version
+  url URL
+  userAgent "Agent utilisateur"
+  theme Thème
+  language Langue
+  wasmReady 'WASM prêt'
+  timestamp 'Horodatage'
+  input Entrée
+  resultSection Résultat
+  resultLabel Résultat
+  linksNotation 'Notation Links'
+  stepsLabel Étapes
+  errorLabel Erreur
+  description Description
+  descriptionPlaceholder 'Veuillez décrire le problème rencontré'
+  issueTitle "Problème avec l'expression : {{expression}}"
+  defaultIssueTitle 'Rapport de problème'
+common:
+  yes Oui
+  no Non
+  unknown Inconnu

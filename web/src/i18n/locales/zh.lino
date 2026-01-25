@@ -17,6 +17,21 @@ errors:
   workerFailed 工作线程初始化失败
   calculationFailed 计算失败
   reportIssue 报告此问题
+  parseError '解析错误：{{message}}'
+  unexpectedToken '位置 {{position}} 处出现意外标记 "{{found}}"，期望 {{expected}}'
+  unitMismatch '无法对 "{{leftUnit}}" 和 "{{rightUnit}}" 进行 {{operation}} 操作'
+  evaluationError '计算错误：{{message}}'
+  divisionByZero 除以零
+  invalidDateTime '无效的日期/时间格式：{{format}}'
+  unknownCurrency '未知货币：{{currency}}'
+  currencyConversion '无法将 {{from}} 转换为 {{to}}：{{reason}}'
+  noHistoricalRate '{{date}} 没有 {{currency}} 的汇率'
+  overflow 数值溢出
+  invalidOperation '无效操作：{{message}}'
+  emptyInput 输入为空
+  unknownFunction '未知函数：{{name}}'
+  invalidFunctionArgs '函数 "{{function}}" 的参数无效：{{reason}}'
+  domainError '域错误：{{message}}'
 footer:
   poweredBy '由 Rust + WebAssembly 驱动'
   viewOnGitHub '在 GitHub 上查看'
@@ -30,3 +45,43 @@ settings:
 share:
   copyLink 复制链接
   copied 已复制！
+steps:
+  inputExpression '输入表达式：{{expression}}'
+  literalValue '字面值：{{value}}'
+  dateTimeValue '日期时间值：{{value}}'
+  compute '计算：{{left}} {{op}} {{right}}'
+  equals '= {{value}}'
+  negate '取反：-{{value}} = {{result}}'
+  evaluateGroup 计算分组表达式：
+  atTime '在时间点：{{time}}'
+  callFunction '调用函数：{{name}}({{args}})'
+  computePower '计算：{{base}} ^ {{exponent}}'
+  numericalIntegration '数值积分：{{name}}(...)'
+  parseFirstDatetime '解析第一个日期时间：{{datetime}}'
+  parseSecondDatetime '解析第二个日期时间：{{datetime}}'
+  calculateDifference '计算差值：{{dt1}} - {{dt2}}'
+  result '结果：{{value}}'
+  finalResult '最终结果：{{value}}'
+issueReport:
+  environment 环境
+  version 版本
+  url URL
+  userAgent 用户代理
+  theme 主题
+  language 语言
+  wasmReady 'WASM 就绪'
+  timestamp 时间戳
+  input 输入
+  resultSection 结果
+  resultLabel 结果
+  linksNotation 链接表示法
+  stepsLabel 步骤
+  errorLabel 错误
+  description 描述
+  descriptionPlaceholder 请描述您遇到的问题
+  issueTitle '表达式问题：{{expression}}'
+  defaultIssueTitle 问题报告
+common:
+  yes 是
+  no 否
+  unknown 未知
