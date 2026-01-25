@@ -112,7 +112,7 @@ mod tests {
     fn test_unexpected_token() {
         let err = CalculatorError::unexpected_token("+", "number", 5);
         assert!(err.to_string().contains("Unexpected token"));
-        assert!(err.to_string().contains("+"));
+        assert!(err.to_string().contains('+'));
     }
 
     #[test]

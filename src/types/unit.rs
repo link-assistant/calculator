@@ -168,6 +168,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::float_cmp)]
     fn test_duration_conversion() {
         assert_eq!(DurationUnit::Minutes.to_secs(2.0), 120.0);
         assert_eq!(DurationUnit::Hours.secs_to_unit(3600.0), 1.0);
