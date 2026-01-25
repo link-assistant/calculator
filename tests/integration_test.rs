@@ -481,7 +481,7 @@ mod indefinite_integral_tests {
         );
         // x^2 integrates to x^3/3 + C
         assert!(
-            result.result.contains("3") && result.result.contains("C"),
+            result.result.contains('3') && result.result.contains('C'),
             "Result should contain x^3/3 + C pattern: got '{}'",
             result.result
         );
@@ -499,7 +499,7 @@ mod indefinite_integral_tests {
         );
         // sin(x) integrates to -cos(x) + C
         assert!(
-            result.result.contains("cos") && result.result.contains("C"),
+            result.result.contains("cos") && result.result.contains('C'),
             "Result should contain -cos(x) + C: got '{}'",
             result.result
         );
@@ -517,7 +517,7 @@ mod indefinite_integral_tests {
         );
         // cos(x) integrates to sin(x) + C
         assert!(
-            result.result.contains("sin") && result.result.contains("C"),
+            result.result.contains("sin") && result.result.contains('C'),
             "Result should contain sin(x) + C: got '{}'",
             result.result
         );
@@ -535,7 +535,7 @@ mod indefinite_integral_tests {
         );
         // x integrates to x^2/2 + C
         assert!(
-            result.result.contains("2") && result.result.contains("C"),
+            result.result.contains('2') && result.result.contains('C'),
             "Result should contain x²/2 + C: got '{}'",
             result.result
         );
@@ -553,9 +553,9 @@ mod indefinite_integral_tests {
         );
         // 5 integrates to 5x + C
         assert!(
-            result.result.contains("5")
-                && result.result.contains("x")
-                && result.result.contains("C"),
+            result.result.contains('5')
+                && result.result.contains('x')
+                && result.result.contains('C'),
             "Result should contain 5 * x + C: got '{}'",
             result.result
         );
@@ -573,7 +573,7 @@ mod indefinite_integral_tests {
         );
         // exp(x) integrates to exp(x) + C
         assert!(
-            result.result.contains("exp") && result.result.contains("C"),
+            result.result.contains("exp") && result.result.contains('C'),
             "Result should contain exp(x) + C: got '{}'",
             result.result
         );
@@ -590,7 +590,7 @@ mod indefinite_integral_tests {
             "Result should be symbolic"
         );
         assert!(
-            result.result.contains("cos") && result.result.contains("t"),
+            result.result.contains("cos") && result.result.contains('t'),
             "Result should contain -cos(t) + C: got '{}'",
             result.result
         );
@@ -605,8 +605,7 @@ mod indefinite_integral_tests {
         let latex_input = result.latex_input.unwrap();
         assert!(
             latex_input.contains("\\int"),
-            "LaTeX input should contain integral symbol: got '{}'",
-            latex_input
+            "LaTeX input should contain integral symbol: got '{latex_input}'"
         );
     }
 
