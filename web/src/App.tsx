@@ -52,6 +52,8 @@ function App() {
   const [version, setVersion] = useState('');
   const [linkCopied, setLinkCopied] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [ratesLoading, setRatesLoading] = useState(false);
+  const [ratesInfo, setRatesInfo] = useState<{ date?: string; base?: string } | null>(null);
 
   const workerRef = useRef<Worker | null>(null);
   const settingsRef = useRef<HTMLDivElement>(null);
@@ -84,6 +86,12 @@ function App() {
           error: data.error,
         });
         setLoading(false);
+      } else if (type === 'ratesLoading') {
+        setRatesLoading(data.loading);
+      } else if (type === 'ratesLoaded') {
+        if (data.success) {
+          setRatesInfo({ date: data.date, base: data.base });
+        }
       }
     };
 
@@ -366,6 +374,16 @@ function App() {
             {t('footer.reportIssue')}
           </button>
         </p>
+        {ratesLoading && (
+          <p className="rates-status loading">
+            <span className="spinner-small" /> {t('footer.loadingRates')}
+          </p>
+        )}
+        {!ratesLoading && ratesInfo && (
+          <p className="rates-status">
+            {t('footer.ratesInfo', { date: ratesInfo.date, source: 'fawazahmed0/currency-api' })}
+          </p>
+        )}
       </footer>
     </div>
   );

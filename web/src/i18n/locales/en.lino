@@ -36,6 +36,8 @@ footer:
   poweredBy 'Powered by Rust + WebAssembly'
   viewOnGitHub 'View on GitHub'
   reportIssue 'Report Issue'
+  loadingRates 'Loading exchange rates...'
+  ratesInfo 'Exchange rates from {{source}} ({{date}})'
 settings:
   theme Theme
   themeLight Light
