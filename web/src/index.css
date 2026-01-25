@@ -160,7 +160,7 @@ header p {
   padding: 1rem;
   min-width: 200px;
   box-shadow: var(--shadow-lg);
-  z-index: 100;
+  z-index: 1000;
 }
 
 .rtl .settings-dropdown {
