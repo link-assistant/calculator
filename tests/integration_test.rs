@@ -9,7 +9,7 @@ mod calculator_tests {
 
     #[test]
     fn test_calculator_creation() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let _ = calculator;
     }
 
@@ -472,5 +472,196 @@ mod version_tests {
     fn test_version_matches_cargo_toml() {
         // Version should match the one in Cargo.toml
         assert!(VERSION.starts_with("0."));
+    }
+}
+
+mod indefinite_integral_tests {
+    use super::*;
+
+    #[test]
+    fn test_natural_integral_notation_sin_x_over_x() {
+        // This is the exact test case from issue #3: "integrate sin(x)/x dx"
+        let mut calculator = Calculator::new();
+        let result = calculator.calculate_internal("integrate sin(x)/x dx");
+
+        // The result should be a symbolic result with Si(x) + C
+        assert!(result.success, "integrate sin(x)/x dx should succeed");
+        assert!(
+            result.is_symbolic.unwrap_or(false),
+            "Result should be symbolic"
+        );
+        assert!(
+            result.result.contains("Si(x)"),
+            "Result should contain Si(x): got '{}'",
+            result.result
+        );
+
+        // Should have LaTeX rendering
+        assert!(result.latex_input.is_some(), "Should have LaTeX input");
+        assert!(result.latex_result.is_some(), "Should have LaTeX result");
+
+        // Should have plot data
+        assert!(result.plot_data.is_some(), "Should have plot data");
+        let plot = result.plot_data.unwrap();
+        assert!(!plot.x_values.is_empty(), "Plot should have x values");
+        assert!(!plot.y_values.is_empty(), "Plot should have y values");
+    }
+
+    #[test]
+    fn test_natural_integral_notation_x_squared() {
+        let mut calculator = Calculator::new();
+        let result = calculator.calculate_internal("integrate x^2 dx");
+
+        assert!(result.success, "integrate x^2 dx should succeed");
+        assert!(
+            result.is_symbolic.unwrap_or(false),
+            "Result should be symbolic"
+        );
+        // x^2 integrates to x^3/3 + C
+        assert!(
+            result.result.contains('3') && result.result.contains('C'),
+            "Result should contain x^3/3 + C pattern: got '{}'",
+            result.result
+        );
+    }
+
+    #[test]
+    fn test_natural_integral_notation_sin() {
+        let mut calculator = Calculator::new();
+        let result = calculator.calculate_internal("integrate sin(x) dx");
+
+        assert!(result.success, "integrate sin(x) dx should succeed");
+        assert!(
+            result.is_symbolic.unwrap_or(false),
+            "Result should be symbolic"
+        );
+        // sin(x) integrates to -cos(x) + C
+        assert!(
+            result.result.contains("cos") && result.result.contains('C'),
+            "Result should contain -cos(x) + C: got '{}'",
+            result.result
+        );
+    }
+
+    #[test]
+    fn test_natural_integral_notation_cos() {
+        let mut calculator = Calculator::new();
+        let result = calculator.calculate_internal("integrate cos(x) dx");
+
+        assert!(result.success, "integrate cos(x) dx should succeed");
+        assert!(
+            result.is_symbolic.unwrap_or(false),
+            "Result should be symbolic"
+        );
+        // cos(x) integrates to sin(x) + C
+        assert!(
+            result.result.contains("sin") && result.result.contains('C'),
+            "Result should contain sin(x) + C: got '{}'",
+            result.result
+        );
+    }
+
+    #[test]
+    fn test_natural_integral_notation_x() {
+        let mut calculator = Calculator::new();
+        let result = calculator.calculate_internal("integrate x dx");
+
+        assert!(result.success, "integrate x dx should succeed");
+        assert!(
+            result.is_symbolic.unwrap_or(false),
+            "Result should be symbolic"
+        );
+        // x integrates to x^2/2 + C
+        assert!(
+            result.result.contains('2') && result.result.contains('C'),
+            "Result should contain x²/2 + C: got '{}'",
+            result.result
+        );
+    }
+
+    #[test]
+    fn test_natural_integral_notation_constant() {
+        let mut calculator = Calculator::new();
+        let result = calculator.calculate_internal("integrate 5 dx");
+
+        assert!(result.success, "integrate 5 dx should succeed");
+        assert!(
+            result.is_symbolic.unwrap_or(false),
+            "Result should be symbolic"
+        );
+        // 5 integrates to 5x + C
+        assert!(
+            result.result.contains('5')
+                && result.result.contains('x')
+                && result.result.contains('C'),
+            "Result should contain 5 * x + C: got '{}'",
+            result.result
+        );
+    }
+
+    #[test]
+    fn test_natural_integral_notation_exp() {
+        let mut calculator = Calculator::new();
+        let result = calculator.calculate_internal("integrate exp(x) dx");
+
+        assert!(result.success, "integrate exp(x) dx should succeed");
+        assert!(
+            result.is_symbolic.unwrap_or(false),
+            "Result should be symbolic"
+        );
+        // exp(x) integrates to exp(x) + C
+        assert!(
+            result.result.contains("exp") && result.result.contains('C'),
+            "Result should contain exp(x) + C: got '{}'",
+            result.result
+        );
+    }
+
+    #[test]
+    fn test_natural_integral_notation_different_variable() {
+        let mut calculator = Calculator::new();
+        let result = calculator.calculate_internal("integrate sin(t) dt");
+
+        assert!(result.success, "integrate sin(t) dt should succeed");
+        assert!(
+            result.is_symbolic.unwrap_or(false),
+            "Result should be symbolic"
+        );
+        assert!(
+            result.result.contains("cos") && result.result.contains('t'),
+            "Result should contain -cos(t) + C: got '{}'",
+            result.result
+        );
+    }
+
+    #[test]
+    fn test_latex_rendering_for_integral() {
+        let mut calculator = Calculator::new();
+        let result = calculator.calculate_internal("integrate sin(x)/x dx");
+
+        assert!(result.success, "Should succeed");
+        let latex_input = result.latex_input.unwrap();
+        assert!(
+            latex_input.contains("\\int"),
+            "LaTeX input should contain integral symbol: got '{latex_input}'"
+        );
+    }
+
+    #[test]
+    fn test_definite_integral_still_works() {
+        // Ensure the traditional definite integral syntax still works
+        let mut calculator = Calculator::new();
+        let result = calculator.calculate_internal("integrate(sin(x), x, 0, 3.14159)");
+
+        assert!(result.success, "Definite integral should still work");
+        assert!(
+            !result.is_symbolic.unwrap_or(false),
+            "Definite integral should not be symbolic"
+        );
+        let value: f64 = result.result.parse().unwrap();
+        assert!(
+            (value - 2.0).abs() < 0.1,
+            "∫sin(x) from 0 to π should be approximately 2"
+        );
     }
 }

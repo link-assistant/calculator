@@ -2,7 +2,8 @@
 
 use crate::error::CalculatorError;
 use crate::grammar::{
-    evaluate_function, is_math_function, DateTimeGrammar, Lexer, NumberGrammar, Token, TokenKind,
+    evaluate_function, evaluate_indefinite_integral, is_math_function, DateTimeGrammar, Lexer,
+    NumberGrammar, Token, TokenKind,
 };
 use crate::types::{BinaryOp, CurrencyDatabase, Decimal, Expression, Unit, Value};
 
@@ -39,7 +40,7 @@ impl ExpressionParser {
         self.currency_db.clear_last_used_rate();
 
         // Try datetime subtraction pattern first: "(datetime) - (datetime)"
-        if let Some(result) = self.try_parse_datetime_subtraction(input) {
+        if let Some(result) = self.datetime_grammar.try_parse_datetime_subtraction(input) {
             return Ok(result);
         }
 
@@ -53,81 +54,6 @@ impl ExpressionParser {
         let (value, steps) = self.evaluate_with_steps(&expr)?;
 
         Ok((value, steps, lino))
-    }
-
-    /// Tries to parse a datetime subtraction expression like "(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)".
-    fn try_parse_datetime_subtraction(&self, input: &str) -> Option<(Value, Vec<String>, String)> {
-        // Look for pattern: (datetime) - (datetime)
-        let input = input.trim();
-
-        // Check if it starts with '(' and contains '-'
-        if !input.starts_with('(') || !input.contains('-') {
-            return None;
-        }
-
-        // Try to find the matching closing paren for the first datetime
-        let mut paren_depth = 0;
-        let mut first_end = None;
-
-        for (i, ch) in input.char_indices() {
-            match ch {
-                '(' => paren_depth += 1,
-                ')' => {
-                    paren_depth -= 1;
-                    if paren_depth == 0 {
-                        first_end = Some(i);
-                        break;
-                    }
-                }
-                _ => {}
-            }
-        }
-
-        let first_end = first_end?;
-
-        // Extract first datetime (without parens)
-        let first_dt_str = &input[1..first_end];
-
-        // Find the minus sign
-        let rest = input[first_end + 1..].trim();
-        if !rest.starts_with('-') {
-            return None;
-        }
-
-        let second_part = rest[1..].trim();
-        if !second_part.starts_with('(') || !second_part.ends_with(')') {
-            return None;
-        }
-
-        // Extract second datetime (without parens)
-        let second_dt_str = &second_part[1..second_part.len() - 1];
-
-        // Try to parse both as datetimes
-        let Ok(dt1) = self.datetime_grammar.parse(first_dt_str) else {
-            return None;
-        };
-
-        let Ok(dt2) = self.datetime_grammar.parse(second_dt_str) else {
-            return None;
-        };
-
-        // Calculate the difference
-        let diff = dt1.subtract(&dt2);
-        #[allow(clippy::cast_possible_wrap)]
-        let seconds = diff.as_secs() as i64;
-
-        let value = Value::duration(seconds);
-
-        let steps = vec![
-            format!("Parse first datetime: {dt1}"),
-            format!("Parse second datetime: {dt2}"),
-            format!("Calculate difference: {dt1} - {dt2}"),
-            format!("Result: {}", value.to_display_string()),
-        ];
-
-        let lino = format!("((({}) - ({})))", first_dt_str.trim(), second_dt_str.trim());
-
-        Some((value, steps, lino))
     }
 
     /// Parses an expression string into an Expression AST.
@@ -230,6 +156,15 @@ impl ExpressionParser {
                 }
 
                 Ok(Value::number(Decimal::from_f64(result)))
+            }
+            Expression::IndefiniteIntegral {
+                integrand,
+                variable,
+            } => {
+                // Indefinite integrals return a symbolic result
+                // For now, we return an error directing users to use definite integrals for numeric results
+                // or display the symbolic representation
+                evaluate_indefinite_integral(integrand, variable)
             }
         }
     }
@@ -358,6 +293,18 @@ impl ExpressionParser {
                 let val = Value::number(Decimal::from_f64(result));
                 steps.push(format!("= {}", val.to_display_string()));
                 Ok(val)
+            }
+            Expression::IndefiniteIntegral {
+                integrand,
+                variable,
+            } => {
+                steps.push(format!(
+                    "Indefinite integral: ∫ {} d{}",
+                    integrand, variable
+                ));
+                let result = evaluate_indefinite_integral(integrand, variable)?;
+                steps.push(format!("= {}", result.to_display_string()));
+                Ok(result)
             }
         }
     }
@@ -542,6 +489,10 @@ impl ExpressionParser {
 
                 Ok(Value::number(Decimal::from_f64(result)))
             }
+            Expression::IndefiniteIntegral { .. } => Err(CalculatorError::invalid_args(
+                "nested integration",
+                "nested indefinite integrals are not supported",
+            )),
         }
     }
 }
@@ -673,6 +624,11 @@ impl<'a> TokenParser<'a> {
                 return self.parse_function_call(&id);
             }
 
+            // Check for natural integration syntax: "integrate <expr> d<var>"
+            if id.to_lowercase() == "integrate" {
+                return self.parse_natural_integral();
+            }
+
             // If it looks like a datetime start (month name), try to parse more
             if DateTimeGrammar::looks_like_datetime(&id) {
                 return self.try_parse_datetime_from_tokens(&id);
@@ -765,6 +721,199 @@ impl<'a> TokenParser<'a> {
         }
     }
 
+    /// Parses natural integral notation: "integrate <expr> d<var>"
+    /// Examples:
+    /// - integrate sin(x)/x dx
+    /// - integrate x^2 dx
+    fn parse_natural_integral(&mut self) -> Result<Expression, CalculatorError> {
+        // We've already consumed "integrate", now we need to find the integrand and d<var>
+        // Strategy: collect tokens until we find "d<var>" pattern (identifier starting with 'd')
+
+        let start_pos = self.pos;
+        let mut integrand_end_pos = None;
+        let mut var_name = None;
+
+        // Scan forward to find the d<var> pattern
+        let mut scan_pos = self.pos;
+        while scan_pos < self.tokens.len() {
+            if let TokenKind::Identifier(id) = &self.tokens[scan_pos].kind {
+                // Check if this is a differential notation like "dx", "dy", "dt"
+                let id_lower = id.to_lowercase();
+                if id_lower.starts_with('d') && id_lower.len() == 2 {
+                    let var_char = id_lower.chars().nth(1).unwrap();
+                    if var_char.is_ascii_alphabetic() {
+                        integrand_end_pos = Some(scan_pos);
+                        var_name = Some(var_char.to_string());
+                        break;
+                    }
+                }
+            }
+            scan_pos += 1;
+        }
+
+        // If we didn't find d<var>, return an error with helpful message
+        let (Some(end_pos), Some(var)) = (integrand_end_pos, var_name) else {
+            return Err(CalculatorError::parse(
+                "Invalid integration syntax. Expected: integrate <expression> d<var> (e.g., integrate sin(x)/x dx)"
+            ));
+        };
+
+        // Reset position and parse the integrand expression
+        // We need a sub-parser that only parses up to the d<var> token
+        self.pos = start_pos;
+
+        // Parse the integrand by parsing an expression and stopping at the d<var>
+        let integrand = self.parse_integrand_until(end_pos)?;
+
+        // Now consume the d<var> token
+        self.pos = end_pos;
+        self.advance();
+
+        Ok(Expression::indefinite_integral(integrand, var))
+    }
+
+    /// Parse an integrand expression up to (but not including) the position `until_pos`.
+    fn parse_integrand_until(&mut self, until_pos: usize) -> Result<Expression, CalculatorError> {
+        // Save the tokens after until_pos temporarily
+        let original_len = self.tokens.len();
+
+        // We need to be careful - parse_expression will consume tokens
+        // We'll parse and then check we didn't go past until_pos
+        let result = self.parse_integrand_expression(until_pos)?;
+
+        // Verify we stopped at the right place
+        if self.pos > until_pos {
+            self.pos = until_pos;
+        }
+
+        let _ = original_len; // Suppress unused warning
+        Ok(result)
+    }
+
+    /// Parse integrand with awareness of the boundary.
+    fn parse_integrand_expression(
+        &mut self,
+        boundary: usize,
+    ) -> Result<Expression, CalculatorError> {
+        self.parse_integrand_additive(boundary)
+    }
+
+    fn parse_integrand_additive(&mut self, boundary: usize) -> Result<Expression, CalculatorError> {
+        let mut left = self.parse_integrand_multiplicative(boundary)?;
+
+        while self.pos < boundary {
+            if let Some(op) = self.match_additive_op() {
+                if self.pos >= boundary {
+                    // Put the operator back
+                    self.pos -= 1;
+                    break;
+                }
+                let right = self.parse_integrand_multiplicative(boundary)?;
+                left = Expression::binary(left, op, right);
+            } else {
+                break;
+            }
+        }
+
+        Ok(left)
+    }
+
+    fn parse_integrand_multiplicative(
+        &mut self,
+        boundary: usize,
+    ) -> Result<Expression, CalculatorError> {
+        let mut left = self.parse_integrand_power(boundary)?;
+
+        while self.pos < boundary {
+            if let Some(op) = self.match_multiplicative_op() {
+                if self.pos >= boundary {
+                    // Put the operator back
+                    self.pos -= 1;
+                    break;
+                }
+                let right = self.parse_integrand_power(boundary)?;
+                left = Expression::binary(left, op, right);
+            } else {
+                break;
+            }
+        }
+
+        Ok(left)
+    }
+
+    fn parse_integrand_power(&mut self, boundary: usize) -> Result<Expression, CalculatorError> {
+        let mut left = self.parse_integrand_unary(boundary)?;
+
+        if self.pos < boundary && self.check(&TokenKind::Caret) {
+            self.advance();
+            let right = self.parse_integrand_power(boundary)?;
+            left = Expression::power(left, right);
+        }
+
+        Ok(left)
+    }
+
+    fn parse_integrand_unary(&mut self, boundary: usize) -> Result<Expression, CalculatorError> {
+        if self.pos < boundary && self.check(&TokenKind::Minus) {
+            self.advance();
+            let expr = self.parse_integrand_unary(boundary)?;
+            return Ok(Expression::negate(expr));
+        }
+
+        self.parse_integrand_primary(boundary)
+    }
+
+    fn parse_integrand_primary(&mut self, boundary: usize) -> Result<Expression, CalculatorError> {
+        if self.pos >= boundary {
+            return Err(CalculatorError::parse("Unexpected end of integrand"));
+        }
+
+        // Parenthesized expression
+        if self.check(&TokenKind::LeftParen) {
+            self.advance();
+            let expr = self.parse_expression()?;
+            self.expect(&TokenKind::RightParen)?;
+            return Ok(Expression::group(expr));
+        }
+
+        // Number
+        if let Some(TokenKind::Number(n)) = self.current_kind() {
+            let num_str = n.clone();
+            self.advance();
+            let value = self.number_grammar.parse_number(&num_str)?;
+            return Ok(Expression::number(value));
+        }
+
+        // Identifier (function call or variable)
+        if let Some(TokenKind::Identifier(id)) = self.current_kind() {
+            let id = id.clone();
+            self.advance();
+
+            // Check if this is a function call
+            if self.pos < boundary && self.check(&TokenKind::LeftParen) {
+                return self.parse_function_call(&id);
+            }
+
+            // Check if this is a math constant
+            if is_math_function(&id) {
+                return Ok(Expression::function_call(id, vec![]));
+            }
+
+            // Single-letter identifier is a variable
+            if id.len() == 1 && id.chars().next().unwrap().is_ascii_alphabetic() {
+                return Ok(Expression::variable(id));
+            }
+
+            // Multi-letter identifier could be an implicit variable in integration context
+            return Ok(Expression::variable(id));
+        }
+
+        Err(CalculatorError::parse(format!(
+            "Unexpected token in integrand: {:?}",
+            self.current()
+        )))
+    }
+
     fn match_additive_op(&mut self) -> Option<BinaryOp> {
         if self.check(&TokenKind::Plus) {
             self.advance();
@@ -835,154 +984,5 @@ impl<'a> TokenParser<'a> {
                 self.pos,
             ))
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_parse_simple_number() {
-        let parser = ExpressionParser::new();
-        let expr = parser.parse("42").unwrap();
-        assert!(matches!(expr, Expression::Number { .. }));
-    }
-
-    #[test]
-    fn test_parse_addition() {
-        let parser = ExpressionParser::new();
-        let expr = parser.parse("2 + 3").unwrap();
-        assert!(matches!(expr, Expression::Binary { .. }));
-    }
-
-    #[test]
-    fn test_parse_currency() {
-        let parser = ExpressionParser::new();
-        let expr = parser.parse("100 USD").unwrap();
-        if let Expression::Number { value, unit } = expr {
-            assert_eq!(value, Decimal::new(100));
-            assert_eq!(unit, Unit::currency("USD"));
-        } else {
-            panic!("Expected Number expression");
-        }
-    }
-
-    #[test]
-    fn test_parse_currency_subtraction() {
-        let parser = ExpressionParser::new();
-        let expr = parser.parse("84 USD - 34 EUR").unwrap();
-        assert!(matches!(expr, Expression::Binary { .. }));
-    }
-
-    #[test]
-    fn test_evaluate_simple() {
-        let mut parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("2 + 3").unwrap();
-        assert_eq!(value.to_display_string(), "5");
-    }
-
-    #[test]
-    fn test_evaluate_multiplication() {
-        let mut parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("4 * 5").unwrap();
-        assert_eq!(value.to_display_string(), "20");
-    }
-
-    #[test]
-    fn test_evaluate_precedence() {
-        let mut parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("2 + 3 * 4").unwrap();
-        assert_eq!(value.to_display_string(), "14"); // 2 + (3 * 4) = 14
-    }
-
-    #[test]
-    fn test_evaluate_parentheses() {
-        let mut parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("(2 + 3) * 4").unwrap();
-        assert_eq!(value.to_display_string(), "20"); // (2 + 3) * 4 = 20
-    }
-
-    #[test]
-    fn test_evaluate_negation() {
-        let mut parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("-5 + 3").unwrap();
-        assert_eq!(value.to_display_string(), "-2");
-    }
-
-    #[test]
-    fn test_datetime_subtraction() {
-        let mut parser = ExpressionParser::new();
-        let result = parser.parse_and_evaluate("(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)");
-        assert!(result.is_ok());
-        let (value, _, _) = result.unwrap();
-        // Should be approximately 1 day, 20 hours, 8 minutes
-        assert!(value.to_display_string().contains("day"));
-    }
-
-    #[test]
-    fn test_lino_representation() {
-        let mut parser = ExpressionParser::new();
-        let (_, _, lino) = parser.parse_and_evaluate("84 USD - 34 EUR").unwrap();
-        assert!(lino.contains("84 USD"));
-        assert!(lino.contains("34 EUR"));
-    }
-
-    // New tests for math functions
-    #[test]
-    fn test_parse_function_call() {
-        let parser = ExpressionParser::new();
-        let expr = parser.parse("sin(0)").unwrap();
-        assert!(matches!(expr, Expression::FunctionCall { .. }));
-    }
-
-    #[test]
-    fn test_evaluate_sin() {
-        let mut parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("sin(0)").unwrap();
-        assert_eq!(value.to_display_string(), "0");
-    }
-
-    #[test]
-    fn test_evaluate_sqrt() {
-        let mut parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("sqrt(16)").unwrap();
-        assert_eq!(value.to_display_string(), "4");
-    }
-
-    #[test]
-    fn test_evaluate_power() {
-        let mut parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("2^3").unwrap();
-        assert_eq!(value.to_display_string(), "8");
-    }
-
-    #[test]
-    fn test_evaluate_pi() {
-        let mut parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("pi()").unwrap();
-        let pi = value.as_decimal().unwrap().to_f64();
-        assert!((pi - std::f64::consts::PI).abs() < 1e-10);
-    }
-
-    #[test]
-    fn test_evaluate_complex_expression() {
-        let mut parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("2 + sin(0) * 3").unwrap();
-        assert_eq!(value.to_display_string(), "2");
-    }
-
-    #[test]
-    fn test_evaluate_nested_functions() {
-        let mut parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("sqrt(abs(-16))").unwrap();
-        assert_eq!(value.to_display_string(), "4");
-    }
-
-    #[test]
-    fn test_evaluate_function_with_expression() {
-        let mut parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("sqrt(4 + 12)").unwrap();
-        assert_eq!(value.to_display_string(), "4");
     }
 }

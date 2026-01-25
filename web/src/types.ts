@@ -1,3 +1,11 @@
+export interface PlotData {
+  x_values: number[];
+  y_values: number[];
+  label: string;
+  x_label: string;
+  y_label: string;
+}
+
 /**
  * Error information for i18n support.
  * Contains the translation key and optional interpolation parameters.
@@ -34,4 +42,8 @@ export interface CalculationResult {
   /** Error information for i18n support. */
   error_info?: ErrorInfo;
   issue_link?: string;
+  latex_input?: string;
+  latex_result?: string;
+  is_symbolic?: boolean;
+  plot_data?: PlotData;
 }
