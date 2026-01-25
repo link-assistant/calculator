@@ -27,13 +27,16 @@ impl ExpressionParser {
 
     /// Parses and evaluates an expression, returning the result, steps, and lino representation.
     pub fn parse_and_evaluate(
-        &self,
+        &mut self,
         input: &str,
     ) -> Result<(Value, Vec<String>, String), CalculatorError> {
         let input = input.trim();
         if input.is_empty() {
             return Err(CalculatorError::EmptyInput);
         }
+
+        // Clear any previous rate tracking
+        self.currency_db.clear_last_used_rate();
 
         // Try datetime subtraction pattern first: "(datetime) - (datetime)"
         if let Some(result) = self.try_parse_datetime_subtraction(input) {
@@ -136,13 +139,13 @@ impl ExpressionParser {
     }
 
     /// Evaluates an expression.
-    pub fn evaluate(&self, expr: &Expression) -> Result<Value, CalculatorError> {
+    pub fn evaluate(&mut self, expr: &Expression) -> Result<Value, CalculatorError> {
         self.evaluate_expr(expr)
     }
 
     /// Evaluates an expression with step-by-step tracking.
     fn evaluate_with_steps(
-        &self,
+        &mut self,
         expr: &Expression,
     ) -> Result<(Value, Vec<String>), CalculatorError> {
         let mut steps = Vec::new();
@@ -156,7 +159,7 @@ impl ExpressionParser {
         Ok((result, steps))
     }
 
-    fn evaluate_expr(&self, expr: &Expression) -> Result<Value, CalculatorError> {
+    fn evaluate_expr(&mut self, expr: &Expression) -> Result<Value, CalculatorError> {
         match expr {
             Expression::Number { value, unit } => Ok(Value::number_with_unit(*value, unit.clone())),
             Expression::DateTime(dt) => Ok(Value::datetime(dt.clone())),
@@ -232,7 +235,7 @@ impl ExpressionParser {
     }
 
     fn evaluate_expr_with_steps(
-        &self,
+        &mut self,
         expr: &Expression,
         steps: &mut Vec<String>,
     ) -> Result<Value, CalculatorError> {
@@ -257,7 +260,19 @@ impl ExpressionParser {
                     right_val.to_display_string()
                 ));
 
+                // Clear any previous rate tracking before the operation
+                self.currency_db.clear_last_used_rate();
+
                 let result = self.apply_binary_op(&left_val, *op, &right_val)?;
+
+                // If a currency conversion was used, add rate info to steps
+                if let Some((from, to, rate_info)) = self.currency_db.get_last_used_rate() {
+                    steps.push(format!(
+                        "Exchange rate: {}",
+                        rate_info.format_for_display(from, to)
+                    ));
+                }
+
                 steps.push(format!("= {}", result.to_display_string()));
 
                 Ok(result)
@@ -348,14 +363,14 @@ impl ExpressionParser {
     }
 
     fn apply_binary_op(
-        &self,
+        &mut self,
         left: &Value,
         op: BinaryOp,
         right: &Value,
     ) -> Result<Value, CalculatorError> {
         match op {
-            BinaryOp::Add => left.add(right, &self.currency_db),
-            BinaryOp::Subtract => left.subtract(right, &self.currency_db),
+            BinaryOp::Add => left.add(right, &mut self.currency_db),
+            BinaryOp::Subtract => left.subtract(right, &mut self.currency_db),
             BinaryOp::Multiply => left.multiply(right),
             BinaryOp::Divide => left.divide(right),
         }
@@ -365,7 +380,7 @@ impl ExpressionParser {
     ///
     /// Uses numerical integration (Simpson's rule) to compute the definite integral.
     #[allow(clippy::many_single_char_names)]
-    fn evaluate_integrate(&self, args: &[Expression]) -> Result<Value, CalculatorError> {
+    fn evaluate_integrate(&mut self, args: &[Expression]) -> Result<Value, CalculatorError> {
         if args.len() != 4 {
             return Err(CalculatorError::invalid_args(
                 "integrate",
@@ -437,7 +452,7 @@ impl ExpressionParser {
 
     /// Evaluates an expression with a variable substitution.
     fn evaluate_at(
-        &self,
+        &mut self,
         expr: &Expression,
         var_name: &str,
         value: f64,
@@ -450,7 +465,7 @@ impl ExpressionParser {
 
     /// Evaluates an expression with a variable substitution.
     fn evaluate_expr_with_var(
-        &self,
+        &mut self,
         expr: &Expression,
         var_name: &str,
         var_value: Decimal,
@@ -862,42 +877,42 @@ mod tests {
 
     #[test]
     fn test_evaluate_simple() {
-        let parser = ExpressionParser::new();
+        let mut parser = ExpressionParser::new();
         let (value, _, _) = parser.parse_and_evaluate("2 + 3").unwrap();
         assert_eq!(value.to_display_string(), "5");
     }
 
     #[test]
     fn test_evaluate_multiplication() {
-        let parser = ExpressionParser::new();
+        let mut parser = ExpressionParser::new();
         let (value, _, _) = parser.parse_and_evaluate("4 * 5").unwrap();
         assert_eq!(value.to_display_string(), "20");
     }
 
     #[test]
     fn test_evaluate_precedence() {
-        let parser = ExpressionParser::new();
+        let mut parser = ExpressionParser::new();
         let (value, _, _) = parser.parse_and_evaluate("2 + 3 * 4").unwrap();
         assert_eq!(value.to_display_string(), "14"); // 2 + (3 * 4) = 14
     }
 
     #[test]
     fn test_evaluate_parentheses() {
-        let parser = ExpressionParser::new();
+        let mut parser = ExpressionParser::new();
         let (value, _, _) = parser.parse_and_evaluate("(2 + 3) * 4").unwrap();
         assert_eq!(value.to_display_string(), "20"); // (2 + 3) * 4 = 20
     }
 
     #[test]
     fn test_evaluate_negation() {
-        let parser = ExpressionParser::new();
+        let mut parser = ExpressionParser::new();
         let (value, _, _) = parser.parse_and_evaluate("-5 + 3").unwrap();
         assert_eq!(value.to_display_string(), "-2");
     }
 
     #[test]
     fn test_datetime_subtraction() {
-        let parser = ExpressionParser::new();
+        let mut parser = ExpressionParser::new();
         let result = parser.parse_and_evaluate("(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)");
         assert!(result.is_ok());
         let (value, _, _) = result.unwrap();
@@ -907,7 +922,7 @@ mod tests {
 
     #[test]
     fn test_lino_representation() {
-        let parser = ExpressionParser::new();
+        let mut parser = ExpressionParser::new();
         let (_, _, lino) = parser.parse_and_evaluate("84 USD - 34 EUR").unwrap();
         assert!(lino.contains("84 USD"));
         assert!(lino.contains("34 EUR"));
@@ -923,28 +938,28 @@ mod tests {
 
     #[test]
     fn test_evaluate_sin() {
-        let parser = ExpressionParser::new();
+        let mut parser = ExpressionParser::new();
         let (value, _, _) = parser.parse_and_evaluate("sin(0)").unwrap();
         assert_eq!(value.to_display_string(), "0");
     }
 
     #[test]
     fn test_evaluate_sqrt() {
-        let parser = ExpressionParser::new();
+        let mut parser = ExpressionParser::new();
         let (value, _, _) = parser.parse_and_evaluate("sqrt(16)").unwrap();
         assert_eq!(value.to_display_string(), "4");
     }
 
     #[test]
     fn test_evaluate_power() {
-        let parser = ExpressionParser::new();
+        let mut parser = ExpressionParser::new();
         let (value, _, _) = parser.parse_and_evaluate("2^3").unwrap();
         assert_eq!(value.to_display_string(), "8");
     }
 
     #[test]
     fn test_evaluate_pi() {
-        let parser = ExpressionParser::new();
+        let mut parser = ExpressionParser::new();
         let (value, _, _) = parser.parse_and_evaluate("pi()").unwrap();
         let pi = value.as_decimal().unwrap().to_f64();
         assert!((pi - std::f64::consts::PI).abs() < 1e-10);
@@ -952,21 +967,21 @@ mod tests {
 
     #[test]
     fn test_evaluate_complex_expression() {
-        let parser = ExpressionParser::new();
+        let mut parser = ExpressionParser::new();
         let (value, _, _) = parser.parse_and_evaluate("2 + sin(0) * 3").unwrap();
         assert_eq!(value.to_display_string(), "2");
     }
 
     #[test]
     fn test_evaluate_nested_functions() {
-        let parser = ExpressionParser::new();
+        let mut parser = ExpressionParser::new();
         let (value, _, _) = parser.parse_and_evaluate("sqrt(abs(-16))").unwrap();
         assert_eq!(value.to_display_string(), "4");
     }
 
     #[test]
     fn test_evaluate_function_with_expression() {
-        let parser = ExpressionParser::new();
+        let mut parser = ExpressionParser::new();
         let (value, _, _) = parser.parse_and_evaluate("sqrt(4 + 12)").unwrap();
         assert_eq!(value.to_display_string(), "4");
     }

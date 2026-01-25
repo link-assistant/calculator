@@ -11,7 +11,7 @@
 //! ```
 //! use link_calculator::Calculator;
 //!
-//! let calculator = Calculator::new();
+//! let mut calculator = Calculator::new();
 //! let result = calculator.calculate_internal("2 + 3");
 //! assert!(result.success);
 //! assert_eq!(result.result, "5");
@@ -31,6 +31,7 @@
 #![allow(clippy::cast_possible_wrap)]
 #![allow(clippy::match_same_arms)]
 
+pub mod currency_api;
 pub mod error;
 pub mod grammar;
 pub mod lino;
@@ -247,7 +248,7 @@ impl Calculator {
     ///
     /// A JSON string containing the calculation result.
     #[wasm_bindgen]
-    pub fn calculate(&self, input: &str) -> String {
+    pub fn calculate(&mut self, input: &str) -> String {
         let result = self.calculate_internal(input);
         serde_json::to_string(&result).unwrap_or_else(|e| {
             format!(
@@ -267,7 +268,7 @@ impl Calculator {
 
 impl Calculator {
     /// Internal calculation method that returns a proper Result type.
-    pub fn calculate_internal(&self, input: &str) -> CalculationResult {
+    pub fn calculate_internal(&mut self, input: &str) -> CalculationResult {
         match self.parser.parse_and_evaluate(input) {
             Ok((value, steps, lino)) => {
                 CalculationResult::success(value.to_display_string(), lino, steps)
@@ -282,7 +283,7 @@ impl Calculator {
     }
 
     /// Evaluates a parsed expression.
-    pub fn evaluate(&self, expr: &types::Expression) -> Result<Value, CalculatorError> {
+    pub fn evaluate(&mut self, expr: &types::Expression) -> Result<Value, CalculatorError> {
         self.parser.evaluate(expr)
     }
 }
@@ -300,7 +301,7 @@ mod tests {
 
     #[test]
     fn test_simple_addition() {
-        let calc = Calculator::new();
+        let mut calc = Calculator::new();
         let result = calc.calculate_internal("2 + 3");
         assert!(result.success);
         assert_eq!(result.result, "5");
@@ -308,7 +309,7 @@ mod tests {
 
     #[test]
     fn test_simple_subtraction() {
-        let calc = Calculator::new();
+        let mut calc = Calculator::new();
         let result = calc.calculate_internal("10 - 4");
         assert!(result.success);
         assert_eq!(result.result, "6");
@@ -316,7 +317,7 @@ mod tests {
 
     #[test]
     fn test_simple_multiplication() {
-        let calc = Calculator::new();
+        let mut calc = Calculator::new();
         let result = calc.calculate_internal("3 * 4");
         assert!(result.success);
         assert_eq!(result.result, "12");
@@ -324,7 +325,7 @@ mod tests {
 
     #[test]
     fn test_simple_division() {
-        let calc = Calculator::new();
+        let mut calc = Calculator::new();
         let result = calc.calculate_internal("15 / 3");
         assert!(result.success);
         assert_eq!(result.result, "5");
@@ -332,7 +333,7 @@ mod tests {
 
     #[test]
     fn test_decimal_numbers() {
-        let calc = Calculator::new();
+        let mut calc = Calculator::new();
         let result = calc.calculate_internal("3.14 + 2.86");
         assert!(result.success);
         assert_eq!(result.result, "6");
@@ -340,7 +341,7 @@ mod tests {
 
     #[test]
     fn test_negative_numbers() {
-        let calc = Calculator::new();
+        let mut calc = Calculator::new();
         let result = calc.calculate_internal("-5 + 3");
         assert!(result.success);
         assert_eq!(result.result, "-2");
@@ -348,7 +349,7 @@ mod tests {
 
     #[test]
     fn test_parentheses() {
-        let calc = Calculator::new();
+        let mut calc = Calculator::new();
         let result = calc.calculate_internal("(2 + 3) * 4");
         assert!(result.success);
         assert_eq!(result.result, "20");

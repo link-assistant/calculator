@@ -7,7 +7,7 @@ fn main() {
     println!("Link Calculator v{}", link_calculator::VERSION);
     println!("Type expressions to calculate, or 'quit' to exit.\n");
 
-    let calculator = Calculator::new();
+    let mut calculator = Calculator::new();
     let stdin = io::stdin();
     let mut stdout = io::stdout();
 
