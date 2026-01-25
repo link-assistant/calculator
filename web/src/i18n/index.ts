@@ -1,9 +1,9 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import { linoToJson } from 'lino-objects-codec';
+import { Parser } from 'links-notation';
 
-// Import .lino files as raw strings
+// Import .lino files as raw text using Vite's ?raw suffix
 import enLino from './locales/en.lino?raw';
 import ruLino from './locales/ru.lino?raw';
 import zhLino from './locales/zh.lino?raw';
@@ -11,15 +11,6 @@ import hiLino from './locales/hi.lino?raw';
 import arLino from './locales/ar.lino?raw';
 import deLino from './locales/de.lino?raw';
 import frLino from './locales/fr.lino?raw';
-
-// Parse Links Notation files to JSON objects
-const en = linoToJson({ lino: enLino }) as Record<string, unknown>;
-const ru = linoToJson({ lino: ruLino }) as Record<string, unknown>;
-const zh = linoToJson({ lino: zhLino }) as Record<string, unknown>;
-const hi = linoToJson({ lino: hiLino }) as Record<string, unknown>;
-const ar = linoToJson({ lino: arLino }) as Record<string, unknown>;
-const de = linoToJson({ lino: deLino }) as Record<string, unknown>;
-const fr = linoToJson({ lino: frLino }) as Record<string, unknown>;
 
 const STORAGE_KEY = 'link-calculator-preferences';
 
@@ -92,6 +83,72 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'de', name: 'German', nativeName: 'Deutsch' },
   { code: 'fr', name: 'French', nativeName: 'Français' },
 ] as const;
+
+// Parser for Links Notation
+const parser = new Parser();
+
+/**
+ * i18n translations type - nested object with section keys and string values
+ */
+interface I18nTranslations {
+  [key: string]: { [key: string]: string };
+}
+
+/**
+ * Convert parsed Links Notation to i18n JSON format.
+ * The .lino format uses indented links where each section is:
+ *   sectionName:
+ *     key value
+ *     key2 value2
+ *
+ * This highly readable format is parsed by links-notation parser
+ * and converted to i18next-compatible JSON structure.
+ */
+function linksToI18nJson(links: ReturnType<typeof parser.parse>): I18nTranslations {
+  const result: I18nTranslations = {};
+
+  for (const link of links) {
+    if (!link.id) continue;
+
+    const sectionKey = link.id;
+
+    if (link.values && link.values.length > 0) {
+      // This is a nested object with key-value pairs
+      const nestedObj: { [key: string]: string } = {};
+
+      for (const valueLink of link.values) {
+        if (valueLink.values && valueLink.values.length >= 2) {
+          // This is a doublet (key value)
+          const nestedKey = valueLink.values[0].id || '';
+          const nestedValue = valueLink.values[1].id || '';
+          nestedObj[nestedKey] = nestedValue;
+        }
+      }
+
+      result[sectionKey] = nestedObj;
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Parse a Links Notation string to i18n JSON format.
+ * Supports the indented format for human-readable locale files.
+ */
+export function parseLinoToI18n(linoContent: string): I18nTranslations {
+  const links = parser.parse(linoContent);
+  return linksToI18nJson(links);
+}
+
+// Parse all locale files from Links Notation to JSON
+const en = parseLinoToI18n(enLino);
+const ru = parseLinoToI18n(ruLino);
+const zh = parseLinoToI18n(zhLino);
+const hi = parseLinoToI18n(hiLino);
+const ar = parseLinoToI18n(arLino);
+const de = parseLinoToI18n(deLino);
+const fr = parseLinoToI18n(frLino);
 
 const resources = {
   en: { translation: en },

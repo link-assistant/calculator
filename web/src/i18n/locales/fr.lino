@@ -1,42 +1,32 @@
-(
-  (app (
-    (title 'Link Calculator')
-    (subtitle "Calculatrice d'expressions basée sur la grammaire avec support Date/Heure et Devise")
-  ))
-  (input (
-    (label Expression)
-    (placeholder 'Entrez une expression (ex: 2 + 3, 84 USD - 34 EUR)')
-  ))
-  (result (
-    (title Résultat)
-    (calculating 'Calcul en cours...')
-    (loading 'Chargement du moteur de calcul...')
-    (placeholder 'Entrez une expression ci-dessus')
-    (linksNotation 'Notation Links')
-    (steps Étapes)
-  ))
-  (examples (
-    (title 'Essayez ces exemples :')
-  ))
-  (errors (
-    (workerFailed "Échec de l'initialisation du worker")
-    (calculationFailed 'Échec du calcul')
-    (reportIssue 'Signaler ce problème')
-  ))
-  (footer (
-    (poweredBy 'Propulsé par Rust + WebAssembly')
-    (viewOnGitHub 'Voir sur GitHub')
-    (reportIssue 'Signaler un problème')
-  ))
-  (settings (
-    (theme Thème)
-    (themeLight Clair)
-    (themeDark Sombre)
-    (themeSystem Système)
-    (language Langue)
-  ))
-  (share (
-    (copyLink 'Copier le lien')
-    (copied 'Copié !')
-  ))
-)
+app:
+  title 'Link Calculator'
+  subtitle "Calculatrice d'expressions basée sur la grammaire avec support Date/Heure et Devise"
+input:
+  label Expression
+  placeholder 'Entrez une expression (ex: 2 + 3, 84 USD - 34 EUR)'
+result:
+  title Résultat
+  calculating 'Calcul en cours...'
+  loading 'Chargement du moteur de calcul...'
+  placeholder 'Entrez une expression ci-dessus'
+  linksNotation 'Notation Links'
+  steps Étapes
+examples:
+  title 'Essayez ces exemples :'
+errors:
+  workerFailed "Échec de l'initialisation du worker"
+  calculationFailed 'Échec du calcul'
+  reportIssue 'Signaler ce problème'
+footer:
+  poweredBy 'Propulsé par Rust + WebAssembly'
+  viewOnGitHub 'Voir sur GitHub'
+  reportIssue 'Signaler un problème'
+settings:
+  theme Thème
+  themeLight Clair
+  themeDark Sombre
+  themeSystem Système
+  language Langue
+share:
+  copyLink 'Copier le lien'
+  copied 'Copié !'
