@@ -1,0 +1,6 @@
+rate:
+  from EUR
+  to USD
+  value 1.086
+  date 2026-01-22
+  source 'fawazahmed0/currency-api'

@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to JPY
+  value 148.30
+  date 2026-01-22
+  source 'fawazahmed0/currency-api'
