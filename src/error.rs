@@ -76,6 +76,20 @@ pub enum CalculatorError {
     /// Domain error (e.g., sqrt of negative number, log of non-positive).
     #[error("Domain error: {0}")]
     DomainError(String),
+
+    /// Symbolic result (for indefinite integrals and symbolic computation).
+    /// This is not really an error but a different type of result that needs special handling.
+    #[error("{result}")]
+    SymbolicResult {
+        /// The original expression in text form.
+        expression: String,
+        /// The symbolic result.
+        result: String,
+        /// LaTeX representation of the input.
+        latex_input: String,
+        /// LaTeX representation of the result.
+        latex_result: String,
+    },
 }
 
 impl CalculatorError {

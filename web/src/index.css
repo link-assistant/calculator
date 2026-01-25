@@ -457,6 +457,70 @@ header p {
   }
 }
 
+/* Symbolic result with LaTeX */
+.symbolic-result {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.math-equation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: center;
+  background: var(--surface);
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .math-equation {
+    font-size: 1.5rem;
+    padding: 1.5rem;
+  }
+}
+
+.math-equation .equals {
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+}
+
+.math-equation .katex {
+  color: var(--primary);
+}
+
+.result-text {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 1rem;
+  color: var(--text);
+  text-align: center;
+}
+
+/* Plot section */
+.plot-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.plot-section h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.function-plot {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
+
 .steps-list li {
   padding: 0.5rem 0;
   padding-left: 1.5rem;

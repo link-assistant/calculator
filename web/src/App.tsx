@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useUrlExpression, useDelayedLoading } from './hooks';
 import { SUPPORTED_LANGUAGES, loadPreferences, savePreferences } from './i18n';
@@ -6,13 +6,17 @@ import { generateIssueUrl, type PageState } from './utils/reportIssue';
 import { AutoResizeTextarea } from './components';
 import type { CalculationResult } from './types';
 
+// Lazy load the math and plot components for better initial bundle size
+const MathRenderer = lazy(() => import('./components/MathRenderer'));
+const FunctionPlot = lazy(() => import('./components/FunctionPlot'));
+
 const EXAMPLES = [
   '2 + 3',
   '(2 + 3) * 4',
   '84 USD - 34 EUR',
   '100 * 1.5',
-  '3.14 + 2.86',
-  '(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)',
+  'integrate sin(x)/x dx',
+  'integrate(x^2, x, 0, 3)',
 ];
 
 function App() {
@@ -263,16 +267,40 @@ function App() {
               <>
                 {result.success ? (
                   <>
-                    <div className="result-value">{result.result}</div>
+                    {/* Symbolic result with LaTeX rendering */}
+                    {result.is_symbolic && result.latex_input && result.latex_result ? (
+                      <div className="symbolic-result">
+                        <Suspense fallback={<div className="result-value">{result.result}</div>}>
+                          <div className="math-equation">
+                            <MathRenderer latex={result.latex_input} display={true} />
+                            <span className="equals">=</span>
+                            <MathRenderer latex={result.latex_result} display={true} />
+                          </div>
+                        </Suspense>
+                        <div className="result-text">{result.result}</div>
+                      </div>
+                    ) : (
+                      <div className="result-value">{result.result}</div>
+                    )}
 
-                    {result.lino_interpretation && (
+                    {/* Plot rendering for symbolic results */}
+                    {result.plot_data && (
+                      <div className="plot-section">
+                        <h3>{t('result.plot', 'Function Plot')}</h3>
+                        <Suspense fallback={<div className="loading"><div className="spinner" /></div>}>
+                          <FunctionPlot data={result.plot_data} width={360} height={220} />
+                        </Suspense>
+                      </div>
+                    )}
+
+                    {result.lino_interpretation && !result.is_symbolic && (
                       <div className="lino-section">
                         <h3>{t('result.linksNotation')}</h3>
                         <div className="lino-value">{result.lino_interpretation}</div>
                       </div>
                     )}
 
-                    {result.steps.length > 0 && (
+                    {result.steps.length > 0 && !result.is_symbolic && (
                       <div className="steps-section">
                         <h3>{t('result.steps')}</h3>
                         <ul className="steps-list">

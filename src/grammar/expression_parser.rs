@@ -228,6 +228,12 @@ impl ExpressionParser {
 
                 Ok(Value::number(Decimal::from_f64(result)))
             }
+            Expression::IndefiniteIntegral { integrand, variable } => {
+                // Indefinite integrals return a symbolic result
+                // For now, we return an error directing users to use definite integrals for numeric results
+                // or display the symbolic representation
+                self.evaluate_indefinite_integral(integrand, variable)
+            }
         }
     }
 
@@ -343,6 +349,12 @@ impl ExpressionParser {
                 let val = Value::number(Decimal::from_f64(result));
                 steps.push(format!("= {}", val.to_display_string()));
                 Ok(val)
+            }
+            Expression::IndefiniteIntegral { integrand, variable } => {
+                steps.push(format!("Indefinite integral: ∫ {} d{}", integrand, variable));
+                let result = self.evaluate_indefinite_integral(integrand, variable)?;
+                steps.push(format!("= {}", result.to_display_string()));
+                Ok(result)
             }
         }
     }
@@ -527,7 +539,140 @@ impl ExpressionParser {
 
                 Ok(Value::number(Decimal::from_f64(result)))
             }
+            Expression::IndefiniteIntegral { .. } => {
+                Err(CalculatorError::invalid_args(
+                    "nested integration",
+                    "nested indefinite integrals are not supported",
+                ))
+            }
         }
+    }
+
+    /// Evaluates an indefinite integral.
+    ///
+    /// For known special integrals, returns symbolic result.
+    /// For others, returns an informational message.
+    fn evaluate_indefinite_integral(
+        &self,
+        integrand: &Expression,
+        variable: &str,
+    ) -> Result<Value, CalculatorError> {
+        // Check for known special integrals
+        let symbolic_result = self.try_symbolic_integral(integrand, variable);
+
+        if let Some(result) = symbolic_result {
+            // Return a special value that indicates symbolic result
+            // For now, we'll create an error with the symbolic result as a message
+            // since the Value type doesn't support symbolic results yet
+            let latex_result = self.symbolic_result_to_latex(&result);
+            Err(CalculatorError::SymbolicResult {
+                expression: format!("∫ {} d{}", integrand, variable),
+                result,
+                latex_input: format!("\\int {} \\, d{}", integrand.to_latex(), variable),
+                latex_result,
+            })
+        } else {
+            // For unknown integrals, provide a helpful message
+            Err(CalculatorError::SymbolicResult {
+                expression: format!("∫ {} d{}", integrand, variable),
+                result: "Cannot compute symbolic result. Use definite integral with bounds: integrate(expr, var, lower, upper)".to_string(),
+                latex_input: format!("\\int {} \\, d{}", integrand.to_latex(), variable),
+                latex_result: "\\text{Use definite integral with bounds}".to_string(),
+            })
+        }
+    }
+
+    /// Tries to compute a symbolic integral for known special cases.
+    fn try_symbolic_integral(&self, integrand: &Expression, variable: &str) -> Option<String> {
+        // Pattern: sin(x)/x -> Si(x) + C (Sine Integral)
+        if let Expression::Binary { left, op: BinaryOp::Divide, right } = integrand {
+            if let Expression::FunctionCall { name, args } = left.as_ref() {
+                if name.to_lowercase() == "sin" && args.len() == 1 {
+                    if let Expression::Variable(v) = &args[0] {
+                        if let Expression::Variable(v2) = right.as_ref() {
+                            if v == variable && v2 == variable {
+                                return Some(format!("Si({}) + C", variable));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Pattern: cos(x)/x -> Ci(x) + C (Cosine Integral)
+        if let Expression::Binary { left, op: BinaryOp::Divide, right } = integrand {
+            if let Expression::FunctionCall { name, args } = left.as_ref() {
+                if name.to_lowercase() == "cos" && args.len() == 1 {
+                    if let Expression::Variable(v) = &args[0] {
+                        if let Expression::Variable(v2) = right.as_ref() {
+                            if v == variable && v2 == variable {
+                                return Some(format!("Ci({}) + C", variable));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Pattern: x^n -> x^(n+1)/(n+1) + C
+        if let Expression::Power { base, exponent } = integrand {
+            if let Expression::Variable(v) = base.as_ref() {
+                if v == variable {
+                    if let Expression::Number { value, .. } = exponent.as_ref() {
+                        let n = value.to_f64();
+                        if (n - (-1.0)).abs() > 1e-10 {
+                            // Not x^(-1)
+                            let new_exp = n + 1.0;
+                            return Some(format!("{}^{}/({}) + C", variable, new_exp, new_exp));
+                        } else {
+                            // x^(-1) = 1/x -> ln|x| + C
+                            return Some(format!("ln|{}| + C", variable));
+                        }
+                    }
+                }
+            }
+        }
+
+        // Pattern: just x -> x^2/2 + C
+        if let Expression::Variable(v) = integrand {
+            if v == variable {
+                return Some(format!("{}²/2 + C", variable));
+            }
+        }
+
+        // Pattern: constant -> constant * x + C
+        if let Expression::Number { value, .. } = integrand {
+            return Some(format!("{} * {} + C", value, variable));
+        }
+
+        // Pattern: sin(x) -> -cos(x) + C
+        if let Expression::FunctionCall { name, args } = integrand {
+            if args.len() == 1 {
+                if let Expression::Variable(v) = &args[0] {
+                    if v == variable {
+                        match name.to_lowercase().as_str() {
+                            "sin" => return Some(format!("-cos({}) + C", variable)),
+                            "cos" => return Some(format!("sin({}) + C", variable)),
+                            "exp" => return Some(format!("exp({}) + C", variable)),
+                            _ => {}
+                        }
+                    }
+                }
+            }
+        }
+
+        None
+    }
+
+    /// Converts a symbolic result to LaTeX.
+    fn symbolic_result_to_latex(&self, result: &str) -> String {
+        // Basic conversions
+        result
+            .replace("Si(", "\\text{Si}(")
+            .replace("Ci(", "\\text{Ci}(")
+            .replace("ln|", "\\ln|")
+            .replace("²", "^{2}")
+            .replace(" + C", " + C")
     }
 }
 
@@ -658,6 +803,11 @@ impl<'a> TokenParser<'a> {
                 return self.parse_function_call(&id);
             }
 
+            // Check for natural integration syntax: "integrate <expr> d<var>"
+            if id.to_lowercase() == "integrate" {
+                return self.parse_natural_integral();
+            }
+
             // If it looks like a datetime start (month name), try to parse more
             if DateTimeGrammar::looks_like_datetime(&id) {
                 return self.try_parse_datetime_from_tokens(&id);
@@ -748,6 +898,196 @@ impl<'a> TokenParser<'a> {
             Ok(dt) => Ok(Expression::DateTime(dt)),
             Err(e) => Err(e),
         }
+    }
+
+    /// Parses natural integral notation: "integrate <expr> d<var>"
+    /// Examples:
+    /// - integrate sin(x)/x dx
+    /// - integrate x^2 dx
+    fn parse_natural_integral(&mut self) -> Result<Expression, CalculatorError> {
+        // We've already consumed "integrate", now we need to find the integrand and d<var>
+        // Strategy: collect tokens until we find "d<var>" pattern (identifier starting with 'd')
+
+        let start_pos = self.pos;
+        let mut integrand_end_pos = None;
+        let mut var_name = None;
+
+        // Scan forward to find the d<var> pattern
+        let mut scan_pos = self.pos;
+        while scan_pos < self.tokens.len() {
+            if let TokenKind::Identifier(id) = &self.tokens[scan_pos].kind {
+                // Check if this is a differential notation like "dx", "dy", "dt"
+                let id_lower = id.to_lowercase();
+                if id_lower.starts_with('d') && id_lower.len() == 2 {
+                    let var_char = id_lower.chars().nth(1).unwrap();
+                    if var_char.is_ascii_alphabetic() {
+                        integrand_end_pos = Some(scan_pos);
+                        var_name = Some(var_char.to_string());
+                        break;
+                    }
+                }
+            }
+            scan_pos += 1;
+        }
+
+        // If we didn't find d<var>, return an error with helpful message
+        let (end_pos, var) = match (integrand_end_pos, var_name) {
+            (Some(end), Some(v)) => (end, v),
+            _ => {
+                return Err(CalculatorError::parse(
+                    "Invalid integration syntax. Expected: integrate <expression> d<var> (e.g., integrate sin(x)/x dx)"
+                ));
+            }
+        };
+
+        // Reset position and parse the integrand expression
+        // We need a sub-parser that only parses up to the d<var> token
+        self.pos = start_pos;
+
+        // Parse the integrand by parsing an expression and stopping at the d<var>
+        let integrand = self.parse_integrand_until(end_pos)?;
+
+        // Now consume the d<var> token
+        self.pos = end_pos;
+        self.advance();
+
+        Ok(Expression::indefinite_integral(integrand, var))
+    }
+
+    /// Parse an integrand expression up to (but not including) the position `until_pos`.
+    fn parse_integrand_until(&mut self, until_pos: usize) -> Result<Expression, CalculatorError> {
+        // Save the tokens after until_pos temporarily
+        let original_len = self.tokens.len();
+
+        // We need to be careful - parse_expression will consume tokens
+        // We'll parse and then check we didn't go past until_pos
+        let result = self.parse_integrand_expression(until_pos)?;
+
+        // Verify we stopped at the right place
+        if self.pos > until_pos {
+            self.pos = until_pos;
+        }
+
+        let _ = original_len; // Suppress unused warning
+        Ok(result)
+    }
+
+    /// Parse integrand with awareness of the boundary.
+    fn parse_integrand_expression(&mut self, boundary: usize) -> Result<Expression, CalculatorError> {
+        self.parse_integrand_additive(boundary)
+    }
+
+    fn parse_integrand_additive(&mut self, boundary: usize) -> Result<Expression, CalculatorError> {
+        let mut left = self.parse_integrand_multiplicative(boundary)?;
+
+        while self.pos < boundary {
+            if let Some(op) = self.match_additive_op() {
+                if self.pos >= boundary {
+                    // Put the operator back
+                    self.pos -= 1;
+                    break;
+                }
+                let right = self.parse_integrand_multiplicative(boundary)?;
+                left = Expression::binary(left, op, right);
+            } else {
+                break;
+            }
+        }
+
+        Ok(left)
+    }
+
+    fn parse_integrand_multiplicative(&mut self, boundary: usize) -> Result<Expression, CalculatorError> {
+        let mut left = self.parse_integrand_power(boundary)?;
+
+        while self.pos < boundary {
+            if let Some(op) = self.match_multiplicative_op() {
+                if self.pos >= boundary {
+                    // Put the operator back
+                    self.pos -= 1;
+                    break;
+                }
+                let right = self.parse_integrand_power(boundary)?;
+                left = Expression::binary(left, op, right);
+            } else {
+                break;
+            }
+        }
+
+        Ok(left)
+    }
+
+    fn parse_integrand_power(&mut self, boundary: usize) -> Result<Expression, CalculatorError> {
+        let mut left = self.parse_integrand_unary(boundary)?;
+
+        if self.pos < boundary && self.check(&TokenKind::Caret) {
+            self.advance();
+            let right = self.parse_integrand_power(boundary)?;
+            left = Expression::power(left, right);
+        }
+
+        Ok(left)
+    }
+
+    fn parse_integrand_unary(&mut self, boundary: usize) -> Result<Expression, CalculatorError> {
+        if self.pos < boundary && self.check(&TokenKind::Minus) {
+            self.advance();
+            let expr = self.parse_integrand_unary(boundary)?;
+            return Ok(Expression::negate(expr));
+        }
+
+        self.parse_integrand_primary(boundary)
+    }
+
+    fn parse_integrand_primary(&mut self, boundary: usize) -> Result<Expression, CalculatorError> {
+        if self.pos >= boundary {
+            return Err(CalculatorError::parse("Unexpected end of integrand"));
+        }
+
+        // Parenthesized expression
+        if self.check(&TokenKind::LeftParen) {
+            self.advance();
+            let expr = self.parse_expression()?;
+            self.expect(&TokenKind::RightParen)?;
+            return Ok(Expression::group(expr));
+        }
+
+        // Number
+        if let Some(TokenKind::Number(n)) = self.current_kind() {
+            let num_str = n.clone();
+            self.advance();
+            let value = self.number_grammar.parse_number(&num_str)?;
+            return Ok(Expression::number(value));
+        }
+
+        // Identifier (function call or variable)
+        if let Some(TokenKind::Identifier(id)) = self.current_kind() {
+            let id = id.clone();
+            self.advance();
+
+            // Check if this is a function call
+            if self.pos < boundary && self.check(&TokenKind::LeftParen) {
+                return self.parse_function_call(&id);
+            }
+
+            // Check if this is a math constant
+            if is_math_function(&id) {
+                return Ok(Expression::function_call(id, vec![]));
+            }
+
+            // Single-letter identifier is a variable
+            if id.len() == 1 && id.chars().next().unwrap().is_ascii_alphabetic() {
+                return Ok(Expression::variable(id));
+            }
+
+            // Multi-letter identifier could be an implicit variable in integration context
+            return Ok(Expression::variable(id));
+        }
+
+        Err(CalculatorError::parse(format!(
+            "Unexpected token in integrand: {:?}",
+            self.current()
+        )))
     }
 
     fn match_additive_op(&mut self) -> Option<BinaryOp> {
