@@ -17,14 +17,14 @@ fn main() {
     ];
 
     for expr in test_cases {
-        println!("Expression: {}", expr);
+        println!("Expression: {expr}");
         let result = calc.calculate_internal(expr);
         if result.success {
             println!("  Result: {}", result.result);
             println!("  Links notation: {}", result.lino_interpretation);
             println!("  Steps:");
             for step in &result.steps {
-                println!("    {}", step);
+                println!("    {step}");
             }
         } else {
             println!("  Error: {}", result.error.unwrap_or_default());
