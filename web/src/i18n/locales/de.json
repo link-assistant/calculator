@@ -1,0 +1,42 @@
+{
+  "app": {
+    "title": "Link Calculator",
+    "subtitle": "Grammatikbasierter Ausdrucksrechner mit Datum/Zeit- und Währungsunterstützung"
+  },
+  "input": {
+    "label": "Ausdruck",
+    "placeholder": "Geben Sie einen Ausdruck ein (z.B. 2 + 3, 84 USD - 34 EUR)"
+  },
+  "result": {
+    "title": "Ergebnis",
+    "calculating": "Berechne...",
+    "loading": "Lade Rechner-Engine...",
+    "placeholder": "Geben Sie oben einen Ausdruck ein",
+    "linksNotation": "Links-Notation",
+    "steps": "Schritte"
+  },
+  "examples": {
+    "title": "Probieren Sie diese Beispiele:"
+  },
+  "errors": {
+    "workerFailed": "Worker-Initialisierung fehlgeschlagen",
+    "calculationFailed": "Berechnung fehlgeschlagen",
+    "reportIssue": "Dies als Problem melden"
+  },
+  "footer": {
+    "poweredBy": "Powered by Rust + WebAssembly",
+    "viewOnGitHub": "Auf GitHub ansehen",
+    "reportIssue": "Problem melden"
+  },
+  "settings": {
+    "theme": "Design",
+    "themeLight": "Hell",
+    "themeDark": "Dunkel",
+    "themeSystem": "System",
+    "language": "Sprache"
+  },
+  "share": {
+    "copyLink": "Link kopieren",
+    "copied": "Kopiert!"
+  }
+}

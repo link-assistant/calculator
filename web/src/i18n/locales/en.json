@@ -1,0 +1,42 @@
+{
+  "app": {
+    "title": "Link Calculator",
+    "subtitle": "Grammar-based expression calculator with DateTime and Currency support"
+  },
+  "input": {
+    "label": "Expression",
+    "placeholder": "Enter an expression (e.g., 2 + 3, 84 USD - 34 EUR)"
+  },
+  "result": {
+    "title": "Result",
+    "calculating": "Calculating...",
+    "loading": "Loading calculator engine...",
+    "placeholder": "Enter an expression above",
+    "linksNotation": "Links Notation",
+    "steps": "Steps"
+  },
+  "examples": {
+    "title": "Try these examples:"
+  },
+  "errors": {
+    "workerFailed": "Worker initialization failed",
+    "calculationFailed": "Calculation failed",
+    "reportIssue": "Report this as an issue"
+  },
+  "footer": {
+    "poweredBy": "Powered by Rust + WebAssembly",
+    "viewOnGitHub": "View on GitHub",
+    "reportIssue": "Report Issue"
+  },
+  "settings": {
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "language": "Language"
+  },
+  "share": {
+    "copyLink": "Copy Link",
+    "copied": "Copied!"
+  }
+}
