@@ -1,7 +1,7 @@
 //! Grammar for parsing date and time expressions.
 
 use crate::error::CalculatorError;
-use crate::types::DateTime;
+use crate::types::{DateTime, Value};
 
 /// Grammar for parsing datetime expressions.
 #[derive(Debug, Default)]
@@ -109,6 +109,85 @@ impl DateTimeGrammar {
         // Look for patterns that indicate end of datetime
 
         None
+    }
+
+    /// Tries to parse a datetime subtraction expression like "(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)".
+    #[must_use]
+    pub fn try_parse_datetime_subtraction(
+        &self,
+        input: &str,
+    ) -> Option<(Value, Vec<String>, String)> {
+        // Look for pattern: (datetime) - (datetime)
+        let input = input.trim();
+
+        // Check if it starts with '(' and contains '-'
+        if !input.starts_with('(') || !input.contains('-') {
+            return None;
+        }
+
+        // Try to find the matching closing paren for the first datetime
+        let mut paren_depth = 0;
+        let mut first_end = None;
+
+        for (i, ch) in input.char_indices() {
+            match ch {
+                '(' => paren_depth += 1,
+                ')' => {
+                    paren_depth -= 1;
+                    if paren_depth == 0 {
+                        first_end = Some(i);
+                        break;
+                    }
+                }
+                _ => {}
+            }
+        }
+
+        let first_end = first_end?;
+
+        // Extract first datetime (without parens)
+        let first_dt_str = &input[1..first_end];
+
+        // Find the minus sign
+        let rest = input[first_end + 1..].trim();
+        if !rest.starts_with('-') {
+            return None;
+        }
+
+        let second_part = rest[1..].trim();
+        if !second_part.starts_with('(') || !second_part.ends_with(')') {
+            return None;
+        }
+
+        // Extract second datetime (without parens)
+        let second_dt_str = &second_part[1..second_part.len() - 1];
+
+        // Try to parse both as datetimes
+        let Ok(dt1) = self.parse(first_dt_str) else {
+            return None;
+        };
+
+        let Ok(dt2) = self.parse(second_dt_str) else {
+            return None;
+        };
+
+        // Calculate the difference
+        let diff = dt1.subtract(&dt2);
+        #[allow(clippy::cast_possible_wrap)]
+        let seconds = diff.as_secs() as i64;
+
+        let value = Value::duration(seconds);
+
+        let steps = vec![
+            format!("Parse first datetime: {dt1}"),
+            format!("Parse second datetime: {dt2}"),
+            format!("Calculate difference: {dt1} - {dt2}"),
+            format!("Result: {}", value.to_display_string()),
+        ];
+
+        let lino = format!("((({}) - ({})))", first_dt_str.trim(), second_dt_str.trim());
+
+        Some((value, steps, lino))
     }
 }
 

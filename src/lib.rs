@@ -45,6 +45,21 @@ use wasm_bindgen::prelude::*;
 /// Package version (matches Cargo.toml version).
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
+/// Data for plotting a function.
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+pub struct PlotData {
+    /// X-axis values.
+    pub x_values: Vec<f64>,
+    /// Y-axis values.
+    pub y_values: Vec<f64>,
+    /// Label for the plot (e.g., "sin(x)/x").
+    pub label: String,
+    /// X-axis label.
+    pub x_label: String,
+    /// Y-axis label.
+    pub y_label: String,
+}
+
 /// A single calculation step with i18n support.
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct CalculationStep {
@@ -105,6 +120,18 @@ pub struct CalculationResult {
     pub error_info: Option<ErrorInfo>,
     /// Link to create an issue for unrecognized input.
     pub issue_link: Option<String>,
+    /// LaTeX representation of the input (for rendering mathematical formulas).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub latex_input: Option<String>,
+    /// LaTeX representation of the result (for rendering mathematical formulas).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub latex_result: Option<String>,
+    /// Whether this is a symbolic result (e.g., indefinite integral).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub is_symbolic: Option<bool>,
+    /// Plot data points for graphing (x, y pairs).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub plot_data: Option<PlotData>,
 }
 
 impl CalculationResult {
@@ -120,6 +147,10 @@ impl CalculationResult {
             error: None,
             error_info: None,
             issue_link: None,
+            latex_input: None,
+            latex_result: None,
+            is_symbolic: None,
+            plot_data: None,
         }
     }
 
@@ -140,6 +171,63 @@ impl CalculationResult {
             error: None,
             error_info: None,
             issue_link: None,
+            latex_input: None,
+            latex_result: None,
+            is_symbolic: None,
+            plot_data: None,
+        }
+    }
+
+    /// Creates a successful calculation result with LaTeX formatting.
+    #[must_use]
+    pub fn success_with_latex(
+        result: String,
+        lino: String,
+        steps: Vec<String>,
+        latex_input: Option<String>,
+        latex_result: Option<String>,
+    ) -> Self {
+        Self {
+            result,
+            lino_interpretation: lino,
+            steps,
+            steps_i18n: None,
+            success: true,
+            error: None,
+            error_info: None,
+            issue_link: None,
+            latex_input,
+            latex_result,
+            is_symbolic: None,
+            plot_data: None,
+        }
+    }
+
+    /// Creates a symbolic result (e.g., for indefinite integrals).
+    #[must_use]
+    pub fn symbolic(
+        expression: &str,
+        result: String,
+        latex_input: String,
+        latex_result: String,
+        plot_data: Option<PlotData>,
+    ) -> Self {
+        Self {
+            result,
+            lino_interpretation: expression.to_string(),
+            steps: vec![
+                format!("Input: {}", expression),
+                "Computed symbolic result".to_string(),
+            ],
+            steps_i18n: None,
+            success: true,
+            error: None,
+            error_info: None,
+            issue_link: None,
+            latex_input: Some(latex_input),
+            latex_result: Some(latex_result),
+            is_symbolic: Some(true),
+            plot_data,
         }
     }
 
@@ -156,6 +244,10 @@ impl CalculationResult {
             error: Some(error),
             error_info: None,
             issue_link: Some(issue_link),
+            latex_input: None,
+            latex_result: None,
+            is_symbolic: None,
+            plot_data: None,
         }
     }
 
@@ -173,6 +265,10 @@ impl CalculationResult {
             error: Some(error_string),
             error_info: Some(error.to_error_info()),
             issue_link: Some(issue_link),
+            latex_input: None,
+            latex_result: None,
+            is_symbolic: None,
+            plot_data: None,
         }
     }
 }
@@ -272,7 +368,138 @@ impl Calculator {
             Ok((value, steps, lino)) => {
                 CalculationResult::success(value.to_display_string(), lino, steps)
             }
+            Err(CalculatorError::SymbolicResult {
+                expression,
+                result,
+                latex_input,
+                latex_result,
+            }) => {
+                // Generate plot data for the integrand function
+                let plot_data = self.generate_plot_data_for_integral(input);
+                CalculationResult::symbolic(
+                    &expression,
+                    result,
+                    latex_input,
+                    latex_result,
+                    plot_data,
+                )
+            }
             Err(e) => CalculationResult::failure_with_i18n(&e, input),
+        }
+    }
+
+    /// Generates plot data for an integral expression.
+    fn generate_plot_data_for_integral(&self, input: &str) -> Option<PlotData> {
+        // Try to parse and extract the integrand for plotting
+        let expr = self.parser.parse(input).ok()?;
+
+        if let types::Expression::IndefiniteIntegral {
+            integrand,
+            variable,
+        } = expr
+        {
+            // Generate plot points for the integrand
+            let mut x_values = Vec::new();
+            let mut y_values = Vec::new();
+
+            // Generate points from -10 to 10 with 200 steps
+            let num_points: i32 = 200;
+            let x_min = -10.0;
+            let x_max = 10.0;
+            let step = (x_max - x_min) / f64::from(num_points);
+
+            for i in 0..=num_points {
+                let x = f64::from(i).mul_add(step, x_min);
+
+                // Skip x = 0 for functions like sin(x)/x to avoid division issues
+                if x.abs() < 1e-10 {
+                    // For sin(x)/x, the limit at x=0 is 1
+                    x_values.push(x);
+                    y_values.push(1.0);
+                    continue;
+                }
+
+                // Try to evaluate the integrand at this point
+                if let Ok(y_val) = self.evaluate_at_point(&integrand, &variable, x) {
+                    if y_val.is_finite() {
+                        x_values.push(x);
+                        y_values.push(y_val);
+                    }
+                }
+            }
+
+            if !x_values.is_empty() {
+                return Some(PlotData {
+                    x_values,
+                    y_values,
+                    label: format!("{}", integrand),
+                    x_label: variable.clone(),
+                    y_label: format!("f({})", variable),
+                });
+            }
+        }
+
+        None
+    }
+
+    /// Evaluates an expression at a specific point.
+    fn evaluate_at_point(
+        &self,
+        expr: &types::Expression,
+        var: &str,
+        value: f64,
+    ) -> Result<f64, CalculatorError> {
+        let substituted = Self::substitute_variable(expr, var, value);
+        let result = self.parser.evaluate(&substituted)?;
+        result
+            .as_decimal()
+            .map(|d| d.to_f64())
+            .ok_or_else(|| CalculatorError::eval("Expected numeric result"))
+    }
+
+    /// Substitutes a variable with a numeric value in an expression.
+    fn substitute_variable(expr: &types::Expression, var: &str, value: f64) -> types::Expression {
+        use types::{Decimal, Expression};
+
+        match expr {
+            Expression::Variable(name) if name == var => {
+                Expression::number(Decimal::from_f64(value))
+            }
+            Expression::Variable(_) => expr.clone(),
+            Expression::Number { .. } => expr.clone(),
+            Expression::DateTime(_) => expr.clone(),
+            Expression::Binary { left, op, right } => Expression::binary(
+                Self::substitute_variable(left, var, value),
+                *op,
+                Self::substitute_variable(right, var, value),
+            ),
+            Expression::Negate(inner) => {
+                Expression::negate(Self::substitute_variable(inner, var, value))
+            }
+            Expression::Group(inner) => {
+                Expression::group(Self::substitute_variable(inner, var, value))
+            }
+            Expression::Power { base, exponent } => Expression::power(
+                Self::substitute_variable(base, var, value),
+                Self::substitute_variable(exponent, var, value),
+            ),
+            Expression::FunctionCall { name, args } => Expression::function_call(
+                name.clone(),
+                args.iter()
+                    .map(|a| Self::substitute_variable(a, var, value))
+                    .collect(),
+            ),
+            Expression::AtTime { value: v, time } => Expression::at_time(
+                Self::substitute_variable(v, var, value),
+                Self::substitute_variable(time, var, value),
+            ),
+            Expression::IndefiniteIntegral {
+                integrand,
+                variable,
+            } => Expression::indefinite_integral(
+                Self::substitute_variable(integrand, var, value),
+                variable.clone(),
+            ),
         }
     }
 

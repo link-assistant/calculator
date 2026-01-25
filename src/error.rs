@@ -77,6 +77,20 @@ pub enum CalculatorError {
     /// Domain error (e.g., sqrt of negative number, log of non-positive).
     #[error("Domain error: {0}")]
     DomainError(String),
+
+    /// Symbolic result (for indefinite integrals and symbolic computation).
+    /// This is not really an error but a different type of result that needs special handling.
+    #[error("{result}")]
+    SymbolicResult {
+        /// The original expression in text form.
+        expression: String,
+        /// The symbolic result.
+        result: String,
+        /// LaTeX representation of the input.
+        latex_input: String,
+        /// LaTeX representation of the result.
+        latex_result: String,
+    },
 }
 
 /// Error information for i18n support.
@@ -198,6 +212,12 @@ impl CalculatorError {
                 let mut params = HashMap::new();
                 params.insert("message".to_string(), msg.clone());
                 ErrorInfo::with_params("errors.domainError", params)
+            }
+            Self::SymbolicResult { result, .. } => {
+                // SymbolicResult is not really an error, but we provide info for consistency
+                let mut params = HashMap::new();
+                params.insert("result".to_string(), result.clone());
+                ErrorInfo::with_params("result.symbolic", params)
             }
         }
     }

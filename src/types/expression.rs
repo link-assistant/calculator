@@ -73,6 +73,13 @@ pub enum Expression {
         base: Box<Expression>,
         exponent: Box<Expression>,
     },
+    /// Indefinite integral expression (e.g., "integrate sin(x)/x dx").
+    IndefiniteIntegral {
+        /// The integrand expression.
+        integrand: Box<Expression>,
+        /// The variable of integration.
+        variable: String,
+    },
 }
 
 impl Expression {
@@ -155,6 +162,15 @@ impl Expression {
         }
     }
 
+    /// Creates an indefinite integral expression.
+    #[must_use]
+    pub fn indefinite_integral(integrand: Expression, variable: impl Into<String>) -> Self {
+        Self::IndefiniteIntegral {
+            integrand: Box::new(integrand),
+            variable: variable.into(),
+        }
+    }
+
     /// Converts the expression to links notation format.
     #[must_use]
     pub fn to_lino(&self) -> String {
@@ -208,6 +224,16 @@ impl Expression {
                     exponent.to_lino_internal(false)
                 )
             }
+            Self::IndefiniteIntegral {
+                integrand,
+                variable,
+            } => {
+                format!(
+                    "(integrate ({}) d{})",
+                    integrand.to_lino_internal(false),
+                    variable
+                )
+            }
         }
     }
 
@@ -225,6 +251,127 @@ impl Expression {
             Self::AtTime { value, time } => 1 + value.depth().max(time.depth()),
             Self::FunctionCall { args, .. } => {
                 1 + args.iter().map(Expression::depth).max().unwrap_or(0)
+            }
+            Self::IndefiniteIntegral { integrand, .. } => 1 + integrand.depth(),
+        }
+    }
+
+    /// Converts the expression to a LaTeX representation.
+    #[must_use]
+    pub fn to_latex(&self) -> String {
+        match self {
+            Self::Number { value, unit } => {
+                let num_str = value.to_string();
+                if *unit == Unit::None {
+                    num_str
+                } else {
+                    format!("{num_str} \\text{{{unit}}}")
+                }
+            }
+            Self::DateTime(dt) => format!("\\text{{{dt}}}"),
+            Self::Binary { left, op, right } => {
+                let left_str = left.to_latex();
+                let right_str = right.to_latex();
+                match op {
+                    BinaryOp::Add => format!("{left_str} + {right_str}"),
+                    BinaryOp::Subtract => format!("{left_str} - {right_str}"),
+                    BinaryOp::Multiply => format!("{left_str} \\cdot {right_str}"),
+                    BinaryOp::Divide => format!("\\frac{{{left_str}}}{{{right_str}}}"),
+                }
+            }
+            Self::Negate(inner) => format!("-{}", inner.to_latex()),
+            Self::Group(inner) => format!("\\left({} \\right)", inner.to_latex()),
+            Self::AtTime { value, time } => {
+                format!("{} \\text{{ at }} {}", value.to_latex(), time.to_latex())
+            }
+            Self::FunctionCall { name, args } => {
+                let name_lower = name.to_lowercase();
+                match name_lower.as_str() {
+                    "sin" | "cos" | "tan" | "cot" | "sec" | "csc" | "sinh" | "cosh" | "tanh"
+                    | "coth" | "sech" | "csch" | "arcsin" | "arccos" | "arctan" | "ln" | "log"
+                    | "exp" => {
+                        if args.len() == 1 {
+                            format!("\\{name_lower}\\left({} \\right)", args[0].to_latex())
+                        } else {
+                            let args_str = args
+                                .iter()
+                                .map(Expression::to_latex)
+                                .collect::<Vec<_>>()
+                                .join(", ");
+                            format!("\\{name_lower}\\left({args_str} \\right)")
+                        }
+                    }
+                    "sqrt" => {
+                        if args.len() == 1 {
+                            format!("\\sqrt{{{}}}", args[0].to_latex())
+                        } else {
+                            let args_str = args
+                                .iter()
+                                .map(Expression::to_latex)
+                                .collect::<Vec<_>>()
+                                .join(", ");
+                            format!("\\sqrt{{{args_str}}}")
+                        }
+                    }
+                    "abs" => {
+                        if args.len() == 1 {
+                            format!("\\left| {} \\right|", args[0].to_latex())
+                        } else {
+                            let args_str = args
+                                .iter()
+                                .map(Expression::to_latex)
+                                .collect::<Vec<_>>()
+                                .join(", ");
+                            format!("\\left| {args_str} \\right|")
+                        }
+                    }
+                    "pi" => "\\pi".to_string(),
+                    "e" => "e".to_string(),
+                    "integrate" => {
+                        if args.len() == 4 {
+                            format!(
+                                "\\int_{{{}}}^{{{}}} {} \\, d{}",
+                                args[2].to_latex(),
+                                args[3].to_latex(),
+                                args[0].to_latex(),
+                                args[1].to_latex()
+                            )
+                        } else {
+                            let args_str = args
+                                .iter()
+                                .map(Expression::to_latex)
+                                .collect::<Vec<_>>()
+                                .join(", ");
+                            format!("\\text{{integrate}}({args_str})")
+                        }
+                    }
+                    _ => {
+                        let args_str = args
+                            .iter()
+                            .map(Expression::to_latex)
+                            .collect::<Vec<_>>()
+                            .join(", ");
+                        format!("\\text{{{name}}}({args_str})")
+                    }
+                }
+            }
+            Self::Variable(name) => name.clone(),
+            Self::Power { base, exponent } => {
+                let base_latex = base.to_latex();
+                let exp_latex = exponent.to_latex();
+                // Wrap base in braces if it's complex
+                match base.as_ref() {
+                    Self::Number { .. } | Self::Variable(_) => {
+                        format!("{base_latex}^{{{exp_latex}}}")
+                    }
+                    _ => format!("\\left({base_latex}\\right)^{{{exp_latex}}}"),
+                }
+            }
+            Self::IndefiniteIntegral {
+                integrand,
+                variable,
+            } => {
+                format!("\\int {} \\, d{}", integrand.to_latex(), variable)
             }
         }
     }
@@ -255,6 +402,12 @@ impl fmt::Display for Expression {
             }
             Self::Variable(name) => write!(f, "{name}"),
             Self::Power { base, exponent } => write!(f, "{base}^{exponent}"),
+            Self::IndefiniteIntegral {
+                integrand,
+                variable,
+            } => {
+                write!(f, "integrate {integrand} d{variable}")
+            }
         }
     }
 }
