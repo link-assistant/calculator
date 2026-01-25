@@ -93,6 +93,7 @@ header {
   gap: 1rem;
   margin-bottom: 0.5rem;
   position: relative;
+  z-index: 10;
 }
 
 header h1 {
