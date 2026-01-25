@@ -562,8 +562,7 @@ impl Calculator {
         let rate_source = source.unwrap_or_else(|| "unknown".to_string());
 
         // Create ExchangeRateInfo and add to the database
-        let rate_info =
-            types::ExchangeRateInfo::new(rate_value, rate_source, rate_date.clone());
+        let rate_info = types::ExchangeRateInfo::new(rate_value, rate_source, rate_date.clone());
 
         self.parser
             .currency_db_mut()
@@ -577,15 +576,10 @@ impl Calculator {
     pub fn load_rates_batch(&mut self, contents: &[&str]) -> Result<usize, String> {
         let mut loaded = 0;
         for content in contents {
-            if let Err(e) = self.load_rate_from_lino(content) {
-                // Log the error but continue loading other rates
-                #[cfg(target_arch = "wasm32")]
-                web_sys::console::warn_1(&format!("Failed to load rate: {}", e).into());
-                #[cfg(not(target_arch = "wasm32"))]
-                eprintln!("Failed to load rate: {}", e);
-            } else {
+            if self.load_rate_from_lino(content).is_ok() {
                 loaded += 1;
             }
+            // Silently skip invalid rate files
         }
         Ok(loaded)
     }

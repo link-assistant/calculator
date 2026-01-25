@@ -5,7 +5,9 @@ use crate::grammar::{
     evaluate_function, evaluate_indefinite_integral, is_math_function, DateTimeGrammar, Lexer,
     NumberGrammar, Token, TokenKind,
 };
-use crate::types::{BinaryOp, CurrencyDatabase, DateTime, Decimal, Expression, Unit, Value, ValueKind};
+use crate::types::{
+    BinaryOp, CurrencyDatabase, DateTime, Decimal, Expression, Unit, Value, ValueKind,
+};
 
 /// Parser for calculator expressions.
 #[derive(Debug, Default)]
@@ -357,8 +359,16 @@ impl ExpressionParser {
         right: &Value,
     ) -> Result<Value, CalculatorError> {
         match op {
-            BinaryOp::Add => left.add_at_date(right, &mut self.currency_db, self.current_date_context.as_ref()),
-            BinaryOp::Subtract => left.subtract_at_date(right, &mut self.currency_db, self.current_date_context.as_ref()),
+            BinaryOp::Add => left.add_at_date(
+                right,
+                &mut self.currency_db,
+                self.current_date_context.as_ref(),
+            ),
+            BinaryOp::Subtract => left.subtract_at_date(
+                right,
+                &mut self.currency_db,
+                self.current_date_context.as_ref(),
+            ),
             BinaryOp::Multiply => left.multiply(right),
             BinaryOp::Divide => left.divide(right),
         }

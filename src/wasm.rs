@@ -190,31 +190,31 @@ pub fn parse_lino_rate(content: String) -> String {
         }
     }
 
-    let result = if from_currency.is_some() && to_currency.is_some() && value.is_some() && date.is_some() {
-        ParsedRate {
-            success: true,
-            from: from_currency,
-            to: to_currency,
-            value,
-            date,
-            source,
-            error: None,
-        }
-    } else {
-        ParsedRate {
-            success: false,
-            from: from_currency,
-            to: to_currency,
-            value,
-            date,
-            source,
-            error: Some("Missing required fields".to_string()),
-        }
-    };
+    let result =
+        if from_currency.is_some() && to_currency.is_some() && value.is_some() && date.is_some() {
+            ParsedRate {
+                success: true,
+                from: from_currency,
+                to: to_currency,
+                value,
+                date,
+                source,
+                error: None,
+            }
+        } else {
+            ParsedRate {
+                success: false,
+                from: from_currency,
+                to: to_currency,
+                value,
+                date,
+                source,
+                error: Some("Missing required fields".to_string()),
+            }
+        };
 
-    serde_json::to_string(&result).unwrap_or_else(|_| {
-        r#"{"success":false,"error":"Serialization failed"}"#.to_string()
-    })
+    serde_json::to_string(&result)
+        .unwrap_or_else(|_| r#"{"success":false,"error":"Serialization failed"}"#.to_string())
 }
 
 #[cfg(test)]
