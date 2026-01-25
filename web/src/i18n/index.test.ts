@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { encodePreferences, decodePreferences, loadPreferences, savePreferences, type Preferences } from './index';
+import { encodePreferences, decodePreferences, loadPreferences, savePreferences, parseLinoToI18n, type Preferences } from './index';
 
 // Mock localStorage
 const localStorageMock = {
@@ -130,6 +130,77 @@ describe('i18n preferences', () => {
       const [key, value] = localStorageMock.setItem.mock.calls[0];
       expect(key).toBe('link-calculator-preferences');
       expect(value).toContain('preferences');
+    });
+  });
+
+  describe('parseLinoToI18n', () => {
+    it('should parse simple indented Links Notation to i18n format', () => {
+      const lino = `app:
+  title 'My App'
+  subtitle 'A great app'`;
+
+      const result = parseLinoToI18n(lino);
+
+      expect(result).toEqual({
+        app: {
+          title: 'My App',
+          subtitle: 'A great app',
+        },
+      });
+    });
+
+    it('should parse multiple sections', () => {
+      const lino = `app:
+  title 'My App'
+footer:
+  text Footer`;
+
+      const result = parseLinoToI18n(lino);
+
+      expect(result).toEqual({
+        app: {
+          title: 'My App',
+        },
+        footer: {
+          text: 'Footer',
+        },
+      });
+    });
+
+    it('should handle values without quotes', () => {
+      const lino = `settings:
+  theme Theme
+  language Language`;
+
+      const result = parseLinoToI18n(lino);
+
+      expect(result).toEqual({
+        settings: {
+          theme: 'Theme',
+          language: 'Language',
+        },
+      });
+    });
+
+    it('should handle values with special characters', () => {
+      const lino = `errors:
+  message 'Something went wrong!'
+  loading 'Loading...'`;
+
+      const result = parseLinoToI18n(lino);
+
+      expect(result).toEqual({
+        errors: {
+          message: 'Something went wrong!',
+          loading: 'Loading...',
+        },
+      });
+    });
+
+    it('should handle empty input', () => {
+      const result = parseLinoToI18n('');
+
+      expect(result).toEqual({});
     });
   });
 });
