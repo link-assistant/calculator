@@ -130,7 +130,7 @@ impl Value {
             (Unit::Currency(c1), Unit::Currency(c2)) => {
                 // Convert c2 to c1
                 let converted = currency_db.convert(b.to_f64(), c2, c1)?;
-                let converted_decimal = Decimal::from_f64(converted).unwrap_or_else(Decimal::zero);
+                let converted_decimal = Decimal::from_f64(converted);
                 Ok(Value::currency(a + converted_decimal, c1))
             }
             (u1, u2) if u1 == u2 => Ok(Value::number_with_unit(a + b, u1.clone())),
@@ -185,7 +185,7 @@ impl Value {
             (Unit::Currency(c1), Unit::Currency(c2)) => {
                 // Convert c2 to c1
                 let converted = currency_db.convert(b.to_f64(), c2, c1)?;
-                let converted_decimal = Decimal::from_f64(converted).unwrap_or_else(Decimal::zero);
+                let converted_decimal = Decimal::from_f64(converted);
                 Ok(Value::currency(a - converted_decimal, c1))
             }
             (u1, u2) if u1 == u2 => Ok(Value::number_with_unit(a - b, u1.clone())),
@@ -305,6 +305,12 @@ impl Value {
             ValueKind::Number(n) => Some(*n),
             _ => None,
         }
+    }
+
+    /// Returns the decimal value if this is a number (alias for as_number).
+    #[must_use]
+    pub fn as_decimal(&self) -> Option<Decimal> {
+        self.as_number()
     }
 }
 

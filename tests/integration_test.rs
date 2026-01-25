@@ -175,6 +175,253 @@ mod error_handling_tests {
     }
 }
 
+mod advanced_math_tests {
+    use super::*;
+
+    #[test]
+    fn test_sin_function() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("sin(0)");
+        assert!(result.success, "sin(0) should succeed");
+        assert_eq!(result.result, "0");
+    }
+
+    #[test]
+    fn test_cos_function() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("cos(0)");
+        assert!(result.success, "cos(0) should succeed");
+        assert_eq!(result.result, "1");
+    }
+
+    #[test]
+    fn test_sqrt_function() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("sqrt(16)");
+        assert!(result.success, "sqrt(16) should succeed");
+        assert_eq!(result.result, "4");
+    }
+
+    #[test]
+    fn test_sqrt_function_decimal() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("sqrt(2)");
+        assert!(result.success, "sqrt(2) should succeed");
+        // sqrt(2) ≈ 1.414...
+        assert!(
+            result.result.starts_with("1.41"),
+            "sqrt(2) should be approximately 1.414"
+        );
+    }
+
+    #[test]
+    fn test_pow_function() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("pow(2, 3)");
+        assert!(result.success, "pow(2, 3) should succeed");
+        assert_eq!(result.result, "8");
+    }
+
+    #[test]
+    fn test_power_operator() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("2^3");
+        assert!(result.success, "2^3 should succeed");
+        assert_eq!(result.result, "8");
+    }
+
+    #[test]
+    fn test_exp_function() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("exp(0)");
+        assert!(result.success, "exp(0) should succeed");
+        assert_eq!(result.result, "1");
+    }
+
+    #[test]
+    fn test_ln_function() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("ln(1)");
+        assert!(result.success, "ln(1) should succeed");
+        assert_eq!(result.result, "0");
+    }
+
+    #[test]
+    fn test_log_function() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("log(100)");
+        assert!(result.success, "log(100) should succeed");
+        assert_eq!(result.result, "2");
+    }
+
+    #[test]
+    fn test_abs_function() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("abs(-5)");
+        assert!(result.success, "abs(-5) should succeed");
+        assert_eq!(result.result, "5");
+    }
+
+    #[test]
+    fn test_floor_function() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("floor(3.7)");
+        assert!(result.success, "floor(3.7) should succeed");
+        assert_eq!(result.result, "3");
+    }
+
+    #[test]
+    fn test_ceil_function() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("ceil(3.2)");
+        assert!(result.success, "ceil(3.2) should succeed");
+        assert_eq!(result.result, "4");
+    }
+
+    #[test]
+    fn test_pi_constant() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("pi()");
+        assert!(result.success, "pi() should succeed");
+        assert!(
+            result.result.starts_with("3.14"),
+            "pi should start with 3.14"
+        );
+    }
+
+    #[test]
+    fn test_e_constant() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("e()");
+        assert!(result.success, "e() should succeed");
+        assert!(
+            result.result.starts_with("2.71"),
+            "e should start with 2.71"
+        );
+    }
+
+    #[test]
+    fn test_nested_functions() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("sqrt(abs(-16))");
+        assert!(result.success, "sqrt(abs(-16)) should succeed");
+        assert_eq!(result.result, "4");
+    }
+
+    #[test]
+    fn test_function_with_expression() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("sqrt(9 + 7)");
+        assert!(result.success, "sqrt(9 + 7) should succeed");
+        assert_eq!(result.result, "4");
+    }
+
+    #[test]
+    fn test_min_function() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("min(5, 3)");
+        assert!(result.success, "min(5, 3) should succeed");
+        assert_eq!(result.result, "3");
+    }
+
+    #[test]
+    fn test_max_function() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("max(5, 3)");
+        assert!(result.success, "max(5, 3) should succeed");
+        assert_eq!(result.result, "5");
+    }
+
+    #[test]
+    fn test_factorial() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("factorial(5)");
+        assert!(result.success, "factorial(5) should succeed");
+        assert_eq!(result.result, "120");
+    }
+
+    #[test]
+    fn test_deg_function() {
+        let calculator = Calculator::new();
+        // pi radians = 180 degrees
+        let result = calculator.calculate_internal("deg(3.14159265358979)");
+        assert!(result.success, "deg(pi) should succeed");
+        // Should be close to 180
+        let value: f64 = result.result.parse().unwrap();
+        assert!(
+            (value - 180.0).abs() < 0.01,
+            "deg(pi) should be approximately 180"
+        );
+    }
+
+    #[test]
+    fn test_rad_function() {
+        let calculator = Calculator::new();
+        // 180 degrees = pi radians
+        let result = calculator.calculate_internal("rad(180)");
+        assert!(result.success, "rad(180) should succeed");
+        // Should be close to pi
+        let value: f64 = result.result.parse().unwrap();
+        assert!(
+            (value - std::f64::consts::PI).abs() < 0.01,
+            "rad(180) should be approximately pi"
+        );
+    }
+
+    #[test]
+    fn test_integrate_x_squared() {
+        let calculator = Calculator::new();
+        // integrate(x^2, x, 0, 3) = [x^3/3] from 0 to 3 = 9
+        let result = calculator.calculate_internal("integrate(x^2, x, 0, 3)");
+        assert!(result.success, "integrate(x^2, x, 0, 3) should succeed");
+        let value: f64 = result.result.parse().unwrap();
+        assert!(
+            (value - 9.0).abs() < 0.1,
+            "∫x² from 0 to 3 should be approximately 9"
+        );
+    }
+
+    #[test]
+    fn test_integrate_sin() {
+        let calculator = Calculator::new();
+        // integrate(sin(x), x, 0, pi) = 2
+        let result = calculator.calculate_internal("integrate(sin(x), x, 0, 3.14159265358979)");
+        assert!(result.success, "integrate(sin(x), x, 0, pi) should succeed");
+        let value: f64 = result.result.parse().unwrap();
+        assert!(
+            (value - 2.0).abs() < 0.1,
+            "∫sin(x) from 0 to π should be approximately 2"
+        );
+    }
+
+    #[test]
+    fn test_sqrt_negative_error() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("sqrt(-1)");
+        assert!(!result.success, "sqrt(-1) should fail");
+        assert!(result.error.is_some());
+        assert!(result.error.unwrap().contains("Domain error"));
+    }
+
+    #[test]
+    fn test_ln_negative_error() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("ln(-1)");
+        assert!(!result.success, "ln(-1) should fail");
+        assert!(result.error.is_some());
+        assert!(result.error.unwrap().contains("Domain error"));
+    }
+
+    #[test]
+    fn test_unknown_function_error() {
+        let calculator = Calculator::new();
+        let result = calculator.calculate_internal("foobar(5)");
+        assert!(!result.success, "foobar(5) should fail");
+        assert!(result.error.is_some());
+        assert!(result.error.unwrap().contains("Unknown function"));
+    }
+}
+
 mod version_tests {
     use super::*;
 

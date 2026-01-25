@@ -64,6 +64,15 @@ pub enum Expression {
         value: Box<Expression>,
         time: Box<Expression>,
     },
+    /// A function call (e.g., sin(x), sqrt(x), integrate(expr, var, lower, upper)).
+    FunctionCall { name: String, args: Vec<Expression> },
+    /// A variable reference (used in integration expressions).
+    Variable(String),
+    /// Power/exponentiation expression (x^y).
+    Power {
+        base: Box<Expression>,
+        exponent: Box<Expression>,
+    },
 }
 
 impl Expression {
@@ -122,6 +131,30 @@ impl Expression {
         }
     }
 
+    /// Creates a function call expression.
+    #[must_use]
+    pub fn function_call(name: impl Into<String>, args: Vec<Expression>) -> Self {
+        Self::FunctionCall {
+            name: name.into(),
+            args,
+        }
+    }
+
+    /// Creates a variable expression.
+    #[must_use]
+    pub fn variable(name: impl Into<String>) -> Self {
+        Self::Variable(name.into())
+    }
+
+    /// Creates a power expression.
+    #[must_use]
+    pub fn power(base: Expression, exponent: Expression) -> Self {
+        Self::Power {
+            base: Box::new(base),
+            exponent: Box::new(exponent),
+        }
+    }
+
     /// Converts the expression to links notation format.
     #[must_use]
     pub fn to_lino(&self) -> String {
@@ -159,6 +192,22 @@ impl Expression {
                     time.to_lino_internal(false)
                 )
             }
+            Self::FunctionCall { name, args } => {
+                let args_str = args
+                    .iter()
+                    .map(|a| a.to_lino_internal(false))
+                    .collect::<Vec<_>>()
+                    .join(" ");
+                format!("({name} ({args_str}))")
+            }
+            Self::Variable(name) => name.clone(),
+            Self::Power { base, exponent } => {
+                format!(
+                    "(({})^({}))",
+                    base.to_lino_internal(false),
+                    exponent.to_lino_internal(false)
+                )
+            }
         }
     }
 
@@ -166,10 +215,17 @@ impl Expression {
     #[must_use]
     pub fn depth(&self) -> usize {
         match self {
-            Self::Number { .. } | Self::DateTime(_) => 1,
-            Self::Binary { left, right, .. } => 1 + left.depth().max(right.depth()),
+            Self::Number { .. } | Self::DateTime(_) | Self::Variable(_) => 1,
+            Self::Binary { left, right, .. }
+            | Self::Power {
+                base: left,
+                exponent: right,
+            } => 1 + left.depth().max(right.depth()),
             Self::Negate(inner) | Self::Group(inner) => 1 + inner.depth(),
             Self::AtTime { value, time } => 1 + value.depth().max(time.depth()),
+            Self::FunctionCall { args, .. } => {
+                1 + args.iter().map(Expression::depth).max().unwrap_or(0)
+            }
         }
     }
 }
@@ -189,6 +245,16 @@ impl fmt::Display for Expression {
             Self::Negate(inner) => write!(f, "-{inner}"),
             Self::Group(inner) => write!(f, "({inner})"),
             Self::AtTime { value, time } => write!(f, "{value} at {time}"),
+            Self::FunctionCall { name, args } => {
+                let args_str = args
+                    .iter()
+                    .map(std::string::ToString::to_string)
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                write!(f, "{name}({args_str})")
+            }
+            Self::Variable(name) => write!(f, "{name}"),
+            Self::Power { base, exponent } => write!(f, "{base}^{exponent}"),
         }
     }
 }

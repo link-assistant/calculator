@@ -18,9 +18,17 @@ impl Decimal {
     }
 
     /// Creates a new Decimal from a float (may lose precision).
+    /// Returns None if the conversion fails.
     #[must_use]
-    pub fn from_f64(value: f64) -> Option<Self> {
+    pub fn try_from_f64(value: f64) -> Option<Self> {
         RustDecimal::try_from(value).ok().map(Self)
+    }
+
+    /// Creates a new Decimal from a float, defaulting to zero on failure.
+    /// Useful for mathematical functions where we expect valid results.
+    #[must_use]
+    pub fn from_f64(value: f64) -> Self {
+        Self::try_from_f64(value).unwrap_or_else(Self::zero)
     }
 
     /// Returns zero.

@@ -64,6 +64,18 @@ pub enum CalculatorError {
     /// Empty input error.
     #[error("Empty input")]
     EmptyInput,
+
+    /// Unknown function error.
+    #[error("Unknown function: {0}")]
+    UnknownFunction(String),
+
+    /// Invalid function arguments error.
+    #[error("Invalid arguments for function '{function}': {reason}")]
+    InvalidFunctionArgs { function: String, reason: String },
+
+    /// Domain error (e.g., sqrt of negative number, log of non-positive).
+    #[error("Domain error: {0}")]
+    DomainError(String),
 }
 
 impl CalculatorError {
@@ -95,6 +107,24 @@ impl CalculatorError {
     /// Creates an evaluation error with the given message.
     pub fn eval(msg: impl Into<String>) -> Self {
         Self::EvaluationError(msg.into())
+    }
+
+    /// Creates an unknown function error.
+    pub fn unknown_function(name: impl Into<String>) -> Self {
+        Self::UnknownFunction(name.into())
+    }
+
+    /// Creates an invalid function arguments error.
+    pub fn invalid_args(function: impl Into<String>, reason: impl Into<String>) -> Self {
+        Self::InvalidFunctionArgs {
+            function: function.into(),
+            reason: reason.into(),
+        }
+    }
+
+    /// Creates a domain error.
+    pub fn domain(msg: impl Into<String>) -> Self {
+        Self::DomainError(msg.into())
     }
 }
 
