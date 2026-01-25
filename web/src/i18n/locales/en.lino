@@ -17,6 +17,21 @@ errors:
   workerFailed 'Worker initialization failed'
   calculationFailed 'Calculation failed'
   reportIssue 'Report this as an issue'
+  parseError 'Parse error: {{message}}'
+  unexpectedToken 'Unexpected token "{{found}}" at position {{position}}, expected {{expected}}'
+  unitMismatch 'Cannot {{operation}} "{{leftUnit}}" and "{{rightUnit}}"'
+  evaluationError 'Evaluation error: {{message}}'
+  divisionByZero 'Division by zero'
+  invalidDateTime 'Invalid date/time format: {{format}}'
+  unknownCurrency 'Unknown currency: {{currency}}'
+  currencyConversion 'Cannot convert {{from}} to {{to}}: {{reason}}'
+  noHistoricalRate 'No exchange rate available for {{currency}} on {{date}}'
+  overflow 'Numeric overflow'
+  invalidOperation 'Invalid operation: {{message}}'
+  emptyInput 'Empty input'
+  unknownFunction 'Unknown function: {{name}}'
+  invalidFunctionArgs 'Invalid arguments for function "{{function}}": {{reason}}'
+  domainError 'Domain error: {{message}}'
 footer:
   poweredBy 'Powered by Rust + WebAssembly'
   viewOnGitHub 'View on GitHub'
@@ -30,3 +45,43 @@ settings:
 share:
   copyLink 'Copy Link'
   copied Copied!
+steps:
+  inputExpression 'Input expression: {{expression}}'
+  literalValue 'Literal value: {{value}}'
+  dateTimeValue 'DateTime value: {{value}}'
+  compute 'Compute: {{left}} {{op}} {{right}}'
+  equals '= {{value}}'
+  negate 'Negate: -{{value}} = {{result}}'
+  evaluateGroup 'Evaluate grouped expression:'
+  atTime 'At time: {{time}}'
+  callFunction 'Call function: {{name}}({{args}})'
+  computePower 'Compute: {{base}} ^ {{exponent}}'
+  numericalIntegration 'Numerical integration: {{name}}(...)'
+  parseFirstDatetime 'Parse first datetime: {{datetime}}'
+  parseSecondDatetime 'Parse second datetime: {{datetime}}'
+  calculateDifference 'Calculate difference: {{dt1}} - {{dt2}}'
+  result 'Result: {{value}}'
+  finalResult 'Final result: {{value}}'
+issueReport:
+  environment Environment
+  version Version
+  url URL
+  userAgent 'User Agent'
+  theme Theme
+  language Language
+  wasmReady 'WASM Ready'
+  timestamp Timestamp
+  input Input
+  resultSection Result
+  resultLabel Result
+  linksNotation 'Links Notation'
+  stepsLabel Steps
+  errorLabel Error
+  description Description
+  descriptionPlaceholder 'Please describe the issue you encountered'
+  issueTitle 'Issue with expression: {{expression}}'
+  defaultIssueTitle 'Issue report'
+common:
+  yes Yes
+  no No
+  unknown Unknown

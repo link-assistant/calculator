@@ -37,7 +37,7 @@ pub mod lino;
 pub mod types;
 pub mod wasm;
 
-use error::CalculatorError;
+use error::{CalculatorError, ErrorInfo};
 use grammar::ExpressionParser;
 use types::Value;
 use wasm_bindgen::prelude::*;
@@ -60,6 +60,45 @@ pub struct PlotData {
     pub y_label: String,
 }
 
+/// A single calculation step with i18n support.
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+pub struct CalculationStep {
+    /// The translation key for this step type.
+    pub key: String,
+    /// Parameters for interpolation in the translated message.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub params: Option<std::collections::HashMap<String, String>>,
+    /// The raw (English) text for fallback.
+    pub text: String,
+}
+
+impl CalculationStep {
+    /// Creates a new step with a translation key, params, and fallback text.
+    #[must_use]
+    pub fn new(
+        key: impl Into<String>,
+        params: Option<std::collections::HashMap<String, String>>,
+        text: impl Into<String>,
+    ) -> Self {
+        Self {
+            key: key.into(),
+            params,
+            text: text.into(),
+        }
+    }
+
+    /// Creates a simple step with just text (no translation key).
+    #[must_use]
+    pub fn text_only(text: impl Into<String>) -> Self {
+        let text = text.into();
+        Self {
+            key: String::new(),
+            params: None,
+            text,
+        }
+    }
+}
+
 /// Result of a calculation operation.
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct CalculationResult {
@@ -67,12 +106,18 @@ pub struct CalculationResult {
     pub result: String,
     /// The input interpreted in links notation format.
     pub lino_interpretation: String,
-    /// Step-by-step explanation of the calculation.
+    /// Step-by-step explanation of the calculation (raw text for backwards compatibility).
     pub steps: Vec<String>,
+    /// Step-by-step explanation with i18n support.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub steps_i18n: Option<Vec<CalculationStep>>,
     /// Whether the calculation was successful.
     pub success: bool,
-    /// Error message if calculation failed.
+    /// Error message if calculation failed (raw text for backwards compatibility).
     pub error: Option<String>,
+    /// Error information for i18n support.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error_info: Option<ErrorInfo>,
     /// Link to create an issue for unrecognized input.
     pub issue_link: Option<String>,
     /// LaTeX representation of the input (for rendering mathematical formulas).
@@ -97,8 +142,34 @@ impl CalculationResult {
             result,
             lino_interpretation: lino,
             steps,
+            steps_i18n: None,
             success: true,
             error: None,
+            error_info: None,
+            issue_link: None,
+            latex_input: None,
+            latex_result: None,
+            is_symbolic: None,
+            plot_data: None,
+        }
+    }
+
+    /// Creates a successful calculation result with i18n step info.
+    #[must_use]
+    pub fn success_with_i18n(
+        result: String,
+        lino: String,
+        steps: Vec<String>,
+        steps_i18n: Vec<CalculationStep>,
+    ) -> Self {
+        Self {
+            result,
+            lino_interpretation: lino,
+            steps,
+            steps_i18n: Some(steps_i18n),
+            success: true,
+            error: None,
+            error_info: None,
             issue_link: None,
             latex_input: None,
             latex_result: None,
@@ -120,8 +191,10 @@ impl CalculationResult {
             result,
             lino_interpretation: lino,
             steps,
+            steps_i18n: None,
             success: true,
             error: None,
+            error_info: None,
             issue_link: None,
             latex_input,
             latex_result,
@@ -146,8 +219,10 @@ impl CalculationResult {
                 format!("Input: {}", expression),
                 "Computed symbolic result".to_string(),
             ],
+            steps_i18n: None,
             success: true,
             error: None,
+            error_info: None,
             issue_link: None,
             latex_input: Some(latex_input),
             latex_result: Some(latex_result),
@@ -164,8 +239,31 @@ impl CalculationResult {
             result: String::new(),
             lino_interpretation: String::new(),
             steps: Vec::new(),
+            steps_i18n: None,
             success: false,
             error: Some(error),
+            error_info: None,
+            issue_link: Some(issue_link),
+            latex_input: None,
+            latex_result: None,
+            is_symbolic: None,
+            plot_data: None,
+        }
+    }
+
+    /// Creates a failed calculation result with i18n error info.
+    #[must_use]
+    pub fn failure_with_i18n(error: &CalculatorError, input: &str) -> Self {
+        let error_string = error.to_string();
+        let issue_link = generate_issue_link(input, &error_string);
+        Self {
+            result: String::new(),
+            lino_interpretation: String::new(),
+            steps: Vec::new(),
+            steps_i18n: None,
+            success: false,
+            error: Some(error_string),
+            error_info: Some(error.to_error_info()),
             issue_link: Some(issue_link),
             latex_input: None,
             latex_result: None,
@@ -286,7 +384,7 @@ impl Calculator {
                     plot_data,
                 )
             }
-            Err(e) => CalculationResult::failure(e.to_string(), input),
+            Err(e) => CalculationResult::failure_with_i18n(&e, input),
         }
     }
 
