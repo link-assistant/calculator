@@ -1,5 +1,11 @@
 /// <reference types="vite/client" />
 
+// Type declarations for Links Notation files imported as raw strings
+declare module '*.lino?raw' {
+  const content: string;
+  export default content;
+}
+
 // Type declarations for the WASM calculator module
 // The actual module is built by wasm-pack to web/pkg/
 declare module '*.wasm' {

@@ -1,14 +1,25 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
+import { linoToJson } from 'lino-objects-codec';
 
-import en from './locales/en.json';
-import ru from './locales/ru.json';
-import zh from './locales/zh.json';
-import hi from './locales/hi.json';
-import ar from './locales/ar.json';
-import de from './locales/de.json';
-import fr from './locales/fr.json';
+// Import .lino files as raw strings
+import enLino from './locales/en.lino?raw';
+import ruLino from './locales/ru.lino?raw';
+import zhLino from './locales/zh.lino?raw';
+import hiLino from './locales/hi.lino?raw';
+import arLino from './locales/ar.lino?raw';
+import deLino from './locales/de.lino?raw';
+import frLino from './locales/fr.lino?raw';
+
+// Parse Links Notation files to JSON objects
+const en = linoToJson({ lino: enLino }) as Record<string, unknown>;
+const ru = linoToJson({ lino: ruLino }) as Record<string, unknown>;
+const zh = linoToJson({ lino: zhLino }) as Record<string, unknown>;
+const hi = linoToJson({ lino: hiLino }) as Record<string, unknown>;
+const ar = linoToJson({ lino: arLino }) as Record<string, unknown>;
+const de = linoToJson({ lino: deLino }) as Record<string, unknown>;
+const fr = linoToJson({ lino: frLino }) as Record<string, unknown>;
 
 const STORAGE_KEY = 'link-calculator-preferences';
 

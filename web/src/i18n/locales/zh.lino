@@ -1,0 +1,42 @@
+(
+  (app (
+    (title 'Link Calculator')
+    (subtitle 支持日期时间和货币的语法表达式计算器)
+  ))
+  (input (
+    (label 表达式)
+    (placeholder '输入表达式（例如：2 + 3, 84 USD - 34 EUR）')
+  ))
+  (result (
+    (title 结果)
+    (calculating 计算中...)
+    (loading 正在加载计算引擎...)
+    (placeholder 请在上方输入表达式)
+    (linksNotation 链接表示法)
+    (steps 步骤)
+  ))
+  (examples (
+    (title 试试这些示例：)
+  ))
+  (errors (
+    (workerFailed 工作线程初始化失败)
+    (calculationFailed 计算失败)
+    (reportIssue 报告此问题)
+  ))
+  (footer (
+    (poweredBy '由 Rust + WebAssembly 驱动')
+    (viewOnGitHub '在 GitHub 上查看')
+    (reportIssue 报告问题)
+  ))
+  (settings (
+    (theme 主题)
+    (themeLight 浅色)
+    (themeDark 深色)
+    (themeSystem 跟随系统)
+    (language 语言)
+  ))
+  (share (
+    (copyLink 复制链接)
+    (copied 已复制！)
+  ))
+)

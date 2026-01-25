@@ -1,0 +1,42 @@
+(
+  (app (
+    (title 'Link Calculator')
+    (subtitle 'حاسبة تعبيرات قائمة على القواعد مع دعم التاريخ/الوقت والعملات')
+  ))
+  (input (
+    (label التعبير)
+    (placeholder 'أدخل تعبيرًا (مثال: 2 + 3, 84 USD - 34 EUR)')
+  ))
+  (result (
+    (title النتيجة)
+    (calculating 'جاري الحساب...')
+    (loading 'جاري تحميل محرك الحاسبة...')
+    (placeholder 'أدخل تعبيرًا أعلاه')
+    (linksNotation 'تدوين الروابط')
+    (steps الخطوات)
+  ))
+  (examples (
+    (title 'جرب هذه الأمثلة:')
+  ))
+  (errors (
+    (workerFailed 'فشل في تهيئة العامل')
+    (calculationFailed 'فشل الحساب')
+    (reportIssue 'الإبلاغ عن هذه المشكلة')
+  ))
+  (footer (
+    (poweredBy 'مدعوم بـ Rust + WebAssembly')
+    (viewOnGitHub 'عرض على GitHub')
+    (reportIssue 'الإبلاغ عن مشكلة')
+  ))
+  (settings (
+    (theme المظهر)
+    (themeLight فاتح)
+    (themeDark داكن)
+    (themeSystem النظام)
+    (language اللغة)
+  ))
+  (share (
+    (copyLink 'نسخ الرابط')
+    (copied 'تم النسخ!')
+  ))
+)
