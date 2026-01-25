@@ -54,3 +54,9 @@ doc/
 # Log files
 *.log
 logs/
+
+# Web frontend
+web/node_modules/
+web/dist/
+web/pkg/
+web/.vite/

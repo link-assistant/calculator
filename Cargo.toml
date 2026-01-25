@@ -52,6 +52,9 @@ too_many_lines = "allow"
 missing_errors_doc = "allow"
 missing_panics_doc = "allow"
 
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false
+
 [profile.release]
 lto = true
 codegen-units = 1
