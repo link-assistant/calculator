@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useUrlExpression, useDelayedLoading } from './hooks';
 import { SUPPORTED_LANGUAGES, loadPreferences, savePreferences } from './i18n';
 import { generateIssueUrl, type PageState } from './utils/reportIssue';
+import { AutoResizeTextarea } from './components';
 import type { CalculationResult } from './types';
 
 const EXAMPLES = [
@@ -212,14 +213,15 @@ function App() {
           <div className="input-section">
             <label htmlFor="expression">{t('input.label')}</label>
             <div className="input-wrapper">
-              <textarea
+              <AutoResizeTextarea
                 id="expression"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={t('input.placeholder')}
                 disabled={!wasmReady}
                 autoFocus
-                rows={1}
+                minRows={1}
+                maxRows={10}
               />
               {input && (
                 <button
