@@ -2,7 +2,8 @@
 
 use crate::error::CalculatorError;
 use crate::grammar::{
-    evaluate_function, is_math_function, DateTimeGrammar, Lexer, NumberGrammar, Token, TokenKind,
+    evaluate_function, evaluate_indefinite_integral, is_math_function, DateTimeGrammar, Lexer,
+    NumberGrammar, Token, TokenKind,
 };
 use crate::types::{BinaryOp, CurrencyDatabase, Decimal, Expression, Unit, Value};
 
@@ -36,7 +37,7 @@ impl ExpressionParser {
         }
 
         // Try datetime subtraction pattern first: "(datetime) - (datetime)"
-        if let Some(result) = self.try_parse_datetime_subtraction(input) {
+        if let Some(result) = self.datetime_grammar.try_parse_datetime_subtraction(input) {
             return Ok(result);
         }
 
@@ -50,81 +51,6 @@ impl ExpressionParser {
         let (value, steps) = self.evaluate_with_steps(&expr)?;
 
         Ok((value, steps, lino))
-    }
-
-    /// Tries to parse a datetime subtraction expression like "(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)".
-    fn try_parse_datetime_subtraction(&self, input: &str) -> Option<(Value, Vec<String>, String)> {
-        // Look for pattern: (datetime) - (datetime)
-        let input = input.trim();
-
-        // Check if it starts with '(' and contains '-'
-        if !input.starts_with('(') || !input.contains('-') {
-            return None;
-        }
-
-        // Try to find the matching closing paren for the first datetime
-        let mut paren_depth = 0;
-        let mut first_end = None;
-
-        for (i, ch) in input.char_indices() {
-            match ch {
-                '(' => paren_depth += 1,
-                ')' => {
-                    paren_depth -= 1;
-                    if paren_depth == 0 {
-                        first_end = Some(i);
-                        break;
-                    }
-                }
-                _ => {}
-            }
-        }
-
-        let first_end = first_end?;
-
-        // Extract first datetime (without parens)
-        let first_dt_str = &input[1..first_end];
-
-        // Find the minus sign
-        let rest = input[first_end + 1..].trim();
-        if !rest.starts_with('-') {
-            return None;
-        }
-
-        let second_part = rest[1..].trim();
-        if !second_part.starts_with('(') || !second_part.ends_with(')') {
-            return None;
-        }
-
-        // Extract second datetime (without parens)
-        let second_dt_str = &second_part[1..second_part.len() - 1];
-
-        // Try to parse both as datetimes
-        let Ok(dt1) = self.datetime_grammar.parse(first_dt_str) else {
-            return None;
-        };
-
-        let Ok(dt2) = self.datetime_grammar.parse(second_dt_str) else {
-            return None;
-        };
-
-        // Calculate the difference
-        let diff = dt1.subtract(&dt2);
-        #[allow(clippy::cast_possible_wrap)]
-        let seconds = diff.as_secs() as i64;
-
-        let value = Value::duration(seconds);
-
-        let steps = vec![
-            format!("Parse first datetime: {dt1}"),
-            format!("Parse second datetime: {dt2}"),
-            format!("Calculate difference: {dt1} - {dt2}"),
-            format!("Result: {}", value.to_display_string()),
-        ];
-
-        let lino = format!("((({}) - ({})))", first_dt_str.trim(), second_dt_str.trim());
-
-        Some((value, steps, lino))
     }
 
     /// Parses an expression string into an Expression AST.
@@ -235,7 +161,7 @@ impl ExpressionParser {
                 // Indefinite integrals return a symbolic result
                 // For now, we return an error directing users to use definite integrals for numeric results
                 // or display the symbolic representation
-                Self::evaluate_indefinite_integral(integrand, variable)
+                evaluate_indefinite_integral(integrand, variable)
             }
         }
     }
@@ -361,7 +287,7 @@ impl ExpressionParser {
                     "Indefinite integral: ∫ {} d{}",
                     integrand, variable
                 ));
-                let result = Self::evaluate_indefinite_integral(integrand, variable)?;
+                let result = evaluate_indefinite_integral(integrand, variable)?;
                 steps.push(format!("= {}", result.to_display_string()));
                 Ok(result)
             }
@@ -553,140 +479,6 @@ impl ExpressionParser {
                 "nested indefinite integrals are not supported",
             )),
         }
-    }
-
-    /// Evaluates an indefinite integral.
-    ///
-    /// For known special integrals, returns symbolic result.
-    /// For others, returns an informational message.
-    fn evaluate_indefinite_integral(
-        integrand: &Expression,
-        variable: &str,
-    ) -> Result<Value, CalculatorError> {
-        // Check for known special integrals
-        let symbolic_result = Self::try_symbolic_integral(integrand, variable);
-
-        if let Some(result) = symbolic_result {
-            // Return a special value that indicates symbolic result
-            // For now, we'll create an error with the symbolic result as a message
-            // since the Value type doesn't support symbolic results yet
-            let latex_result = Self::symbolic_result_to_latex(&result);
-            Err(CalculatorError::SymbolicResult {
-                expression: format!("∫ {} d{}", integrand, variable),
-                result,
-                latex_input: format!("\\int {} \\, d{}", integrand.to_latex(), variable),
-                latex_result,
-            })
-        } else {
-            // For unknown integrals, provide a helpful message
-            Err(CalculatorError::SymbolicResult {
-                expression: format!("∫ {} d{}", integrand, variable),
-                result: "Cannot compute symbolic result. Use definite integral with bounds: integrate(expr, var, lower, upper)".to_string(),
-                latex_input: format!("\\int {} \\, d{}", integrand.to_latex(), variable),
-                latex_result: "\\text{Use definite integral with bounds}".to_string(),
-            })
-        }
-    }
-
-    /// Tries to compute a symbolic integral for known special cases.
-    fn try_symbolic_integral(integrand: &Expression, variable: &str) -> Option<String> {
-        // Pattern: sin(x)/x -> Si(x) + C (Sine Integral)
-        if let Expression::Binary {
-            left,
-            op: BinaryOp::Divide,
-            right,
-        } = integrand
-        {
-            if let Expression::FunctionCall { name, args } = left.as_ref() {
-                if name.to_lowercase() == "sin" && args.len() == 1 {
-                    if let Expression::Variable(v) = &args[0] {
-                        if let Expression::Variable(v2) = right.as_ref() {
-                            if v == variable && v2 == variable {
-                                return Some(format!("Si({}) + C", variable));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // Pattern: cos(x)/x -> Ci(x) + C (Cosine Integral)
-        if let Expression::Binary {
-            left,
-            op: BinaryOp::Divide,
-            right,
-        } = integrand
-        {
-            if let Expression::FunctionCall { name, args } = left.as_ref() {
-                if name.to_lowercase() == "cos" && args.len() == 1 {
-                    if let Expression::Variable(v) = &args[0] {
-                        if let Expression::Variable(v2) = right.as_ref() {
-                            if v == variable && v2 == variable {
-                                return Some(format!("Ci({}) + C", variable));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // Pattern: x^n -> x^(n+1)/(n+1) + C
-        if let Expression::Power { base, exponent } = integrand {
-            if let Expression::Variable(v) = base.as_ref() {
-                if v == variable {
-                    if let Expression::Number { value, .. } = exponent.as_ref() {
-                        let n = value.to_f64();
-                        if (n - (-1.0)).abs() > 1e-10 {
-                            // Not x^(-1)
-                            let new_exp = n + 1.0;
-                            return Some(format!("{}^{}/({}) + C", variable, new_exp, new_exp));
-                        }
-                        // x^(-1) = 1/x -> ln|x| + C
-                        return Some(format!("ln|{}| + C", variable));
-                    }
-                }
-            }
-        }
-
-        // Pattern: just x -> x^2/2 + C
-        if let Expression::Variable(v) = integrand {
-            if v == variable {
-                return Some(format!("{}²/2 + C", variable));
-            }
-        }
-
-        // Pattern: constant -> constant * x + C
-        if let Expression::Number { value, .. } = integrand {
-            return Some(format!("{} * {} + C", value, variable));
-        }
-
-        // Pattern: sin(x) -> -cos(x) + C
-        if let Expression::FunctionCall { name, args } = integrand {
-            if args.len() == 1 {
-                if let Expression::Variable(v) = &args[0] {
-                    if v == variable {
-                        match name.to_lowercase().as_str() {
-                            "sin" => return Some(format!("-cos({}) + C", variable)),
-                            "cos" => return Some(format!("sin({}) + C", variable)),
-                            "exp" => return Some(format!("exp({}) + C", variable)),
-                            _ => {}
-                        }
-                    }
-                }
-            }
-        }
-
-        None
-    }
-
-    /// Converts a symbolic result to LaTeX.
-    fn symbolic_result_to_latex(result: &str) -> String {
-        // Basic conversions
-        result
-            .replace("Si(", "\\text{Si}(")
-            .replace("Ci(", "\\text{Ci}(")
-            .replace("ln|", "\\ln|")
-            .replace("²", "^{2}")
     }
 }
 
@@ -1177,154 +969,5 @@ impl<'a> TokenParser<'a> {
                 self.pos,
             ))
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_parse_simple_number() {
-        let parser = ExpressionParser::new();
-        let expr = parser.parse("42").unwrap();
-        assert!(matches!(expr, Expression::Number { .. }));
-    }
-
-    #[test]
-    fn test_parse_addition() {
-        let parser = ExpressionParser::new();
-        let expr = parser.parse("2 + 3").unwrap();
-        assert!(matches!(expr, Expression::Binary { .. }));
-    }
-
-    #[test]
-    fn test_parse_currency() {
-        let parser = ExpressionParser::new();
-        let expr = parser.parse("100 USD").unwrap();
-        if let Expression::Number { value, unit } = expr {
-            assert_eq!(value, Decimal::new(100));
-            assert_eq!(unit, Unit::currency("USD"));
-        } else {
-            panic!("Expected Number expression");
-        }
-    }
-
-    #[test]
-    fn test_parse_currency_subtraction() {
-        let parser = ExpressionParser::new();
-        let expr = parser.parse("84 USD - 34 EUR").unwrap();
-        assert!(matches!(expr, Expression::Binary { .. }));
-    }
-
-    #[test]
-    fn test_evaluate_simple() {
-        let parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("2 + 3").unwrap();
-        assert_eq!(value.to_display_string(), "5");
-    }
-
-    #[test]
-    fn test_evaluate_multiplication() {
-        let parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("4 * 5").unwrap();
-        assert_eq!(value.to_display_string(), "20");
-    }
-
-    #[test]
-    fn test_evaluate_precedence() {
-        let parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("2 + 3 * 4").unwrap();
-        assert_eq!(value.to_display_string(), "14"); // 2 + (3 * 4) = 14
-    }
-
-    #[test]
-    fn test_evaluate_parentheses() {
-        let parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("(2 + 3) * 4").unwrap();
-        assert_eq!(value.to_display_string(), "20"); // (2 + 3) * 4 = 20
-    }
-
-    #[test]
-    fn test_evaluate_negation() {
-        let parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("-5 + 3").unwrap();
-        assert_eq!(value.to_display_string(), "-2");
-    }
-
-    #[test]
-    fn test_datetime_subtraction() {
-        let parser = ExpressionParser::new();
-        let result = parser.parse_and_evaluate("(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)");
-        assert!(result.is_ok());
-        let (value, _, _) = result.unwrap();
-        // Should be approximately 1 day, 20 hours, 8 minutes
-        assert!(value.to_display_string().contains("day"));
-    }
-
-    #[test]
-    fn test_lino_representation() {
-        let parser = ExpressionParser::new();
-        let (_, _, lino) = parser.parse_and_evaluate("84 USD - 34 EUR").unwrap();
-        assert!(lino.contains("84 USD"));
-        assert!(lino.contains("34 EUR"));
-    }
-
-    // New tests for math functions
-    #[test]
-    fn test_parse_function_call() {
-        let parser = ExpressionParser::new();
-        let expr = parser.parse("sin(0)").unwrap();
-        assert!(matches!(expr, Expression::FunctionCall { .. }));
-    }
-
-    #[test]
-    fn test_evaluate_sin() {
-        let parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("sin(0)").unwrap();
-        assert_eq!(value.to_display_string(), "0");
-    }
-
-    #[test]
-    fn test_evaluate_sqrt() {
-        let parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("sqrt(16)").unwrap();
-        assert_eq!(value.to_display_string(), "4");
-    }
-
-    #[test]
-    fn test_evaluate_power() {
-        let parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("2^3").unwrap();
-        assert_eq!(value.to_display_string(), "8");
-    }
-
-    #[test]
-    fn test_evaluate_pi() {
-        let parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("pi()").unwrap();
-        let pi = value.as_decimal().unwrap().to_f64();
-        assert!((pi - std::f64::consts::PI).abs() < 1e-10);
-    }
-
-    #[test]
-    fn test_evaluate_complex_expression() {
-        let parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("2 + sin(0) * 3").unwrap();
-        assert_eq!(value.to_display_string(), "2");
-    }
-
-    #[test]
-    fn test_evaluate_nested_functions() {
-        let parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("sqrt(abs(-16))").unwrap();
-        assert_eq!(value.to_display_string(), "4");
-    }
-
-    #[test]
-    fn test_evaluate_function_with_expression() {
-        let parser = ExpressionParser::new();
-        let (value, _, _) = parser.parse_and_evaluate("sqrt(4 + 12)").unwrap();
-        assert_eq!(value.to_display_string(), "4");
     }
 }
