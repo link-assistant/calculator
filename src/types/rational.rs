@@ -146,6 +146,7 @@ impl Rational {
         let mut x = value;
 
         for _ in 0..50 {
+            #[allow(clippy::cast_possible_truncation)]
             let a = x.floor() as i128;
 
             let h_next = a.saturating_mul(h_curr).saturating_add(h_prev);
@@ -248,7 +249,7 @@ impl Rational {
             None
         } else {
             Some(Self {
-                inner: self.inner.clone() / other.inner.clone(),
+                inner: self.inner / other.inner,
             })
         }
     }
@@ -294,6 +295,8 @@ impl Rational {
         let is_negative = self.is_negative();
 
         // Use Floyd's algorithm to detect the repeating pattern
+        // We use try_into to safely convert from i128 to u128, which is safe since we've taken abs()
+        #[allow(clippy::cast_sign_loss)]
         detect_repeating_decimal(numer as u128, denom as u128, is_negative)
     }
 }
@@ -332,13 +335,13 @@ impl FromStr for Rational {
 
 impl From<i64> for Rational {
     fn from(value: i64) -> Self {
-        Self::from_integer(value as i128)
+        Self::from_integer(i128::from(value))
     }
 }
 
 impl From<i32> for Rational {
     fn from(value: i32) -> Self {
-        Self::from_integer(value as i128)
+        Self::from_integer(i128::from(value))
     }
 }
 
@@ -397,7 +400,7 @@ impl Neg for Rational {
 }
 
 /// Represents a repeating decimal with its components.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RepeatingDecimal {
     /// Whether the number is negative.
     pub is_negative: bool,
@@ -424,11 +427,11 @@ impl RepeatingDecimal {
             }
         } else {
             // Add combining overline character (U+0305) after each repeating digit
-            let repetend_with_overline: String = self
-                .repeating
-                .chars()
-                .map(|c| format!("{}\u{0305}", c))
-                .collect();
+            use std::fmt::Write;
+            let mut repetend_with_overline = String::with_capacity(self.repeating.len() * 2);
+            for c in self.repeating.chars() {
+                write!(repetend_with_overline, "{c}\u{0305}").unwrap();
+            }
 
             if self.non_repeating.is_empty() {
                 format!("{}{}.{}", sign, self.integer_part, repetend_with_overline)
@@ -521,6 +524,7 @@ fn detect_repeating_decimal(
     is_negative: bool,
 ) -> Option<RepeatingDecimal> {
     use std::collections::HashMap;
+    const MAX_DIGITS: usize = 1000;
 
     if denominator == 0 {
         return None;
@@ -544,7 +548,6 @@ fn detect_repeating_decimal(
     let mut repeat_start = None;
 
     // Perform long division, tracking remainders
-    const MAX_DIGITS: usize = 1000;
 
     while remainder != 0 && digits.len() < MAX_DIGITS {
         if let Some(&pos) = remainder_positions.get(&remainder) {

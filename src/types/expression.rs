@@ -186,7 +186,7 @@ impl Expression {
     /// Internal helper for to_lino.
     /// `parent_op` is the parent operator's precedence (if any) to determine
     /// if we need parentheses for this subexpression.
-    fn to_lino_internal(&self, parent_op: Option<&BinaryOp>) -> String {
+    fn to_lino_internal(&self, _parent_op: Option<&BinaryOp>) -> String {
         match self {
             Self::Number { value, unit } => {
                 let num_str = value.to_string();
@@ -201,13 +201,7 @@ impl Expression {
                 let left_str = left.to_lino_internal(Some(op));
                 let right_str = right.to_lino_internal(Some(op));
                 let expr_str = format!("{left_str} {op} {right_str}");
-
-                // Add parentheses if we're in a context that needs them
-                if parent_op.is_some() {
-                    format!("({expr_str})")
-                } else {
-                    format!("({expr_str})")
-                }
+                format!("({expr_str})")
             }
             Self::Negate(inner) => {
                 let inner_str = inner.to_lino_internal(None);

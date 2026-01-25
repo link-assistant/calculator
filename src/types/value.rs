@@ -74,7 +74,7 @@ impl Value {
     #[must_use]
     pub fn from_integer(n: i64) -> Self {
         Self {
-            kind: ValueKind::Rational(Rational::from_integer(n as i128)),
+            kind: ValueKind::Rational(Rational::from_integer(i128::from(n))),
             unit: Unit::None,
         }
     }
@@ -83,7 +83,7 @@ impl Value {
     #[must_use]
     pub fn from_integer_with_unit(n: i64, unit: Unit) -> Self {
         Self {
-            kind: ValueKind::Rational(Rational::from_integer(n as i128)),
+            kind: ValueKind::Rational(Rational::from_integer(i128::from(n))),
             unit,
         }
     }
