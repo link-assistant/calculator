@@ -287,9 +287,7 @@ function App() {
                     {result.issue_link && (
                       <div className="issue-link">
                         <a href={result.issue_link} target="_blank" rel="noopener noreferrer">
-                          {result.issue_link.includes('wolframalpha.com')
-                            ? t('errors.tryWolframAlpha')
-                            : t('errors.reportIssue')} →
+                          {t('errors.reportIssue')} →
                         </a>
                       </div>
                     )}
