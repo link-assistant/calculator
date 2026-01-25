@@ -1,7 +1,7 @@
 // Web Worker for running WASM calculations in the background
 // This prevents blocking the main UI thread
 
-import init, { Calculator } from '../public/pkg/link_calculator';
+import init, { Calculator } from '../pkg/link_calculator';
 
 interface CalculatorInstance {
   calculate(input: string): string;
