@@ -150,6 +150,7 @@ pub fn fetch_historical_rates(base_currency: String, date: String) -> Promise {
 /// # Returns
 /// A JSON string with the parsed rate information
 #[wasm_bindgen]
+#[allow(clippy::needless_pass_by_value)] // wasm_bindgen requires owned String
 pub fn parse_lino_rate(content: String) -> String {
     #[derive(serde::Serialize)]
     struct ParsedRate {
