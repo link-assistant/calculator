@@ -1,4 +1,5 @@
 // Historical currency rates for 2026-01-22
+// Source: fawazahmed0/currency-api
 // All rates are relative to USD
 
 EUR:0.9220:USD
@@ -8,3 +9,7 @@ CHF:0.8695:USD
 CAD:1.3485:USD
 AUD:1.5295:USD
 CNY:7.1820:USD
+RUB:89.35:USD
+UAH:41.15:USD
+INR:83.05:USD
+KRW:1314.00:USD

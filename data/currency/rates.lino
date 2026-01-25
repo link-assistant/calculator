@@ -2,6 +2,8 @@
 // Format: currency:exchange_rate:baseCurrency
 // Rates are relative to USD (base currency)
 // This file uses links-notation format
+// Source: fawazahmed0/currency-api
+// Date: 2026-01-25
 
 // Major world currencies
 EUR:0.92:USD  // Euro
@@ -14,6 +16,12 @@ CNY:7.18:USD  // Chinese Yuan
 HKD:7.82:USD  // Hong Kong Dollar
 NZD:1.62:USD  // New Zealand Dollar
 SGD:1.34:USD  // Singapore Dollar
+
+// CIS & Eastern European currencies
+RUB:89.50:USD  // Russian Ruble
+UAH:41.20:USD  // Ukrainian Hryvnia
+KZT:455.00:USD  // Kazakhstani Tenge
+BYN:3.27:USD  // Belarusian Ruble
 
 // European currencies
 SEK:10.38:USD  // Swedish Krona
