@@ -21,7 +21,10 @@ use crate::types::Decimal;
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct Rational {
     /// The underlying rational number.
-    #[serde(serialize_with = "serialize_ratio", deserialize_with = "deserialize_ratio")]
+    #[serde(
+        serialize_with = "serialize_ratio",
+        deserialize_with = "deserialize_ratio"
+    )]
     inner: Ratio<i128>,
 }
 
@@ -78,7 +81,11 @@ impl Rational {
             // Has fractional part
             let sign = if s.starts_with('-') { -1i128 } else { 1i128 };
             let s_abs = s.trim_start_matches('-');
-            let dot_pos_abs = if s.starts_with('-') { dot_pos - 1 } else { dot_pos };
+            let dot_pos_abs = if s.starts_with('-') {
+                dot_pos - 1
+            } else {
+                dot_pos
+            };
 
             let int_part = &s_abs[..dot_pos_abs];
             let frac_part = &s_abs[dot_pos_abs + 1..];
@@ -468,11 +475,16 @@ impl RepeatingDecimal {
             }
         } else {
             // Show a few repetitions then ellipsis
-            let repetitions = self.repeating.repeat(3.min(10 / self.repeating.len().max(1)));
+            let repetitions = self
+                .repeating
+                .repeat(3.min(10 / self.repeating.len().max(1)));
             if self.non_repeating.is_empty() {
                 format!("{}{}.{}...", sign, self.integer_part, repetitions)
             } else {
-                format!("{}{}.{}{}...", sign, self.integer_part, self.non_repeating, repetitions)
+                format!(
+                    "{}{}.{}{}...",
+                    sign, self.integer_part, self.non_repeating, repetitions
+                )
             }
         }
     }
@@ -489,7 +501,10 @@ impl RepeatingDecimal {
                 format!("{}{}.{}", sign, self.integer_part, self.non_repeating)
             }
         } else if self.non_repeating.is_empty() {
-            format!("{}{}.\\overline{{{}}}", sign, self.integer_part, self.repeating)
+            format!(
+                "{}{}.\\overline{{{}}}",
+                sign, self.integer_part, self.repeating
+            )
         } else {
             format!(
                 "{}{}.{}\\overline{{{}}}",

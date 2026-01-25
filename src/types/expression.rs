@@ -275,10 +275,7 @@ impl Expression {
     fn needs_parens_for_power(&self) -> bool {
         matches!(
             self,
-            Self::Binary { .. }
-                | Self::Negate(_)
-                | Self::AtTime { .. }
-                | Self::Power { .. }
+            Self::Binary { .. } | Self::Negate(_) | Self::AtTime { .. } | Self::Power { .. }
         )
     }
 
