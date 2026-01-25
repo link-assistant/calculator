@@ -5,7 +5,7 @@ use crate::grammar::{
     evaluate_function, evaluate_indefinite_integral, is_math_function, DateTimeGrammar, Lexer,
     NumberGrammar, Token, TokenKind,
 };
-use crate::types::{BinaryOp, CurrencyDatabase, Decimal, Expression, Unit, Value};
+use crate::types::{BinaryOp, CurrencyDatabase, Decimal, Expression, Rational, Unit, Value};
 
 /// Parser for calculator expressions.
 #[derive(Debug, Default)]
@@ -84,7 +84,11 @@ impl ExpressionParser {
 
     fn evaluate_expr(&self, expr: &Expression) -> Result<Value, CalculatorError> {
         match expr {
-            Expression::Number { value, unit } => Ok(Value::number_with_unit(*value, unit.clone())),
+            Expression::Number { value, unit } => {
+                // Convert to Rational for exact arithmetic
+                let rational = Rational::from_decimal(*value);
+                Ok(Value::rational_with_unit(rational, unit.clone()))
+            }
             Expression::DateTime(dt) => Ok(Value::datetime(dt.clone())),
             Expression::Binary { left, op, right } => {
                 let left_val = self.evaluate_expr(left)?;
@@ -173,7 +177,9 @@ impl ExpressionParser {
     ) -> Result<Value, CalculatorError> {
         match expr {
             Expression::Number { value, unit } => {
-                let val = Value::number_with_unit(*value, unit.clone());
+                // Convert to Rational for exact arithmetic
+                let rational = Rational::from_decimal(*value);
+                let val = Value::rational_with_unit(rational, unit.clone());
                 steps.push(format!("Literal value: {}", val.to_display_string()));
                 Ok(val)
             }
@@ -403,7 +409,10 @@ impl ExpressionParser {
         var_value: Decimal,
     ) -> Result<Value, CalculatorError> {
         match expr {
-            Expression::Number { value, unit } => Ok(Value::number_with_unit(*value, unit.clone())),
+            Expression::Number { value, unit } => {
+                let rational = Rational::from_decimal(*value);
+                Ok(Value::rational_with_unit(rational, unit.clone()))
+            }
             Expression::DateTime(dt) => Ok(Value::datetime(dt.clone())),
             Expression::Binary { left, op, right } => {
                 let left_val = self.evaluate_expr_with_var(left, var_name, var_value)?;
@@ -445,6 +454,7 @@ impl ExpressionParser {
             }
             Expression::Variable(name) => {
                 if name == var_name {
+                    // Keep as Decimal for integration (numerical computation)
                     Ok(Value::number(var_value))
                 } else {
                     Err(CalculatorError::eval(format!("undefined variable: {name}")))

@@ -172,12 +172,21 @@ impl Expression {
     }
 
     /// Converts the expression to links notation format.
+    ///
+    /// Links notation uses minimal parentheses, only adding them where
+    /// necessary to clarify structure. The rules are:
+    /// - Atomic values (numbers, variables) don't need parentheses
+    /// - Binary operations are wrapped in a single set of parentheses
+    /// - Explicit groups from the input are preserved
     #[must_use]
     pub fn to_lino(&self) -> String {
-        self.to_lino_internal(false)
+        self.to_lino_internal(None)
     }
 
-    fn to_lino_internal(&self, in_binary: bool) -> String {
+    /// Internal helper for to_lino.
+    /// `parent_op` is the parent operator's precedence (if any) to determine
+    /// if we need parentheses for this subexpression.
+    fn to_lino_internal(&self, parent_op: Option<&BinaryOp>) -> String {
         match self {
             Self::Number { value, unit } => {
                 let num_str = value.to_string();
@@ -187,54 +196,90 @@ impl Expression {
                     format!("({num_str} {unit})")
                 }
             }
-            Self::DateTime(dt) => format!("({})", dt),
+            Self::DateTime(dt) => dt.to_string(),
             Self::Binary { left, op, right } => {
-                let left_str = left.to_lino_internal(true);
-                let right_str = right.to_lino_internal(true);
-                // in_binary is used by recursive calls to determine context
-                let _ = in_binary;
-                format!("(({left_str}) {op} ({right_str}))")
+                let left_str = left.to_lino_internal(Some(op));
+                let right_str = right.to_lino_internal(Some(op));
+                let expr_str = format!("{left_str} {op} {right_str}");
+
+                // Add parentheses if we're in a context that needs them
+                if parent_op.is_some() {
+                    format!("({expr_str})")
+                } else {
+                    format!("({expr_str})")
+                }
             }
             Self::Negate(inner) => {
-                format!("(- ({}))", inner.to_lino_internal(false))
+                let inner_str = inner.to_lino_internal(None);
+                // Only add parens if the inner expression needs them
+                if inner.needs_parens_for_unary() {
+                    format!("(-({inner_str}))")
+                } else {
+                    format!("(-{inner_str})")
+                }
             }
             Self::Group(inner) => {
-                format!("({})", inner.to_lino_internal(false))
+                // Groups are explicitly requested by the user
+                // If the inner expression already has its own parentheses, don't double-wrap
+                let inner_str = inner.to_lino_internal(None);
+                if inner_str.starts_with('(') && inner_str.ends_with(')') {
+                    inner_str
+                } else {
+                    format!("({inner_str})")
+                }
             }
             Self::AtTime { value, time } => {
-                format!(
-                    "(({}) at ({}))",
-                    value.to_lino_internal(false),
-                    time.to_lino_internal(false)
-                )
+                let value_str = value.to_lino_internal(None);
+                let time_str = time.to_lino_internal(None);
+                format!("({value_str} at {time_str})")
             }
             Self::FunctionCall { name, args } => {
-                let args_str = args
-                    .iter()
-                    .map(|a| a.to_lino_internal(false))
-                    .collect::<Vec<_>>()
-                    .join(" ");
-                format!("({name} ({args_str}))")
+                if args.is_empty() {
+                    name.clone()
+                } else {
+                    let args_str = args
+                        .iter()
+                        .map(|a| a.to_lino_internal(None))
+                        .collect::<Vec<_>>()
+                        .join(", ");
+                    format!("{name}({args_str})")
+                }
             }
             Self::Variable(name) => name.clone(),
             Self::Power { base, exponent } => {
-                format!(
-                    "(({})^({}))",
-                    base.to_lino_internal(false),
-                    exponent.to_lino_internal(false)
-                )
+                let base_str = base.to_lino_internal(None);
+                let exp_str = exponent.to_lino_internal(None);
+                // Add parens around base if it's a complex expression
+                if base.needs_parens_for_power() {
+                    format!("({base_str})^{exp_str}")
+                } else {
+                    format!("{base_str}^{exp_str}")
+                }
             }
             Self::IndefiniteIntegral {
                 integrand,
                 variable,
             } => {
-                format!(
-                    "(integrate ({}) d{})",
-                    integrand.to_lino_internal(false),
-                    variable
-                )
+                let integrand_str = integrand.to_lino_internal(None);
+                format!("integrate {integrand_str} d{variable}")
             }
         }
+    }
+
+    /// Returns true if this expression needs parentheses when used as a unary operand.
+    fn needs_parens_for_unary(&self) -> bool {
+        matches!(self, Self::Binary { .. } | Self::AtTime { .. })
+    }
+
+    /// Returns true if this expression needs parentheses when used as a power base.
+    fn needs_parens_for_power(&self) -> bool {
+        matches!(
+            self,
+            Self::Binary { .. }
+                | Self::Negate(_)
+                | Self::AtTime { .. }
+                | Self::Power { .. }
+        )
     }
 
     /// Returns the depth of the expression tree.
@@ -436,7 +481,8 @@ mod tests {
         let right = Expression::number(Decimal::new(3));
         let expr = Expression::binary(left, BinaryOp::Add, right);
         assert_eq!(expr.to_string(), "2 + 3");
-        assert_eq!(expr.to_lino(), "((2) + (3))");
+        // Improved links notation with minimal parentheses
+        assert_eq!(expr.to_lino(), "(2 + 3)");
     }
 
     #[test]
