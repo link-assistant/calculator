@@ -224,7 +224,8 @@ impl CurrencyDatabase {
         let to_upper = to.to_uppercase();
 
         // Store the forward rate
-        self.rates.insert((from_upper.clone(), to_upper.clone()), info.clone());
+        self.rates
+            .insert((from_upper.clone(), to_upper.clone()), info.clone());
 
         // Also add the inverse rate
         if info.rate != 0.0 {
@@ -267,10 +268,8 @@ impl CurrencyDatabase {
                 date: info.date.clone(),
                 fetched_at: info.fetched_at.clone(),
             };
-            self.historical_rates.insert(
-                (to_upper, from_upper, date.to_string()),
-                inverse_info,
-            );
+            self.historical_rates
+                .insert((to_upper, from_upper, date.to_string()), inverse_info);
         }
     }
 
@@ -377,7 +376,8 @@ impl CurrencyDatabase {
         }
 
         // First try historical rates
-        if let Some(info) = self.historical_rates
+        if let Some(info) = self
+            .historical_rates
             .get(&(from_upper.clone(), to_upper.clone(), date_str))
             .cloned()
         {
@@ -386,7 +386,8 @@ impl CurrencyDatabase {
         }
 
         // Fall back to current rates
-        if let Some(info) = self.rates
+        if let Some(info) = self
+            .rates
             .get(&(from_upper.clone(), to_upper.clone()))
             .cloned()
         {

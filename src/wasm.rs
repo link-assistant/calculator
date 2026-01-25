@@ -1,8 +1,8 @@
 //! WebAssembly bindings for the calculator.
 
+use js_sys::Promise;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::future_to_promise;
-use js_sys::Promise;
 
 use crate::currency_api;
 
@@ -96,9 +96,8 @@ pub fn fetch_exchange_rates(base_currency: String) -> Promise {
                     error: Some(e.to_string()),
                     rates_json: String::new(),
                 };
-                let json = serde_json::to_string(&response).unwrap_or_else(|_| {
-                    format!(r#"{{"success":false,"error":"{}"}}"#, e)
-                });
+                let json = serde_json::to_string(&response)
+                    .unwrap_or_else(|_| format!(r#"{{"success":false,"error":"{}"}}"#, e));
                 Ok(JsValue::from_str(&json))
             }
         }
@@ -133,9 +132,8 @@ pub fn fetch_historical_rates(base_currency: String, date: String) -> Promise {
                     error: Some(e.to_string()),
                     rates_json: String::new(),
                 };
-                let json = serde_json::to_string(&response).unwrap_or_else(|_| {
-                    format!(r#"{{"success":false,"error":"{}"}}"#, e)
-                });
+                let json = serde_json::to_string(&response)
+                    .unwrap_or_else(|_| format!(r#"{{"success":false,"error":"{}"}}"#, e));
                 Ok(JsValue::from_str(&json))
             }
         }

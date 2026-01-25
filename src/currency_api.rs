@@ -106,16 +106,16 @@ async fn fetch_rates_from_url(
 
 /// Performs the actual fetch and JSON parsing.
 async fn fetch_json(url: &str) -> Result<(String, HashMap<String, f64>), CurrencyApiError> {
-    let window = web_sys::window().ok_or_else(|| {
-        CurrencyApiError::NetworkError("No window object available".to_string())
-    })?;
+    let window = web_sys::window()
+        .ok_or_else(|| CurrencyApiError::NetworkError("No window object available".to_string()))?;
 
     let opts = RequestInit::new();
     opts.set_method("GET");
     opts.set_mode(RequestMode::Cors);
 
-    let request = Request::new_with_str_and_init(url, &opts)
-        .map_err(|e| CurrencyApiError::NetworkError(format!("Failed to create request: {:?}", e)))?;
+    let request = Request::new_with_str_and_init(url, &opts).map_err(|e| {
+        CurrencyApiError::NetworkError(format!("Failed to create request: {:?}", e))
+    })?;
 
     request
         .headers()
@@ -156,11 +156,7 @@ async fn fetch_json(url: &str) -> Result<(String, HashMap<String, f64>), Currenc
         .and_then(|s| s.strip_suffix(".json"))
         .unwrap_or("usd");
 
-    let rates = response
-        .rates
-        .get(base_lower)
-        .cloned()
-        .unwrap_or_default();
+    let rates = response.rates.get(base_lower).cloned().unwrap_or_default();
 
     Ok((response.date, rates))
 }
@@ -178,18 +174,14 @@ pub fn rates_to_exchange_info(
         .iter()
         .map(|(target, rate)| {
             let target_upper = target.to_uppercase();
-            let info = ExchangeRateInfo::new(*rate, API_SOURCE, date)
-                .with_fetched_at(&timestamp);
+            let info = ExchangeRateInfo::new(*rate, API_SOURCE, date).with_fetched_at(&timestamp);
             (base_upper.clone(), target_upper, info)
         })
         .collect()
 }
 
 /// Fetches a single exchange rate.
-pub async fn fetch_rate(
-    from: &str,
-    to: &str,
-) -> Result<ExchangeRateInfo, CurrencyApiError> {
+pub async fn fetch_rate(from: &str, to: &str) -> Result<ExchangeRateInfo, CurrencyApiError> {
     let (date, rates) = fetch_current_rates(from).await?;
     let to_lower = to.to_lowercase();
 

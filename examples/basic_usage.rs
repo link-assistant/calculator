@@ -45,7 +45,10 @@ fn main() {
 
     // Example 6: DateTime subtraction
     println!("Example 6: DateTime subtraction");
-    show_calculation(&mut calculator, "(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)");
+    show_calculation(
+        &mut calculator,
+        "(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)",
+    );
 }
 
 fn show_calculation(calculator: &mut Calculator, input: &str) {
