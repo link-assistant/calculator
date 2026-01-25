@@ -17,6 +17,21 @@ errors:
   workerFailed 'Не удалось инициализировать воркер'
   calculationFailed 'Ошибка вычисления'
   reportIssue 'Сообщить о проблеме'
+  parseError 'Ошибка разбора: {{message}}'
+  unexpectedToken 'Неожиданный токен "{{found}}" в позиции {{position}}, ожидался {{expected}}'
+  unitMismatch 'Невозможно {{operation}} "{{leftUnit}}" и "{{rightUnit}}"'
+  evaluationError 'Ошибка вычисления: {{message}}'
+  divisionByZero 'Деление на ноль'
+  invalidDateTime 'Неверный формат даты/времени: {{format}}'
+  unknownCurrency 'Неизвестная валюта: {{currency}}'
+  currencyConversion 'Невозможно преобразовать {{from}} в {{to}}: {{reason}}'
+  noHistoricalRate 'Нет курса обмена для {{currency}} на {{date}}'
+  overflow 'Числовое переполнение'
+  invalidOperation 'Недопустимая операция: {{message}}'
+  emptyInput 'Пустой ввод'
+  unknownFunction 'Неизвестная функция: {{name}}'
+  invalidFunctionArgs 'Неверные аргументы для функции "{{function}}": {{reason}}'
+  domainError 'Ошибка области определения: {{message}}'
 footer:
   poweredBy 'На базе Rust + WebAssembly'
   viewOnGitHub 'Смотреть на GitHub'
@@ -30,3 +45,43 @@ settings:
 share:
   copyLink 'Копировать ссылку'
   copied Скопировано!
+steps:
+  inputExpression 'Входное выражение: {{expression}}'
+  literalValue 'Литеральное значение: {{value}}'
+  dateTimeValue 'Значение даты/времени: {{value}}'
+  compute 'Вычислить: {{left}} {{op}} {{right}}'
+  equals '= {{value}}'
+  negate 'Отрицание: -{{value}} = {{result}}'
+  evaluateGroup 'Вычислить сгруппированное выражение:'
+  atTime 'На момент времени: {{time}}'
+  callFunction 'Вызов функции: {{name}}({{args}})'
+  computePower 'Вычислить: {{base}} ^ {{exponent}}'
+  numericalIntegration 'Численное интегрирование: {{name}}(...)'
+  parseFirstDatetime 'Разбор первой даты/времени: {{datetime}}'
+  parseSecondDatetime 'Разбор второй даты/времени: {{datetime}}'
+  calculateDifference 'Вычислить разницу: {{dt1}} - {{dt2}}'
+  result 'Результат: {{value}}'
+  finalResult 'Итоговый результат: {{value}}'
+issueReport:
+  environment Окружение
+  version Версия
+  url URL
+  userAgent 'Браузер'
+  theme Тема
+  language Язык
+  wasmReady 'WASM готов'
+  timestamp 'Время'
+  input Ввод
+  resultSection Результат
+  resultLabel Результат
+  linksNotation 'Links Notation'
+  stepsLabel Шаги
+  errorLabel Ошибка
+  description Описание
+  descriptionPlaceholder 'Пожалуйста, опишите возникшую проблему'
+  issueTitle 'Проблема с выражением: {{expression}}'
+  defaultIssueTitle 'Сообщение о проблеме'
+common:
+  yes Да
+  no Нет
+  unknown Неизвестно

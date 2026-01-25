@@ -17,6 +17,21 @@ errors:
   workerFailed 'فشل في تهيئة العامل'
   calculationFailed 'فشل الحساب'
   reportIssue 'الإبلاغ عن هذه المشكلة'
+  parseError 'خطأ في التحليل: {{message}}'
+  unexpectedToken 'رمز غير متوقع "{{found}}" في الموضع {{position}}، المتوقع {{expected}}'
+  unitMismatch 'لا يمكن {{operation}} "{{leftUnit}}" و "{{rightUnit}}"'
+  evaluationError 'خطأ في التقييم: {{message}}'
+  divisionByZero 'القسمة على صفر'
+  invalidDateTime 'تنسيق التاريخ/الوقت غير صالح: {{format}}'
+  unknownCurrency 'عملة غير معروفة: {{currency}}'
+  currencyConversion 'لا يمكن تحويل {{from}} إلى {{to}}: {{reason}}'
+  noHistoricalRate 'لا يتوفر سعر صرف لـ {{currency}} في {{date}}'
+  overflow 'تجاوز رقمي'
+  invalidOperation 'عملية غير صالحة: {{message}}'
+  emptyInput 'إدخال فارغ'
+  unknownFunction 'دالة غير معروفة: {{name}}'
+  invalidFunctionArgs 'وسائط غير صالحة للدالة "{{function}}": {{reason}}'
+  domainError 'خطأ في النطاق: {{message}}'
 footer:
   poweredBy 'مدعوم بـ Rust + WebAssembly'
   viewOnGitHub 'عرض على GitHub'
@@ -30,3 +45,43 @@ settings:
 share:
   copyLink 'نسخ الرابط'
   copied 'تم النسخ!'
+steps:
+  inputExpression 'تعبير الإدخال: {{expression}}'
+  literalValue 'القيمة الحرفية: {{value}}'
+  dateTimeValue 'قيمة التاريخ/الوقت: {{value}}'
+  compute 'حساب: {{left}} {{op}} {{right}}'
+  equals '= {{value}}'
+  negate 'نفي: -{{value}} = {{result}}'
+  evaluateGroup 'تقييم التعبير المجمع:'
+  atTime 'في الوقت: {{time}}'
+  callFunction 'استدعاء الدالة: {{name}}({{args}})'
+  computePower 'حساب: {{base}} ^ {{exponent}}'
+  numericalIntegration 'التكامل العددي: {{name}}(...)'
+  parseFirstDatetime 'تحليل التاريخ/الوقت الأول: {{datetime}}'
+  parseSecondDatetime 'تحليل التاريخ/الوقت الثاني: {{datetime}}'
+  calculateDifference 'حساب الفرق: {{dt1}} - {{dt2}}'
+  result 'النتيجة: {{value}}'
+  finalResult 'النتيجة النهائية: {{value}}'
+issueReport:
+  environment البيئة
+  version الإصدار
+  url الرابط
+  userAgent 'وكيل المستخدم'
+  theme المظهر
+  language اللغة
+  wasmReady 'WASM جاهز'
+  timestamp 'الطابع الزمني'
+  input الإدخال
+  resultSection النتيجة
+  resultLabel النتيجة
+  linksNotation 'تدوين الروابط'
+  stepsLabel الخطوات
+  errorLabel الخطأ
+  description الوصف
+  descriptionPlaceholder 'يرجى وصف المشكلة التي واجهتها'
+  issueTitle 'مشكلة في التعبير: {{expression}}'
+  defaultIssueTitle 'تقرير المشكلة'
+common:
+  yes نعم
+  no لا
+  unknown غير معروف

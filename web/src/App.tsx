@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { useTheme, useUrlExpression, useDelayedLoading } from './hooks';
 import { SUPPORTED_LANGUAGES, loadPreferences, savePreferences } from './i18n';
 import { generateIssueUrl, type PageState } from './utils/reportIssue';
 import { AutoResizeTextarea } from './components';
-import type { CalculationResult } from './types';
+import type { CalculationResult, ErrorInfo } from './types';
 
 const EXAMPLES = [
   '2 + 3',
@@ -14,6 +15,31 @@ const EXAMPLES = [
   '3.14 + 2.86',
   '(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)',
 ];
+
+/**
+ * Translates an error using i18n error info.
+ * Falls back to the raw error message if translation key doesn't exist.
+ */
+function translateError(
+  t: TFunction,
+  errorInfo: ErrorInfo | undefined,
+  fallbackError: string | undefined
+): string {
+  if (!errorInfo) {
+    return fallbackError || t('errors.calculationFailed');
+  }
+
+  // Check if the translation key exists
+  const translated = t(errorInfo.key, errorInfo.params || {});
+
+  // If the translation key is not found, i18next returns the key itself
+  // In that case, fall back to the raw error message
+  if (translated === errorInfo.key) {
+    return fallbackError || t('errors.calculationFailed');
+  }
+
+  return translated;
+}
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -129,7 +155,8 @@ function App() {
       userAgent: navigator.userAgent,
       timestamp: new Date().toISOString(),
     };
-    const issueUrl = generateIssueUrl(pageState);
+    // Pass the translation function for localized issue reports
+    const issueUrl = generateIssueUrl(pageState, t);
     window.open(issueUrl, '_blank', 'noopener,noreferrer');
   };
 
@@ -263,14 +290,15 @@ function App() {
               <>
                 {result.success ? (
                   <>
-                    <div className="result-value">{result.result}</div>
-
+                    {/* Links notation interpretation shown before result (per issue #15) */}
                     {result.lino_interpretation && (
                       <div className="lino-section">
                         <h3>{t('result.linksNotation')}</h3>
                         <div className="lino-value">{result.lino_interpretation}</div>
                       </div>
                     )}
+
+                    <div className="result-value">{result.result}</div>
 
                     {result.steps.length > 0 && (
                       <div className="steps-section">
@@ -285,7 +313,9 @@ function App() {
                   </>
                 ) : (
                   <>
-                    <div className="result-value error">{result.error}</div>
+                    <div className="result-value error">
+                      {translateError(t, result.error_info, result.error)}
+                    </div>
                     {result.issue_link && (
                       <div className="issue-link">
                         <a href={result.issue_link} target="_blank" rel="noopener noreferrer">

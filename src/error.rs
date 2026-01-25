@@ -1,5 +1,6 @@
 //! Error types for the Link Calculator.
 
+use std::collections::HashMap;
 use thiserror::Error;
 
 /// Main error type for calculator operations.
@@ -76,6 +77,130 @@ pub enum CalculatorError {
     /// Domain error (e.g., sqrt of negative number, log of non-positive).
     #[error("Domain error: {0}")]
     DomainError(String),
+}
+
+/// Error information for i18n support.
+///
+/// This struct contains all the information needed to translate an error
+/// on the frontend, including the error key and any interpolation parameters.
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+pub struct ErrorInfo {
+    /// The translation key for this error (e.g., "errors.divisionByZero").
+    pub key: String,
+    /// Parameters for interpolation in the translated message.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub params: Option<HashMap<String, String>>,
+}
+
+impl ErrorInfo {
+    /// Creates a new error info with just a key.
+    #[must_use]
+    pub fn new(key: impl Into<String>) -> Self {
+        Self {
+            key: key.into(),
+            params: None,
+        }
+    }
+
+    /// Creates a new error info with key and parameters.
+    #[must_use]
+    pub fn with_params(key: impl Into<String>, params: HashMap<String, String>) -> Self {
+        Self {
+            key: key.into(),
+            params: Some(params),
+        }
+    }
+}
+
+impl CalculatorError {
+    /// Returns the i18n error info for this error.
+    ///
+    /// This provides the translation key and any parameters needed
+    /// for the frontend to display a localized error message.
+    #[must_use]
+    pub fn to_error_info(&self) -> ErrorInfo {
+        match self {
+            Self::ParseError(msg) => {
+                let mut params = HashMap::new();
+                params.insert("message".to_string(), msg.clone());
+                ErrorInfo::with_params("errors.parseError", params)
+            }
+            Self::UnexpectedToken {
+                found,
+                expected,
+                position,
+            } => {
+                let mut params = HashMap::new();
+                params.insert("found".to_string(), found.clone());
+                params.insert("expected".to_string(), expected.clone());
+                params.insert("position".to_string(), position.to_string());
+                ErrorInfo::with_params("errors.unexpectedToken", params)
+            }
+            Self::UnitMismatch {
+                operation,
+                left_unit,
+                right_unit,
+            } => {
+                let mut params = HashMap::new();
+                params.insert("operation".to_string(), operation.clone());
+                params.insert("leftUnit".to_string(), left_unit.clone());
+                params.insert("rightUnit".to_string(), right_unit.clone());
+                ErrorInfo::with_params("errors.unitMismatch", params)
+            }
+            Self::EvaluationError(msg) => {
+                let mut params = HashMap::new();
+                params.insert("message".to_string(), msg.clone());
+                ErrorInfo::with_params("errors.evaluationError", params)
+            }
+            Self::DivisionByZero => ErrorInfo::new("errors.divisionByZero"),
+            Self::InvalidDateTime(format) => {
+                let mut params = HashMap::new();
+                params.insert("format".to_string(), format.clone());
+                ErrorInfo::with_params("errors.invalidDateTime", params)
+            }
+            Self::UnknownCurrency(currency) => {
+                let mut params = HashMap::new();
+                params.insert("currency".to_string(), currency.clone());
+                ErrorInfo::with_params("errors.unknownCurrency", params)
+            }
+            Self::CurrencyConversion { from, to, reason } => {
+                let mut params = HashMap::new();
+                params.insert("from".to_string(), from.clone());
+                params.insert("to".to_string(), to.clone());
+                params.insert("reason".to_string(), reason.clone());
+                ErrorInfo::with_params("errors.currencyConversion", params)
+            }
+            Self::NoHistoricalRate { currency, date } => {
+                let mut params = HashMap::new();
+                params.insert("currency".to_string(), currency.clone());
+                params.insert("date".to_string(), date.clone());
+                ErrorInfo::with_params("errors.noHistoricalRate", params)
+            }
+            Self::Overflow => ErrorInfo::new("errors.overflow"),
+            Self::InvalidOperation(msg) => {
+                let mut params = HashMap::new();
+                params.insert("message".to_string(), msg.clone());
+                ErrorInfo::with_params("errors.invalidOperation", params)
+            }
+            Self::EmptyInput => ErrorInfo::new("errors.emptyInput"),
+            Self::UnknownFunction(name) => {
+                let mut params = HashMap::new();
+                params.insert("name".to_string(), name.clone());
+                ErrorInfo::with_params("errors.unknownFunction", params)
+            }
+            Self::InvalidFunctionArgs { function, reason } => {
+                let mut params = HashMap::new();
+                params.insert("function".to_string(), function.clone());
+                params.insert("reason".to_string(), reason.clone());
+                ErrorInfo::with_params("errors.invalidFunctionArgs", params)
+            }
+            Self::DomainError(msg) => {
+                let mut params = HashMap::new();
+                params.insert("message".to_string(), msg.clone());
+                ErrorInfo::with_params("errors.domainError", params)
+            }
+        }
+    }
 }
 
 impl CalculatorError {
