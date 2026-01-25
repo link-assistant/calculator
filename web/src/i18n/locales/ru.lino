@@ -1,43 +1,32 @@
-(
-  (app (
-    (title 'Link Calculator')
-    (subtitle 'Калькулятор выражений с поддержкой даты/времени и валют')
-  ))
-  (input (
-    (label Выражение)
-    (placeholder 'Введите выражение (например, 2 + 3, 84 USD - 34 EUR)')
-  ))
-  (result (
-    (title Результат)
-    (calculating Вычисление...)
-    (loading 'Загрузка движка калькулятора...')
-    (placeholder 'Введите выражение выше')
-    (linksNotation 'Links Notation')
-    (steps Шаги)
-  ))
-  (examples (
-    (title 'Попробуйте эти примеры:')
-  ))
-  (errors (
-    (workerFailed 'Не удалось инициализировать воркер')
-    (calculationFailed 'Ошибка вычисления')
-    (reportIssue 'Сообщить о проблеме')
-    (tryWolframAlpha 'Попробовать Wolfram Alpha')
-  ))
-  (footer (
-    (poweredBy 'На базе Rust + WebAssembly')
-    (viewOnGitHub 'Смотреть на GitHub')
-    (reportIssue 'Сообщить о проблеме')
-  ))
-  (settings (
-    (theme Тема)
-    (themeLight Светлая)
-    (themeDark Тёмная)
-    (themeSystem Системная)
-    (language Язык)
-  ))
-  (share (
-    (copyLink 'Копировать ссылку')
-    (copied Скопировано!)
-  ))
-)
+app:
+  title 'Link Calculator'
+  subtitle 'Калькулятор выражений с поддержкой даты/времени и валют'
+input:
+  label Выражение
+  placeholder 'Введите выражение (например, 2 + 3, 84 USD - 34 EUR)'
+result:
+  title Результат
+  calculating Вычисление...
+  loading 'Загрузка движка калькулятора...'
+  placeholder 'Введите выражение выше'
+  linksNotation 'Links Notation'
+  steps Шаги
+examples:
+  title 'Попробуйте эти примеры:'
+errors:
+  workerFailed 'Не удалось инициализировать воркер'
+  calculationFailed 'Ошибка вычисления'
+  reportIssue 'Сообщить о проблеме'
+footer:
+  poweredBy 'На базе Rust + WebAssembly'
+  viewOnGitHub 'Смотреть на GitHub'
+  reportIssue 'Сообщить о проблеме'
+settings:
+  theme Тема
+  themeLight Светлая
+  themeDark Тёмная
+  themeSystem Системная
+  language Язык
+share:
+  copyLink 'Копировать ссылку'
+  copied Скопировано!
