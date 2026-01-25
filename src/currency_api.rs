@@ -5,6 +5,9 @@
 //!
 //! API Documentation: https://github.com/fawazahmed0/exchange-api
 
+// Allow futures that are not Send, as these are WASM-only functions running in a single-threaded context
+#![allow(clippy::future_not_send)]
+
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::JsFuture;
@@ -94,13 +97,12 @@ async fn fetch_rates_from_url(
     base_currency: &str,
 ) -> Result<(String, HashMap<String, f64>), CurrencyApiError> {
     // First try the primary CDN URL
-    match fetch_json(url).await {
-        Ok((date, rates)) => Ok((date, rates)),
-        Err(_) => {
-            // Try fallback URL
-            let fallback = format!("{}/v1/currencies/{}.json", FALLBACK_URL, base_currency);
-            fetch_json(&fallback).await
-        }
+    if let Ok((date, rates)) = fetch_json(url).await {
+        Ok((date, rates))
+    } else {
+        // Try fallback URL
+        let fallback = format!("{}/v1/currencies/{}.json", FALLBACK_URL, base_currency);
+        fetch_json(&fallback).await
     }
 }
 
@@ -152,7 +154,7 @@ async fn fetch_json(url: &str) -> Result<(String, HashMap<String, f64>), Currenc
     // The API returns: { "date": "YYYY-MM-DD", "usd": { "eur": 0.92, ... } }
     let base_lower = url
         .split('/')
-        .last()
+        .next_back()
         .and_then(|s| s.strip_suffix(".json"))
         .unwrap_or("usd");
 
@@ -162,6 +164,7 @@ async fn fetch_json(url: &str) -> Result<(String, HashMap<String, f64>), Currenc
 }
 
 /// Converts raw API rates to `ExchangeRateInfo` objects.
+#[allow(clippy::implicit_hasher)]
 pub fn rates_to_exchange_info(
     base: &str,
     date: &str,
@@ -207,6 +210,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::float_cmp)]
     fn test_rates_to_exchange_info() {
         let mut rates = HashMap::new();
         rates.insert("eur".to_string(), 0.92);

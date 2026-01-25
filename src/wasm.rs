@@ -28,6 +28,7 @@ pub fn health_check() -> bool {
 /// Response from fetching exchange rates.
 #[wasm_bindgen]
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[allow(clippy::unsafe_derive_deserialize)] // wasm_bindgen adds unsafe methods
 pub struct ExchangeRatesResponse {
     /// Whether the fetch was successful.
     pub success: bool,

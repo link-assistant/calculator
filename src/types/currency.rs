@@ -233,7 +233,7 @@ impl CurrencyDatabase {
                 rate: 1.0 / info.rate,
                 source: info.source.clone(),
                 date: info.date.clone(),
-                fetched_at: info.fetched_at.clone(),
+                fetched_at: info.fetched_at,
             };
             self.rates.insert((to_upper, from_upper), inverse_info);
         }
@@ -266,7 +266,7 @@ impl CurrencyDatabase {
                 rate: 1.0 / info.rate,
                 source: info.source.clone(),
                 date: info.date.clone(),
-                fetched_at: info.fetched_at.clone(),
+                fetched_at: info.fetched_at,
             };
             self.historical_rates
                 .insert((to_upper, from_upper, date.to_string()), inverse_info);
@@ -511,6 +511,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::float_cmp)]
     fn test_exchange_rate_info() {
         let info = ExchangeRateInfo::new(1.5, "test-api", "2026-01-25");
         assert_eq!(info.rate, 1.5);
@@ -528,6 +529,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::float_cmp)]
     fn test_set_rate_with_info() {
         let mut db = CurrencyDatabase::new();
         let info = ExchangeRateInfo::new(75.0, "test-api", "2026-01-25");
@@ -543,6 +545,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::float_cmp)]
     fn test_convert_tracks_rate_used() {
         let mut db = CurrencyDatabase::new();
         let info = ExchangeRateInfo::new(75.0, "test-api", "2026-01-25");
@@ -559,6 +562,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::float_cmp)]
     fn test_same_currency_no_rate_tracking() {
         let mut db = CurrencyDatabase::new();
         let result = db.convert(100.0, "USD", "USD").unwrap();
