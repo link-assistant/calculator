@@ -1,255 +1,171 @@
-# rust-ai-driven-development-pipeline-template
+# Link Calculator
 
-A comprehensive template for AI-driven Rust development with full CI/CD pipeline support.
+A grammar-based expression calculator with DateTime and Currency support, built with Rust WebAssembly and React.
 
-[![CI/CD Pipeline](https://github.com/link-foundation/rust-ai-driven-development-pipeline-template/workflows/CI%2FCD%20Pipeline/badge.svg)](https://github.com/link-foundation/rust-ai-driven-development-pipeline-template/actions)
+[![CI/CD Pipeline](https://github.com/link-assistant/calculator/workflows/CI/badge.svg)](https://github.com/link-assistant/calculator/actions)
+[![Deploy](https://github.com/link-assistant/calculator/workflows/Deploy%20to%20GitHub%20Pages/badge.svg)](https://link-assistant.github.io/calculator/)
 [![Rust Version](https://img.shields.io/badge/rust-1.70%2B-blue.svg)](https://www.rust-lang.org/)
 [![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)
 
+## Live Demo
+
+**[https://link-assistant.github.io/calculator/](https://link-assistant.github.io/calculator/)**
+
+## Screenshots
+
+### Main Interface
+![Link Calculator Main Interface](docs/screenshots/calculator-main.png)
+
+### Arithmetic Operations
+![Arithmetic calculation with step-by-step explanation](docs/screenshots/calculator-arithmetic.png)
+
+### DateTime Calculations
+![DateTime subtraction showing duration calculation](docs/screenshots/calculator-datetime.png)
+
+### Currency Conversions
+![Currency arithmetic with automatic conversion](docs/screenshots/calculator-currency.png)
+
 ## Features
 
-- **Rust stable support**: Works with Rust stable version
-- **Cross-platform testing**: CI runs on Ubuntu, macOS, and Windows
-- **Comprehensive testing**: Unit tests, integration tests, and doc tests
-- **Code quality**: rustfmt + Clippy with pedantic lints
-- **Pre-commit hooks**: Automated code quality checks before commits
-- **CI/CD pipeline**: GitHub Actions with multi-platform support
-- **Changelog management**: Fragment-based changelog (like Changesets/Scriv)
-- **Release automation**: Automatic GitHub releases
+### Expression Parser
+- Arithmetic operations: `+`, `-`, `*`, `/` with proper operator precedence
+- Parentheses for grouping: `(2 + 3) * 4`
+- Negative numbers: `-5 + 3`
+- Decimal precision using `rust_decimal`
 
-## Quick Start
+### DateTime Support
+Supports multiple date and time formats:
+- ISO format: `2026-01-22`
+- US format: `01/22/2026`
+- European format: `22/01/2026`
+- Month names: `Jan 22, 2026`, `22 Jan 2026`
+- Time formats: `8:59am`, `14:30`, with timezone support (`8:59am UTC`)
+- DateTime arithmetic: `(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)`
 
-### Using This Template
+### Currency Support
+- Currency amounts: `84 USD`, `34 EUR`
+- Currency arithmetic with automatic conversion: `100 USD + 50 EUR`
+- Temporal awareness: `84 USD - 34 EUR at 22 Jan 2026`
+- Support for 50+ currencies including major world currencies, precious metals, and cryptocurrencies
 
-1. Click "Use this template" on GitHub to create a new repository
-2. Clone your new repository
-3. Update `Cargo.toml` with your package name and description
-4. Rename the library and binary in `Cargo.toml`
-5. Update imports in tests and examples
-6. Build and start developing!
+### Links Notation
+All expressions are represented in [links-notation](https://github.com/link-foundation/links-notation) format:
+- Step-by-step calculation explanations
+- Issue prefill links for unrecognized input
 
-### Development Setup
+## Example Usage
+
+```
+> 2 + 3
+Result: 5
+Links notation: ((2) + (3))
+
+> (Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)
+Result: 1 day, 20 hours, 8 minutes
+Links notation: (((Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)))
+
+> 84 USD - 34 EUR
+Result: 47.042 USD
+Links notation: (((84 USD)) - ((34 EUR)))
+```
+
+## Technical Implementation
+
+### Rust WASM Core (`src/`)
+- `grammar/` - Lexer and recursive descent parser
+- `types/` - Value, Decimal, DateTime, Currency, Unit types
+- `lino/` - Links notation representation
+- `error/` - Error types with thiserror
+- `wasm.rs` - WebAssembly bindings
+
+### React Frontend (`web/`)
+- Vite + TypeScript + React 18
+- Web Worker for non-blocking WASM calculations
+- Responsive design with real-time results
+- Example expressions for quick testing
+
+### CI/CD (`.github/workflows/`)
+- `ci.yml` - Tests, linting, formatting, WASM build
+- `deploy.yml` - GitHub Pages deployment
+
+## Development Setup
+
+### Prerequisites
+- Rust 1.70+ with `wasm32-unknown-unknown` target
+- Node.js 18+
+- wasm-pack
+
+### Build & Run
 
 ```bash
 # Clone the repository
-git clone https://github.com/link-foundation/rust-ai-driven-development-pipeline-template.git
-cd rust-ai-driven-development-pipeline-template
+git clone https://github.com/link-assistant/calculator.git
+cd calculator
 
-# Build the project
-cargo build
+# Build the WASM package
+wasm-pack build --target web --out-dir web/public/pkg
 
-# Run tests
-cargo test
+# Install web dependencies
+cd web
+npm install
 
-# Run the example binary
-cargo run
-
-# Run an example
-cargo run --example basic_usage
+# Start development server
+npm run dev
 ```
 
 ### Running Tests
 
 ```bash
-# Run all tests
+# Run all Rust tests
 cargo test
 
 # Run tests with verbose output
 cargo test --verbose
 
-# Run doc tests
-cargo test --doc
+# Run Clippy lints
+cargo clippy --all-targets --all-features
 
-# Run a specific test
-cargo test test_add_positive_numbers
-
-# Run tests with output
-cargo test -- --nocapture
-```
-
-### Code Quality Checks
-
-```bash
 # Format code
 cargo fmt
 
 # Check formatting (CI style)
 cargo fmt --check
+```
 
-# Run Clippy lints
-cargo clippy --all-targets --all-features
+### Building for Production
 
-# Check file size limits
-node scripts/check-file-size.mjs
+```bash
+# Build optimized WASM
+wasm-pack build --target web --release --out-dir web/public/pkg
 
-# Run all checks
-cargo fmt --check && cargo clippy --all-targets --all-features && node scripts/check-file-size.mjs
+# Build web frontend
+cd web
+npm run build
 ```
 
 ## Project Structure
 
 ```
 .
-├── .github/
-│   └── workflows/
-│       └── release.yml         # CI/CD pipeline configuration
-├── changelog.d/                # Changelog fragments
-│   ├── README.md               # Fragment instructions
-│   └── *.md                    # Individual changelog entries
-├── examples/
-│   └── basic_usage.rs          # Usage examples
-├── scripts/
-│   ├── bump-version.mjs        # Version bumping utility
-│   ├── check-file-size.mjs     # File size validation script
-│   ├── collect-changelog.mjs   # Changelog collection script
-│   ├── create-github-release.mjs # GitHub release creation
-│   ├── detect-code-changes.mjs # Detects code changes for CI
-│   ├── get-bump-type.mjs       # Determines version bump type
-│   └── version-and-commit.mjs  # CI/CD version management
-├── src/
-│   ├── lib.rs                  # Library entry point
-│   └── main.rs                 # Binary entry point
-├── tests/
-│   └── integration_test.rs     # Integration tests
-├── .gitignore                  # Git ignore patterns
-├── .pre-commit-config.yaml     # Pre-commit hooks configuration
-├── Cargo.toml                  # Project configuration
-├── CHANGELOG.md                # Project changelog
-├── CONTRIBUTING.md             # Contribution guidelines
-├── LICENSE                     # Unlicense (public domain)
-└── README.md                   # This file
+├── .github/workflows/      # CI/CD pipeline configuration
+├── data/                   # Currency exchange rate databases
+│   └── exchange_rates/     # Historical exchange rates (.lino files)
+├── docs/                   # Documentation and screenshots
+├── src/                    # Rust source code
+│   ├── grammar/            # Lexer, parser, and grammar modules
+│   ├── types/              # Core types (Value, DateTime, Currency, etc.)
+│   ├── lino/               # Links notation module
+│   ├── error.rs            # Error types
+│   ├── lib.rs              # Library entry point
+│   ├── main.rs             # CLI entry point
+│   └── wasm.rs             # WASM bindings
+├── tests/                  # Integration tests
+├── web/                    # React frontend
+│   ├── src/                # TypeScript source
+│   └── public/             # Static assets
+├── Cargo.toml              # Rust project configuration
+└── README.md               # This file
 ```
-
-## Design Choices
-
-### Code Quality Tools
-
-- **rustfmt**: Standard Rust code formatter
-  - Ensures consistent code style across the project
-  - Configured to run on all Rust files
-
-- **Clippy**: Rust linter with comprehensive checks
-  - Pedantic and nursery lints enabled for strict code quality
-  - Catches common mistakes and suggests improvements
-  - Enforces best practices
-
-- **Pre-commit hooks**: Automated checks before each commit
-  - Runs rustfmt to ensure formatting
-  - Runs Clippy to catch issues early
-  - Runs tests to prevent broken commits
-
-### Testing Strategy
-
-The template supports multiple levels of testing:
-
-- **Unit tests**: In `src/lib.rs` using `#[cfg(test)]` modules
-- **Integration tests**: In `tests/` directory
-- **Doc tests**: In documentation examples using `///` comments
-- **Examples**: In `examples/` directory (also serve as documentation)
-
-### Changelog Management
-
-This template uses a fragment-based changelog system similar to:
-- [Changesets](https://github.com/changesets/changesets) (JavaScript)
-- [Scriv](https://scriv.readthedocs.io/) (Python)
-
-Benefits:
-- **No merge conflicts**: Multiple PRs can add fragments without conflicts
-- **Per-PR documentation**: Each PR documents its own changes
-- **Automated collection**: Fragments are collected during release
-- **Consistent format**: Template ensures consistent changelog entries
-
-```bash
-# Create a changelog fragment
-touch changelog.d/$(date +%Y%m%d_%H%M%S)_my_change.md
-
-# Edit the fragment to document your changes
-```
-
-### CI/CD Pipeline
-
-The GitHub Actions workflow provides:
-
-1. **Linting**: rustfmt and Clippy checks
-2. **Changelog check**: Warns if PRs are missing changelog fragments
-3. **Test matrix**: 3 OS (Ubuntu, macOS, Windows) with Rust stable
-4. **Building**: Release build and package validation
-5. **Release**: Automated GitHub releases when version changes
-
-### Release Automation
-
-The release workflow supports:
-
-- **Auto-release**: Automatically creates releases when version in Cargo.toml changes
-- **Manual release**: Trigger releases via workflow_dispatch with version bump type
-- **Changelog collection**: Automatically collects fragments during release
-- **GitHub releases**: Automatic creation with CHANGELOG content
-
-## Configuration
-
-### Updating Package Name
-
-After creating a repository from this template:
-
-1. Update `Cargo.toml`:
-   - Change `name` field
-   - Update `repository` and `documentation` URLs
-   - Change `[lib]` and `[[bin]]` names
-
-2. Rename the crate in imports:
-   - `tests/integration_test.rs`
-   - `examples/basic_usage.rs`
-   - `src/main.rs`
-
-### Clippy Configuration
-
-Clippy is configured in `Cargo.toml` under `[lints.clippy]`:
-
-- Pedantic lints enabled for strict code quality
-- Nursery lints enabled for additional checks
-- Some common patterns allowed (e.g., `module_name_repetitions`)
-
-### rustfmt Configuration
-
-Uses default rustfmt settings. To customize, create a `rustfmt.toml`:
-
-```toml
-edition = "2021"
-max_width = 100
-tab_spaces = 4
-```
-
-## Scripts Reference
-
-| Script                              | Description                    |
-| ----------------------------------- | ------------------------------ |
-| `cargo test`                        | Run all tests                  |
-| `cargo fmt`                         | Format code                    |
-| `cargo clippy`                      | Run lints                      |
-| `cargo run --example basic_usage`   | Run example                    |
-| `node scripts/check-file-size.mjs`  | Check file size limits         |
-| `node scripts/bump-version.mjs`     | Bump version                   |
-
-## Example Usage
-
-```rust
-use my_package::{add, multiply, delay};
-
-#[tokio::main]
-async fn main() {
-    // Basic arithmetic
-    let sum = add(2, 3);     // 5
-    let product = multiply(2, 3);  // 6
-
-    println!("2 + 3 = {sum}");
-    println!("2 * 3 = {product}");
-
-    // Async operations
-    delay(1.0).await;  // Wait for 1 second
-}
-```
-
-See `examples/basic_usage.rs` for more examples.
 
 ## Contributing
 
@@ -273,14 +189,6 @@ This is free and unencumbered software released into the public domain. See [LIC
 
 ## Acknowledgments
 
-Inspired by:
-- [js-ai-driven-development-pipeline-template](https://github.com/link-foundation/js-ai-driven-development-pipeline-template)
-- [python-ai-driven-development-pipeline-template](https://github.com/link-foundation/python-ai-driven-development-pipeline-template)
-
-## Resources
-
-- [Rust Book](https://doc.rust-lang.org/book/)
-- [Cargo Book](https://doc.rust-lang.org/cargo/)
-- [Clippy Documentation](https://rust-lang.github.io/rust-clippy/)
-- [rustfmt Documentation](https://rust-lang.github.io/rustfmt/)
-- [Pre-commit Documentation](https://pre-commit.com/)
+- Built with [Rust](https://www.rust-lang.org/) and [WebAssembly](https://webassembly.org/)
+- Inspired by [links-notation](https://github.com/link-foundation/links-notation)
+- React frontend powered by [Vite](https://vitejs.dev/)
