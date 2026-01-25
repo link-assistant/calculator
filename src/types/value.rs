@@ -99,6 +99,10 @@ impl Value {
             (ValueKind::DateTime(dt), ValueKind::Duration { seconds }) => {
                 Ok(Value::datetime(dt.add_duration(*seconds)))
             }
+            (ValueKind::Duration { seconds }, ValueKind::DateTime(dt)) => {
+                // Duration + DateTime = DateTime (commutative)
+                Ok(Value::datetime(dt.add_duration(*seconds)))
+            }
             (ValueKind::Duration { seconds: s1 }, ValueKind::Duration { seconds: s2 }) => {
                 Ok(Value::duration(s1 + s2))
             }
@@ -425,5 +429,42 @@ mod tests {
         let db = CurrencyDatabase::new();
         let result = dt1.subtract(&dt2, &db).unwrap();
         assert!(matches!(result.kind, ValueKind::Duration { .. }));
+    }
+
+    #[test]
+    fn test_datetime_plus_duration() {
+        let dt = Value::datetime(DateTime::parse("2026-01-25").unwrap());
+        let dur = Value::duration(86400); // 1 day in seconds
+        let db = CurrencyDatabase::new();
+        let result = dt.add(&dur, &db).unwrap();
+        assert!(matches!(result.kind, ValueKind::DateTime(_)));
+    }
+
+    #[test]
+    fn test_duration_plus_datetime() {
+        // This is the case from issue #8: duration + datetime
+        let dur = Value::duration(86400); // 1 day in seconds
+        let dt = Value::datetime(DateTime::parse("2026-01-25").unwrap());
+        let db = CurrencyDatabase::new();
+        let result = dur.add(&dt, &db).unwrap();
+        assert!(matches!(result.kind, ValueKind::DateTime(_)));
+    }
+
+    #[test]
+    fn test_issue_8_expression() {
+        // Test the exact expression from issue #8:
+        // (Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC) + (Jan 25, 12:51pm UTC)
+        let dt1 = Value::datetime(DateTime::parse("Jan 27, 8:59am UTC").unwrap());
+        let dt2 = Value::datetime(DateTime::parse("Jan 25, 12:51pm UTC").unwrap());
+        let dt3 = Value::datetime(DateTime::parse("Jan 25, 12:51pm UTC").unwrap());
+        let db = CurrencyDatabase::new();
+
+        // First: dt1 - dt2 = duration
+        let duration = dt1.subtract(&dt2, &db).unwrap();
+        assert!(matches!(duration.kind, ValueKind::Duration { .. }));
+
+        // Second: duration + dt3 = datetime (this was failing before the fix)
+        let result = duration.add(&dt3, &db).unwrap();
+        assert!(matches!(result.kind, ValueKind::DateTime(_)));
     }
 }
