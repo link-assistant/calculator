@@ -1,8 +1,10 @@
 //! Expression parser that combines all grammars.
 
 use crate::error::CalculatorError;
-use crate::grammar::{DateTimeGrammar, Lexer, NumberGrammar, Token, TokenKind};
-use crate::types::{BinaryOp, CurrencyDatabase, Expression, Unit, Value};
+use crate::grammar::{
+    evaluate_function, is_math_function, DateTimeGrammar, Lexer, NumberGrammar, Token, TokenKind,
+};
+use crate::types::{BinaryOp, CurrencyDatabase, Decimal, Expression, Unit, Value};
 
 /// Parser for calculator expressions.
 #[derive(Debug, Default)]
@@ -127,12 +129,6 @@ impl ExpressionParser {
 
     /// Parses an expression string into an Expression AST.
     pub fn parse(&self, input: &str) -> Result<Expression, CalculatorError> {
-        // Pre-check for advanced math expressions before tokenizing
-        // This catches cases where special characters (^, =, >) would cause parse errors
-        if let Some(keyword) = detect_advanced_math_keyword(input) {
-            return Err(CalculatorError::unsupported_math(keyword, input));
-        }
-
         let mut lexer = Lexer::new(input);
         let tokens = lexer.tokenize()?;
         let mut parser = TokenParser::new(&tokens, &self.number_grammar, input);
@@ -179,6 +175,58 @@ impl ExpressionParser {
                 // In the future, this would use the time for currency conversion
                 let _time_val = self.evaluate_expr(time)?;
                 self.evaluate_expr(value)
+            }
+            Expression::FunctionCall { name, args } => {
+                let name_lower = name.to_lowercase();
+
+                // Special handling for integrate(expr, var, lower, upper)
+                if name_lower == "integrate" {
+                    return self.evaluate_integrate(args);
+                }
+
+                // Evaluate all arguments
+                let mut arg_values = Vec::new();
+                for arg in args {
+                    let val = self.evaluate_expr(arg)?;
+                    // Extract the decimal value
+                    let decimal = val.as_decimal().ok_or_else(|| {
+                        CalculatorError::invalid_args(name, "expected numeric argument")
+                    })?;
+                    arg_values.push(decimal);
+                }
+
+                // Call the function
+                let result = evaluate_function(name, &arg_values)?;
+                Ok(Value::number(result))
+            }
+            Expression::Variable(name) => {
+                // Variables should not appear in direct evaluation
+                // They are only used in integration contexts
+                Err(CalculatorError::eval(format!("undefined variable: {name}")))
+            }
+            Expression::Power { base, exponent } => {
+                let base_val = self.evaluate_expr(base)?;
+                let exp_val = self.evaluate_expr(exponent)?;
+
+                let base_dec = base_val.as_decimal().ok_or_else(|| {
+                    CalculatorError::InvalidOperation("power base must be numeric".into())
+                })?;
+                let exp_dec = exp_val.as_decimal().ok_or_else(|| {
+                    CalculatorError::InvalidOperation("power exponent must be numeric".into())
+                })?;
+
+                let base_f64 = base_dec.to_f64();
+                let exp_f64 = exp_dec.to_f64();
+                let result = base_f64.powf(exp_f64);
+
+                if result.is_nan() {
+                    return Err(CalculatorError::domain("power result is undefined"));
+                }
+                if result.is_infinite() {
+                    return Err(CalculatorError::Overflow);
+                }
+
+                Ok(Value::number(Decimal::from_f64(result)))
             }
         }
     }
@@ -229,6 +277,73 @@ impl ExpressionParser {
                 steps.push(format!("At time: {}", time_val.to_display_string()));
                 self.evaluate_expr_with_steps(value, steps)
             }
+            Expression::FunctionCall { name, args } => {
+                let name_lower = name.to_lowercase();
+
+                // Special handling for integrate(expr, var, lower, upper)
+                if name_lower == "integrate" {
+                    steps.push(format!("Numerical integration: {}(...)", name));
+                    let result = self.evaluate_integrate(args)?;
+                    steps.push(format!("= {}", result.to_display_string()));
+                    return Ok(result);
+                }
+
+                let mut arg_values = Vec::new();
+                let mut arg_display = Vec::new();
+                for arg in args {
+                    let val = self.evaluate_expr_with_steps(arg, steps)?;
+                    arg_display.push(val.to_display_string());
+                    let decimal = val.as_decimal().ok_or_else(|| {
+                        CalculatorError::invalid_args(name, "expected numeric argument")
+                    })?;
+                    arg_values.push(decimal);
+                }
+
+                steps.push(format!(
+                    "Call function: {}({})",
+                    name,
+                    arg_display.join(", ")
+                ));
+                let result = evaluate_function(name, &arg_values)?;
+                let val = Value::number(result);
+                steps.push(format!("= {}", val.to_display_string()));
+                Ok(val)
+            }
+            Expression::Variable(name) => {
+                Err(CalculatorError::eval(format!("undefined variable: {name}")))
+            }
+            Expression::Power { base, exponent } => {
+                let base_val = self.evaluate_expr_with_steps(base, steps)?;
+                let exp_val = self.evaluate_expr_with_steps(exponent, steps)?;
+
+                steps.push(format!(
+                    "Compute: {} ^ {}",
+                    base_val.to_display_string(),
+                    exp_val.to_display_string()
+                ));
+
+                let base_dec = base_val.as_decimal().ok_or_else(|| {
+                    CalculatorError::InvalidOperation("power base must be numeric".into())
+                })?;
+                let exp_dec = exp_val.as_decimal().ok_or_else(|| {
+                    CalculatorError::InvalidOperation("power exponent must be numeric".into())
+                })?;
+
+                let base_f64 = base_dec.to_f64();
+                let exp_f64 = exp_dec.to_f64();
+                let result = base_f64.powf(exp_f64);
+
+                if result.is_nan() {
+                    return Err(CalculatorError::domain("power result is undefined"));
+                }
+                if result.is_infinite() {
+                    return Err(CalculatorError::Overflow);
+                }
+
+                let val = Value::number(Decimal::from_f64(result));
+                steps.push(format!("= {}", val.to_display_string()));
+                Ok(val)
+            }
         }
     }
 
@@ -245,90 +360,175 @@ impl ExpressionParser {
             BinaryOp::Divide => left.divide(right),
         }
     }
-}
 
-/// Keywords that indicate advanced mathematical expressions.
-/// These are not supported by this calculator but can be handled by Wolfram Alpha.
-const ADVANCED_MATH_KEYWORDS: &[&str] = &[
-    "integrate",
-    "integral",
-    "differentiate",
-    "derivative",
-    "diff",
-    "solve",
-    "limit",
-    "lim",
-    "sum",
-    "product",
-    "series",
-    "taylor",
-    "fourier",
-    "laplace",
-    "simplify",
-    "expand",
-    "factor",
-    "roots",
-    "zeros",
-    "plot",
-    "graph",
-    "sin",
-    "cos",
-    "tan",
-    "log",
-    "ln",
-    "exp",
-    "sqrt",
-    "abs",
-    "mod",
-    "gcd",
-    "lcm",
-    "prime",
-    "factorial",
-    "permutation",
-    "combination",
-    "matrix",
-    "determinant",
-    "eigenvalue",
-    "eigenvector",
-];
+    /// Evaluates an integrate function call: integrate(expr, var, lower, upper).
+    ///
+    /// Uses numerical integration (Simpson's rule) to compute the definite integral.
+    #[allow(clippy::many_single_char_names)]
+    fn evaluate_integrate(&self, args: &[Expression]) -> Result<Value, CalculatorError> {
+        if args.len() != 4 {
+            return Err(CalculatorError::invalid_args(
+                "integrate",
+                "expected 4 arguments: integrate(expr, var, lower, upper)",
+            ));
+        }
 
-/// Checks if an identifier is an advanced math keyword.
-fn is_advanced_math_keyword(id: &str) -> bool {
-    ADVANCED_MATH_KEYWORDS
-        .iter()
-        .any(|&keyword| id.to_lowercase() == keyword)
-}
+        // Second argument must be a variable name
+        let var_name = match &args[1] {
+            Expression::Variable(name) => name.clone(),
+            _ => {
+                return Err(CalculatorError::invalid_args(
+                    "integrate",
+                    "second argument must be a variable name (e.g., x)",
+                ))
+            }
+        };
 
-/// Detects advanced math keywords in the input string.
-/// Returns the first keyword found, or None if no advanced math keyword is detected.
-fn detect_advanced_math_keyword(input: &str) -> Option<&'static str> {
-    let input_lower = input.to_lowercase();
+        // Evaluate lower and upper bounds
+        let lower_val = self.evaluate_expr(&args[2])?;
+        let lower = lower_val.as_decimal().ok_or_else(|| {
+            CalculatorError::invalid_args("integrate", "lower bound must be numeric")
+        })?;
 
-    for &keyword in ADVANCED_MATH_KEYWORDS {
-        // Check if the keyword appears as a word (not part of another word)
-        if let Some(pos) = input_lower.find(keyword) {
-            // Check that it's a word boundary (start of string or preceded by non-alphanumeric)
-            let is_word_start = pos == 0
-                || !input_lower[..pos]
-                    .chars()
-                    .last()
-                    .is_some_and(char::is_alphanumeric);
+        let upper_val = self.evaluate_expr(&args[3])?;
+        let upper = upper_val.as_decimal().ok_or_else(|| {
+            CalculatorError::invalid_args("integrate", "upper bound must be numeric")
+        })?;
 
-            // Check that it's followed by a word boundary (end of string, space, or punctuation)
-            let end_pos = pos + keyword.len();
-            let is_word_end = end_pos >= input_lower.len()
-                || !input_lower[end_pos..]
-                    .chars()
-                    .next()
-                    .is_some_and(char::is_alphanumeric);
+        let a = lower.to_f64();
+        let b = upper.to_f64();
 
-            if is_word_start && is_word_end {
-                return Some(keyword);
+        // The expression to integrate
+        let integrand = &args[0];
+
+        // Numerical integration using Simpson's rule
+        let n = 1000_usize; // Number of subdivisions
+        let h = (b - a) / (n as f64);
+
+        let mut sum = 0.0;
+
+        // f(a) + f(b)
+        sum += self.evaluate_at(integrand, &var_name, a)?.to_f64();
+        sum += self.evaluate_at(integrand, &var_name, b)?.to_f64();
+
+        // 4 * sum of odd terms
+        for i in (1..n).step_by(2) {
+            let x = (i as f64).mul_add(h, a);
+            sum += 4.0 * self.evaluate_at(integrand, &var_name, x)?.to_f64();
+        }
+
+        // 2 * sum of even terms
+        for i in (2..n).step_by(2) {
+            let x = (i as f64).mul_add(h, a);
+            sum += 2.0 * self.evaluate_at(integrand, &var_name, x)?.to_f64();
+        }
+
+        let result = sum * h / 3.0;
+
+        if result.is_nan() {
+            return Err(CalculatorError::domain("integration result is undefined"));
+        }
+        if result.is_infinite() {
+            return Err(CalculatorError::Overflow);
+        }
+
+        Ok(Value::number(Decimal::from_f64(result)))
+    }
+
+    /// Evaluates an expression with a variable substitution.
+    fn evaluate_at(
+        &self,
+        expr: &Expression,
+        var_name: &str,
+        value: f64,
+    ) -> Result<Decimal, CalculatorError> {
+        let val = self.evaluate_expr_with_var(expr, var_name, Decimal::from_f64(value))?;
+        val.as_decimal().ok_or_else(|| {
+            CalculatorError::InvalidOperation("expected numeric result in integration".into())
+        })
+    }
+
+    /// Evaluates an expression with a variable substitution.
+    fn evaluate_expr_with_var(
+        &self,
+        expr: &Expression,
+        var_name: &str,
+        var_value: Decimal,
+    ) -> Result<Value, CalculatorError> {
+        match expr {
+            Expression::Number { value, unit } => Ok(Value::number_with_unit(*value, unit.clone())),
+            Expression::DateTime(dt) => Ok(Value::datetime(dt.clone())),
+            Expression::Binary { left, op, right } => {
+                let left_val = self.evaluate_expr_with_var(left, var_name, var_value)?;
+                let right_val = self.evaluate_expr_with_var(right, var_name, var_value)?;
+                self.apply_binary_op(&left_val, *op, &right_val)
+            }
+            Expression::Negate(inner) => {
+                let val = self.evaluate_expr_with_var(inner, var_name, var_value)?;
+                Ok(val.negate())
+            }
+            Expression::Group(inner) => self.evaluate_expr_with_var(inner, var_name, var_value),
+            Expression::AtTime { value, time } => {
+                let _time_val = self.evaluate_expr_with_var(time, var_name, var_value)?;
+                self.evaluate_expr_with_var(value, var_name, var_value)
+            }
+            Expression::FunctionCall { name, args } => {
+                let name_lower = name.to_lowercase();
+
+                // Nested integrate not supported
+                if name_lower == "integrate" {
+                    return Err(CalculatorError::invalid_args(
+                        "integrate",
+                        "nested integration is not supported",
+                    ));
+                }
+
+                // Evaluate all arguments with variable substitution
+                let mut arg_values = Vec::new();
+                for arg in args {
+                    let val = self.evaluate_expr_with_var(arg, var_name, var_value)?;
+                    let decimal = val.as_decimal().ok_or_else(|| {
+                        CalculatorError::invalid_args(name, "expected numeric argument")
+                    })?;
+                    arg_values.push(decimal);
+                }
+
+                let result = evaluate_function(name, &arg_values)?;
+                Ok(Value::number(result))
+            }
+            Expression::Variable(name) => {
+                if name == var_name {
+                    Ok(Value::number(var_value))
+                } else {
+                    Err(CalculatorError::eval(format!("undefined variable: {name}")))
+                }
+            }
+            Expression::Power { base, exponent } => {
+                let base_val = self.evaluate_expr_with_var(base, var_name, var_value)?;
+                let exp_val = self.evaluate_expr_with_var(exponent, var_name, var_value)?;
+
+                let base_dec = base_val.as_decimal().ok_or_else(|| {
+                    CalculatorError::InvalidOperation("power base must be numeric".into())
+                })?;
+                let exp_dec = exp_val.as_decimal().ok_or_else(|| {
+                    CalculatorError::InvalidOperation("power exponent must be numeric".into())
+                })?;
+
+                let base_f64 = base_dec.to_f64();
+                let exp_f64 = exp_dec.to_f64();
+                let result = base_f64.powf(exp_f64);
+
+                if result.is_nan() {
+                    return Err(CalculatorError::domain("power result is undefined"));
+                }
+                if result.is_infinite() {
+                    return Err(CalculatorError::Overflow);
+                }
+
+                Ok(Value::number(Decimal::from_f64(result)))
             }
         }
     }
-
-    None
 }
 
 /// Internal token-based parser.
@@ -336,6 +536,7 @@ struct TokenParser<'a> {
     tokens: &'a [Token],
     pos: usize,
     number_grammar: &'a NumberGrammar,
+    #[allow(dead_code)]
     original_input: &'a str,
 }
 
@@ -376,11 +577,24 @@ impl<'a> TokenParser<'a> {
     }
 
     fn parse_multiplicative(&mut self) -> Result<Expression, CalculatorError> {
-        let mut left = self.parse_unary()?;
+        let mut left = self.parse_power()?;
 
         while let Some(op) = self.match_multiplicative_op() {
-            let right = self.parse_unary()?;
+            let right = self.parse_power()?;
             left = Expression::binary(left, op, right);
+        }
+
+        Ok(left)
+    }
+
+    fn parse_power(&mut self) -> Result<Expression, CalculatorError> {
+        let mut left = self.parse_unary()?;
+
+        // Power is right-associative: 2^3^4 = 2^(3^4)
+        if self.check(&TokenKind::Caret) {
+            self.advance();
+            let right = self.parse_power()?; // Right-associative recursion
+            left = Expression::power(left, right);
         }
 
         Ok(left)
@@ -410,14 +624,22 @@ impl<'a> TokenParser<'a> {
             let num_str = n.clone();
             self.advance();
 
-            // Check for unit (identifier following number)
+            // Check for power operator after number (without unit)
+            // This is handled in parse_power, so we just need to handle units here
+
+            // Check for unit (identifier following number that is not a function)
             let unit = if let Some(TokenKind::Identifier(id)) = self.current_kind() {
-                let unit = self
-                    .number_grammar
-                    .parse_unit(id)
-                    .unwrap_or_else(|_| Unit::Custom(id.clone()));
-                self.advance();
-                unit
+                // Don't treat function names as units
+                if !is_math_function(id) && !self.peek_is_left_paren() {
+                    let unit = self
+                        .number_grammar
+                        .parse_unit(id)
+                        .unwrap_or_else(|_| Unit::Custom(id.clone()));
+                    self.advance();
+                    unit
+                } else {
+                    Unit::None
+                }
             } else {
                 Unit::None
             };
@@ -426,23 +648,35 @@ impl<'a> TokenParser<'a> {
             return Ok(Expression::number_with_unit(value, unit));
         }
 
-        // Standalone identifier (could be a unit or datetime part)
+        // Standalone identifier (could be a function call, unit, variable, or datetime part)
         if let Some(TokenKind::Identifier(id)) = self.current_kind() {
-            // This might be a datetime - try to collect more tokens
             let id = id.clone();
             self.advance();
+
+            // Check if this is a function call (identifier followed by left paren)
+            if self.check(&TokenKind::LeftParen) {
+                return self.parse_function_call(&id);
+            }
 
             // If it looks like a datetime start (month name), try to parse more
             if DateTimeGrammar::looks_like_datetime(&id) {
                 return self.try_parse_datetime_from_tokens(&id);
             }
 
-            // Check if this looks like an advanced math expression
-            if is_advanced_math_keyword(&id) {
-                return Err(CalculatorError::unsupported_math(&id, self.original_input));
+            // Check if this is a math constant (pi, e)
+            if is_math_function(&id) {
+                // It's a constant like pi() or e() used without parens
+                // Treat it as a zero-argument function call
+                return Ok(Expression::function_call(id, vec![]));
             }
 
-            // Otherwise it's probably just an identifier/unit
+            // Allow single-letter identifiers as variables (for use in integrate, etc.)
+            // Variables will be validated at evaluation time
+            if id.len() == 1 && id.chars().next().unwrap().is_ascii_alphabetic() {
+                return Ok(Expression::variable(id));
+            }
+
+            // Otherwise it's probably just an identifier/unit (which is an error in expression context)
             return Err(CalculatorError::parse(format!(
                 "Unexpected identifier: {id}"
             )));
@@ -452,6 +686,29 @@ impl<'a> TokenParser<'a> {
             "Unexpected token: {:?}",
             self.current()
         )))
+    }
+
+    fn parse_function_call(&mut self, name: &str) -> Result<Expression, CalculatorError> {
+        // We're positioned at the left paren
+        self.expect(&TokenKind::LeftParen)?;
+
+        let mut args = Vec::new();
+
+        // Check for empty argument list
+        if !self.check(&TokenKind::RightParen) {
+            // Parse first argument
+            args.push(self.parse_expression()?);
+
+            // Parse remaining arguments
+            while self.check(&TokenKind::Comma) {
+                self.advance(); // consume comma
+                args.push(self.parse_expression()?);
+            }
+        }
+
+        self.expect(&TokenKind::RightParen)?;
+
+        Ok(Expression::function_call(name, args))
     }
 
     fn try_parse_datetime_from_tokens(
@@ -534,6 +791,14 @@ impl<'a> TokenParser<'a> {
         self.current().map(|t| &t.kind)
     }
 
+    fn peek_kind(&self) -> Option<&TokenKind> {
+        self.tokens.get(self.pos + 1).map(|t| &t.kind)
+    }
+
+    fn peek_is_left_paren(&self) -> bool {
+        matches!(self.peek_kind(), Some(TokenKind::LeftParen))
+    }
+
     fn advance(&mut self) {
         if !self.is_at_end() {
             self.pos += 1;
@@ -561,7 +826,6 @@ impl<'a> TokenParser<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::types::Decimal;
 
     #[test]
     fn test_parse_simple_number() {
@@ -647,5 +911,63 @@ mod tests {
         let (_, _, lino) = parser.parse_and_evaluate("84 USD - 34 EUR").unwrap();
         assert!(lino.contains("84 USD"));
         assert!(lino.contains("34 EUR"));
+    }
+
+    // New tests for math functions
+    #[test]
+    fn test_parse_function_call() {
+        let parser = ExpressionParser::new();
+        let expr = parser.parse("sin(0)").unwrap();
+        assert!(matches!(expr, Expression::FunctionCall { .. }));
+    }
+
+    #[test]
+    fn test_evaluate_sin() {
+        let parser = ExpressionParser::new();
+        let (value, _, _) = parser.parse_and_evaluate("sin(0)").unwrap();
+        assert_eq!(value.to_display_string(), "0");
+    }
+
+    #[test]
+    fn test_evaluate_sqrt() {
+        let parser = ExpressionParser::new();
+        let (value, _, _) = parser.parse_and_evaluate("sqrt(16)").unwrap();
+        assert_eq!(value.to_display_string(), "4");
+    }
+
+    #[test]
+    fn test_evaluate_power() {
+        let parser = ExpressionParser::new();
+        let (value, _, _) = parser.parse_and_evaluate("2^3").unwrap();
+        assert_eq!(value.to_display_string(), "8");
+    }
+
+    #[test]
+    fn test_evaluate_pi() {
+        let parser = ExpressionParser::new();
+        let (value, _, _) = parser.parse_and_evaluate("pi()").unwrap();
+        let pi = value.as_decimal().unwrap().to_f64();
+        assert!((pi - std::f64::consts::PI).abs() < 1e-10);
+    }
+
+    #[test]
+    fn test_evaluate_complex_expression() {
+        let parser = ExpressionParser::new();
+        let (value, _, _) = parser.parse_and_evaluate("2 + sin(0) * 3").unwrap();
+        assert_eq!(value.to_display_string(), "2");
+    }
+
+    #[test]
+    fn test_evaluate_nested_functions() {
+        let parser = ExpressionParser::new();
+        let (value, _, _) = parser.parse_and_evaluate("sqrt(abs(-16))").unwrap();
+        assert_eq!(value.to_display_string(), "4");
+    }
+
+    #[test]
+    fn test_evaluate_function_with_expression() {
+        let parser = ExpressionParser::new();
+        let (value, _, _) = parser.parse_and_evaluate("sqrt(4 + 12)").unwrap();
+        assert_eq!(value.to_display_string(), "4");
     }
 }

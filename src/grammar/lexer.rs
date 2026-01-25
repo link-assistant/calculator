@@ -17,6 +17,8 @@ pub enum TokenKind {
     Star,
     /// The division operator.
     Slash,
+    /// The power/exponent operator.
+    Caret,
     /// Left parenthesis.
     LeftParen,
     /// Right parenthesis.
@@ -134,6 +136,10 @@ impl Lexer {
             '/' => {
                 self.advance();
                 Token::new(TokenKind::Slash, start, self.pos, "/".to_string())
+            }
+            '^' => {
+                self.advance();
+                Token::new(TokenKind::Caret, start, self.pos, "^".to_string())
             }
             '(' => {
                 self.advance();
