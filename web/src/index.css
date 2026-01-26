@@ -709,3 +709,105 @@ footer a:hover {
 .link-button:hover {
   text-decoration: underline;
 }
+
+/* Interpretation section */
+.interpretation-section {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.interpretation-section h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+/* Color-coded LINO */
+.lino-colored {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.875rem;
+  background: var(--surface);
+  padding: 0.75rem;
+  border-radius: 6px;
+  display: block;
+  overflow-x: auto;
+  word-break: break-word;
+}
+
+@media (min-width: 640px) {
+  .lino-colored {
+    font-size: 1rem;
+  }
+}
+
+/* Result value section */
+.result-value-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.fraction-hint {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Notations section for repeating decimals */
+.notations-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.notations-section h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+/* Repeating decimal notations table */
+.repeating-decimal-notations {
+  overflow-x: auto;
+}
+
+.notations-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.notations-table th,
+.notations-table td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.notations-table th {
+  font-weight: 500;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.notations-table td.notation-value {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  color: var(--primary);
+}
+
+.notations-table tr:last-child td {
+  border-bottom: none;
+}
+
+@media (min-width: 640px) {
+  .notations-table {
+    font-size: 1rem;
+  }
+}

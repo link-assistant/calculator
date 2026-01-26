@@ -22,6 +22,22 @@ fn main() {
         if result.success {
             println!("  Result: {}", result.result);
             println!("  Links notation: {}", result.lino_interpretation);
+
+            // Show fraction if available
+            if let Some(ref frac) = result.fraction {
+                println!("  Fraction: {frac}");
+            }
+
+            // Show repeating decimal notations if available
+            if let Some(ref rd) = result.repeating_decimal {
+                println!("  Repeating decimal notations:");
+                println!("    Vinculum: {}", rd.vinculum);
+                println!("    Parenthesis: {}", rd.parenthesis);
+                println!("    Ellipsis: {}", rd.ellipsis);
+                println!("    LaTeX: {}", rd.latex);
+                println!("    Fraction: {}", rd.fraction);
+            }
+
             println!("  Steps:");
             for step in &result.steps {
                 println!("    {step}");
