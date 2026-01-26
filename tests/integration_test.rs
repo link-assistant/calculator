@@ -701,3 +701,109 @@ mod indefinite_integral_tests {
         );
     }
 }
+
+/// Tests for the `update_rates_from_api` method (Issue #18 fix)
+mod api_rate_update_tests {
+    use super::*;
+
+    #[test]
+    fn test_update_rates_from_api_returns_count() {
+        let mut calc = Calculator::new();
+
+        // Create a JSON string simulating API response
+        let rates_json = r#"{"eur": 0.92, "gbp": 0.79, "rub": 75.5}"#;
+
+        let count = calc.update_rates_from_api("USD", "2026-01-26", rates_json);
+
+        // Should have updated 3 rates
+        assert_eq!(count, 3);
+    }
+
+    #[test]
+    fn test_update_rates_from_api_invalid_json() {
+        let mut calc = Calculator::new();
+
+        // Invalid JSON should return 0
+        let count = calc.update_rates_from_api("USD", "2026-01-26", "invalid json");
+        assert_eq!(count, 0);
+    }
+
+    #[test]
+    fn test_update_rates_from_api_empty() {
+        let mut calc = Calculator::new();
+
+        // Empty rates object should return 0
+        let count = calc.update_rates_from_api("USD", "2026-01-26", "{}");
+        assert_eq!(count, 0);
+    }
+
+    #[test]
+    fn test_update_rates_from_api_skips_same_currency() {
+        let mut calc = Calculator::new();
+
+        // USD to USD should be skipped
+        let rates_json = r#"{"usd": 1.0, "eur": 0.92}"#;
+        let count = calc.update_rates_from_api("USD", "2026-01-26", rates_json);
+
+        // Should only update EUR, not USD (1 rate)
+        assert_eq!(count, 1);
+    }
+
+    #[test]
+    fn test_calculation_uses_updated_api_rate() {
+        let mut calc = Calculator::new();
+
+        // Update with a specific rate for testing (100 RUB per USD)
+        let rates_json = r#"{"rub": 100.0}"#;
+        calc.update_rates_from_api("USD", "2026-01-26", rates_json);
+
+        // Calculate 1 USD in RUB - should use the API rate
+        let result = calc.calculate_internal("0 RUB + 1 USD");
+        assert!(result.success);
+        assert_eq!(result.result, "100 RUB");
+    }
+
+    #[test]
+    fn test_calculation_steps_show_api_rate_source() {
+        let mut calc = Calculator::new();
+
+        // Update with a specific rate for testing
+        let rates_json = r#"{"rub": 100.0}"#;
+        calc.update_rates_from_api("USD", "2026-01-26", rates_json);
+
+        // Calculate 1 USD in RUB
+        let result = calc.calculate_internal("0 RUB + 1 USD");
+        assert!(result.success);
+
+        // Verify the steps show the correct API source and date
+        let steps_str = result.steps.join("\n");
+        assert!(
+            steps_str.contains("fawazahmed0/currency-api"),
+            "Steps should show API source"
+        );
+        assert!(
+            steps_str.contains("2026-01-26"),
+            "Steps should show rate date"
+        );
+    }
+
+    #[test]
+    fn test_api_rate_overrides_hardcoded_rate() {
+        let mut calc = Calculator::new();
+
+        // First calculation uses hardcoded rate (89.5)
+        let result1 = calc.calculate_internal("0 RUB + 1 USD");
+        assert!(result1.success);
+        // The hardcoded rate is 89.5, so 1 USD = 89.5 RUB
+        assert_eq!(result1.result, "89.5 RUB");
+
+        // Update with API rate (75.5)
+        let rates_json = r#"{"rub": 75.5}"#;
+        calc.update_rates_from_api("USD", "2026-01-26", rates_json);
+
+        // Second calculation should use the API rate
+        let result2 = calc.calculate_internal("0 RUB + 1 USD");
+        assert!(result2.success);
+        assert_eq!(result2.result, "75.5 RUB");
+    }
+}

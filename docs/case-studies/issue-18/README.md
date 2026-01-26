@@ -29,23 +29,57 @@ Users need transparency about currency conversion rates for:
 
 ## Root Cause Analysis
 
-### Primary Issue
-The calculator uses **hardcoded exchange rates** in `src/types/currency.rs`:
+### Primary Issue: Missing Rate Application Pipeline
+
+**Critical Finding**: The web worker successfully fetches exchange rates from the API but **never applies them to the Calculator instance**.
+
+In `web/src/worker.ts`:
+```typescript
+async function fetchExchangeRates() {
+  const responseJson = await fetch_exchange_rates('usd');
+  const response: ExchangeRatesResponse = JSON.parse(responseJson);
+
+  if (response.success) {
+    const rates = JSON.parse(response.rates_json);
+    // PROBLEM: rates are parsed but NEVER applied to calculator!
+    self.postMessage({
+      type: 'ratesLoaded',
+      data: { ... ratesCount: Object.keys(rates).length }
+    });
+  }
+}
+```
+
+The architecture has all the pieces but they're not connected:
+1. `fetch_exchange_rates()` in WASM returns rates ✅
+2. Worker receives rates and counts them ✅
+3. **Worker never updates Calculator with the rates** ❌
+4. Result: Calculator uses hardcoded fallback rates
+
+### Secondary Issue: Hardcoded Fallback Rates
+
+The calculator uses **hardcoded exchange rates** in `src/types/currency.rs:188`:
 
 ```rust
 fn initialize_default_rates(&mut self) {
-    // Approximate rates as of January 2026 (for demonstration)
-    // In a real application, these would be fetched from an API
-    self.set_rate("USD", "RUB", 89.5);
+    // Default fallback rates - these are used only when API rates are unavailable.
+    self.set_rate_with_info("USD", "RUB", ExchangeRateInfo::default_rate(89.5));
     // ...
 }
 ```
 
-### Secondary Issues
-1. No rate source attribution shown to users
-2. No timestamp/date information for rates
+This creates rates with `source: "default (hardcoded)"` and `date: "unknown"`.
+
+### Tertiary Issue: Data Quality
+
+The `data/currency/usd-rub.lino` file contains a suspicious rate:
+- Previous rates (2025-12-30 to 2026-01-24): 75-80 RUB/USD range (legitimate CBR data)
+- Last entry (2026-01-25): **89.5 RUB/USD** (matches hardcoded default, NOT real data)
+
+### Additional Issues
+1. Historical rates from `.lino` files are not automatically loaded
+2. No rate source attribution shown to users
 3. Rates are static and don't reflect real-world changes
-4. No transparency in calculation steps about conversion rates used
 
 ## Current vs Actual Exchange Rate
 
