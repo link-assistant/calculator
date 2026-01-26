@@ -166,6 +166,42 @@ mod datetime_tests {
         // Should be approximately 1 day, 20 hours
         assert!(result.result.contains("day"));
     }
+
+    /// Test for issue #30: Links notation should use exactly 2 outer parentheses,
+    /// not 3. Input: (datetime) - (datetime) should produce ((datetime) - (datetime))
+    #[test]
+    fn test_datetime_subtraction_lino_notation_issue_30() {
+        let mut calculator = Calculator::new();
+        let result = calculator.calculate_internal("(Jan 27, 8:59am UTC) - (Jan 26, 10:20am UTC)");
+        assert!(result.success);
+
+        // The lino notation should be ((Jan 27, 8:59am UTC) - (Jan 26, 10:20am UTC))
+        // NOT (((Jan 27, 8:59am UTC) - (Jan 26, 10:20am UTC)))
+        let lino = &result.lino_interpretation;
+
+        // Count leading and trailing parentheses
+        let leading_parens = lino.chars().take_while(|&c| c == '(').count();
+        let trailing_parens = lino.chars().rev().take_while(|&c| c == ')').count();
+
+        assert_eq!(
+            leading_parens, 2,
+            "Should have exactly 2 leading parentheses in lino notation, but got {leading_parens}: '{lino}'"
+        );
+        assert_eq!(
+            trailing_parens, 2,
+            "Should have exactly 2 trailing parentheses in lino notation, but got {trailing_parens}: '{lino}'"
+        );
+
+        // Also verify the overall structure
+        assert!(
+            lino.starts_with("((") && lino.ends_with("))"),
+            "Lino notation should start with '((' and end with '))': '{lino}'"
+        );
+        assert!(
+            !lino.starts_with("((("),
+            "Lino notation should NOT start with '(((': '{lino}'"
+        );
+    }
 }
 
 mod lino_tests {

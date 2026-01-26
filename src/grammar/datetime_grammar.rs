@@ -185,7 +185,9 @@ impl DateTimeGrammar {
             format!("Result: {}", value.to_display_string()),
         ];
 
-        let lino = format!("((({}) - ({})))", first_dt_str.trim(), second_dt_str.trim());
+        // Issue #30 fix: Use exactly 2 outer parentheses for Links notation
+        // Format: ((datetime1) - (datetime2))
+        let lino = format!("(({}) - ({}))", first_dt_str.trim(), second_dt_str.trim());
 
         Some((value, steps, lino))
     }
