@@ -1,6 +1,0 @@
-rate:
-  from USD
-  to PLN
-  value 4.4
-  date 2022-12-26
-  source 'frankfurter.dev (ECB)'

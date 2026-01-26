@@ -1,6 +1,0 @@
-rate:
-  from USD
-  to EUR
-  value 0.92345
-  date 2024-03-25
-  source 'frankfurter.dev (ECB)'

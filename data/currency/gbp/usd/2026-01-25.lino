@@ -1,6 +1,0 @@
-rate:
-  from GBP
-  to USD
-  value 1.27
-  date 2026-01-25
-  source 'fawazahmed0/currency-api'

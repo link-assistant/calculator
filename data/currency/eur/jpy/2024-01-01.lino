@@ -1,6 +1,0 @@
-rate:
-  from EUR
-  to JPY
-  value 157.08
-  date 2024-01-01
-  source 'frankfurter.dev (ECB)'

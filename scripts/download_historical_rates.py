@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 """
-Download historical exchange rates from multiple sources and convert to .lino format.
+Download historical exchange rates from multiple sources and convert to consolidated .lino format.
 
 Sources:
 - Frankfurter API (https://frankfurter.dev/) - ECB data from 1999, 30+ currencies (no RUB)
 - CBR API (http://cbr.ru/) - Russian Central Bank data from 1992, RUB rates
 
-Output format (.lino - links notation):
-    rate:
+Output format (consolidated .lino - one file per currency pair):
+    rates:
       from USD
-      to RUB
-      value 89.50
-      date 2026-01-25
-      source 'frankfurter.dev'
+      to EUR
+      source 'frankfurter.dev (ECB)'
+      data:
+        2021-01-25 0.8234
+        2021-02-01 0.8315
+        ...
 """
 
 import json
@@ -23,7 +25,8 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Dict, List, Tuple
+from collections import defaultdict
 
 
 # Currency pairs to download - popular pairs that users commonly need
@@ -101,31 +104,39 @@ def fetch_xml(url: str, max_retries: int = 3) -> Optional[ET.Element]:
                 return None
 
 
-def write_lino_rate(output_dir: Path, from_curr: str, to_curr: str,
-                    date: str, rate: float, source: str):
-    """Write a single rate to a .lino file."""
-    # Create directory structure: data/currency/{from}/{to}/
-    rate_dir = output_dir / from_curr.lower() / to_curr.lower()
-    rate_dir.mkdir(parents=True, exist_ok=True)
+def write_consolidated_lino(output_dir: Path, from_curr: str, to_curr: str,
+                            rates: List[Tuple[str, float]], source: str):
+    """Write all rates for a currency pair to a single consolidated .lino file."""
+    # Sort rates by date
+    rates_sorted = sorted(rates, key=lambda x: x[0])
 
-    # File name: {date}.lino
-    file_path = rate_dir / f"{date}.lino"
+    # File name: {from}-{to}.lino (e.g., usd-eur.lino)
+    file_path = output_dir / f"{from_curr.lower()}-{to_curr.lower()}.lino"
 
-    # Write in links notation format
-    content = f"""rate:
-  from {from_curr.upper()}
-  to {to_curr.upper()}
-  value {rate}
-  date {date}
-  source '{source}'
-"""
+    # Build content
+    lines = [
+        "rates:",
+        f"  from {from_curr.upper()}",
+        f"  to {to_curr.upper()}",
+        f"  source '{source}'",
+        "  data:"
+    ]
 
-    file_path.write_text(content)
+    for date, rate in rates_sorted:
+        lines.append(f"    {date} {rate}")
+
+    file_path.write_text('\n'.join(lines) + '\n')
+    return len(rates_sorted)
 
 
-def download_frankfurter_rates(output_dir: Path, start_date: str, end_date: str):
-    """Download rates from Frankfurter API (ECB data)."""
+def download_frankfurter_rates(output_dir: Path, start_date: str, end_date: str) -> Dict[Tuple[str, str], List[Tuple[str, float]]]:
+    """Download rates from Frankfurter API (ECB data).
+
+    Returns a dict mapping (from, to) pairs to lists of (date, rate) tuples.
+    """
     print(f"\nDownloading Frankfurter rates from {start_date} to {end_date}...")
+
+    all_rates: Dict[Tuple[str, str], List[Tuple[str, float]]] = defaultdict(list)
 
     for from_curr, to_curr in FRANKFURTER_PAIRS:
         print(f"  {from_curr} -> {to_curr}...", end=" ", flush=True)
@@ -139,7 +150,7 @@ def download_frankfurter_rates(output_dir: Path, start_date: str, end_date: str)
             for date_str, day_rates in rates.items():
                 if to_curr in day_rates:
                     rate = day_rates[to_curr]
-                    write_lino_rate(output_dir, from_curr, to_curr, date_str, rate, "frankfurter.dev (ECB)")
+                    all_rates[(from_curr, to_curr)].append((date_str, rate))
                     count += 1
             print(f"{count} rates")
         else:
@@ -148,9 +159,20 @@ def download_frankfurter_rates(output_dir: Path, start_date: str, end_date: str)
         # Be nice to the API
         time.sleep(0.2)
 
+    # Write consolidated files
+    for (from_curr, to_curr), rates in all_rates.items():
+        if rates:
+            count = write_consolidated_lino(output_dir, from_curr, to_curr, rates, "frankfurter.dev (ECB)")
+            print(f"  -> {from_curr.lower()}-{to_curr.lower()}.lino ({count} rates)")
 
-def download_cbr_rates(output_dir: Path, start_date: str, end_date: str):
-    """Download RUB rates from Russian Central Bank API."""
+    return all_rates
+
+
+def download_cbr_rates(output_dir: Path, start_date: str, end_date: str) -> Dict[Tuple[str, str], List[Tuple[str, float]]]:
+    """Download RUB rates from Russian Central Bank API.
+
+    Returns a dict mapping (from, to) pairs to lists of (date, rate) tuples.
+    """
     print(f"\nDownloading CBR rates from {start_date} to {end_date}...")
 
     # Convert dates to CBR format (DD/MM/YYYY)
@@ -160,8 +182,10 @@ def download_cbr_rates(output_dir: Path, start_date: str, end_date: str):
     cbr_start = start_dt.strftime("%d/%m/%Y")
     cbr_end = end_dt.strftime("%d/%m/%Y")
 
+    all_rates: Dict[Tuple[str, str], List[Tuple[str, float]]] = defaultdict(list)
+
     for cbr_code, currency in CBR_CURRENCIES.items():
-        print(f"  RUB -> {currency}...", end=" ", flush=True)
+        print(f"  RUB <-> {currency}...", end=" ", flush=True)
 
         url = f"http://www.cbr.ru/scripts/XML_dynamic.asp?date_req1={cbr_start}&date_req2={cbr_end}&VAL_NM_RQ={cbr_code}"
         root = fetch_xml(url)
@@ -201,20 +225,28 @@ def download_cbr_rates(output_dir: Path, start_date: str, end_date: str):
                     # So the rate from RUB to foreign is: nominal / rate
                     rub_to_foreign = nominal / rate
 
-                    # Write RUB -> foreign
-                    write_lino_rate(output_dir, "RUB", currency, date_str, rub_to_foreign, "cbr.ru (Central Bank of Russia)")
+                    # Store RUB -> foreign
+                    all_rates[("RUB", currency)].append((date_str, rub_to_foreign))
 
-                    # Also write foreign -> RUB (inverse)
+                    # Also store foreign -> RUB (inverse)
                     foreign_to_rub = rate / nominal
-                    write_lino_rate(output_dir, currency, "RUB", date_str, foreign_to_rub, "cbr.ru (Central Bank of Russia)")
+                    all_rates[(currency, "RUB")].append((date_str, foreign_to_rub))
 
                     count += 1
-            print(f"{count} rates")
+            print(f"{count} rates each direction")
         else:
             print("no data")
 
         # Be nice to the API
         time.sleep(0.3)
+
+    # Write consolidated files
+    for (from_curr, to_curr), rates in all_rates.items():
+        if rates:
+            count = write_consolidated_lino(output_dir, from_curr, to_curr, rates, "cbr.ru (Central Bank of Russia)")
+            print(f"  -> {from_curr.lower()}-{to_curr.lower()}.lino ({count} rates)")
+
+    return all_rates
 
 
 def main():
@@ -224,6 +256,9 @@ def main():
     output_dir = repo_root / "data" / "currency"
 
     print(f"Output directory: {output_dir}")
+
+    # Ensure output directory exists
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     # Get date range from arguments or use defaults
     # Default: last 5 years of data (a reasonable amount for a calculator)
@@ -244,9 +279,9 @@ def main():
     download_frankfurter_rates(output_dir, start_date, end_date)
     download_cbr_rates(output_dir, start_date, end_date)
 
-    # Count total files
-    total_files = sum(1 for _ in output_dir.rglob("*.lino"))
-    print(f"\nTotal .lino files: {total_files}")
+    # Count final files
+    total_files = sum(1 for _ in output_dir.glob("*.lino"))
+    print(f"\nTotal consolidated .lino files: {total_files}")
 
 
 if __name__ == "__main__":

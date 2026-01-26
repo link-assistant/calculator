@@ -1,6 +1,0 @@
-rate:
-  from EUR
-  to JPY
-  value 161.5
-  date 2026-01-25
-  source 'fawazahmed0/currency-api'

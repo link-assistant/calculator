@@ -1,6 +1,0 @@
-rate:
-  from EUR
-  to JPY
-  value 141.35
-  date 2023-01-23
-  source 'frankfurter.dev (ECB)'
