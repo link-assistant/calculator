@@ -5,7 +5,9 @@ use crate::grammar::token_parser::TokenParser;
 use crate::grammar::{
     evaluate_function, evaluate_indefinite_integral, DateTimeGrammar, Lexer, NumberGrammar,
 };
-use crate::types::{BinaryOp, CurrencyDatabase, DateTime, Decimal, Expression, Rational, Value, ValueKind};
+use crate::types::{
+    BinaryOp, CurrencyDatabase, DateTime, Decimal, Expression, Rational, Value, ValueKind,
+};
 
 /// Parser for calculator expressions.
 #[derive(Debug, Default)]

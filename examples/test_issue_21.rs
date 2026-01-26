@@ -7,7 +7,7 @@
 use link_calculator::Calculator;
 
 fn main() {
-    let calc = Calculator::new();
+    let mut calc = Calculator::new();
 
     println!("=== Issue #21: Expression (1/3)*3 Test ===\n");
 
