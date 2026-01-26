@@ -1,8 +1,8 @@
-rates:
+conversion:
   from USD
   to MXN
   source 'frankfurter.dev (ECB)'
-  data:
+  rates:
     2021-01-25 20.282
     2021-02-01 20.245
     2021-02-08 20.073

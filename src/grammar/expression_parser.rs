@@ -31,6 +31,11 @@ impl ExpressionParser {
         }
     }
 
+    /// Returns a reference to the currency database.
+    pub fn currency_db(&self) -> &CurrencyDatabase {
+        &self.currency_db
+    }
+
     /// Returns a mutable reference to the currency database.
     pub fn currency_db_mut(&mut self) -> &mut CurrencyDatabase {
         &mut self.currency_db

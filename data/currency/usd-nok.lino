@@ -1,8 +1,8 @@
-rates:
+conversion:
   from USD
   to NOK
   source 'frankfurter.dev (ECB)'
-  data:
+  rates:
     2021-01-25 8.6179
     2021-02-01 8.6044
     2021-02-08 8.4786

@@ -1,8 +1,8 @@
-rates:
+conversion:
   from USD
   to TRY
   source 'frankfurter.dev (ECB)'
-  data:
+  rates:
     2021-01-25 7.3641
     2021-02-01 7.1503
     2021-02-08 7.056

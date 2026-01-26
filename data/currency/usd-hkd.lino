@@ -1,8 +1,8 @@
-rates:
+conversion:
   from USD
   to HKD
   source 'frankfurter.dev (ECB)'
-  data:
+  rates:
     2021-01-25 7.7526
     2021-02-01 7.7522
     2021-02-08 7.7524

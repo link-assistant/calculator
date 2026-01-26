@@ -1,8 +1,8 @@
-rates:
+conversion:
   from USD
   to GBP
   source 'frankfurter.dev (ECB)'
-  data:
+  rates:
     2021-01-25 0.73023
     2021-02-01 0.73123
     2021-02-08 0.7252

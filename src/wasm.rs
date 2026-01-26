@@ -219,7 +219,21 @@ pub fn parse_lino_rate(content: String) -> String {
 }
 
 /// Parses a consolidated .lino rate file and returns the rate data as JSON.
-/// The consolidated format stores all rates for a currency pair in one file:
+///
+/// Supports both the new format (conversion/rates) and legacy format (rates/data):
+///
+/// New format:
+/// ```text
+/// conversion:
+///   from USD
+///   to EUR
+///   source 'frankfurter.dev (ECB)'
+///   rates:
+///     2021-01-25 0.8234
+///     2021-02-01 0.8315
+/// ```
+///
+/// Legacy format:
 /// ```text
 /// rates:
 ///   from USD
@@ -263,10 +277,29 @@ pub fn parse_consolidated_lino_rates(content: String) -> String {
     for line in content.lines() {
         let trimmed = line.trim();
 
-        if trimmed.is_empty() || trimmed == "rates:" {
+        // Skip empty lines
+        if trimmed.is_empty() {
             continue;
         }
 
+        // Handle 'rates:' based on context:
+        // - If we haven't parsed from_currency yet, it's a root marker (legacy format), skip it
+        // - If we have parsed from_currency, it's the data section marker (new format)
+        if trimmed == "rates:" {
+            if from_currency.is_some() {
+                // New format: 'rates:' marks the start of data section
+                in_data_section = true;
+            }
+            // Either way, continue to next line (skip the 'rates:' line itself)
+            continue;
+        }
+
+        // Skip root marker for new format
+        if trimmed == "conversion:" {
+            continue;
+        }
+
+        // Check for legacy data section marker
         if trimmed == "data:" {
             in_data_section = true;
             continue;
@@ -369,7 +402,8 @@ mod tests {
     }
 
     #[test]
-    fn test_parse_consolidated_lino_rates() {
+    fn test_parse_consolidated_lino_rates_legacy_format() {
+        // Legacy format: rates: as root, data: for rates
         let content = "rates:
   from USD
   to EUR
@@ -394,12 +428,38 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_consolidated_lino_rates_new_format() {
+        // New format: conversion: as root, rates: for rates
+        let content = "conversion:
+  from USD
+  to RUB
+  source 'cbr.ru (Central Bank of Russia)'
+  rates:
+    2021-02-08 74.2602
+    2021-02-09 74.1192
+    2026-01-25 76.03";
+
+        let result = parse_consolidated_lino_rates(content.to_string());
+        let parsed: serde_json::Value = serde_json::from_str(&result).unwrap();
+
+        assert_eq!(parsed["success"], true);
+        assert_eq!(parsed["from"], "USD");
+        assert_eq!(parsed["to"], "RUB");
+        assert_eq!(parsed["source"], "cbr.ru (Central Bank of Russia)");
+
+        let rates = parsed["rates"].as_array().unwrap();
+        assert_eq!(rates.len(), 3);
+        assert_eq!(rates[0]["date"], "2021-02-08");
+        assert_eq!(rates[0]["value"], 74.2602);
+    }
+
+    #[test]
     fn test_parse_consolidated_lino_rates_empty() {
-        let content = "rates:
+        let content = "conversion:
   from USD
   to EUR
   source 'test'
-  data:";
+  rates:";
 
         let result = parse_consolidated_lino_rates(content.to_string());
         let parsed: serde_json::Value = serde_json::from_str(&result).unwrap();

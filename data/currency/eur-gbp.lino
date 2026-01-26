@@ -1,8 +1,8 @@
-rates:
+conversion:
   from EUR
   to GBP
   source 'frankfurter.dev (ECB)'
-  data:
+  rates:
     2021-01-25 0.8846
     2021-02-01 0.8793
     2021-02-08 0.87764

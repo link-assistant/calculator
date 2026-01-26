@@ -1,8 +1,8 @@
-rates:
+conversion:
   from USD
   to HUF
   source 'frankfurter.dev (ECB)'
-  data:
+  rates:
     2021-01-25 297.08
     2021-02-01 296.01
     2021-02-08 295.95

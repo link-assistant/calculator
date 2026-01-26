@@ -143,7 +143,7 @@ impl Value {
         match (&self.kind, &other.kind) {
             // Rational + Rational
             (ValueKind::Rational(a), ValueKind::Rational(b)) => {
-                self.add_rationals(a.clone(), b.clone(), other, currency_db)
+                self.add_rationals(a.clone(), b.clone(), other, currency_db, date)
             }
             // Number + Number (legacy)
             (ValueKind::Number(a), ValueKind::Number(b)) => {
@@ -152,11 +152,11 @@ impl Value {
             // Mixed: convert Decimal to Rational
             (ValueKind::Rational(a), ValueKind::Number(b)) => {
                 let b_rat = Rational::from_decimal(*b);
-                self.add_rationals(a.clone(), b_rat, other, currency_db)
+                self.add_rationals(a.clone(), b_rat, other, currency_db, date)
             }
             (ValueKind::Number(a), ValueKind::Rational(b)) => {
                 let a_rat = Rational::from_decimal(*a);
-                self.add_rationals(a_rat, b.clone(), other, currency_db)
+                self.add_rationals(a_rat, b.clone(), other, currency_db, date)
             }
             (ValueKind::DateTime(dt), ValueKind::Duration { seconds }) => {
                 Ok(Value::datetime(dt.add_duration(*seconds)))
@@ -182,6 +182,7 @@ impl Value {
         b: Rational,
         other: &Self,
         currency_db: &mut CurrencyDatabase,
+        date: Option<&DateTime>,
     ) -> Result<Self, CalculatorError> {
         match (&self.unit, &other.unit) {
             (Unit::None, Unit::None) => Ok(Value::rational(a + b)),
@@ -196,7 +197,12 @@ impl Value {
             (Unit::Currency(c1), Unit::Currency(c2)) => {
                 let a_dec = a.to_decimal();
                 let b_dec = b.to_decimal();
-                let converted = currency_db.convert(b_dec.to_f64(), c2, c1)?;
+                // Use historical rate if date is provided
+                let converted = if let Some(dt) = date {
+                    currency_db.convert_at_date(b_dec.to_f64(), c2, c1, dt)?
+                } else {
+                    currency_db.convert(b_dec.to_f64(), c2, c1)?
+                };
                 let converted_decimal = Decimal::from_f64(converted);
                 Ok(Value::currency(a_dec + converted_decimal, c1))
             }
@@ -261,7 +267,7 @@ impl Value {
         match (&self.kind, &other.kind) {
             // Rational - Rational
             (ValueKind::Rational(a), ValueKind::Rational(b)) => {
-                self.subtract_rationals(a.clone(), b.clone(), other, currency_db)
+                self.subtract_rationals(a.clone(), b.clone(), other, currency_db, date)
             }
             // Number - Number (legacy)
             (ValueKind::Number(a), ValueKind::Number(b)) => {
@@ -270,11 +276,11 @@ impl Value {
             // Mixed: convert Decimal to Rational
             (ValueKind::Rational(a), ValueKind::Number(b)) => {
                 let b_rat = Rational::from_decimal(*b);
-                self.subtract_rationals(a.clone(), b_rat, other, currency_db)
+                self.subtract_rationals(a.clone(), b_rat, other, currency_db, date)
             }
             (ValueKind::Number(a), ValueKind::Rational(b)) => {
                 let a_rat = Rational::from_decimal(*a);
-                self.subtract_rationals(a_rat, b.clone(), other, currency_db)
+                self.subtract_rationals(a_rat, b.clone(), other, currency_db, date)
             }
             (ValueKind::DateTime(dt1), ValueKind::DateTime(dt2)) => {
                 let diff = dt1.subtract(dt2);
@@ -300,6 +306,7 @@ impl Value {
         b: Rational,
         other: &Self,
         currency_db: &mut CurrencyDatabase,
+        date: Option<&DateTime>,
     ) -> Result<Self, CalculatorError> {
         match (&self.unit, &other.unit) {
             (Unit::None, Unit::None) => Ok(Value::rational(a - b)),
@@ -313,7 +320,12 @@ impl Value {
             (Unit::Currency(c1), Unit::Currency(c2)) => {
                 let a_dec = a.to_decimal();
                 let b_dec = b.to_decimal();
-                let converted = currency_db.convert(b_dec.to_f64(), c2, c1)?;
+                // Use historical rate if date is provided
+                let converted = if let Some(dt) = date {
+                    currency_db.convert_at_date(b_dec.to_f64(), c2, c1, dt)?
+                } else {
+                    currency_db.convert(b_dec.to_f64(), c2, c1)?
+                };
                 let converted_decimal = Decimal::from_f64(converted);
                 Ok(Value::currency(a_dec - converted_decimal, c1))
             }

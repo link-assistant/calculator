@@ -1,8 +1,8 @@
-rates:
+conversion:
   from GBP
   to RUB
   source 'cbr.ru (Central Bank of Russia)'
-  data:
+  rates:
     2021-01-27 103.0381
     2021-01-28 103.0674
     2021-01-29 103.955

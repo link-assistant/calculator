@@ -664,7 +664,21 @@ impl Calculator {
 
     /// Loads historical exchange rates from a consolidated .lino format.
     ///
-    /// The consolidated format stores all rates for a currency pair in one file:
+    /// Supports both the new format (conversion/rates) and legacy format (rates/data):
+    ///
+    /// New format:
+    /// ```text
+    /// conversion:
+    ///   from USD
+    ///   to EUR
+    ///   source 'frankfurter.dev (ECB)'
+    ///   rates:
+    ///     2021-01-25 0.8234
+    ///     2021-02-01 0.8315
+    ///     ...
+    /// ```
+    ///
+    /// Legacy format:
     /// ```text
     /// rates:
     ///   from USD
@@ -685,11 +699,29 @@ impl Calculator {
         for line in content.lines() {
             let trimmed = line.trim();
 
-            if trimmed.is_empty() || trimmed == "rates:" {
+            // Skip empty lines
+            if trimmed.is_empty() {
                 continue;
             }
 
-            // Check for data section marker
+            // Handle 'rates:' based on context:
+            // - If we haven't parsed from_currency yet, it's a root marker (legacy format), skip it
+            // - If we have parsed from_currency, it's the data section marker (new format)
+            if trimmed == "rates:" {
+                if from_currency.is_some() {
+                    // New format: 'rates:' marks the start of data section
+                    in_data_section = true;
+                }
+                // Either way, continue to next line (skip the 'rates:' line itself)
+                continue;
+            }
+
+            // Skip root marker for new format
+            if trimmed == "conversion:" {
+                continue;
+            }
+
+            // Check for legacy data section marker
             if trimmed == "data:" {
                 in_data_section = true;
                 continue;
@@ -858,8 +890,9 @@ mod tests {
     }
 
     #[test]
-    fn test_load_rates_from_consolidated_lino() {
+    fn test_load_rates_from_consolidated_lino_legacy_format() {
         let mut calc = Calculator::new();
+        // Legacy format: rates: as root, data: for rates
         let content = "rates:
   from USD
   to EUR
@@ -875,15 +908,59 @@ mod tests {
     }
 
     #[test]
+    fn test_load_rates_from_consolidated_lino_new_format() {
+        let mut calc = Calculator::new();
+        // New format: conversion: as root, rates: for rates
+        let content = "conversion:
+  from USD
+  to RUB
+  source 'cbr.ru (Central Bank of Russia)'
+  rates:
+    2021-02-08 74.2602
+    2021-02-09 74.1192
+    2026-01-25 76.03";
+
+        let result = calc.load_rates_from_consolidated_lino(content);
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap(), 3);
+    }
+
+    #[test]
     fn test_load_rates_from_consolidated_lino_empty() {
         let mut calc = Calculator::new();
-        let content = "rates:
+        let content = "conversion:
   from USD
   to EUR
   source 'test'
-  data:";
+  rates:";
 
         let result = calc.load_rates_from_consolidated_lino(content);
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_lino_rates_used_in_historical_conversion() {
+        let mut calc = Calculator::new();
+        // Load rates in the new .lino format
+        let content = "conversion:
+  from USD
+  to RUB
+  source 'cbr.ru (Central Bank of Russia)'
+  rates:
+    2021-02-08 74.2602
+    2021-02-09 74.1192";
+
+        let result = calc.load_rates_from_consolidated_lino(content);
+        assert!(result.is_ok());
+
+        // Verify the historical rate can be retrieved from the database
+        let date = types::DateTime::from_date(chrono::NaiveDate::from_ymd_opt(2021, 2, 8).unwrap());
+        let rate = calc
+            .parser
+            .currency_db()
+            .get_historical_rate("USD", "RUB", &date);
+        assert!(rate.is_some());
+        let rate_value = rate.unwrap();
+        assert!((rate_value - 74.2602).abs() < 0.001);
     }
 }

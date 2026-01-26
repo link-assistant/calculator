@@ -1,8 +1,8 @@
-rates:
+conversion:
   from EUR
   to RUB
   source 'cbr.ru (Central Bank of Russia)'
-  data:
+  rates:
     2021-01-27 91.6701
     2021-01-28 91.2186
     2021-01-29 92.131

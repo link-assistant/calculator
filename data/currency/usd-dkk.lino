@@ -1,8 +1,8 @@
-rates:
+conversion:
   from USD
   to DKK
   source 'frankfurter.dev (ECB)'
-  data:
+  rates:
     2021-01-25 6.1393
     2021-02-01 6.1846
     2021-02-08 6.1453
