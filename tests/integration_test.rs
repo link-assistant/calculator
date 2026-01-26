@@ -675,7 +675,7 @@ mod lino_rate_file_tests {
     use super::*;
 
     /// Test that we can load rates from a .lino file and use them in calculations.
-    /// Uses the "Feb 8, 2021" date format which is parsed as a DateTime correctly.
+    /// Uses the "Feb 8, 2021" date format which is parsed as a `DateTime` correctly.
     #[test]
     fn test_load_lino_rates_and_use_in_conversion() {
         let mut calculator = Calculator::new();
@@ -706,8 +706,7 @@ mod lino_rate_file_tests {
         let steps_text = calc_result.steps.join("\n");
         assert!(
             steps_text.contains("cbr.ru") || steps_text.contains("74.26"),
-            "Should use the loaded rate from cbr.ru, not default. Steps: {}",
-            steps_text
+            "Should use the loaded rate from cbr.ru, not default. Steps: {steps_text}"
         );
 
         // Parse the result to get the numeric value
@@ -720,9 +719,7 @@ mod lino_rate_file_tests {
         // The rate for 2021-02-08 is 74.2602, so 1 USD should = ~74.26 RUB
         assert!(
             (result_value - 74.2602).abs() < 0.01,
-            "1 USD at 2021-02-08 should be ~74.26 RUB (from .lino file), got {}. Steps: {}",
-            result_value,
-            steps_text
+            "1 USD at 2021-02-08 should be ~74.26 RUB (from .lino file), got {result_value}. Steps: {steps_text}"
         );
     }
 
@@ -754,8 +751,7 @@ mod lino_rate_file_tests {
         let val1: f64 = val1_str.trim().parse().expect("Should parse");
         assert!(
             (val1 - 0.8234).abs() < 0.001,
-            "Rate on Jan 25, 2021 should be 0.8234, got {}",
-            val1
+            "Rate on Jan 25, 2021 should be 0.8234, got {val1}"
         );
 
         // Test second date - using month name format
@@ -765,8 +761,7 @@ mod lino_rate_file_tests {
         let val2: f64 = val2_str.trim().parse().expect("Should parse");
         assert!(
             (val2 - 0.8402).abs() < 0.001,
-            "Rate on Feb 8, 2021 should be 0.8402, got {}",
-            val2
+            "Rate on Feb 8, 2021 should be 0.8402, got {val2}"
         );
 
         // Rates should be different
@@ -811,8 +806,7 @@ mod lino_rate_file_tests {
         let val1: f64 = val1_str.trim().parse().expect("Should parse");
         assert!(
             (val1 - 0.8765).abs() < 0.001,
-            "EUR->GBP rate should be 0.8765, got {}",
-            val1
+            "EUR->GBP rate should be 0.8765, got {val1}"
         );
 
         // Test USD to JPY conversion - using month name format
@@ -822,8 +816,7 @@ mod lino_rate_file_tests {
         let val2: f64 = val2_str.trim().parse().expect("Should parse");
         assert!(
             (val2 - 105.25).abs() < 0.1,
-            "USD->JPY rate should be 105.25, got {}",
-            val2
+            "USD->JPY rate should be 105.25, got {val2}"
         );
     }
 
@@ -858,9 +851,7 @@ mod lino_rate_file_tests {
         let expected = 100.0 / 74.2602;
         assert!(
             (val - expected).abs() < 0.01,
-            "100 RUB should be ~{:.3} USD, got {}",
-            expected,
-            val
+            "100 RUB should be ~{expected:.3} USD, got {val}"
         );
     }
 
@@ -889,15 +880,13 @@ mod lino_rate_file_tests {
         // Should show the source from the loaded .lino file
         assert!(
             steps_text.contains("cbr.ru"),
-            "Steps should contain rate source 'cbr.ru'. Steps: {}",
-            steps_text
+            "Steps should contain rate source 'cbr.ru'. Steps: {steps_text}"
         );
 
         // Should show the rate value
         assert!(
             steps_text.contains("74.26"),
-            "Steps should contain exchange rate 74.26. Steps: {}",
-            steps_text
+            "Steps should contain exchange rate 74.26. Steps: {steps_text}"
         );
     }
 
@@ -926,8 +915,7 @@ mod lino_rate_file_tests {
         let val: f64 = val_str.trim().parse().expect("Should parse");
         assert!(
             (val - 0.8234).abs() < 0.001,
-            "Rate should be 0.8234, got {}",
-            val
+            "Rate should be 0.8234, got {val}"
         );
     }
 
@@ -959,9 +947,7 @@ mod lino_rate_file_tests {
         let expected = 100.0 + (50.0 / 0.85);
         assert!(
             (val - expected).abs() < 0.1,
-            "100 USD + 50 EUR should be ~{:.2} USD, got {}",
-            expected,
-            val
+            "100 USD + 50 EUR should be ~{expected:.2} USD, got {val}"
         );
     }
 
@@ -996,9 +982,7 @@ mod lino_rate_file_tests {
         let expected = 100.0 - (34.0 / 0.85);
         assert!(
             (val - expected).abs() < 0.1,
-            "100 USD - 34 EUR should be ~{:.2} USD, got {}",
-            expected,
-            val
+            "100 USD - 34 EUR should be ~{expected:.2} USD, got {val}"
         );
     }
 
@@ -1028,8 +1012,7 @@ mod lino_rate_file_tests {
         // Document the actual behavior here:
         assert!(
             steps_text.contains("default") || steps_text.contains("89.5"),
-            "ISO dates are not properly parsed in at clause - falls back to default rate. Steps: {}",
-            steps_text
+            "ISO dates are not properly parsed in at clause - falls back to default rate. Steps: {steps_text}"
         );
     }
 }
