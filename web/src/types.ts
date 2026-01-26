@@ -7,6 +7,22 @@ export interface PlotData {
 }
 
 /**
+ * Different notation formats for repeating decimals.
+ */
+export interface RepeatingDecimalFormats {
+  /** Vinculum notation with overline: 0.3̅ */
+  vinculum: string;
+  /** Parenthesis notation: 0.(3) */
+  parenthesis: string;
+  /** Ellipsis notation: 0.333... */
+  ellipsis: string;
+  /** LaTeX notation: 0.\overline{3} */
+  latex: string;
+  /** Fraction representation: 1/3 */
+  fraction: string;
+}
+
+/**
  * Error information for i18n support.
  * Contains the translation key and optional interpolation parameters.
  */
@@ -46,4 +62,8 @@ export interface CalculationResult {
   latex_result?: string;
   is_symbolic?: boolean;
   plot_data?: PlotData;
+  /** Repeating decimal notations (if result is a repeating decimal). */
+  repeating_decimal?: RepeatingDecimalFormats;
+  /** Fraction representation (if applicable). */
+  fraction?: string;
 }

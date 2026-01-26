@@ -4,7 +4,7 @@ import type { TFunction } from 'i18next';
 import { useTheme, useUrlExpression, useDelayedLoading } from './hooks';
 import { SUPPORTED_LANGUAGES, loadPreferences, savePreferences } from './i18n';
 import { generateIssueUrl, type PageState } from './utils/reportIssue';
-import { AutoResizeTextarea } from './components';
+import { AutoResizeTextarea, ColorCodedLino, RepeatingDecimalNotations } from './components';
 import type { CalculationResult, ErrorInfo } from './types';
 
 // Lazy load the math and plot components for better initial bundle size
@@ -302,7 +302,17 @@ function App() {
               <>
                 {result.success ? (
                   <>
-                    {/* Symbolic result with LaTeX rendering */}
+                    {/* Section 1: Interpretation (mandatory) - Links notation with color-coded parentheses */}
+                    {result.lino_interpretation && (
+                      <div className="interpretation-section">
+                        <h3>{t('result.interpretation', 'Interpretation')}</h3>
+                        <div className="lino-value">
+                          <ColorCodedLino lino={result.lino_interpretation} />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Section 2: Result (mandatory) */}
                     {result.is_symbolic && result.latex_input && result.latex_result ? (
                       <div className="symbolic-result">
                         <Suspense fallback={<div className="result-value">{result.result}</div>}>
@@ -315,20 +325,26 @@ function App() {
                         <div className="result-text">{result.result}</div>
                       </div>
                     ) : (
-                      <>
-                        {/* Links notation interpretation shown before result (per issue #15) */}
-                        {result.lino_interpretation && (
-                          <div className="lino-section">
-                            <h3>{t('result.linksNotation')}</h3>
-                            <div className="lino-value">{result.lino_interpretation}</div>
+                      <div className="result-value-section">
+                        <div className="result-value">{result.result}</div>
+                        {/* Show fraction representation if available */}
+                        {result.fraction && (
+                          <div className="fraction-hint">
+                            = {result.fraction}
                           </div>
                         )}
-
-                        <div className="result-value">{result.result}</div>
-                      </>
+                      </div>
                     )}
 
-                    {/* Plot rendering for symbolic results */}
+                    {/* Section 3: Repeating decimal notations (optional) */}
+                    {result.repeating_decimal && (
+                      <div className="notations-section">
+                        <h3>{t('result.notations', 'Decimal Notations')}</h3>
+                        <RepeatingDecimalNotations formats={result.repeating_decimal} />
+                      </div>
+                    )}
+
+                    {/* Section 4: Plot (optional) */}
                     {result.plot_data && (
                       <div className="plot-section">
                         <h3>{t('result.plot', 'Function Plot')}</h3>
@@ -338,6 +354,7 @@ function App() {
                       </div>
                     )}
 
+                    {/* Section 5: Steps / Reasoning (optional) */}
                     {result.steps.length > 0 && !result.is_symbolic && (
                       <div className="steps-section">
                         <h3>{t('result.steps')}</h3>
