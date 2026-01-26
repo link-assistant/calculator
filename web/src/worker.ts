@@ -5,6 +5,7 @@ import init, { Calculator, fetch_exchange_rates } from '@wasm/link_calculator';
 
 interface CalculatorInstance {
   calculate(input: string): string;
+  update_rates_from_api(base: string, date: string, rates_json: string): number;
 }
 
 interface CalculatorStatic {
@@ -62,8 +63,20 @@ async function fetchExchangeRates() {
       ratesLoaded = true;
       ratesError = null;
 
-      // Parse the rates
+      // Parse the rates and count them
       const rates = JSON.parse(response.rates_json);
+      const ratesCount = Object.keys(rates).length;
+
+      // CRITICAL: Apply the fetched rates to the calculator instance
+      // This was the root cause of issue #18 - rates were fetched but never applied
+      let appliedCount = 0;
+      if (calculator) {
+        appliedCount = calculator.update_rates_from_api(
+          response.base,
+          response.date,
+          response.rates_json
+        );
+      }
 
       self.postMessage({
         type: 'ratesLoaded',
@@ -71,7 +84,8 @@ async function fetchExchangeRates() {
           success: true,
           base: response.base,
           date: response.date,
-          ratesCount: Object.keys(rates).length
+          ratesCount,
+          appliedCount
         }
       });
     } else {

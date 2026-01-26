@@ -440,6 +440,39 @@ impl Calculator {
     pub fn version() -> String {
         VERSION.to_string()
     }
+
+    /// Updates exchange rates from API response. Returns the number of rates updated.
+    /// Args: `base` (e.g., "USD"), `date` (e.g., "2026-01-25"), `rates_json` (e.g., `{"eur": 0.92}`).
+    #[wasm_bindgen]
+    pub fn update_rates_from_api(&mut self, base: &str, date: &str, rates_json: &str) -> usize {
+        let rates: std::collections::HashMap<String, f64> = match serde_json::from_str(rates_json) {
+            Ok(r) => r,
+            Err(_) => return 0,
+        };
+
+        let base_upper = base.to_uppercase();
+        let timestamp = chrono::Utc::now().to_rfc3339();
+        let mut count = 0;
+
+        for (target, rate) in rates {
+            let target_upper = target.to_uppercase();
+
+            if base_upper == target_upper {
+                continue;
+            } // Skip same currency
+
+            let info = types::ExchangeRateInfo::new(rate, currency_api::API_SOURCE, date)
+                .with_fetched_at(&timestamp);
+
+            self.parser
+                .currency_db_mut()
+                .set_rate_with_info(&base_upper, &target_upper, info);
+
+            count += 1;
+        }
+
+        count
+    }
 }
 
 impl Calculator {
