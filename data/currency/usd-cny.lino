@@ -1,8 +1,8 @@
-rates:
+conversion:
   from USD
   to CNY
   source 'frankfurter.dev (ECB)'
-  data:
+  rates:
     2021-01-25 6.4577
     2021-02-01 6.4632
     2021-02-08 6.4518

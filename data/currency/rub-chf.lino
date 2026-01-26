@@ -1,8 +1,8 @@
-rates:
+conversion:
   from RUB
   to CHF
   source 'cbr.ru (Central Bank of Russia)'
-  data:
+  rates:
     2021-01-27 0.011752428051635467
     2021-01-28 0.011821700386096735
     2021-01-29 0.011672833813864993

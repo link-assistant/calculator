@@ -1,8 +1,8 @@
-rates:
+conversion:
   from USD
   to CZK
   source 'frankfurter.dev (ECB)'
-  data:
+  rates:
     2021-01-25 21.507
     2021-02-01 21.538
     2021-02-08 21.292

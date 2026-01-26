@@ -1,8 +1,8 @@
-rates:
+conversion:
   from USD
   to AUD
   source 'frankfurter.dev (ECB)'
-  data:
+  rates:
     2021-01-25 1.3064
     2021-02-01 1.313
     2021-02-08 1.295

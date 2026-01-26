@@ -1,6 +1,6 @@
-rates:
+conversion:
   from EUR
   to CNY
   source 'fawazahmed0/currency-api'
-  data:
+  rates:
     2026-01-25 7.8

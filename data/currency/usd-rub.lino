@@ -1,8 +1,8 @@
-rates:
+conversion:
   from USD
   to RUB
   source 'cbr.ru (Central Bank of Russia)'
-  data:
+  rates:
     2021-01-27 75.6354
     2021-01-28 75.04
     2021-01-29 76.1854

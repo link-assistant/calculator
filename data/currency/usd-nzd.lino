@@ -1,8 +1,8 @@
-rates:
+conversion:
   from USD
   to NZD
   source 'frankfurter.dev (ECB)'
-  data:
+  rates:
     2021-01-25 1.3955
     2021-02-01 1.3933
     2021-02-08 1.3865

@@ -1,8 +1,8 @@
-rates:
+conversion:
   from USD
   to ZAR
   source 'frankfurter.dev (ECB)'
-  data:
+  rates:
     2021-01-25 15.1833
     2021-02-01 14.9814
     2021-02-08 14.7389

@@ -1,8 +1,8 @@
-rates:
+conversion:
   from USD
   to PLN
   source 'frankfurter.dev (ECB)'
-  data:
+  rates:
     2021-01-25 3.7504
     2021-02-01 3.7408
     2021-02-08 3.7081

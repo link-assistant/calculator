@@ -1,8 +1,8 @@
-rates:
+conversion:
   from USD
   to INR
   source 'frankfurter.dev (ECB)'
-  data:
+  rates:
     2021-01-25 72.973
     2021-02-01 72.956
     2021-02-08 72.814

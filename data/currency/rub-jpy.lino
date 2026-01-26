@@ -1,8 +1,8 @@
-rates:
+conversion:
   from RUB
   to JPY
   source 'cbr.ru (Central Bank of Russia)'
-  data:
+  rates:
     2021-01-27 1.3721091375608017
     2021-01-28 1.3819961829265428
     2021-01-29 1.3691596782474758

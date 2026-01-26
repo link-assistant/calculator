@@ -1,8 +1,8 @@
-rates:
+conversion:
   from USD
   to JPY
   source 'frankfurter.dev (ECB)'
-  data:
+  rates:
     2021-01-25 104.32
     2021-02-01 105.19
     2021-02-08 104.92

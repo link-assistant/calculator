@@ -1,8 +1,8 @@
-rates:
+conversion:
   from USD
   to BRL
   source 'frankfurter.dev (ECB)'
-  data:
+  rates:
     2021-01-25 5.4315
     2021-02-01 5.3964
     2021-02-08 5.3936
