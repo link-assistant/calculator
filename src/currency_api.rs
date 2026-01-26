@@ -107,10 +107,8 @@ async fn fetch_rates_from_url(
 }
 
 /// Performs the actual fetch and JSON parsing.
+/// Works in both Window and Web Worker contexts.
 async fn fetch_json(url: &str) -> Result<(String, HashMap<String, f64>), CurrencyApiError> {
-    let window = web_sys::window()
-        .ok_or_else(|| CurrencyApiError::NetworkError("No window object available".to_string()))?;
-
     let opts = RequestInit::new();
     opts.set_method("GET");
     opts.set_mode(RequestMode::Cors);
@@ -124,9 +122,21 @@ async fn fetch_json(url: &str) -> Result<(String, HashMap<String, f64>), Currenc
         .set("Accept", "application/json")
         .map_err(|e| CurrencyApiError::NetworkError(format!("Failed to set headers: {:?}", e)))?;
 
-    let resp_value = JsFuture::from(window.fetch_with_request(&request))
-        .await
-        .map_err(|e| CurrencyApiError::NetworkError(format!("Fetch failed: {:?}", e)))?;
+    // Use the global fetch function which works in both Window and Worker contexts.
+    // In a browser window, this is window.fetch; in a worker, this is self.fetch.
+    let global = js_sys::global();
+    let resp_value = if let Some(window) = global.dyn_ref::<web_sys::Window>() {
+        // Running in a Window context
+        JsFuture::from(window.fetch_with_request(&request)).await
+    } else if let Some(worker) = global.dyn_ref::<web_sys::WorkerGlobalScope>() {
+        // Running in a Web Worker context
+        JsFuture::from(worker.fetch_with_request(&request)).await
+    } else {
+        return Err(CurrencyApiError::NetworkError(
+            "Neither Window nor WorkerGlobalScope available".to_string(),
+        ));
+    }
+    .map_err(|e| CurrencyApiError::NetworkError(format!("Fetch failed: {:?}", e)))?;
 
     let resp: Response = resp_value
         .dyn_into()

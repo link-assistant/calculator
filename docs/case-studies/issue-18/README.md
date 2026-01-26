@@ -29,34 +29,37 @@ Users need transparency about currency conversion rates for:
 
 ## Root Cause Analysis
 
-### Primary Issue: Missing Rate Application Pipeline
+### Primary Issue: Web Worker Context Incompatibility
 
-**Critical Finding**: The web worker successfully fetches exchange rates from the API but **never applies them to the Calculator instance**.
+**Critical Finding**: The currency API fetch code used `web_sys::window()` which returns `None` in a Web Worker context. Web Workers don't have a `window` object - they use `WorkerGlobalScope` instead.
 
-In `web/src/worker.ts`:
-```typescript
-async function fetchExchangeRates() {
-  const responseJson = await fetch_exchange_rates('usd');
-  const response: ExchangeRatesResponse = JSON.parse(responseJson);
-
-  if (response.success) {
-    const rates = JSON.parse(response.rates_json);
-    // PROBLEM: rates are parsed but NEVER applied to calculator!
-    self.postMessage({
-      type: 'ratesLoaded',
-      data: { ... ratesCount: Object.keys(rates).length }
-    });
-  }
+In `src/currency_api.rs` (before fix):
+```rust
+async fn fetch_json(url: &str) -> Result<(String, HashMap<String, f64>), CurrencyApiError> {
+    let window = web_sys::window()
+        .ok_or_else(|| CurrencyApiError::NetworkError("No window object available".to_string()))?;
+    // This always fails in a Web Worker!
+    // ...
 }
 ```
 
-The architecture has all the pieces but they're not connected:
-1. `fetch_exchange_rates()` in WASM returns rates ✅
-2. Worker receives rates and counts them ✅
-3. **Worker never updates Calculator with the rates** ❌
-4. Result: Calculator uses hardcoded fallback rates
+The fix requires checking for both Window and WorkerGlobalScope contexts:
+```rust
+let global = js_sys::global();
+let resp_value = if let Some(window) = global.dyn_ref::<web_sys::Window>() {
+    JsFuture::from(window.fetch_with_request(&request)).await
+} else if let Some(worker) = global.dyn_ref::<web_sys::WorkerGlobalScope>() {
+    JsFuture::from(worker.fetch_with_request(&request)).await
+} else {
+    return Err(CurrencyApiError::NetworkError("Neither Window nor WorkerGlobalScope available".to_string()));
+};
+```
 
-### Secondary Issue: Hardcoded Fallback Rates
+### Secondary Issue: Missing Rate Application Pipeline (Fixed in PR #38)
+
+The web worker originally fetched exchange rates from the API but **never applied them to the Calculator instance**. This was fixed by adding `update_rates_from_api` call in `web/src/worker.ts`.
+
+### Tertiary Issue: Hardcoded Fallback Rates
 
 The calculator uses **hardcoded exchange rates** in `src/types/currency.rs:188`:
 
