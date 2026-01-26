@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to KRW
+  value 1383.39
+  date 2025-05-19
+  source 'frankfurter.dev (ECB)'

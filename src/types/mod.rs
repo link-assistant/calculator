@@ -7,9 +7,9 @@ mod expression;
 mod unit;
 mod value;
 
-pub use currency::{Currency, CurrencyDatabase};
+pub use currency::{Currency, CurrencyDatabase, ExchangeRateInfo};
 pub use datetime::DateTime;
 pub use decimal::Decimal;
 pub use expression::{BinaryOp, Expression};
 pub use unit::Unit;
-pub use value::Value;
+pub use value::{Value, ValueKind};

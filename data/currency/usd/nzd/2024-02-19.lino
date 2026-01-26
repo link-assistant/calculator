@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to NZD
+  value 1.6175
+  date 2024-02-19
+  source 'frankfurter.dev (ECB)'

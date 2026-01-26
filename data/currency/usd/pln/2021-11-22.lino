@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to PLN
+  value 4.1718
+  date 2021-11-22
+  source 'frankfurter.dev (ECB)'

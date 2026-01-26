@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to JPY
+  value 136.89
+  date 2022-08-22
+  source 'frankfurter.dev (ECB)'

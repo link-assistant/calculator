@@ -36,6 +36,8 @@ footer:
   poweredBy 'مدعوم بـ Rust + WebAssembly'
   viewOnGitHub 'عرض على GitHub'
   reportIssue 'الإبلاغ عن مشكلة'
+  loadingRates 'جاري تحميل أسعار الصرف...'
+  ratesInfo 'أسعار الصرف من {{source}} ({{date}})'
 settings:
   theme المظهر
   themeLight فاتح
@@ -62,6 +64,7 @@ steps:
   calculateDifference 'حساب الفرق: {{dt1}} - {{dt2}}'
   result 'النتيجة: {{value}}'
   finalResult 'النتيجة النهائية: {{value}}'
+  exchangeRate 'سعر الصرف: 1 {{from}} = {{rate}} {{to}} (المصدر: {{source}}، التاريخ: {{date}})'
 issueReport:
   environment البيئة
   version الإصدار

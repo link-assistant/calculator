@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to HUF
+  value 344.0
+  date 2023-06-05
+  source 'frankfurter.dev (ECB)'

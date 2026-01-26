@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to CHF
+  value 0.8035
+  date 2025-08-25
+  source 'frankfurter.dev (ECB)'

@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to BRL
+  value 4.7455
+  date 2022-03-28
+  source 'frankfurter.dev (ECB)'

@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to CAD
+  value 1.3976
+  date 2025-05-12
+  source 'frankfurter.dev (ECB)'

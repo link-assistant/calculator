@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to DKK
+  value 6.15
+  date 2021-04-26
+  source 'frankfurter.dev (ECB)'

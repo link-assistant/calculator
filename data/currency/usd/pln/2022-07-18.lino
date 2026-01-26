@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to PLN
+  value 4.6757
+  date 2022-07-18
+  source 'frankfurter.dev (ECB)'

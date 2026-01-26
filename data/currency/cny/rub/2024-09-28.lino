@@ -1,0 +1,6 @@
+rate:
+  from CNY
+  to RUB
+  value 13.2163
+  date 2024-09-28
+  source 'cbr.ru (Central Bank of Russia)'

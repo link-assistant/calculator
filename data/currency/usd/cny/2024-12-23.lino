@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to CNY
+  value 7.298
+  date 2024-12-23
+  source 'frankfurter.dev (ECB)'

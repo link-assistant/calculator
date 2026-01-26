@@ -1,0 +1,6 @@
+rate:
+  from EUR
+  to CHF
+  value 0.96756
+  date 2023-09-25
+  source 'frankfurter.dev (ECB)'

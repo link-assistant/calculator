@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to JPY
+  value 158.12
+  date 2026-01-19
+  source 'frankfurter.dev (ECB)'

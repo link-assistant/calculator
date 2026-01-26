@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to CHF
+  value 0.91748
+  date 2021-11-08
+  source 'frankfurter.dev (ECB)'

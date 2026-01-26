@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to AUD
+  value 1.5878
+  date 2025-03-10
+  source 'frankfurter.dev (ECB)'

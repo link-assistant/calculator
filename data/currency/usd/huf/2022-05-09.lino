@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to HUF
+  value 364.03
+  date 2022-05-09
+  source 'frankfurter.dev (ECB)'

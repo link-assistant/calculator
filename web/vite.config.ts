@@ -9,7 +9,7 @@ export default defineConfig({
   base: '/calculator/',
   resolve: {
     alias: {
-      '@wasm': path.resolve(__dirname, 'pkg'),
+      '@wasm': path.resolve(__dirname, 'public/pkg'),
     },
   },
   build: {

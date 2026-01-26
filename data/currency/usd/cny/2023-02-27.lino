@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to CNY
+  value 6.9147
+  date 2023-02-27
+  source 'frankfurter.dev (ECB)'

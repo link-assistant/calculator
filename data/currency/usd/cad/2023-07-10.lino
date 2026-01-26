@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to CAD
+  value 1.3212
+  date 2023-07-10
+  source 'frankfurter.dev (ECB)'

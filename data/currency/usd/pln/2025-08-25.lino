@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to PLN
+  value 3.6583
+  date 2025-08-25
+  source 'frankfurter.dev (ECB)'

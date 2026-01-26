@@ -1,0 +1,6 @@
+rate:
+  from GBP
+  to RUB
+  value 125.4927
+  date 2025-01-17
+  source 'cbr.ru (Central Bank of Russia)'

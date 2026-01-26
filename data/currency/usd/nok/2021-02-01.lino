@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to NOK
+  value 8.6044
+  date 2021-02-01
+  source 'frankfurter.dev (ECB)'

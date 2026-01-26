@@ -1,0 +1,6 @@
+rate:
+  from RUB
+  to EUR
+  value 0.01028
+  date 2026-01-25
+  source 'fawazahmed0/currency-api'

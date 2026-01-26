@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to KRW
+  value 1428.78
+  date 2022-10-24
+  source 'frankfurter.dev (ECB)'

@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to JPY
+  value 111.35
+  date 2021-10-04
+  source 'frankfurter.dev (ECB)'

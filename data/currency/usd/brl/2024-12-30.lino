@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to BRL
+  value 6.1925
+  date 2024-12-30
+  source 'frankfurter.dev (ECB)'

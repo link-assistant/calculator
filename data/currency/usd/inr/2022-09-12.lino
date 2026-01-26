@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to INR
+  value 79.525
+  date 2022-09-12
+  source 'frankfurter.dev (ECB)'

@@ -36,6 +36,8 @@ footer:
   poweredBy 'Rust + WebAssembly द्वारा संचालित'
   viewOnGitHub 'GitHub पर देखें'
   reportIssue 'समस्या की रिपोर्ट करें'
+  loadingRates 'विनिमय दरें लोड हो रही हैं...'
+  ratesInfo '{{source}} से विनिमय दरें ({{date}})'
 settings:
   theme थीम
   themeLight लाइट
@@ -62,6 +64,7 @@ steps:
   calculateDifference 'अंतर की गणना करें: {{dt1}} - {{dt2}}'
   result 'परिणाम: {{value}}'
   finalResult 'अंतिम परिणाम: {{value}}'
+  exchangeRate 'विनिमय दर: 1 {{from}} = {{rate}} {{to}} (स्रोत: {{source}}, तारीख: {{date}})'
 issueReport:
   environment वातावरण
   version संस्करण

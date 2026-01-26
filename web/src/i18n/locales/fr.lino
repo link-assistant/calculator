@@ -36,6 +36,8 @@ footer:
   poweredBy 'Propulsé par Rust + WebAssembly'
   viewOnGitHub 'Voir sur GitHub'
   reportIssue 'Signaler un problème'
+  loadingRates 'Chargement des taux de change...'
+  ratesInfo 'Taux de change de {{source}} ({{date}})'
 settings:
   theme Thème
   themeLight Clair
@@ -62,6 +64,7 @@ steps:
   calculateDifference 'Calculer la différence : {{dt1}} - {{dt2}}'
   result 'Résultat : {{value}}'
   finalResult 'Résultat final : {{value}}'
+  exchangeRate 'Taux de change : 1 {{from}} = {{rate}} {{to}} (source : {{source}}, date : {{date}})'
 issueReport:
   environment Environnement
   version Version

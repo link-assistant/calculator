@@ -1,0 +1,6 @@
+rate:
+  from GBP
+  to USD
+  value 1.3519
+  date 2022-01-31
+  source 'frankfurter.dev (ECB)'

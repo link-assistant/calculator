@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to PLN
+  value 4.008
+  date 2024-10-21
+  source 'frankfurter.dev (ECB)'

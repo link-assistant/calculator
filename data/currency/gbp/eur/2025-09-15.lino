@@ -1,0 +1,6 @@
+rate:
+  from GBP
+  to EUR
+  value 1.1531
+  date 2025-09-15
+  source 'frankfurter.dev (ECB)'
