@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 /**
  * Encode an expression to a URL-safe Links Notation format
@@ -67,6 +67,9 @@ export function useUrlExpression(initialExpression: string = '') {
     return initialExpression;
   });
 
+  // Track if this is the first update to avoid creating unnecessary history entries
+  const isFirstUpdate = useRef(true);
+
   // Update URL when expression changes (debounced)
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -76,11 +79,31 @@ export function useUrlExpression(initialExpression: string = '') {
       } else {
         url.searchParams.delete('q');
       }
-      window.history.replaceState({}, '', url.toString());
+
+      // Use replaceState for the first update (initial load), pushState for subsequent changes
+      if (isFirstUpdate.current) {
+        window.history.replaceState({}, '', url.toString());
+        isFirstUpdate.current = false;
+      } else {
+        window.history.pushState({}, '', url.toString());
+      }
     }, 500);
 
     return () => clearTimeout(timeout);
   }, [expression]);
+
+  // Handle browser back/forward navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get('q');
+      const decoded = q ? decodeExpression(q) : '';
+      setExpression(decoded);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const copyShareLink = useCallback(async () => {
     const url = generateShareUrl(expression);
