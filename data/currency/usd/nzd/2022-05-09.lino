@@ -1,6 +1,0 @@
-rate:
-  from USD
-  to NZD
-  value 1.5871
-  date 2022-05-09
-  source 'frankfurter.dev (ECB)'

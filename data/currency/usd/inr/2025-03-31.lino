@@ -1,6 +1,0 @@
-rate:
-  from USD
-  to INR
-  value 85.45
-  date 2025-03-31
-  source 'frankfurter.dev (ECB)'

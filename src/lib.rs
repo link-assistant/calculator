@@ -583,6 +583,80 @@ impl Calculator {
         }
         Ok(loaded)
     }
+
+    /// Loads historical exchange rates from a consolidated .lino format.
+    ///
+    /// The consolidated format stores all rates for a currency pair in one file:
+    /// ```text
+    /// rates:
+    ///   from USD
+    ///   to EUR
+    ///   source 'frankfurter.dev (ECB)'
+    ///   data:
+    ///     2021-01-25 0.8234
+    ///     2021-02-01 0.8315
+    ///     ...
+    /// ```
+    pub fn load_rates_from_consolidated_lino(&mut self, content: &str) -> Result<usize, String> {
+        let mut from_currency: Option<String> = None;
+        let mut to_currency: Option<String> = None;
+        let mut source: Option<String> = None;
+        let mut in_data_section = false;
+        let mut loaded = 0;
+
+        for line in content.lines() {
+            let trimmed = line.trim();
+
+            if trimmed.is_empty() || trimmed == "rates:" {
+                continue;
+            }
+
+            // Check for data section marker
+            if trimmed == "data:" {
+                in_data_section = true;
+                continue;
+            }
+
+            if in_data_section {
+                // Parse date and value: "2021-01-25 0.8234"
+                let parts: Vec<&str> = trimmed.split_whitespace().collect();
+                if parts.len() >= 2 {
+                    if let (Some(from), Some(to)) = (from_currency.as_ref(), to_currency.as_ref()) {
+                        let date = parts[0];
+                        if let Ok(value) = parts[1].parse::<f64>() {
+                            let rate_source =
+                                source.clone().unwrap_or_else(|| "unknown".to_string());
+                            let rate_info =
+                                types::ExchangeRateInfo::new(value, rate_source, date.to_string());
+                            self.parser
+                                .currency_db_mut()
+                                .set_historical_rate_with_info(from, to, date, rate_info);
+                            loaded += 1;
+                        }
+                    }
+                }
+            } else {
+                // Parse header section
+                if let Some(rest) = trimmed.strip_prefix("from ") {
+                    from_currency = Some(rest.trim().to_uppercase());
+                } else if let Some(rest) = trimmed.strip_prefix("to ") {
+                    to_currency = Some(rest.trim().to_uppercase());
+                } else if let Some(rest) = trimmed.strip_prefix("source ") {
+                    // Remove quotes from source
+                    let src = rest.trim();
+                    let src = src.trim_start_matches('\'').trim_end_matches('\'');
+                    let src = src.trim_start_matches('"').trim_end_matches('"');
+                    source = Some(src.to_string());
+                }
+            }
+        }
+
+        if loaded == 0 {
+            Err("No rates loaded from consolidated file".to_string())
+        } else {
+            Ok(loaded)
+        }
+    }
 }
 
 #[cfg(test)]
@@ -703,5 +777,35 @@ mod tests {
         let result = calc.load_rates_batch(&[content1, content2]);
         assert!(result.is_ok());
         assert_eq!(result.unwrap(), 2);
+    }
+
+    #[test]
+    fn test_load_rates_from_consolidated_lino() {
+        let mut calc = Calculator::new();
+        let content = "rates:
+  from USD
+  to EUR
+  source 'frankfurter.dev (ECB)'
+  data:
+    2021-01-25 0.8234
+    2021-02-01 0.8315
+    2021-02-08 0.8402";
+
+        let result = calc.load_rates_from_consolidated_lino(content);
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap(), 3);
+    }
+
+    #[test]
+    fn test_load_rates_from_consolidated_lino_empty() {
+        let mut calc = Calculator::new();
+        let content = "rates:
+  from USD
+  to EUR
+  source 'test'
+  data:";
+
+        let result = calc.load_rates_from_consolidated_lino(content);
+        assert!(result.is_err());
     }
 }

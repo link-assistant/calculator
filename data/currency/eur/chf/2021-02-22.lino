@@ -1,6 +1,0 @@
-rate:
-  from EUR
-  to CHF
-  value 1.0985
-  date 2021-02-22
-  source 'frankfurter.dev (ECB)'

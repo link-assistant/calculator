@@ -1,6 +1,0 @@
-rate:
-  from EUR
-  to CHF
-  value 0.99
-  date 2024-05-20
-  source 'frankfurter.dev (ECB)'

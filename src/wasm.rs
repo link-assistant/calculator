@@ -218,6 +218,107 @@ pub fn parse_lino_rate(content: String) -> String {
         .unwrap_or_else(|_| r#"{"success":false,"error":"Serialization failed"}"#.to_string())
 }
 
+/// Parses a consolidated .lino rate file and returns the rate data as JSON.
+/// The consolidated format stores all rates for a currency pair in one file:
+/// ```text
+/// rates:
+///   from USD
+///   to EUR
+///   source 'frankfurter.dev (ECB)'
+///   data:
+///     2021-01-25 0.8234
+///     2021-02-01 0.8315
+/// ```
+///
+/// # Arguments
+/// * `content` - The consolidated .lino file content
+///
+/// # Returns
+/// A JSON string with the parsed rates array
+#[wasm_bindgen]
+#[allow(clippy::needless_pass_by_value)] // wasm_bindgen requires owned String
+pub fn parse_consolidated_lino_rates(content: String) -> String {
+    #[derive(serde::Serialize)]
+    struct ParsedConsolidatedRates {
+        success: bool,
+        from: Option<String>,
+        to: Option<String>,
+        source: Option<String>,
+        rates: Vec<RateEntry>,
+        error: Option<String>,
+    }
+
+    #[derive(serde::Serialize)]
+    struct RateEntry {
+        date: String,
+        value: f64,
+    }
+
+    let mut from_currency: Option<String> = None;
+    let mut to_currency: Option<String> = None;
+    let mut source: Option<String> = None;
+    let mut rates: Vec<RateEntry> = Vec::new();
+    let mut in_data_section = false;
+
+    for line in content.lines() {
+        let trimmed = line.trim();
+
+        if trimmed.is_empty() || trimmed == "rates:" {
+            continue;
+        }
+
+        if trimmed == "data:" {
+            in_data_section = true;
+            continue;
+        }
+
+        if in_data_section {
+            // Parse date and value: "2021-01-25 0.8234"
+            let parts: Vec<&str> = trimmed.split_whitespace().collect();
+            if parts.len() >= 2 {
+                if let Ok(value) = parts[1].parse::<f64>() {
+                    rates.push(RateEntry {
+                        date: parts[0].to_string(),
+                        value,
+                    });
+                }
+            }
+        } else if let Some(rest) = trimmed.strip_prefix("from ") {
+            from_currency = Some(rest.trim().to_uppercase());
+        } else if let Some(rest) = trimmed.strip_prefix("to ") {
+            to_currency = Some(rest.trim().to_uppercase());
+        } else if let Some(rest) = trimmed.strip_prefix("source ") {
+            let src = rest.trim();
+            let src = src.trim_start_matches('\'').trim_end_matches('\'');
+            let src = src.trim_start_matches('"').trim_end_matches('"');
+            source = Some(src.to_string());
+        }
+    }
+
+    let result = if from_currency.is_some() && to_currency.is_some() && !rates.is_empty() {
+        ParsedConsolidatedRates {
+            success: true,
+            from: from_currency,
+            to: to_currency,
+            source,
+            rates,
+            error: None,
+        }
+    } else {
+        ParsedConsolidatedRates {
+            success: false,
+            from: from_currency,
+            to: to_currency,
+            source,
+            rates,
+            error: Some("Missing required fields or no rates found".to_string()),
+        }
+    };
+
+    serde_json::to_string(&result)
+        .unwrap_or_else(|_| r#"{"success":false,"error":"Serialization failed"}"#.to_string())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -265,5 +366,45 @@ mod tests {
 
         assert_eq!(parsed["success"], false);
         assert!(parsed["error"].as_str().unwrap().contains("Missing"));
+    }
+
+    #[test]
+    fn test_parse_consolidated_lino_rates() {
+        let content = "rates:
+  from USD
+  to EUR
+  source 'frankfurter.dev (ECB)'
+  data:
+    2021-01-25 0.8234
+    2021-02-01 0.8315
+    2021-02-08 0.8402";
+
+        let result = parse_consolidated_lino_rates(content.to_string());
+        let parsed: serde_json::Value = serde_json::from_str(&result).unwrap();
+
+        assert_eq!(parsed["success"], true);
+        assert_eq!(parsed["from"], "USD");
+        assert_eq!(parsed["to"], "EUR");
+        assert_eq!(parsed["source"], "frankfurter.dev (ECB)");
+
+        let rates = parsed["rates"].as_array().unwrap();
+        assert_eq!(rates.len(), 3);
+        assert_eq!(rates[0]["date"], "2021-01-25");
+        assert_eq!(rates[0]["value"], 0.8234);
+    }
+
+    #[test]
+    fn test_parse_consolidated_lino_rates_empty() {
+        let content = "rates:
+  from USD
+  to EUR
+  source 'test'
+  data:";
+
+        let result = parse_consolidated_lino_rates(content.to_string());
+        let parsed: serde_json::Value = serde_json::from_str(&result).unwrap();
+
+        assert_eq!(parsed["success"], false);
+        assert!(parsed["error"].as_str().unwrap().contains("no rates found"));
     }
 }

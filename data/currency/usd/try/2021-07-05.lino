@@ -1,6 +1,0 @@
-rate:
-  from USD
-  to TRY
-  value 8.672
-  date 2021-07-05
-  source 'frankfurter.dev (ECB)'

@@ -1,6 +1,0 @@
-rate:
-  from RUB
-  to USD
-  value 0.01118
-  date 2026-01-25
-  source 'fawazahmed0/currency-api'

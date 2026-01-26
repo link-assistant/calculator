@@ -1,6 +1,0 @@
-rate:
-  from USD
-  to MXN
-  value 20.524
-  date 2022-02-07
-  source 'frankfurter.dev (ECB)'
