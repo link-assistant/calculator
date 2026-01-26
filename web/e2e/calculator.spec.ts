@@ -132,7 +132,7 @@ test.describe('URL Sharing', () => {
     await input.fill('1 + 2');
 
     // Wait for debounce and URL update
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(600);
 
     // Check URL contains expression parameter
     const url = page.url();
@@ -154,6 +154,52 @@ test.describe('URL Sharing', () => {
 
     // Result should show 25
     await expect(page.locator('.result-value')).toContainText('25', { timeout: 5000 });
+  });
+
+  test('should add each new expression to browser history', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('textarea')).toBeEnabled({ timeout: 10000 });
+
+    const input = page.locator('textarea');
+
+    // Type first expression
+    await input.fill('1 + 1');
+    await page.waitForTimeout(600);
+    await expect(page.locator('.result-value')).toContainText('2', { timeout: 5000 });
+
+    // Type second expression
+    await input.fill('2 + 2');
+    await page.waitForTimeout(600);
+    await expect(page.locator('.result-value')).toContainText('4', { timeout: 5000 });
+
+    // Type third expression
+    await input.fill('3 + 3');
+    await page.waitForTimeout(600);
+    await expect(page.locator('.result-value')).toContainText('6', { timeout: 5000 });
+
+    // Go back in history
+    await page.goBack();
+    await page.waitForTimeout(200);
+
+    // Should show second expression
+    await expect(input).toHaveValue('2 + 2');
+    await expect(page.locator('.result-value')).toContainText('4', { timeout: 5000 });
+
+    // Go back again
+    await page.goBack();
+    await page.waitForTimeout(200);
+
+    // Should show first expression
+    await expect(input).toHaveValue('1 + 1');
+    await expect(page.locator('.result-value')).toContainText('2', { timeout: 5000 });
+
+    // Go forward
+    await page.goForward();
+    await page.waitForTimeout(200);
+
+    // Should show second expression again
+    await expect(input).toHaveValue('2 + 2');
+    await expect(page.locator('.result-value')).toContainText('4', { timeout: 5000 });
   });
 });
 
