@@ -37,6 +37,9 @@ rust_decimal = { version = "1.33", features = ["serde"] }
 thiserror = "1.0"
 lazy_static = "1.4"
 regex = "1.10"
+num-rational = { version = "0.4", features = ["serde"] }
+num-integer = "0.1"
+num-traits = "0.2"
 serde-wasm-bindgen = "0.6"
 
 [dev-dependencies]

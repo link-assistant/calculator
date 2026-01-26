@@ -100,6 +100,21 @@ impl CalculationStep {
     }
 }
 
+/// Repeating decimal notation formats.
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+pub struct RepeatingDecimalFormats {
+    /// Vinculum notation with overline: 0.3̅
+    pub vinculum: String,
+    /// Parenthesis notation: 0.(3)
+    pub parenthesis: String,
+    /// Ellipsis notation: 0.333...
+    pub ellipsis: String,
+    /// LaTeX notation: 0.\overline{3}
+    pub latex: String,
+    /// Fraction representation: 1/3
+    pub fraction: String,
+}
+
 /// Result of a calculation operation.
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct CalculationResult {
@@ -133,6 +148,12 @@ pub struct CalculationResult {
     /// Plot data points for graphing (x, y pairs).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub plot_data: Option<PlotData>,
+    /// Repeating decimal notations (if the result is a repeating decimal).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub repeating_decimal: Option<RepeatingDecimalFormats>,
+    /// Fraction representation of the result (if applicable).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub fraction: Option<String>,
 }
 
 impl CalculationResult {
@@ -152,6 +173,55 @@ impl CalculationResult {
             latex_result: None,
             is_symbolic: None,
             plot_data: None,
+            repeating_decimal: None,
+            fraction: None,
+        }
+    }
+
+    /// Creates a successful calculation result with rational value information.
+    #[must_use]
+    pub fn success_with_value(value: &Value, lino: String, steps: Vec<String>) -> Self {
+        let result = value.to_display_string();
+
+        // Extract repeating decimal and fraction info if available
+        let (repeating_decimal, fraction) = if let Some(rational) = value.as_rational() {
+            let fraction = if !rational.is_integer() {
+                Some(rational.to_fraction_string())
+            } else {
+                None
+            };
+
+            let repeating =
+                rational
+                    .to_repeating_decimal_notation()
+                    .map(|rd| RepeatingDecimalFormats {
+                        vinculum: rd.to_vinculum_notation(),
+                        parenthesis: rd.to_parenthesis_notation(),
+                        ellipsis: rd.to_ellipsis_notation(),
+                        latex: rd.to_latex(),
+                        fraction: rational.to_fraction_string(),
+                    });
+
+            (repeating, fraction)
+        } else {
+            (None, None)
+        };
+
+        Self {
+            result,
+            lino_interpretation: lino,
+            steps,
+            steps_i18n: None,
+            success: true,
+            error: None,
+            error_info: None,
+            issue_link: None,
+            latex_input: None,
+            latex_result: None,
+            is_symbolic: None,
+            plot_data: None,
+            repeating_decimal,
+            fraction,
         }
     }
 
@@ -176,6 +246,8 @@ impl CalculationResult {
             latex_result: None,
             is_symbolic: None,
             plot_data: None,
+            repeating_decimal: None,
+            fraction: None,
         }
     }
 
@@ -201,6 +273,8 @@ impl CalculationResult {
             latex_result,
             is_symbolic: None,
             plot_data: None,
+            repeating_decimal: None,
+            fraction: None,
         }
     }
 
@@ -229,6 +303,8 @@ impl CalculationResult {
             latex_result: Some(latex_result),
             is_symbolic: Some(true),
             plot_data,
+            repeating_decimal: None,
+            fraction: None,
         }
     }
 
@@ -249,6 +325,8 @@ impl CalculationResult {
             latex_result: None,
             is_symbolic: None,
             plot_data: None,
+            repeating_decimal: None,
+            fraction: None,
         }
     }
 
@@ -270,6 +348,8 @@ impl CalculationResult {
             latex_result: None,
             is_symbolic: None,
             plot_data: None,
+            repeating_decimal: None,
+            fraction: None,
         }
     }
 }
@@ -366,9 +446,7 @@ impl Calculator {
     /// Internal calculation method that returns a proper Result type.
     pub fn calculate_internal(&mut self, input: &str) -> CalculationResult {
         match self.parser.parse_and_evaluate(input) {
-            Ok((value, steps, lino)) => {
-                CalculationResult::success(value.to_display_string(), lino, steps)
-            }
+            Ok((value, steps, lino)) => CalculationResult::success_with_value(&value, lino, steps),
             Err(CalculatorError::SymbolicResult {
                 expression,
                 result,
