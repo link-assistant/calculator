@@ -6,6 +6,7 @@ mod integral;
 mod lexer;
 mod math_functions;
 mod number_grammar;
+mod token_parser;
 
 pub use datetime_grammar::DateTimeGrammar;
 pub use expression_parser::ExpressionParser;

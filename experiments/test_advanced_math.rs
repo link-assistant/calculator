@@ -3,7 +3,7 @@
 use link_calculator::Calculator;
 
 fn main() {
-    let calculator = Calculator::new();
+    let mut calculator = Calculator::new();
 
     let test_inputs = [
         "integrate sin(x)/x dx",

@@ -17,7 +17,7 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@wasm/*": ["./pkg/*"]
+      "@wasm/*": ["./public/pkg/*"]
     }
   },
   "include": ["src"],

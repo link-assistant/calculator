@@ -36,6 +36,8 @@ footer:
   poweredBy 'Powered by Rust + WebAssembly'
   viewOnGitHub 'Auf GitHub ansehen'
   reportIssue 'Problem melden'
+  loadingRates 'Wechselkurse werden geladen...'
+  ratesInfo 'Wechselkurse von {{source}} ({{date}})'
 settings:
   theme Design
   themeLight Hell
@@ -62,6 +64,7 @@ steps:
   calculateDifference 'Differenz berechnen: {{dt1}} - {{dt2}}'
   result 'Ergebnis: {{value}}'
   finalResult 'Endergebnis: {{value}}'
+  exchangeRate 'Wechselkurs: 1 {{from}} = {{rate}} {{to}} (Quelle: {{source}}, Datum: {{date}})'
 issueReport:
   environment Umgebung
   version Version

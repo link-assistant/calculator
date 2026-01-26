@@ -128,7 +128,17 @@ impl Value {
     pub fn add(
         &self,
         other: &Self,
-        currency_db: &CurrencyDatabase,
+        currency_db: &mut CurrencyDatabase,
+    ) -> Result<Self, CalculatorError> {
+        self.add_at_date(other, currency_db, None)
+    }
+
+    /// Adds two values with optional date context for historical currency conversion.
+    pub fn add_at_date(
+        &self,
+        other: &Self,
+        currency_db: &mut CurrencyDatabase,
+        date: Option<&DateTime>,
     ) -> Result<Self, CalculatorError> {
         match (&self.kind, &other.kind) {
             // Rational + Rational
@@ -137,7 +147,7 @@ impl Value {
             }
             // Number + Number (legacy)
             (ValueKind::Number(a), ValueKind::Number(b)) => {
-                self.add_numbers(*a, *b, other, currency_db)
+                self.add_numbers(*a, *b, other, currency_db, date)
             }
             // Mixed: convert Decimal to Rational
             (ValueKind::Rational(a), ValueKind::Number(b)) => {
@@ -171,7 +181,7 @@ impl Value {
         a: Rational,
         b: Rational,
         other: &Self,
-        currency_db: &CurrencyDatabase,
+        currency_db: &mut CurrencyDatabase,
     ) -> Result<Self, CalculatorError> {
         match (&self.unit, &other.unit) {
             (Unit::None, Unit::None) => Ok(Value::rational(a + b)),
@@ -204,7 +214,8 @@ impl Value {
         a: Decimal,
         b: Decimal,
         other: &Self,
-        currency_db: &CurrencyDatabase,
+        currency_db: &mut CurrencyDatabase,
+        date: Option<&DateTime>,
     ) -> Result<Self, CalculatorError> {
         match (&self.unit, &other.unit) {
             (Unit::None, Unit::None) => Ok(Value::number(a + b)),
@@ -213,8 +224,12 @@ impl Value {
             }
             (Unit::Currency(c1), Unit::Currency(c2)) if c1 == c2 => Ok(Value::currency(a + b, c1)),
             (Unit::Currency(c1), Unit::Currency(c2)) => {
-                // Convert c2 to c1
-                let converted = currency_db.convert(b.to_f64(), c2, c1)?;
+                // Convert c2 to c1, using historical rate if date is provided
+                let converted = if let Some(dt) = date {
+                    currency_db.convert_at_date(b.to_f64(), c2, c1, dt)?
+                } else {
+                    currency_db.convert(b.to_f64(), c2, c1)?
+                };
                 let converted_decimal = Decimal::from_f64(converted);
                 Ok(Value::currency(a + converted_decimal, c1))
             }
@@ -231,7 +246,17 @@ impl Value {
     pub fn subtract(
         &self,
         other: &Self,
-        currency_db: &CurrencyDatabase,
+        currency_db: &mut CurrencyDatabase,
+    ) -> Result<Self, CalculatorError> {
+        self.subtract_at_date(other, currency_db, None)
+    }
+
+    /// Subtracts two values with optional date context for historical currency conversion.
+    pub fn subtract_at_date(
+        &self,
+        other: &Self,
+        currency_db: &mut CurrencyDatabase,
+        date: Option<&DateTime>,
     ) -> Result<Self, CalculatorError> {
         match (&self.kind, &other.kind) {
             // Rational - Rational
@@ -240,7 +265,7 @@ impl Value {
             }
             // Number - Number (legacy)
             (ValueKind::Number(a), ValueKind::Number(b)) => {
-                self.subtract_numbers(*a, *b, other, currency_db)
+                self.subtract_numbers(*a, *b, other, currency_db, date)
             }
             // Mixed: convert Decimal to Rational
             (ValueKind::Rational(a), ValueKind::Number(b)) => {
@@ -274,7 +299,7 @@ impl Value {
         a: Rational,
         b: Rational,
         other: &Self,
-        currency_db: &CurrencyDatabase,
+        currency_db: &mut CurrencyDatabase,
     ) -> Result<Self, CalculatorError> {
         match (&self.unit, &other.unit) {
             (Unit::None, Unit::None) => Ok(Value::rational(a - b)),
@@ -306,7 +331,8 @@ impl Value {
         a: Decimal,
         b: Decimal,
         other: &Self,
-        currency_db: &CurrencyDatabase,
+        currency_db: &mut CurrencyDatabase,
+        date: Option<&DateTime>,
     ) -> Result<Self, CalculatorError> {
         match (&self.unit, &other.unit) {
             (Unit::None, Unit::None) => Ok(Value::number(a - b)),
@@ -314,8 +340,12 @@ impl Value {
             (Unit::None, unit) => Ok(Value::number_with_unit(a - b, unit.clone())),
             (Unit::Currency(c1), Unit::Currency(c2)) if c1 == c2 => Ok(Value::currency(a - b, c1)),
             (Unit::Currency(c1), Unit::Currency(c2)) => {
-                // Convert c2 to c1
-                let converted = currency_db.convert(b.to_f64(), c2, c1)?;
+                // Convert c2 to c1, using historical rate if date is provided
+                let converted = if let Some(dt) = date {
+                    currency_db.convert_at_date(b.to_f64(), c2, c1, dt)?
+                } else {
+                    currency_db.convert(b.to_f64(), c2, c1)?
+                };
                 let converted_decimal = Decimal::from_f64(converted);
                 Ok(Value::currency(a - converted_decimal, c1))
             }
@@ -657,8 +687,8 @@ mod tests {
     fn test_number_addition() {
         let a = Value::number(Decimal::new(2));
         let b = Value::number(Decimal::new(3));
-        let db = CurrencyDatabase::new();
-        let result = a.add(&b, &db).unwrap();
+        let mut db = CurrencyDatabase::new();
+        let result = a.add(&b, &mut db).unwrap();
         assert_eq!(result.to_display_string(), "5");
     }
 
@@ -666,8 +696,8 @@ mod tests {
     fn test_rational_addition() {
         let a = Value::rational(Rational::new(1, 3));
         let b = Value::rational(Rational::new(1, 3));
-        let db = CurrencyDatabase::new();
-        let result = a.add(&b, &db).unwrap();
+        let mut db = CurrencyDatabase::new();
+        let result = a.add(&b, &mut db).unwrap();
         // 1/3 + 1/3 = 2/3
         assert_eq!(result.to_fraction_string(), Some("2/3".to_string()));
     }
@@ -676,8 +706,8 @@ mod tests {
     fn test_currency_addition_same() {
         let a = Value::currency(Decimal::new(100), "USD");
         let b = Value::currency(Decimal::new(50), "USD");
-        let db = CurrencyDatabase::new();
-        let result = a.add(&b, &db).unwrap();
+        let mut db = CurrencyDatabase::new();
+        let result = a.add(&b, &mut db).unwrap();
         assert_eq!(result.to_display_string(), "150 USD");
     }
 
@@ -737,8 +767,8 @@ mod tests {
     fn test_datetime_subtraction() {
         let dt1 = Value::datetime(DateTime::parse("2026-01-27").unwrap());
         let dt2 = Value::datetime(DateTime::parse("2026-01-25").unwrap());
-        let db = CurrencyDatabase::new();
-        let result = dt1.subtract(&dt2, &db).unwrap();
+        let mut db = CurrencyDatabase::new();
+        let result = dt1.subtract(&dt2, &mut db).unwrap();
         assert!(matches!(result.kind, ValueKind::Duration { .. }));
     }
 
@@ -746,8 +776,8 @@ mod tests {
     fn test_datetime_plus_duration() {
         let dt = Value::datetime(DateTime::parse("2026-01-25").unwrap());
         let dur = Value::duration(86400); // 1 day in seconds
-        let db = CurrencyDatabase::new();
-        let result = dt.add(&dur, &db).unwrap();
+        let mut db = CurrencyDatabase::new();
+        let result = dt.add(&dur, &mut db).unwrap();
         assert!(matches!(result.kind, ValueKind::DateTime(_)));
     }
 
@@ -756,8 +786,8 @@ mod tests {
         // This is the case from issue #8: duration + datetime
         let dur = Value::duration(86400); // 1 day in seconds
         let dt = Value::datetime(DateTime::parse("2026-01-25").unwrap());
-        let db = CurrencyDatabase::new();
-        let result = dur.add(&dt, &db).unwrap();
+        let mut db = CurrencyDatabase::new();
+        let result = dur.add(&dt, &mut db).unwrap();
         assert!(matches!(result.kind, ValueKind::DateTime(_)));
     }
 
@@ -768,14 +798,14 @@ mod tests {
         let dt1 = Value::datetime(DateTime::parse("Jan 27, 8:59am UTC").unwrap());
         let dt2 = Value::datetime(DateTime::parse("Jan 25, 12:51pm UTC").unwrap());
         let dt3 = Value::datetime(DateTime::parse("Jan 25, 12:51pm UTC").unwrap());
-        let db = CurrencyDatabase::new();
+        let mut db = CurrencyDatabase::new();
 
         // First: dt1 - dt2 = duration
-        let duration = dt1.subtract(&dt2, &db).unwrap();
+        let duration = dt1.subtract(&dt2, &mut db).unwrap();
         assert!(matches!(duration.kind, ValueKind::Duration { .. }));
 
         // Second: duration + dt3 = datetime (this was failing before the fix)
-        let result = duration.add(&dt3, &db).unwrap();
+        let result = duration.add(&dt3, &mut db).unwrap();
         assert!(matches!(result.kind, ValueKind::DateTime(_)));
     }
 }

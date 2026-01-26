@@ -36,6 +36,8 @@ footer:
   poweredBy '由 Rust + WebAssembly 驱动'
   viewOnGitHub '在 GitHub 上查看'
   reportIssue 报告问题
+  loadingRates 正在加载汇率...
+  ratesInfo '汇率来自 {{source}}（{{date}}）'
 settings:
   theme 主题
   themeLight 浅色
@@ -62,6 +64,7 @@ steps:
   calculateDifference '计算差值：{{dt1}} - {{dt2}}'
   result '结果：{{value}}'
   finalResult '最终结果：{{value}}'
+  exchangeRate '汇率：1 {{from}} = {{rate}} {{to}}（来源：{{source}}，日期：{{date}}）'
 issueReport:
   environment 环境
   version 版本

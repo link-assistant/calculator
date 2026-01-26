@@ -36,6 +36,8 @@ footer:
   poweredBy 'На базе Rust + WebAssembly'
   viewOnGitHub 'Смотреть на GitHub'
   reportIssue 'Сообщить о проблеме'
+  loadingRates 'Загрузка курсов валют...'
+  ratesInfo 'Курсы валют от {{source}} ({{date}})'
 settings:
   theme Тема
   themeLight Светлая
@@ -62,6 +64,7 @@ steps:
   calculateDifference 'Вычислить разницу: {{dt1}} - {{dt2}}'
   result 'Результат: {{value}}'
   finalResult 'Итоговый результат: {{value}}'
+  exchangeRate 'Курс обмена: 1 {{from}} = {{rate}} {{to}} (источник: {{source}}, дата: {{date}})'
 issueReport:
   environment Окружение
   version Версия

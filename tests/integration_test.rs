@@ -15,7 +15,7 @@ mod calculator_tests {
 
     #[test]
     fn test_simple_addition() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("2 + 3");
         assert!(result.success);
         assert_eq!(result.result, "5");
@@ -23,7 +23,7 @@ mod calculator_tests {
 
     #[test]
     fn test_simple_subtraction() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("10 - 4");
         assert!(result.success);
         assert_eq!(result.result, "6");
@@ -31,7 +31,7 @@ mod calculator_tests {
 
     #[test]
     fn test_simple_multiplication() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("3 * 4");
         assert!(result.success);
         assert_eq!(result.result, "12");
@@ -39,7 +39,7 @@ mod calculator_tests {
 
     #[test]
     fn test_simple_division() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("15 / 3");
         assert!(result.success);
         assert_eq!(result.result, "5");
@@ -47,7 +47,7 @@ mod calculator_tests {
 
     #[test]
     fn test_division_by_zero() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("10 / 0");
         assert!(!result.success);
         assert!(result.error.is_some());
@@ -56,7 +56,7 @@ mod calculator_tests {
 
     #[test]
     fn test_decimal_numbers() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("3.14 + 2.86");
         assert!(result.success);
         assert_eq!(result.result, "6");
@@ -64,7 +64,7 @@ mod calculator_tests {
 
     #[test]
     fn test_negative_numbers() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("-5 + 3");
         assert!(result.success);
         assert_eq!(result.result, "-2");
@@ -72,7 +72,7 @@ mod calculator_tests {
 
     #[test]
     fn test_parentheses() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("(2 + 3) * 4");
         assert!(result.success);
         assert_eq!(result.result, "20");
@@ -80,7 +80,7 @@ mod calculator_tests {
 
     #[test]
     fn test_operator_precedence() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("2 + 3 * 4");
         assert!(result.success);
         assert_eq!(result.result, "14"); // 2 + (3 * 4) = 14
@@ -92,7 +92,7 @@ mod currency_tests {
 
     #[test]
     fn test_currency_value() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("100 USD");
         assert!(result.success);
         assert!(result.result.contains("100"));
@@ -101,7 +101,7 @@ mod currency_tests {
 
     #[test]
     fn test_same_currency_addition() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("100 USD + 50 USD");
         assert!(result.success);
         assert!(result.result.contains("150"));
@@ -109,11 +109,49 @@ mod currency_tests {
 
     #[test]
     fn test_currency_conversion() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("84 USD - 34 EUR");
         assert!(result.success);
         // Should convert EUR to USD and perform subtraction
         assert!(result.result.contains("USD"));
+    }
+
+    #[test]
+    fn test_currency_conversion_steps_show_rate_info() {
+        let mut calculator = Calculator::new();
+        let result = calculator.calculate_internal("0 RUB + 1 USD");
+        assert!(result.success);
+        // Steps should include exchange rate information
+        let steps_text = result.steps.join("\n");
+        assert!(
+            steps_text.contains("Exchange rate:"),
+            "Steps should contain exchange rate info. Steps: {:?}",
+            result.steps
+        );
+        assert!(
+            steps_text.contains("source:"),
+            "Steps should contain rate source. Steps: {:?}",
+            result.steps
+        );
+        assert!(
+            steps_text.contains("date:"),
+            "Steps should contain rate date. Steps: {:?}",
+            result.steps
+        );
+    }
+
+    #[test]
+    fn test_same_currency_no_rate_info() {
+        let mut calculator = Calculator::new();
+        let result = calculator.calculate_internal("100 USD + 50 USD");
+        assert!(result.success);
+        // Same currency addition should not show exchange rate info
+        let steps_text = result.steps.join("\n");
+        assert!(
+            !steps_text.contains("Exchange rate:"),
+            "Same currency should not show exchange rate. Steps: {:?}",
+            result.steps
+        );
     }
 }
 
@@ -122,7 +160,7 @@ mod datetime_tests {
 
     #[test]
     fn test_datetime_subtraction() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)");
         assert!(result.success);
         // Should be approximately 1 day, 20 hours
@@ -135,7 +173,7 @@ mod lino_tests {
 
     #[test]
     fn test_lino_representation_simple() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("2 + 3");
         assert!(result.success);
         assert!(!result.lino_interpretation.is_empty());
@@ -144,7 +182,7 @@ mod lino_tests {
 
     #[test]
     fn test_lino_representation_currency() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("84 USD - 34 EUR");
         assert!(result.success);
         assert!(result.lino_interpretation.contains("USD"));
@@ -157,7 +195,7 @@ mod error_handling_tests {
 
     #[test]
     fn test_empty_input() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("");
         assert!(!result.success);
         assert!(result.error.is_some());
@@ -165,7 +203,7 @@ mod error_handling_tests {
 
     #[test]
     fn test_invalid_input_generates_issue_link() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("???invalid???");
         assert!(!result.success);
         assert!(result.issue_link.is_some());
@@ -180,7 +218,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_sin_function() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("sin(0)");
         assert!(result.success, "sin(0) should succeed");
         assert_eq!(result.result, "0");
@@ -188,7 +226,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_cos_function() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("cos(0)");
         assert!(result.success, "cos(0) should succeed");
         assert_eq!(result.result, "1");
@@ -196,7 +234,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_sqrt_function() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("sqrt(16)");
         assert!(result.success, "sqrt(16) should succeed");
         assert_eq!(result.result, "4");
@@ -204,7 +242,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_sqrt_function_decimal() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("sqrt(2)");
         assert!(result.success, "sqrt(2) should succeed");
         // sqrt(2) ≈ 1.414...
@@ -216,7 +254,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_pow_function() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("pow(2, 3)");
         assert!(result.success, "pow(2, 3) should succeed");
         assert_eq!(result.result, "8");
@@ -224,7 +262,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_power_operator() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("2^3");
         assert!(result.success, "2^3 should succeed");
         assert_eq!(result.result, "8");
@@ -232,7 +270,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_exp_function() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("exp(0)");
         assert!(result.success, "exp(0) should succeed");
         assert_eq!(result.result, "1");
@@ -240,7 +278,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_ln_function() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("ln(1)");
         assert!(result.success, "ln(1) should succeed");
         assert_eq!(result.result, "0");
@@ -248,7 +286,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_log_function() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("log(100)");
         assert!(result.success, "log(100) should succeed");
         assert_eq!(result.result, "2");
@@ -256,7 +294,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_abs_function() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("abs(-5)");
         assert!(result.success, "abs(-5) should succeed");
         assert_eq!(result.result, "5");
@@ -264,7 +302,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_floor_function() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("floor(3.7)");
         assert!(result.success, "floor(3.7) should succeed");
         assert_eq!(result.result, "3");
@@ -272,7 +310,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_ceil_function() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("ceil(3.2)");
         assert!(result.success, "ceil(3.2) should succeed");
         assert_eq!(result.result, "4");
@@ -280,7 +318,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_pi_constant() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("pi()");
         assert!(result.success, "pi() should succeed");
         assert!(
@@ -291,7 +329,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_e_constant() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("e()");
         assert!(result.success, "e() should succeed");
         assert!(
@@ -302,7 +340,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_nested_functions() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("sqrt(abs(-16))");
         assert!(result.success, "sqrt(abs(-16)) should succeed");
         assert_eq!(result.result, "4");
@@ -310,7 +348,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_function_with_expression() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("sqrt(9 + 7)");
         assert!(result.success, "sqrt(9 + 7) should succeed");
         assert_eq!(result.result, "4");
@@ -318,7 +356,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_min_function() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("min(5, 3)");
         assert!(result.success, "min(5, 3) should succeed");
         assert_eq!(result.result, "3");
@@ -326,7 +364,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_max_function() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("max(5, 3)");
         assert!(result.success, "max(5, 3) should succeed");
         assert_eq!(result.result, "5");
@@ -334,7 +372,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_factorial() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("factorial(5)");
         assert!(result.success, "factorial(5) should succeed");
         assert_eq!(result.result, "120");
@@ -342,7 +380,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_deg_function() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         // pi radians = 180 degrees
         let result = calculator.calculate_internal("deg(3.14159265358979)");
         assert!(result.success, "deg(pi) should succeed");
@@ -356,7 +394,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_rad_function() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         // 180 degrees = pi radians
         let result = calculator.calculate_internal("rad(180)");
         assert!(result.success, "rad(180) should succeed");
@@ -370,7 +408,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_integrate_x_squared() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         // integrate(x^2, x, 0, 3) = [x^3/3] from 0 to 3 = 9
         let result = calculator.calculate_internal("integrate(x^2, x, 0, 3)");
         assert!(result.success, "integrate(x^2, x, 0, 3) should succeed");
@@ -383,7 +421,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_integrate_sin() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         // integrate(sin(x), x, 0, pi) = 2
         let result = calculator.calculate_internal("integrate(sin(x), x, 0, 3.14159265358979)");
         assert!(result.success, "integrate(sin(x), x, 0, pi) should succeed");
@@ -396,7 +434,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_sqrt_negative_error() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("sqrt(-1)");
         assert!(!result.success, "sqrt(-1) should fail");
         assert!(result.error.is_some());
@@ -405,7 +443,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_ln_negative_error() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("ln(-1)");
         assert!(!result.success, "ln(-1) should fail");
         assert!(result.error.is_some());
@@ -414,7 +452,7 @@ mod advanced_math_tests {
 
     #[test]
     fn test_unknown_function_error() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("foobar(5)");
         assert!(!result.success, "foobar(5) should fail");
         assert!(result.error.is_some());
@@ -443,7 +481,7 @@ mod indefinite_integral_tests {
     #[test]
     fn test_natural_integral_notation_sin_x_over_x() {
         // This is the exact test case from issue #3: "integrate sin(x)/x dx"
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("integrate sin(x)/x dx");
 
         // The result should be a symbolic result with Si(x) + C
@@ -471,7 +509,7 @@ mod indefinite_integral_tests {
 
     #[test]
     fn test_natural_integral_notation_x_squared() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("integrate x^2 dx");
 
         assert!(result.success, "integrate x^2 dx should succeed");
@@ -489,7 +527,7 @@ mod indefinite_integral_tests {
 
     #[test]
     fn test_natural_integral_notation_sin() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("integrate sin(x) dx");
 
         assert!(result.success, "integrate sin(x) dx should succeed");
@@ -507,7 +545,7 @@ mod indefinite_integral_tests {
 
     #[test]
     fn test_natural_integral_notation_cos() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("integrate cos(x) dx");
 
         assert!(result.success, "integrate cos(x) dx should succeed");
@@ -525,7 +563,7 @@ mod indefinite_integral_tests {
 
     #[test]
     fn test_natural_integral_notation_x() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("integrate x dx");
 
         assert!(result.success, "integrate x dx should succeed");
@@ -543,7 +581,7 @@ mod indefinite_integral_tests {
 
     #[test]
     fn test_natural_integral_notation_constant() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("integrate 5 dx");
 
         assert!(result.success, "integrate 5 dx should succeed");
@@ -563,7 +601,7 @@ mod indefinite_integral_tests {
 
     #[test]
     fn test_natural_integral_notation_exp() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("integrate exp(x) dx");
 
         assert!(result.success, "integrate exp(x) dx should succeed");
@@ -581,7 +619,7 @@ mod indefinite_integral_tests {
 
     #[test]
     fn test_natural_integral_notation_different_variable() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("integrate sin(t) dt");
 
         assert!(result.success, "integrate sin(t) dt should succeed");
@@ -598,7 +636,7 @@ mod indefinite_integral_tests {
 
     #[test]
     fn test_latex_rendering_for_integral() {
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("integrate sin(x)/x dx");
 
         assert!(result.success, "Should succeed");
@@ -612,7 +650,7 @@ mod indefinite_integral_tests {
     #[test]
     fn test_definite_integral_still_works() {
         // Ensure the traditional definite integral syntax still works
-        let calculator = Calculator::new();
+        let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("integrate(sin(x), x, 0, 3.14159)");
 
         assert!(result.success, "Definite integral should still work");

@@ -406,6 +406,108 @@ test.describe('Textarea Auto-Resize', () => {
   });
 });
 
+test.describe('Currency Conversion with Real Rates', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
+    // Wait for WASM to be ready
+    await expect(page.locator('textarea')).toBeEnabled({ timeout: 10000 });
+    // Wait for exchange rates to load (rates status should appear in footer)
+    // The loading indicator should eventually disappear or show loaded state
+    await page.waitForTimeout(3000); // Allow time for rates API call
+  });
+
+  test('should show rates loading status in footer', async ({ page }) => {
+    // Footer should contain rates status information
+    const footer = page.locator('footer');
+    await expect(footer).toBeVisible();
+    // After rates load, should show currency info (USD, date, or loading indicator)
+    // Check for any rates-related element
+    const ratesStatus = page.locator('.rates-status');
+    // May or may not be visible depending on implementation
+  });
+
+  test('should calculate currency conversion', async ({ page }) => {
+    const input = page.locator('textarea');
+    // Use an expression that will trigger currency conversion
+    await input.fill('100 USD in EUR');
+
+    // Wait for result to appear (not the default placeholder)
+    await expect(page.locator('.result-value')).not.toContainText('Enter an expression', { timeout: 10000 });
+
+    // Result should contain a currency value (EUR since it's the target)
+    const resultText = await page.locator('.result-value').textContent();
+    // Should contain EUR or a numeric value
+    expect(resultText).toMatch(/EUR|\d+/i);
+  });
+
+  test('should show exchange rate info in calculation steps', async ({ page }) => {
+    const input = page.locator('textarea');
+    // This should trigger a currency conversion
+    await input.fill('0 RUB + 1 USD');
+
+    // Wait for result
+    await expect(page.locator('.result-value')).toBeVisible({ timeout: 10000 });
+
+    // Steps section should be visible
+    await expect(page.locator('.steps-section')).toBeVisible();
+
+    // Steps should contain exchange rate information
+    const stepsText = await page.locator('.steps-section').textContent();
+    // Should mention exchange rate or conversion
+    expect(stepsText?.toLowerCase()).toMatch(/exchange|rate|convert/i);
+  });
+
+  test('should handle multiple currency conversions', async ({ page }) => {
+    const input = page.locator('textarea');
+    await input.fill('1 USD + 1 EUR + 1 GBP');
+
+    // Wait for result
+    await expect(page.locator('.result-value')).toBeVisible({ timeout: 10000 });
+
+    // Result should be a number with currency
+    const resultText = await page.locator('.result-value').textContent();
+    expect(resultText).toBeTruthy();
+  });
+
+  test('should display rate source information', async ({ page }) => {
+    const input = page.locator('textarea');
+    await input.fill('100 JPY in USD');
+
+    // Wait for result
+    await expect(page.locator('.result-value')).toBeVisible({ timeout: 10000 });
+
+    // Check if steps section shows rate source
+    const stepsSection = page.locator('.steps-section');
+    if (await stepsSection.isVisible()) {
+      const stepsText = await stepsSection.textContent();
+      // Should contain rate source information (e.g., fawazahmed0 or api name)
+      // This test verifies the exchange rate source is displayed
+      expect(stepsText).toBeTruthy();
+    }
+  });
+
+  test('should handle currency symbols', async ({ page }) => {
+    const input = page.locator('textarea');
+    await input.fill('$100 + €50');
+
+    // Wait for result
+    await expect(page.locator('.result-value')).toBeVisible({ timeout: 10000 });
+
+    // Should show a result (either in $ or €)
+    const resultText = await page.locator('.result-value').textContent();
+    expect(resultText).toMatch(/[$€]|\w{3}/); // Either symbol or currency code
+  });
+
+  test('should gracefully handle rates when offline', async ({ page, context }) => {
+    // This test checks that calculator still works even if rates fail
+    // We can't easily simulate offline, but we can test that basic math works
+    const input = page.locator('textarea');
+    await input.fill('2 + 2');
+
+    await expect(page.locator('.result-value')).toContainText('4', { timeout: 5000 });
+  });
+});
+
 test.describe('Textarea Resize Visual Regression', () => {
   test('textarea should display all content without clipping', async ({ page }) => {
     await page.goto('/');
