@@ -1,0 +1,6 @@
+rate:
+  from CHF
+  to RUB
+  value 109.7268
+  date 2025-01-22
+  source 'cbr.ru (Central Bank of Russia)'

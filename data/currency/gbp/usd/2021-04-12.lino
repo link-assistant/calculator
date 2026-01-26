@@ -1,0 +1,6 @@
+rate:
+  from GBP
+  to USD
+  value 1.3771
+  date 2021-04-12
+  source 'frankfurter.dev (ECB)'

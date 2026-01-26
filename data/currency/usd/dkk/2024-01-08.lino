@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to DKK
+  value 6.8098
+  date 2024-01-08
+  source 'frankfurter.dev (ECB)'

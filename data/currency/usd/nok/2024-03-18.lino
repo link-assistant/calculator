@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to NOK
+  value 10.6568
+  date 2024-03-18
+  source 'frankfurter.dev (ECB)'

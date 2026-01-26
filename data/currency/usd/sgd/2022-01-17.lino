@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to SGD
+  value 1.3474
+  date 2022-01-17
+  source 'frankfurter.dev (ECB)'

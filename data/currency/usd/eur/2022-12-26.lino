@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to EUR
+  value 0.93941
+  date 2022-12-26
+  source 'frankfurter.dev (ECB)'

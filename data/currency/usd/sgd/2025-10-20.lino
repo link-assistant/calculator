@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to SGD
+  value 1.298
+  date 2025-10-20
+  source 'frankfurter.dev (ECB)'

@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to GBP
+  value 0.78069
+  date 2024-07-29
+  source 'frankfurter.dev (ECB)'

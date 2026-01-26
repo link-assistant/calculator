@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to RUB
+  value 78.3892
+  date 2025-06-25
+  source 'cbr.ru (Central Bank of Russia)'

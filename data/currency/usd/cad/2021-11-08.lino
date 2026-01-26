@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to CAD
+  value 1.2498
+  date 2021-11-08
+  source 'frankfurter.dev (ECB)'

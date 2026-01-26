@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to BRL
+  value 5.4569
+  date 2025-08-18
+  source 'frankfurter.dev (ECB)'

@@ -1,0 +1,6 @@
+rate:
+  from EUR
+  to RUB
+  value 92.5094
+  date 2025-08-06
+  source 'cbr.ru (Central Bank of Russia)'

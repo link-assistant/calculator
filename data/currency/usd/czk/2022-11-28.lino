@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to CZK
+  value 23.328
+  date 2022-11-28
+  source 'frankfurter.dev (ECB)'

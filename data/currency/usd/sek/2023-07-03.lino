@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to SEK
+  value 10.8862
+  date 2023-07-03
+  source 'frankfurter.dev (ECB)'

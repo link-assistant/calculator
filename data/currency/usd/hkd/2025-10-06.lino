@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to HKD
+  value 7.7822
+  date 2025-10-06
+  source 'frankfurter.dev (ECB)'

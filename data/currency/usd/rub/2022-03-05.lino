@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to RUB
+  value 105.8124
+  date 2022-03-05
+  source 'cbr.ru (Central Bank of Russia)'

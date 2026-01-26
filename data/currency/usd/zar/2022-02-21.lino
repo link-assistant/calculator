@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to ZAR
+  value 15.1781
+  date 2022-02-21
+  source 'frankfurter.dev (ECB)'

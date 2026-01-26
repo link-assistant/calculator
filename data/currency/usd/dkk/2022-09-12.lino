@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to DKK
+  value 7.3974
+  date 2022-09-12
+  source 'frankfurter.dev (ECB)'

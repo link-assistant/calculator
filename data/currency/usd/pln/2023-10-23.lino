@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to PLN
+  value 4.2249
+  date 2023-10-23
+  source 'frankfurter.dev (ECB)'

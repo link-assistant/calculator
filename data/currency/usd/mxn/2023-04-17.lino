@@ -1,0 +1,6 @@
+rate:
+  from USD
+  to MXN
+  value 18.0357
+  date 2023-04-17
+  source 'frankfurter.dev (ECB)'

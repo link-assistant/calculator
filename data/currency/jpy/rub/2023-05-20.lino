@@ -1,0 +1,6 @@
+rate:
+  from JPY
+  to RUB
+  value 0.577588
+  date 2023-05-20
+  source 'cbr.ru (Central Bank of Russia)'

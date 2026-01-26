@@ -1,0 +1,6 @@
+rate:
+  from EUR
+  to JPY
+  value 133.34
+  date 2021-05-24
+  source 'frankfurter.dev (ECB)'
