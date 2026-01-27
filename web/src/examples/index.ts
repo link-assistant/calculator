@@ -31,7 +31,24 @@ interface ExamplesData {
 const parser = new Parser();
 
 /**
+ * Extract a field value from a parsed link's values array.
+ * Links notation parses (field "value") as [{ id: "field" }, { id: "value" }]
+ */
+function extractField(values: Array<{ id: string | null; values: unknown[] }>, fieldName: string): string | null {
+  for (let i = 0; i < values.length - 1; i++) {
+    const current = values[i];
+    const next = values[i + 1];
+    if (current?.id === fieldName && next?.id) {
+      return next.id;
+    }
+  }
+  return null;
+}
+
+/**
  * Parse the examples.lino file into a structured format.
+ * The file uses flat S-expression format:
+ * (example (expression "...") (description "...") (category "..."))
  */
 function parseExamplesLino(linoContent: string): ExamplesData {
   const categories: Record<string, ExamplesCategory> = {};
@@ -40,63 +57,52 @@ function parseExamplesLino(linoContent: string): ExamplesData {
   try {
     const links = parser.parse(linoContent);
 
-    // Navigate to examples > categories
+    // Each top-level link should be an example
     for (const link of links) {
-      if (link.id === 'examples' && link.values) {
-        for (const child of link.values) {
-          if (child.id === 'categories' && child.values) {
-            // Each child is a category like 'arithmetic', 'currency', etc.
-            for (const categoryLink of child.values) {
-              if (!categoryLink.id || !categoryLink.values) continue;
+      // Check if this is an example link
+      // Format: (example (expression "...") (description "...") (category "..."))
+      // Parsed as: { id: null, values: [{ id: "example" }, { id: null, values: [...] }, ...] }
+      if (!link.values || link.values.length === 0) continue;
 
-              const categoryName = categoryLink.id;
-              let categoryLabel = categoryName;
-              const categoryExamples: Example[] = [];
+      const firstValue = link.values[0];
+      if (firstValue?.id !== 'example') continue;
 
-              for (const prop of categoryLink.values) {
-                if (prop.id === 'label' && prop.values && prop.values.length > 0) {
-                  // Extract label value
-                  categoryLabel = prop.values[0]?.id || categoryName;
-                } else if (prop.id === 'examples' && prop.values) {
-                  // Parse examples array
-                  for (const exampleLink of prop.values) {
-                    if (!exampleLink.values) continue;
+      // Extract fields from the nested values
+      let expression = '';
+      let description = '';
+      let category = '';
 
-                    let expression = '';
-                    let description = '';
-                    let result = '';
+      for (const value of link.values) {
+        if (value.id === null && value.values && Array.isArray(value.values)) {
+          // This is a nested S-expression like (expression "2 + 3")
+          const fieldValues = value.values as Array<{ id: string | null; values: unknown[] }>;
+          const fieldResult = extractField(fieldValues, 'expression');
+          if (fieldResult) expression = fieldResult;
 
-                    for (const field of exampleLink.values) {
-                      if (field.id === 'expression' && field.values && field.values.length > 0) {
-                        expression = field.values[0]?.id || '';
-                      } else if (field.id === 'description' && field.values && field.values.length > 0) {
-                        description = field.values[0]?.id || '';
-                      } else if (field.id === 'result' && field.values && field.values.length > 0) {
-                        result = field.values[0]?.id || '';
-                      }
-                    }
+          const descResult = extractField(fieldValues, 'description');
+          if (descResult) description = descResult;
 
-                    if (expression) {
-                      const example: Example = {
-                        expression,
-                        description,
-                        result,
-                        category: categoryName,
-                      };
-                      categoryExamples.push(example);
-                      allExamples.push(example);
-                    }
-                  }
-                }
-              }
-
-              categories[categoryName] = {
-                label: categoryLabel,
-                examples: categoryExamples,
-              };
-            }
-          }
+          const catResult = extractField(fieldValues, 'category');
+          if (catResult) category = catResult;
         }
+      }
+
+      if (expression && category) {
+        const example: Example = {
+          expression,
+          description: description || '',
+          category,
+        };
+        allExamples.push(example);
+
+        // Add to category
+        if (!categories[category]) {
+          categories[category] = {
+            label: category.charAt(0).toUpperCase() + category.slice(1),
+            examples: [],
+          };
+        }
+        categories[category].examples.push(example);
       }
     }
   } catch (error) {
