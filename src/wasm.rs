@@ -375,7 +375,7 @@ mod tests {
   to EUR
   value 0.92
   date 2026-01-25
-  source 'fawazahmed0/currency-api'";
+  source 'frankfurter.dev (ECB)'";
 
         let result = parse_lino_rate(content.to_string());
         let parsed: serde_json::Value = serde_json::from_str(&result).unwrap();
@@ -385,7 +385,7 @@ mod tests {
         assert_eq!(parsed["to"], "EUR");
         assert_eq!(parsed["value"], 0.92);
         assert_eq!(parsed["date"], "2026-01-25");
-        assert_eq!(parsed["source"], "fawazahmed0/currency-api");
+        assert_eq!(parsed["source"], "frankfurter.dev (ECB)");
     }
 
     #[test]

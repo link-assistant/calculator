@@ -4,7 +4,7 @@ bump: minor
 
 ### Added
 - Exchange rate transparency: show source, date, and fetch time for currency conversions
-- Real-time exchange rate fetching from fawazahmed0/currency-api (200+ currencies supported)
+- Real-time exchange rate fetching from official Central Bank APIs (ECB via frankfurter.dev, CBR via cbr.ru)
 - WASM bindings for `fetch_exchange_rates` and `fetch_historical_rates` functions
 - Exchange rate loading indicator in the web UI
 - E2E tests for currency conversion with real rates

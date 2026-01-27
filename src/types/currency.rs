@@ -11,7 +11,7 @@ use crate::types::DateTime;
 pub struct ExchangeRateInfo {
     /// The exchange rate value.
     pub rate: f64,
-    /// The source of this rate (e.g., "fawazahmed0/currency-api", "ECB", "default").
+    /// The source of this rate (e.g., "frankfurter.dev (ECB)", "cbr.ru (Central Bank of Russia)", "default").
     pub source: String,
     /// The date this rate is from (ISO format: YYYY-MM-DD).
     pub date: String,
@@ -521,10 +521,10 @@ mod tests {
 
     #[test]
     fn test_rate_info_display() {
-        let info = ExchangeRateInfo::new(89.5, "fawazahmed0/currency-api", "2026-01-25");
+        let info = ExchangeRateInfo::new(89.5, "cbr.ru (Central Bank of Russia)", "2026-01-25");
         let display = info.format_for_display("USD", "RUB");
         assert!(display.contains("1 USD = 89.5 RUB"));
-        assert!(display.contains("fawazahmed0/currency-api"));
+        assert!(display.contains("cbr.ru (Central Bank of Russia)"));
         assert!(display.contains("2026-01-25"));
     }
 

@@ -778,7 +778,7 @@ mod api_rate_update_tests {
         // Verify the steps show the correct API source and date
         let steps_str = result.steps.join("\n");
         assert!(
-            steps_str.contains("fawazahmed0/currency-api"),
+            steps_str.contains("frankfurter.dev (ECB)"),
             "Steps should show API source"
         );
         assert!(

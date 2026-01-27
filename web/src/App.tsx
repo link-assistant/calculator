@@ -588,7 +588,7 @@ function App() {
         )}
         {!ratesLoading && ratesInfo && (
           <p className="rates-status">
-            {t('footer.ratesInfo', { date: ratesInfo.date, source: 'fawazahmed0/currency-api' })}
+            {t('footer.ratesInfo', { date: ratesInfo.date, source: 'ECB via frankfurter.dev' })}
           </p>
         )}
       </footer>

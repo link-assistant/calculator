@@ -1,5 +1,9 @@
 # Case Study: Issue #18 - Currency Exchange Rate Source Transparency
 
+> **Note:** As of Issue #43, the currency API has been changed from fawazahmed0/currency-api
+> to official Central Bank APIs: European Central Bank (ECB) via frankfurter.dev, and
+> Central Bank of Russia (CBR) via cbr.ru. This document reflects the original implementation.
+
 ## Overview
 
 **Issue URL:** https://github.com/link-assistant/calculator/issues/18

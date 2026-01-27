@@ -1,0 +1,66 @@
+name: Update Currency Rates
+
+on:
+  # Run weekly on Sunday at 00:00 UTC (after ECB weekend closure)
+  schedule:
+    - cron: '0 0 * * 0'
+  # Allow manual trigger
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  update-rates:
+    name: Update Currency Rates from Central Banks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Configure git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Download latest rates from Central Banks
+        run: |
+          echo "Downloading currency rates from official Central Bank APIs..."
+          echo "- European Central Bank (ECB) via Frankfurter API"
+          echo "- Central Bank of Russia (CBR)"
+          python scripts/download_historical_rates.py
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if git diff --quiet data/currency/; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "No changes in currency rates"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Currency rates have been updated"
+            git diff --stat data/currency/
+          fi
+
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          git add data/currency/
+          git commit -m "chore: update currency rates from Central Banks [skip ci]
+
+          Updated rates from:
+          - European Central Bank (ECB) via frankfurter.dev
+          - Central Bank of Russia (CBR) via cbr.ru
+
+          This is an automated weekly update."
+          git push
