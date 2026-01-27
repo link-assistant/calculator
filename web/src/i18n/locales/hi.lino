@@ -1,11 +1,12 @@
 app:
-  title 'Link Calculator'
-  subtitle 'दिनांक/समय और मुद्रा समर्थन के साथ व्याकरण-आधारित अभिव्यक्ति कैलकुलेटर'
+  title Link.Calculator
+  subtitle 'सार्वजनिक डोमेन के लिए समर्पित मुफ्त ओपन-सोर्स कैलकुलेटर।'
 input:
-  label अभिव्यक्ति
   placeholder 'अभिव्यक्ति दर्ज करें (जैसे, 2 + 3, 84 USD - 34 EUR)'
+  calculate गणना
 result:
   title परिणाम
+  input इनपुट
   calculating 'गणना हो रही है...'
   loading 'कैलकुलेटर इंजन लोड हो रहा है...'
   placeholder 'ऊपर अभिव्यक्ति दर्ज करें'
@@ -42,8 +43,12 @@ settings:
   theme थीम
   themeLight लाइट
   themeDark डार्क
-  themeSystem सिस्टम
+  themeAuto ऑटो
   language भाषा
+  languageAutomatic स्वचालित
+  currency 'पसंदीदा मुद्रा'
+  fiatCurrencies 'फिएट मुद्राएं'
+  cryptoCurrencies क्रिप्टोकरेंसी
 share:
   copyLink 'लिंक कॉपी करें'
   copied 'कॉपी किया गया!'

@@ -14,7 +14,7 @@ A grammar-based expression calculator with DateTime and Currency support, built 
 ## Screenshots
 
 ### Main Interface
-![Link Calculator Main Interface](docs/screenshots/calculator-main.png)
+![Link.Calculator Main Interface](docs/screenshots/calculator-main.png)
 
 ### Arithmetic Operations
 ![Arithmetic calculation with step-by-step explanation](docs/screenshots/calculator-arithmetic.png)
@@ -24,6 +24,8 @@ A grammar-based expression calculator with DateTime and Currency support, built 
 
 ### Currency Conversions
 ![Currency arithmetic with automatic conversion](docs/screenshots/calculator-currency.png)
+
+> **📖 See [USE-CASES.md](docs/USE-CASES.md) for more detailed examples with screenshots**, including symbolic integration, math functions, dark theme, and more.
 
 ## Features
 

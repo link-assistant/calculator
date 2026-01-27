@@ -86,10 +86,10 @@ describe('AutoResizeTextarea', () => {
     expect(handleChange).toHaveBeenCalled();
   });
 
-  it('should have resize: vertical style', () => {
+  it('should have resize: none style (auto-resize only)', () => {
     render(<AutoResizeTextarea data-testid="textarea" />);
     const textarea = screen.getByTestId('textarea');
-    expect(textarea).toHaveStyle({ resize: 'vertical' });
+    expect(textarea).toHaveStyle({ resize: 'none' });
   });
 
   it('should have overflow: hidden style', () => {
@@ -150,7 +150,7 @@ describe('AutoResizeTextarea', () => {
 
     // Check that default styles are applied
     expect(textarea).toHaveStyle({
-      resize: 'vertical',
+      resize: 'none',
       overflow: 'hidden',
     });
 

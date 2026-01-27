@@ -1,11 +1,12 @@
 app:
-  title 'Link Calculator'
-  subtitle 'حاسبة تعبيرات قائمة على القواعد مع دعم التاريخ/الوقت والعملات'
+  title Link.Calculator
+  subtitle 'حاسبة مجانية مفتوحة المصدر مخصصة للملك العام.'
 input:
-  label التعبير
   placeholder 'أدخل تعبيرًا (مثال: 2 + 3, 84 USD - 34 EUR)'
+  calculate حساب
 result:
   title النتيجة
+  input الإدخال
   calculating 'جاري الحساب...'
   loading 'جاري تحميل محرك الحاسبة...'
   placeholder 'أدخل تعبيرًا أعلاه'
@@ -42,8 +43,12 @@ settings:
   theme المظهر
   themeLight فاتح
   themeDark داكن
-  themeSystem النظام
+  themeAuto تلقائي
   language اللغة
+  languageAutomatic تلقائي
+  currency 'العملة المفضلة'
+  fiatCurrencies 'العملات الورقية'
+  cryptoCurrencies 'العملات المشفرة'
 share:
   copyLink 'نسخ الرابط'
   copied 'تم النسخ!'

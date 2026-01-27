@@ -1,11 +1,12 @@
 app:
-  title 'Link Calculator'
-  subtitle 'Калькулятор выражений с поддержкой даты/времени и валют'
+  title Link.Calculator
+  subtitle 'Бесплатный калькулятор с открытым исходным кодом в общественном достоянии.'
 input:
-  label Выражение
   placeholder 'Введите выражение (например, 2 + 3, 84 USD - 34 EUR)'
+  calculate Вычислить
 result:
   title Результат
+  input Ввод
   calculating Вычисление...
   loading 'Загрузка движка калькулятора...'
   placeholder 'Введите выражение выше'
@@ -42,8 +43,12 @@ settings:
   theme Тема
   themeLight Светлая
   themeDark Тёмная
-  themeSystem Системная
+  themeAuto Авто
   language Язык
+  languageAutomatic Автоматически
+  currency 'Предпочтительная валюта'
+  fiatCurrencies 'Фиатные валюты'
+  cryptoCurrencies Криптовалюты
 share:
   copyLink 'Копировать ссылку'
   copied Скопировано!

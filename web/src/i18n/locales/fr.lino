@@ -1,11 +1,12 @@
 app:
-  title 'Link Calculator'
-  subtitle "Calculatrice d'expressions basée sur la grammaire avec support Date/Heure et Devise"
+  title Link.Calculator
+  subtitle 'Calculatrice gratuite et open-source dédiée au domaine public.'
 input:
-  label Expression
   placeholder 'Entrez une expression (ex: 2 + 3, 84 USD - 34 EUR)'
+  calculate Calculer
 result:
   title Résultat
+  input Entrée
   calculating 'Calcul en cours...'
   loading 'Chargement du moteur de calcul...'
   placeholder 'Entrez une expression ci-dessus'
@@ -42,8 +43,12 @@ settings:
   theme Thème
   themeLight Clair
   themeDark Sombre
-  themeSystem Système
+  themeAuto Auto
   language Langue
+  languageAutomatic Automatique
+  currency 'Devise préférée'
+  fiatCurrencies 'Devises Fiat'
+  cryptoCurrencies Cryptomonnaies
 share:
   copyLink 'Copier le lien'
   copied 'Copié !'

@@ -1,24 +1,70 @@
-import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
+import { useState, useEffect, useCallback, useRef, lazy, Suspense, KeyboardEvent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { useTheme, useUrlExpression, useDelayedLoading } from './hooks';
 import { SUPPORTED_LANGUAGES, loadPreferences, savePreferences } from './i18n';
 import { generateIssueUrl, type PageState } from './utils/reportIssue';
-import { AutoResizeTextarea, ColorCodedLino, RepeatingDecimalNotations } from './components';
+import { AutoResizeTextarea, ColorCodedLino, RepeatingDecimalNotations, type AutoResizeTextareaRef } from './components';
+import { getExamplesForDisplay } from './examples';
 import type { CalculationResult, ErrorInfo } from './types';
+
+// SVG Logo component for Link.Calculator branding
+const LinkCalculatorLogo = ({ size = 24 }: { size?: number }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 100 100"
+    width={size}
+    height={size}
+    style={{ verticalAlign: 'middle' }}
+  >
+    <rect x="10" y="10" width="80" height="80" rx="8" fill="currentColor" />
+    <rect x="18" y="18" width="64" height="20" rx="4" fill="var(--primary-light, #e0e7ff)" />
+    <g fill="var(--primary-light, #c7d2fe)" opacity="0.7">
+      <rect x="18" y="44" width="14" height="14" rx="2" />
+      <rect x="36" y="44" width="14" height="14" rx="2" />
+      <rect x="54" y="44" width="14" height="14" rx="2" />
+      <rect x="72" y="44" width="10" height="14" rx="2" />
+      <rect x="18" y="62" width="14" height="14" rx="2" />
+      <rect x="36" y="62" width="14" height="14" rx="2" />
+      <rect x="54" y="62" width="14" height="14" rx="2" />
+      <rect x="72" y="62" width="10" height="14" rx="2" />
+    </g>
+  </svg>
+);
+
+// Top 10 crypto currencies by market cap
+const CRYPTO_CURRENCIES = [
+  { code: 'BTC', name: 'Bitcoin' },
+  { code: 'ETH', name: 'Ethereum' },
+  { code: 'USDT', name: 'Tether' },
+  { code: 'BNB', name: 'BNB' },
+  { code: 'SOL', name: 'Solana' },
+  { code: 'XRP', name: 'XRP' },
+  { code: 'USDC', name: 'USD Coin' },
+  { code: 'ADA', name: 'Cardano' },
+  { code: 'DOGE', name: 'Dogecoin' },
+  { code: 'AVAX', name: 'Avalanche' },
+];
+
+// Major fiat currencies
+const FIAT_CURRENCIES = [
+  { code: 'USD', name: 'US Dollar' },
+  { code: 'EUR', name: 'Euro' },
+  { code: 'GBP', name: 'British Pound' },
+  { code: 'JPY', name: 'Japanese Yen' },
+  { code: 'CNY', name: 'Chinese Yuan' },
+  { code: 'INR', name: 'Indian Rupee' },
+  { code: 'RUB', name: 'Russian Ruble' },
+  { code: 'BRL', name: 'Brazilian Real' },
+  { code: 'CHF', name: 'Swiss Franc' },
+  { code: 'CAD', name: 'Canadian Dollar' },
+  { code: 'AUD', name: 'Australian Dollar' },
+  { code: 'KRW', name: 'Korean Won' },
+];
 
 // Lazy load the math and plot components for better initial bundle size
 const MathRenderer = lazy(() => import('./components/MathRenderer'));
 const FunctionPlot = lazy(() => import('./components/FunctionPlot'));
-
-const EXAMPLES = [
-  '2 + 3',
-  '(2 + 3) * 4',
-  '84 USD - 34 EUR',
-  '100 * 1.5',
-  'integrate sin(x)/x dx',
-  'integrate(x^2, x, 0, 3)',
-];
 
 /**
  * Translates an error using i18n error info.
@@ -45,10 +91,55 @@ function translateError(
   return translated;
 }
 
+/**
+ * Detect user's preferred currency from browser locale.
+ */
+function detectUserCurrency(): string {
+  try {
+    const locale = navigator.language || 'en-US';
+    // Map common locales to their currencies
+    const localeToCurrency: Record<string, string> = {
+      'en-US': 'USD',
+      'en-GB': 'GBP',
+      'de-DE': 'EUR',
+      'fr-FR': 'EUR',
+      'es-ES': 'EUR',
+      'it-IT': 'EUR',
+      'ja-JP': 'JPY',
+      'zh-CN': 'CNY',
+      'zh-TW': 'TWD',
+      'ko-KR': 'KRW',
+      'ru-RU': 'RUB',
+      'pt-BR': 'BRL',
+      'hi-IN': 'INR',
+      'ar-SA': 'SAR',
+    };
+
+    // Try exact match first
+    if (localeToCurrency[locale]) {
+      return localeToCurrency[locale];
+    }
+
+    // Try language-only match
+    const lang = locale.split('-')[0];
+    const langMatch = Object.entries(localeToCurrency).find(([key]) => key.startsWith(lang + '-'));
+    if (langMatch) {
+      return langMatch[1];
+    }
+
+    return 'USD'; // Default to USD
+  } catch {
+    return 'USD';
+  }
+}
+
 function App() {
   const { t, i18n } = useTranslation();
   const { theme, resolvedTheme, setTheme } = useTheme();
   const { expression: input, setExpression: setInput, copyShareLink } = useUrlExpression('');
+
+  // Get random examples from the examples.lino file (memoized to stay stable during session)
+  const displayExamples = useMemo(() => getExamplesForDisplay(6), []);
 
   const [result, setResult] = useState<CalculationResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -58,9 +149,15 @@ function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [ratesLoading, setRatesLoading] = useState(false);
   const [ratesInfo, setRatesInfo] = useState<{ date?: string; base?: string } | null>(null);
+  const [computationTime, setComputationTime] = useState<number | null>(null);
+  const [preferredCurrency, setPreferredCurrency] = useState<string>(() => {
+    const prefs = loadPreferences();
+    return prefs.currency || detectUserCurrency();
+  });
 
   const workerRef = useRef<Worker | null>(null);
   const settingsRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<AutoResizeTextareaRef>(null);
 
   // Delayed loading indicator (shows after 300ms)
   const showLoading = useDelayedLoading(loading, 300);
@@ -80,6 +177,10 @@ function App() {
         setVersion(data.version);
       } else if (type === 'result') {
         setResult(data);
+        // Capture computation time from worker if provided
+        if (data.computation_time_ms !== undefined) {
+          setComputationTime(data.computation_time_ms);
+        }
         setLoading(false);
       } else if (type === 'error') {
         setResult({
@@ -89,6 +190,7 @@ function App() {
           success: false,
           error: data.error,
         });
+        setComputationTime(null);
         setLoading(false);
       } else if (type === 'ratesLoading') {
         setRatesLoading(data.loading);
@@ -116,26 +218,34 @@ function App() {
     };
   }, [t]);
 
-  const calculate = useCallback((expression: string) => {
-    if (!expression.trim() || !wasmReady || !workerRef.current) {
+  const calculate = useCallback((expression?: string) => {
+    const expr = expression ?? input;
+    if (!expr.trim() || !wasmReady || !workerRef.current) {
       return;
     }
 
     setLoading(true);
-    workerRef.current.postMessage({ type: 'calculate', expression });
-  }, [wasmReady]);
+    setComputationTime(null);
+    workerRef.current.postMessage({ type: 'calculate', expression: expr });
+  }, [wasmReady, input]);
 
+  // Handle Enter key press to trigger calculation
+  const handleKeyDown = useCallback((e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      calculate();
+    }
+  }, [calculate]);
+
+  // Handle window resize to auto-resize textarea
   useEffect(() => {
-    const debounce = setTimeout(() => {
-      if (input.trim()) {
-        calculate(input);
-      } else {
-        setResult(null);
-      }
-    }, 300);
+    const handleResize = () => {
+      textareaRef.current?.resize();
+    };
 
-    return () => clearTimeout(debounce);
-  }, [input, calculate]);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleExampleClick = (example: string) => {
     setInput(example);
@@ -153,6 +263,12 @@ function App() {
     i18n.changeLanguage(langCode);
     const prefs = loadPreferences();
     savePreferences({ ...prefs, language: langCode });
+  };
+
+  const handleCurrencyChange = (currencyCode: string) => {
+    setPreferredCurrency(currencyCode);
+    const prefs = loadPreferences();
+    savePreferences({ ...prefs, currency: currencyCode });
   };
 
   const handleReportIssue = () => {
@@ -192,7 +308,10 @@ function App() {
       <div className="container">
         <header>
           <div className="header-top">
-            <h1>{t('app.title')}</h1>
+            <h1 className="brand-title">
+              <LinkCalculatorLogo size={32} />
+              <span>Link.Calculator</span>
+            </h1>
             <div className="settings-wrapper" ref={settingsRef}>
               <button
                 className="settings-button"
@@ -224,7 +343,7 @@ function App() {
                         className={theme === 'system' ? 'active' : ''}
                         onClick={() => setTheme('system')}
                       >
-                        {t('settings.themeSystem')}
+                        {t('settings.themeAuto')}
                       </button>
                     </div>
                   </div>
@@ -234,11 +353,34 @@ function App() {
                       value={i18n.language}
                       onChange={(e) => handleLanguageChange(e.target.value)}
                     >
+                      <option value="">{t('settings.languageAutomatic')}</option>
                       {SUPPORTED_LANGUAGES.map((lang) => (
                         <option key={lang.code} value={lang.code}>
                           {lang.nativeName}
                         </option>
                       ))}
+                    </select>
+                  </div>
+                  <div className="settings-section">
+                    <label>{t('settings.currency')}</label>
+                    <select
+                      value={preferredCurrency}
+                      onChange={(e) => handleCurrencyChange(e.target.value)}
+                    >
+                      <optgroup label={t('settings.fiatCurrencies')}>
+                        {FIAT_CURRENCIES.map((curr) => (
+                          <option key={curr.code} value={curr.code}>
+                            {curr.code} - {curr.name}
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label={t('settings.cryptoCurrencies')}>
+                        {CRYPTO_CURRENCIES.map((curr) => (
+                          <option key={curr.code} value={curr.code}>
+                            {curr.code} - {curr.name}
+                          </option>
+                        ))}
+                      </optgroup>
                     </select>
                   </div>
                 </div>
@@ -250,47 +392,75 @@ function App() {
 
         <div className="calculator">
           <div className="input-section">
-            <label htmlFor="expression">{t('input.label')}</label>
             <div className="input-wrapper">
               <AutoResizeTextarea
+                ref={textareaRef}
                 id="expression"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
                 placeholder={t('input.placeholder')}
                 disabled={!wasmReady}
                 autoFocus
-                minRows={1}
+                minRows={2}
                 maxRows={10}
               />
-              {input && (
+              <div className="input-buttons">
+                {input && (
+                  <button
+                    className="share-button"
+                    onClick={handleCopyLink}
+                    title={t('share.copyLink')}
+                  >
+                    {linkCopied ? (
+                      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                      </svg>
+                    ) : (
+                      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                        <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
+                      </svg>
+                    )}
+                  </button>
+                )}
                 <button
-                  className="share-button"
-                  onClick={handleCopyLink}
-                  title={t('share.copyLink')}
+                  className="calculate-button"
+                  onClick={() => calculate()}
+                  disabled={!wasmReady || !input.trim()}
+                  title={t('input.calculate')}
                 >
-                  {linkCopied ? (
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                    </svg>
-                  ) : (
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
-                    </svg>
-                  )}
+                  <span>=</span>
                 </button>
-              )}
+              </div>
             </div>
           </div>
+
+          {/* Input interpretation section - before Result */}
+          {result && result.success && result.lino_interpretation && (
+            <div className="input-interpretation-section">
+              <h2>{t('result.input')}</h2>
+              <div className="lino-value">
+                <ColorCodedLino lino={result.lino_interpretation} />
+              </div>
+            </div>
+          )}
 
           <div className="result-section">
             <div className="result-header">
               <h2>{t('result.title')}</h2>
-              {showLoading && (
-                <div className="loading">
-                  <div className="spinner" />
-                  <span>{t('result.calculating')}</span>
-                </div>
-              )}
+              <div className="result-meta">
+                {showLoading && (
+                  <div className="loading">
+                    <div className="spinner" />
+                    <span>{t('result.calculating')}</span>
+                  </div>
+                )}
+                {!showLoading && computationTime !== null && (
+                  <span className="computation-time">
+                    {computationTime < 1 ? '<1' : computationTime.toFixed(0)} ms
+                  </span>
+                )}
+              </div>
             </div>
 
             {!wasmReady ? (
@@ -302,17 +472,7 @@ function App() {
               <>
                 {result.success ? (
                   <>
-                    {/* Section 1: Interpretation (mandatory) - Links notation with color-coded parentheses */}
-                    {result.lino_interpretation && (
-                      <div className="interpretation-section">
-                        <h3>{t('result.interpretation', 'Interpretation')}</h3>
-                        <div className="lino-value">
-                          <ColorCodedLino lino={result.lino_interpretation} />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Section 2: Result (mandatory) */}
+                    {/* Section 1: Result (mandatory) */}
                     {result.is_symbolic && result.latex_input && result.latex_result ? (
                       <div className="symbolic-result">
                         <Suspense fallback={<div className="result-value">{result.result}</div>}>
@@ -391,7 +551,7 @@ function App() {
           <div className="examples-section">
             <h2>{t('examples.title')}</h2>
             <div className="examples-grid">
-              {EXAMPLES.map((example) => (
+              {displayExamples.map((example) => (
                 <button
                   key={example}
                   className="example-button"
@@ -408,7 +568,7 @@ function App() {
 
       <footer>
         <p>
-          Link Calculator {version && `v${version}`} · {t('footer.poweredBy')} ·{' '}
+          Link.Calculator {version && `v${version}`} · {t('footer.poweredBy')} ·{' '}
           <a
             href="https://github.com/link-assistant/calculator"
             target="_blank"

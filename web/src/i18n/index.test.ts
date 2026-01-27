@@ -21,7 +21,7 @@ describe('i18n preferences', () => {
 
   describe('encodePreferences', () => {
     it('should encode theme preference', () => {
-      const prefs: Preferences = { theme: 'dark', language: null };
+      const prefs: Preferences = { theme: 'dark', language: null, currency: null };
       const encoded = encodePreferences(prefs);
 
       expect(encoded).toContain('preferences');
@@ -30,7 +30,7 @@ describe('i18n preferences', () => {
     });
 
     it('should encode language preference', () => {
-      const prefs: Preferences = { theme: 'system', language: 'en' };
+      const prefs: Preferences = { theme: 'system', language: 'en', currency: null };
       const encoded = encodePreferences(prefs);
 
       expect(encoded).toContain('language');
@@ -38,13 +38,21 @@ describe('i18n preferences', () => {
     });
 
     it('should encode both theme and language', () => {
-      const prefs: Preferences = { theme: 'light', language: 'ru' };
+      const prefs: Preferences = { theme: 'light', language: 'ru', currency: null };
       const encoded = encodePreferences(prefs);
 
       expect(encoded).toContain('theme');
       expect(encoded).toContain('light');
       expect(encoded).toContain('language');
       expect(encoded).toContain('ru');
+    });
+
+    it('should encode currency preference', () => {
+      const prefs: Preferences = { theme: 'system', language: null, currency: 'EUR' };
+      const encoded = encodePreferences(prefs);
+
+      expect(encoded).toContain('currency');
+      expect(encoded).toContain('EUR');
     });
   });
 
@@ -63,11 +71,19 @@ describe('i18n preferences', () => {
       expect(prefs.language).toBe('en');
     });
 
+    it('should decode currency preference', () => {
+      const encoded = '(preferences (currency: USD))';
+      const prefs = decodePreferences(encoded);
+
+      expect(prefs.currency).toBe('USD');
+    });
+
     it('should return defaults for invalid input', () => {
       const prefs = decodePreferences('invalid');
 
       expect(prefs.theme).toBe('system');
       expect(prefs.language).toBeNull();
+      expect(prefs.currency).toBeNull();
     });
 
     it('should handle malformed input gracefully', () => {
@@ -75,25 +91,29 @@ describe('i18n preferences', () => {
 
       expect(prefs.theme).toBe('system');
       expect(prefs.language).toBeNull();
+      expect(prefs.currency).toBeNull();
     });
   });
 
   describe('round-trip preferences', () => {
     const testCases: Preferences[] = [
-      { theme: 'light', language: 'en' },
-      { theme: 'dark', language: 'ru' },
-      { theme: 'system', language: 'zh' },
-      { theme: 'dark', language: null },
+      { theme: 'light', language: 'en', currency: 'USD' },
+      { theme: 'dark', language: 'ru', currency: 'EUR' },
+      { theme: 'system', language: 'zh', currency: null },
+      { theme: 'dark', language: null, currency: 'BTC' },
     ];
 
     testCases.forEach((prefs) => {
-      it(`should round-trip: theme=${prefs.theme}, language=${prefs.language}`, () => {
+      it(`should round-trip: theme=${prefs.theme}, language=${prefs.language}, currency=${prefs.currency}`, () => {
         const encoded = encodePreferences(prefs);
         const decoded = decodePreferences(encoded);
 
         expect(decoded.theme).toBe(prefs.theme);
         if (prefs.language) {
           expect(decoded.language).toBe(prefs.language);
+        }
+        if (prefs.currency) {
+          expect(decoded.currency).toBe(prefs.currency);
         }
       });
     });
@@ -107,6 +127,7 @@ describe('i18n preferences', () => {
 
       expect(prefs.theme).toBe('system');
       expect(prefs.language).toBeNull();
+      expect(prefs.currency).toBeNull();
     });
 
     it('should load preferences from localStorage', () => {
@@ -122,7 +143,7 @@ describe('i18n preferences', () => {
 
   describe('savePreferences', () => {
     it('should save preferences to localStorage', () => {
-      const prefs: Preferences = { theme: 'dark', language: 'en' };
+      const prefs: Preferences = { theme: 'dark', language: 'en', currency: 'USD' };
 
       savePreferences(prefs);
 

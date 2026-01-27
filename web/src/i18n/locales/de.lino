@@ -1,11 +1,12 @@
 app:
-  title 'Link Calculator'
-  subtitle 'Grammatikbasierter Ausdrucksrechner mit Datum/Zeit- und Währungsunterstützung'
+  title Link.Calculator
+  subtitle 'Kostenloser Open-Source-Rechner im öffentlichen Bereich.'
 input:
-  label Ausdruck
   placeholder 'Geben Sie einen Ausdruck ein (z.B. 2 + 3, 84 USD - 34 EUR)'
+  calculate Berechnen
 result:
   title Ergebnis
+  input Eingabe
   calculating Berechne...
   loading 'Lade Rechner-Engine...'
   placeholder 'Geben Sie oben einen Ausdruck ein'
@@ -42,8 +43,12 @@ settings:
   theme Design
   themeLight Hell
   themeDark Dunkel
-  themeSystem System
+  themeAuto Auto
   language Sprache
+  languageAutomatic Automatisch
+  currency 'Bevorzugte Währung'
+  fiatCurrencies Fiat-Währungen
+  cryptoCurrencies Kryptowährungen
 share:
   copyLink 'Link kopieren'
   copied Kopiert!
