@@ -7,6 +7,8 @@ This document showcases the various capabilities of Link.Calculator with screens
 - [Initial State](#initial-state)
 - [Simple Arithmetic](#simple-arithmetic)
 - [Currency Conversion](#currency-conversion)
+- [DateTime Calculations](#datetime-calculations)
+- [Parentheses Grouping](#parentheses-grouping)
 - [Symbolic Integration](#symbolic-integration)
 - [Definite Integrals](#definite-integrals)
 - [Math Functions](#math-functions)
@@ -56,6 +58,41 @@ Convert between currencies with real-time exchange rates.
 - Real-time exchange rate display
 - Source and date of exchange rate data
 - Automatic currency conversion
+
+---
+
+## DateTime Calculations
+
+Calculate time differences between dates and times.
+
+**Expression:** `(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)`
+
+![DateTime Calculations](use-cases/08-datetime.png)
+
+[Try this example](https://link-assistant.github.io/calculator/?q=KGV4cHJlc3Npb24lMjAlMjIoSmFuJTIwMjclMkMlMjA4JTNBNTlhbSUyMFVUQyklMjAtJTIwKEphbiUyMDI1JTJDJTIwMTIlM0E1MXBtJTIwVVRDKSUyMik%3D)
+
+**Features shown:**
+- DateTime parsing with multiple formats
+- Time difference calculation
+- Duration display in human-readable format
+- Step-by-step breakdown
+
+---
+
+## Parentheses Grouping
+
+Control operator precedence with parentheses.
+
+**Expression:** `(2 + 3) * 4`
+
+![Parentheses Grouping](use-cases/09-parentheses.png)
+
+[Try this example](https://link-assistant.github.io/calculator/?q=KGV4cHJlc3Npb24lMjAlMjIoMiUyMCUyQiUyMDMpJTIwKiUyMDQlMjIp)
+
+**Features shown:**
+- Parentheses for grouping operations
+- Correct operator precedence
+- Step-by-step breakdown
 
 ---
 

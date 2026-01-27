@@ -123,4 +123,28 @@ test.describe('Screenshot Generation', () => {
       fullPage: false,
     });
   });
+
+  test('08-datetime', async ({ page }) => {
+    const input = page.locator('textarea');
+    await input.fill('(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)');
+    await page.keyboard.press('Enter');
+    await expect(page.locator('.result-value')).toContainText('day', { timeout: 5000 });
+
+    await page.screenshot({
+      path: `${SCREENSHOT_DIR}/08-datetime.png`,
+      fullPage: false,
+    });
+  });
+
+  test('09-parentheses', async ({ page }) => {
+    const input = page.locator('textarea');
+    await input.fill('(2 + 3) * 4');
+    await page.keyboard.press('Enter');
+    await expect(page.locator('.result-value')).toContainText('20', { timeout: 5000 });
+
+    await page.screenshot({
+      path: `${SCREENSHOT_DIR}/09-parentheses.png`,
+      fullPage: false,
+    });
+  });
 });
