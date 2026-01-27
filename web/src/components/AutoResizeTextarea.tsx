@@ -225,7 +225,7 @@ export const AutoResizeTextarea = forwardRef<AutoResizeTextareaRef, AutoResizeTe
         onChange={handleChange}
         style={{
           ...style,
-          resize: 'vertical',
+          resize: 'none',
           overflow: 'hidden',
         }}
         {...props}

@@ -1,11 +1,12 @@
 app:
-  title 'Link Calculator'
-  subtitle 支持日期时间和货币的语法表达式计算器
+  title Link.Calculator
+  subtitle 免费开源计算器，献给公共领域。
 input:
-  label 表达式
   placeholder '输入表达式（例如：2 + 3, 84 USD - 34 EUR）'
+  calculate 计算
 result:
   title 结果
+  input 输入
   calculating 计算中...
   loading 正在加载计算引擎...
   placeholder 请在上方输入表达式
@@ -42,8 +43,12 @@ settings:
   theme 主题
   themeLight 浅色
   themeDark 深色
-  themeSystem 跟随系统
+  themeAuto 自动
   language 语言
+  languageAutomatic 自动
+  currency 首选货币
+  fiatCurrencies 法定货币
+  cryptoCurrencies 加密货币
 share:
   copyLink 复制链接
   copied 已复制！

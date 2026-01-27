@@ -17,13 +17,14 @@ const STORAGE_KEY = 'link-calculator-preferences';
 export interface Preferences {
   theme: 'light' | 'dark' | 'system';
   language: string | null;
+  currency: string | null;
 }
 
 // Links Notation helpers for encoding/decoding preferences
 // Using a simple regex-based approach for reliability
 
 export function encodePreferences(prefs: Preferences): string {
-  // Encode as Links Notation: (preferences (theme: dark) (language: en))
+  // Encode as Links Notation: (preferences (theme: dark) (language: en) (currency: USD))
   const parts: string[] = [];
   if (prefs.theme) {
     parts.push(`(theme: ${prefs.theme})`);
@@ -31,23 +32,30 @@ export function encodePreferences(prefs: Preferences): string {
   if (prefs.language) {
     parts.push(`(language: ${prefs.language})`);
   }
+  if (prefs.currency) {
+    parts.push(`(currency: ${prefs.currency})`);
+  }
   return `(preferences ${parts.join(' ')})`;
 }
 
 export function decodePreferences(lino: string): Preferences {
-  const prefs: Preferences = { theme: 'system', language: null };
+  const prefs: Preferences = { theme: 'system', language: null, currency: null };
 
   if (!lino) return prefs;
 
   // Use regex extraction from Links Notation format
   const themeMatch = lino.match(/\(theme:\s*(light|dark|system)\)/);
   const langMatch = lino.match(/\(language:\s*(\w+)\)/);
+  const currencyMatch = lino.match(/\(currency:\s*(\w+)\)/);
 
   if (themeMatch) {
     prefs.theme = themeMatch[1] as 'light' | 'dark' | 'system';
   }
   if (langMatch) {
     prefs.language = langMatch[1];
+  }
+  if (currencyMatch) {
+    prefs.currency = currencyMatch[1];
   }
 
   return prefs;
@@ -62,7 +70,7 @@ export function loadPreferences(): Preferences {
   } catch {
     // localStorage not available
   }
-  return { theme: 'system', language: null };
+  return { theme: 'system', language: null, currency: null };
 }
 
 export function savePreferences(prefs: Preferences): void {
