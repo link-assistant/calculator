@@ -1,9 +1,15 @@
 //! Currency exchange rate API client.
 //!
 //! This module provides functionality to fetch real-time and historical exchange
-//! rates from the fawazahmed0/currency-api service.
+//! rates from official Central Bank APIs.
 //!
-//! API Documentation: https://github.com/fawazahmed0/exchange-api
+//! Primary source: Frankfurter API (https://frankfurter.dev/) - European Central Bank (ECB) data
+//! - Provides exchange rates for 30+ currencies
+//! - Updated daily at around 16:00 CET
+//! - Data available from 1999
+//!
+//! Note: RUB rates are sourced separately from the Central Bank of Russia (cbr.ru)
+//! in the historical rate download scripts.
 
 // Allow futures that are not Send, as these are WASM-only functions running in a single-threaded context
 #![allow(clippy::future_not_send)]
@@ -15,23 +21,24 @@ use web_sys::{Request, RequestInit, RequestMode, Response};
 
 use crate::types::ExchangeRateInfo;
 
-/// The API source identifier for rates fetched from this API.
-pub const API_SOURCE: &str = "fawazahmed0/currency-api";
+/// The API source identifier for rates fetched from ECB via Frankfurter API.
+pub const API_SOURCE: &str = "frankfurter.dev (ECB)";
 
-/// CDN URL for the currency API (primary).
-const CDN_URL: &str = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api";
+/// Primary URL for the Frankfurter API (European Central Bank data).
+const FRANKFURTER_URL: &str = "https://api.frankfurter.app";
 
-/// Fallback URL for the currency API.
-const FALLBACK_URL: &str = "https://latest.currency-api.pages.dev";
-
-/// Response from the currency API.
+/// Response from the Frankfurter API.
 #[derive(Debug, Clone, serde::Deserialize)]
 pub struct CurrencyApiResponse {
+    /// The amount (always 1 for our requests).
+    #[serde(default)]
+    pub amount: f64,
+    /// The base currency.
+    pub base: String,
     /// The date of the rates (YYYY-MM-DD format).
     pub date: String,
     /// The rates for the base currency.
-    #[serde(flatten)]
-    pub rates: HashMap<String, HashMap<String, f64>>,
+    pub rates: HashMap<String, f64>,
 }
 
 /// Error type for currency API operations.
@@ -57,56 +64,55 @@ impl std::fmt::Display for CurrencyApiError {
     }
 }
 
-/// Fetches the current exchange rates for a base currency.
+/// Fetches the current exchange rates for a base currency from ECB via Frankfurter API.
 ///
 /// # Arguments
-/// * `base_currency` - The base currency code (e.g., "usd")
+/// * `base_currency` - The base currency code (e.g., "USD", "EUR")
 ///
 /// # Returns
-/// A map of currency codes to exchange rates
+/// A tuple of (date, rates map) where rates map currency codes to exchange rates
+///
+/// # Note
+/// The ECB publishes rates daily at around 16:00 CET.
+/// RUB is not available through ECB - use historical .lino files for RUB rates.
 pub async fn fetch_current_rates(
     base_currency: &str,
 ) -> Result<(String, HashMap<String, f64>), CurrencyApiError> {
-    let base = base_currency.to_lowercase();
-    let url = format!("{}@latest/v1/currencies/{}.json", CDN_URL, base);
+    let base = base_currency.to_uppercase();
+    let url = format!("{}/latest?from={}", FRANKFURTER_URL, base);
 
-    fetch_rates_from_url(&url, &base).await
+    fetch_rates_from_url(&url).await
 }
 
-/// Fetches historical exchange rates for a specific date.
+/// Fetches historical exchange rates for a specific date from ECB via Frankfurter API.
 ///
 /// # Arguments
-/// * `base_currency` - The base currency code (e.g., "usd")
-/// * `date` - The date in YYYY-MM-DD format
+/// * `base_currency` - The base currency code (e.g., "USD", "EUR")
+/// * `date` - The date in YYYY-MM-DD format (ECB data available from 1999-01-04)
 ///
 /// # Returns
-/// A map of currency codes to exchange rates
+/// A tuple of (date, rates map) where rates map currency codes to exchange rates
+///
+/// # Note
+/// RUB is not available through ECB - use historical .lino files for RUB rates.
 pub async fn fetch_historical_rates(
     base_currency: &str,
     date: &str,
 ) -> Result<(String, HashMap<String, f64>), CurrencyApiError> {
-    let base = base_currency.to_lowercase();
-    let url = format!("{}@{}/v1/currencies/{}.json", CDN_URL, date, base);
+    let base = base_currency.to_uppercase();
+    let url = format!("{}/{}?from={}", FRANKFURTER_URL, date, base);
 
-    fetch_rates_from_url(&url, &base).await
+    fetch_rates_from_url(&url).await
 }
 
-/// Fetches rates from a specific URL.
+/// Fetches rates from the Frankfurter API URL.
 async fn fetch_rates_from_url(
     url: &str,
-    base_currency: &str,
 ) -> Result<(String, HashMap<String, f64>), CurrencyApiError> {
-    // First try the primary CDN URL
-    if let Ok((date, rates)) = fetch_json(url).await {
-        Ok((date, rates))
-    } else {
-        // Try fallback URL
-        let fallback = format!("{}/v1/currencies/{}.json", FALLBACK_URL, base_currency);
-        fetch_json(&fallback).await
-    }
+    fetch_json(url).await
 }
 
-/// Performs the actual fetch and JSON parsing.
+/// Performs the actual fetch and JSON parsing for the Frankfurter API.
 /// Works in both Window and Web Worker contexts.
 async fn fetch_json(url: &str) -> Result<(String, HashMap<String, f64>), CurrencyApiError> {
     let opts = RequestInit::new();
@@ -156,19 +162,17 @@ async fn fetch_json(url: &str) -> Result<(String, HashMap<String, f64>), Currenc
     .await
     .map_err(|e| CurrencyApiError::ParseError(format!("Failed to parse JSON: {:?}", e)))?;
 
-    // Parse the JSON response
+    // Parse the JSON response from Frankfurter API
+    // The API returns: { "amount": 1, "base": "USD", "date": "YYYY-MM-DD", "rates": { "EUR": 0.92, ... } }
     let response: CurrencyApiResponse = serde_wasm_bindgen::from_value(json)
         .map_err(|e| CurrencyApiError::ParseError(format!("Failed to deserialize: {:?}", e)))?;
 
-    // Extract the rates from the nested structure
-    // The API returns: { "date": "YYYY-MM-DD", "usd": { "eur": 0.92, ... } }
-    let base_lower = url
-        .split('/')
-        .next_back()
-        .and_then(|s| s.strip_suffix(".json"))
-        .unwrap_or("usd");
-
-    let rates = response.rates.get(base_lower).cloned().unwrap_or_default();
+    // Convert rate keys to lowercase for consistency with other API consumers
+    let rates: HashMap<String, f64> = response
+        .rates
+        .into_iter()
+        .map(|(k, v)| (k.to_lowercase(), v))
+        .collect();
 
     Ok((response.date, rates))
 }
@@ -216,7 +220,8 @@ mod tests {
 
     #[test]
     fn test_api_source_constant() {
-        assert_eq!(API_SOURCE, "fawazahmed0/currency-api");
+        // API source should be ECB via Frankfurter
+        assert_eq!(API_SOURCE, "frankfurter.dev (ECB)");
     }
 
     #[test]

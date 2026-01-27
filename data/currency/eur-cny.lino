@@ -1,6 +1,6 @@
 conversion:
   from EUR
   to CNY
-  source 'fawazahmed0/currency-api'
+  source 'frankfurter.dev (ECB)'
   rates:
-    2026-01-25 7.8
+    2026-01-27 8.2312

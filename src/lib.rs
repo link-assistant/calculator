@@ -634,7 +634,7 @@ impl Calculator {
     ///   to EUR
     ///   value 0.92
     ///   date 2026-01-25
-    ///   source 'fawazahmed0/currency-api'
+    ///   source 'frankfurter.dev (ECB)'
     /// ```
     pub fn load_rate_from_lino(&mut self, content: &str) -> Result<(), String> {
         let mut from_currency: Option<String> = None;

@@ -544,7 +544,7 @@ test.describe('Currency Conversion with Real Rates', () => {
     const stepsSection = page.locator('.steps-section');
     if (await stepsSection.isVisible()) {
       const stepsText = await stepsSection.textContent();
-      // Should contain rate source information (e.g., fawazahmed0 or api name)
+      // Should contain rate source information (e.g., ECB, frankfurter.dev, or cbr.ru)
       // This test verifies the exchange rate source is displayed
       expect(stepsText).toBeTruthy();
     }
