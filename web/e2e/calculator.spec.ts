@@ -1,4 +1,15 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
+
+/**
+ * Helper function to enter an expression and trigger calculation.
+ * The calculator now requires explicit trigger (Enter key or button click).
+ */
+async function calculateExpression(page: Page, expression: string) {
+  const input = page.locator('textarea');
+  await input.fill(expression);
+  // Trigger calculation by pressing Enter
+  await page.keyboard.press('Enter');
+}
 
 test.describe('Calculator', () => {
   test.beforeEach(async ({ page }) => {
@@ -8,21 +19,19 @@ test.describe('Calculator', () => {
   });
 
   test('should display the calculator UI', async ({ page }) => {
-    await expect(page.locator('h1')).toContainText('Link Calculator');
+    await expect(page.locator('h1')).toContainText('Link.Calculator');
     await expect(page.locator('textarea')).toBeVisible();
   });
 
   test('should calculate simple expression', async ({ page }) => {
-    const input = page.locator('textarea');
-    await input.fill('2 + 3');
+    await calculateExpression(page, '2 + 3');
 
     // Wait for result to appear (result is in .result-value)
     await expect(page.locator('.result-value')).toContainText('5', { timeout: 5000 });
   });
 
   test('should show calculation steps', async ({ page }) => {
-    const input = page.locator('textarea');
-    await input.fill('2 + 3 * 4');
+    await calculateExpression(page, '2 + 3 * 4');
 
     // Wait for result
     await expect(page.locator('.result-value')).toBeVisible({ timeout: 5000 });
@@ -40,19 +49,17 @@ test.describe('Calculator', () => {
   });
 
   test('should display error for invalid expression', async ({ page }) => {
-    const input = page.locator('textarea');
-    await input.fill('invalid expression +++');
+    await calculateExpression(page, 'invalid expression +++');
 
     // Wait for error to appear (error is .result-value.error)
     await expect(page.locator('.result-value.error')).toBeVisible({ timeout: 5000 });
   });
 
   test('should handle multiline input', async ({ page }) => {
-    const input = page.locator('textarea');
-    await input.fill('1 + 1');
+    await calculateExpression(page, '1 + 1');
 
     // Should process and show result
-    await expect(page.locator('.result-value')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('.result-value')).toContainText('2', { timeout: 5000 });
   });
 });
 
@@ -104,8 +111,8 @@ test.describe('Language', () => {
     const settingsButton = page.locator('.settings-button');
     await settingsButton.click();
 
-    // Check for language selector (select element)
-    const langSelector = page.locator('.settings-dropdown select');
+    // Check for language selector (first select element in dropdown is language)
+    const langSelector = page.locator('.settings-dropdown select').first();
     await expect(langSelector).toBeVisible();
   });
 
@@ -114,8 +121,8 @@ test.describe('Language', () => {
     const settingsButton = page.locator('.settings-button');
     await settingsButton.click();
 
-    // Select German
-    const langSelector = page.locator('.settings-dropdown select');
+    // Select German (first select is language selector)
+    const langSelector = page.locator('.settings-dropdown select').first();
     await langSelector.selectOption('de');
 
     // UI should change to German - check result heading changes to "Ergebnis"
@@ -152,6 +159,11 @@ test.describe('URL Sharing', () => {
     const input = page.locator('textarea');
     await expect(input).toHaveValue(expression);
 
+    // Trigger calculation (calculation is on-demand, not automatic)
+    // First focus the input, then press Enter
+    await input.focus();
+    await page.keyboard.press('Enter');
+
     // Result should show 25
     await expect(page.locator('.result-value')).toContainText('25', { timeout: 5000 });
   });
@@ -162,18 +174,21 @@ test.describe('URL Sharing', () => {
 
     const input = page.locator('textarea');
 
-    // Type first expression
+    // Type and calculate first expression
     await input.fill('1 + 1');
+    await page.keyboard.press('Enter');
     await page.waitForTimeout(600);
     await expect(page.locator('.result-value')).toContainText('2', { timeout: 5000 });
 
-    // Type second expression
+    // Type and calculate second expression
     await input.fill('2 + 2');
+    await page.keyboard.press('Enter');
     await page.waitForTimeout(600);
     await expect(page.locator('.result-value')).toContainText('4', { timeout: 5000 });
 
-    // Type third expression
+    // Type and calculate third expression
     await input.fill('3 + 3');
+    await page.keyboard.press('Enter');
     await page.waitForTimeout(600);
     await expect(page.locator('.result-value')).toContainText('6', { timeout: 5000 });
 
@@ -181,24 +196,27 @@ test.describe('URL Sharing', () => {
     await page.goBack();
     await page.waitForTimeout(200);
 
-    // Should show second expression
+    // Should show second expression, trigger calculation
     await expect(input).toHaveValue('2 + 2');
+    await page.keyboard.press('Enter');
     await expect(page.locator('.result-value')).toContainText('4', { timeout: 5000 });
 
     // Go back again
     await page.goBack();
     await page.waitForTimeout(200);
 
-    // Should show first expression
+    // Should show first expression, trigger calculation
     await expect(input).toHaveValue('1 + 1');
+    await page.keyboard.press('Enter');
     await expect(page.locator('.result-value')).toContainText('2', { timeout: 5000 });
 
     // Go forward
     await page.goForward();
     await page.waitForTimeout(200);
 
-    // Should show second expression again
+    // Should show second expression again, trigger calculation
     await expect(input).toHaveValue('2 + 2');
+    await page.keyboard.press('Enter');
     await expect(page.locator('.result-value')).toContainText('4', { timeout: 5000 });
   });
 });
@@ -279,9 +297,8 @@ test.describe('Busy Indicator', () => {
     await page.goto('/');
     await expect(page.locator('textarea')).toBeEnabled({ timeout: 10000 });
 
-    const input = page.locator('textarea');
-    // Type a complex expression that might take longer
-    await input.fill('123456789 * 987654321');
+    // Type a complex expression that might take longer and trigger calculation
+    await calculateExpression(page, '123456789 * 987654321');
 
     // Eventually result should appear (loading indicator is .loading)
     await expect(page.locator('.result-value')).toBeVisible({ timeout: 10000 });
@@ -309,8 +326,13 @@ test.describe('Examples', () => {
     const input = page.locator('textarea');
     await expect(input).not.toHaveValue('');
 
+    // Trigger calculation (clicking example only fills input, doesn't calculate)
+    // First focus the input, then press Enter
+    await input.focus();
+    await page.keyboard.press('Enter');
+
     // Result should appear
-    await expect(page.locator('.result-value')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('.result-value')).not.toContainText('Enter an expression', { timeout: 5000 });
   });
 });
 
@@ -473,9 +495,8 @@ test.describe('Currency Conversion with Real Rates', () => {
   });
 
   test('should calculate currency conversion', async ({ page }) => {
-    const input = page.locator('textarea');
     // Use an expression that will trigger currency conversion
-    await input.fill('100 USD in EUR');
+    await calculateExpression(page, '100 USD in EUR');
 
     // Wait for result to appear (not the default placeholder)
     await expect(page.locator('.result-value')).not.toContainText('Enter an expression', { timeout: 10000 });
@@ -487,9 +508,8 @@ test.describe('Currency Conversion with Real Rates', () => {
   });
 
   test('should show exchange rate info in calculation steps', async ({ page }) => {
-    const input = page.locator('textarea');
     // This should trigger a currency conversion
-    await input.fill('0 RUB + 1 USD');
+    await calculateExpression(page, '0 RUB + 1 USD');
 
     // Wait for result
     await expect(page.locator('.result-value')).toBeVisible({ timeout: 10000 });
@@ -504,8 +524,7 @@ test.describe('Currency Conversion with Real Rates', () => {
   });
 
   test('should handle multiple currency conversions', async ({ page }) => {
-    const input = page.locator('textarea');
-    await input.fill('1 USD + 1 EUR + 1 GBP');
+    await calculateExpression(page, '1 USD + 1 EUR + 1 GBP');
 
     // Wait for result
     await expect(page.locator('.result-value')).toBeVisible({ timeout: 10000 });
@@ -516,8 +535,7 @@ test.describe('Currency Conversion with Real Rates', () => {
   });
 
   test('should display rate source information', async ({ page }) => {
-    const input = page.locator('textarea');
-    await input.fill('100 JPY in USD');
+    await calculateExpression(page, '100 JPY in USD');
 
     // Wait for result
     await expect(page.locator('.result-value')).toBeVisible({ timeout: 10000 });
@@ -533,8 +551,7 @@ test.describe('Currency Conversion with Real Rates', () => {
   });
 
   test('should handle currency symbols', async ({ page }) => {
-    const input = page.locator('textarea');
-    await input.fill('$100 + €50');
+    await calculateExpression(page, '$100 + €50');
 
     // Wait for result
     await expect(page.locator('.result-value')).toBeVisible({ timeout: 10000 });
@@ -544,11 +561,10 @@ test.describe('Currency Conversion with Real Rates', () => {
     expect(resultText).toMatch(/[$€]|\w{3}/); // Either symbol or currency code
   });
 
-  test('should gracefully handle rates when offline', async ({ page, context }) => {
+  test('should gracefully handle rates when offline', async ({ page }) => {
     // This test checks that calculator still works even if rates fail
     // We can't easily simulate offline, but we can test that basic math works
-    const input = page.locator('textarea');
-    await input.fill('2 + 2');
+    await calculateExpression(page, '2 + 2');
 
     await expect(page.locator('.result-value')).toContainText('4', { timeout: 5000 });
   });

@@ -1,10 +1,11 @@
-import { useState, useEffect, useCallback, useRef, lazy, Suspense, KeyboardEvent } from 'react';
+import { useState, useEffect, useCallback, useRef, lazy, Suspense, KeyboardEvent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { useTheme, useUrlExpression, useDelayedLoading } from './hooks';
 import { SUPPORTED_LANGUAGES, loadPreferences, savePreferences } from './i18n';
 import { generateIssueUrl, type PageState } from './utils/reportIssue';
 import { AutoResizeTextarea, ColorCodedLino, RepeatingDecimalNotations, type AutoResizeTextareaRef } from './components';
+import { getExamplesForDisplay } from './examples';
 import type { CalculationResult, ErrorInfo } from './types';
 
 // SVG Logo component for Link.Calculator branding
@@ -64,15 +65,6 @@ const FIAT_CURRENCIES = [
 // Lazy load the math and plot components for better initial bundle size
 const MathRenderer = lazy(() => import('./components/MathRenderer'));
 const FunctionPlot = lazy(() => import('./components/FunctionPlot'));
-
-const EXAMPLES = [
-  '2 + 3',
-  '(2 + 3) * 4',
-  '84 USD - 34 EUR',
-  '100 * 1.5',
-  'integrate sin(x)/x dx',
-  'integrate(x^2, x, 0, 3)',
-];
 
 /**
  * Translates an error using i18n error info.
@@ -145,6 +137,9 @@ function App() {
   const { t, i18n } = useTranslation();
   const { theme, resolvedTheme, setTheme } = useTheme();
   const { expression: input, setExpression: setInput, copyShareLink } = useUrlExpression('');
+
+  // Get random examples from the examples.lino file (memoized to stay stable during session)
+  const displayExamples = useMemo(() => getExamplesForDisplay(6), []);
 
   const [result, setResult] = useState<CalculationResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -556,7 +551,7 @@ function App() {
           <div className="examples-section">
             <h2>{t('examples.title')}</h2>
             <div className="examples-grid">
-              {EXAMPLES.map((example) => (
+              {displayExamples.map((example) => (
                 <button
                   key={example}
                   className="example-button"
