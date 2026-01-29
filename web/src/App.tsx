@@ -136,7 +136,7 @@ function detectUserCurrency(): string {
 function App() {
   const { t, i18n } = useTranslation();
   const { theme, resolvedTheme, setTheme } = useTheme();
-  const { expression: input, setExpression: setInput, copyShareLink } = useUrlExpression('');
+  const { expression: input, setExpression: setInput, copyShareLink, wasLoadedFromUrl } = useUrlExpression('');
 
   // Get random examples from the examples.lino file (memoized to stay stable during session)
   const displayExamples = useMemo(() => getExamplesForDisplay(6), []);
@@ -228,6 +228,13 @@ function App() {
     setComputationTime(null);
     workerRef.current.postMessage({ type: 'calculate', expression: expr });
   }, [wasmReady, input]);
+
+  // Auto-calculate when expression is loaded from URL
+  useEffect(() => {
+    if (wasmReady && input.trim() && wasLoadedFromUrl()) {
+      calculate(input);
+    }
+  }, [wasmReady, input, wasLoadedFromUrl, calculate]);
 
   // Handle Enter key press to trigger calculation
   const handleKeyDown = useCallback((e: KeyboardEvent<HTMLTextAreaElement>) => {
