@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { encodeExpression, decodeExpression, generateShareUrl } from './useUrlExpression';
+import { encodeExpression, decodeExpression, generateShareUrl, isLegacyFormat } from './useUrlExpression';
 
 describe('URL Expression utilities', () => {
   describe('encodeExpression', () => {
@@ -22,6 +22,31 @@ describe('URL Expression utilities', () => {
     it('should encode expressions with quotes', () => {
       const encoded = encodeExpression('test "quoted" value');
       expect(encoded).toBeTruthy();
+    });
+
+    it('should use only URL-safe characters (a-zA-Z0-9, -, _)', () => {
+      // Test with various expressions that might produce +, /, or = in standard base64
+      const testCases = [
+        '2 + 3',
+        'hello world!',
+        '100 * 1.5 / 2',
+        '(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)',
+        'a very long expression with many different characters: 1234567890!@#$%^&*()',
+        '你好世界', // Unicode characters
+      ];
+
+      testCases.forEach((expression) => {
+        const encoded = encodeExpression(expression);
+        // Should not contain +, /, or =
+        expect(encoded).not.toMatch(/[+/=]/);
+        // Should only contain URL-safe characters
+        expect(encoded).toMatch(/^[a-zA-Z0-9_-]*$/);
+      });
+    });
+
+    it('should not include padding characters', () => {
+      const encoded = encodeExpression('test');
+      expect(encoded).not.toContain('=');
     });
   });
 
@@ -55,6 +80,43 @@ describe('URL Expression utilities', () => {
       // Invalid base64 should return empty
       const result = decodeExpression('!!!invalid!!!');
       expect(result).toBe('');
+    });
+
+    it('should decode legacy base64 format with padding', () => {
+      // Legacy format: btoa(encodeURIComponent('(expression "2 + 3")'))
+      const legacyEncoded = btoa(encodeURIComponent('(expression "2 + 3")'));
+      const decoded = decodeExpression(legacyEncoded);
+      expect(decoded).toBe('2 + 3');
+    });
+
+    it('should decode new base64url format without padding', () => {
+      const original = '2 + 3';
+      const encoded = encodeExpression(original);
+      // Verify it doesn't have padding
+      expect(encoded).not.toContain('=');
+      const decoded = decodeExpression(encoded);
+      expect(decoded).toBe(original);
+    });
+  });
+
+  describe('isLegacyFormat', () => {
+    it('should detect legacy format with padding', () => {
+      const legacyEncoded = btoa(encodeURIComponent('(expression "test")'));
+      expect(isLegacyFormat(legacyEncoded)).toBe(true);
+    });
+
+    it('should detect new base64url format', () => {
+      const newEncoded = encodeExpression('test');
+      expect(isLegacyFormat(newEncoded)).toBe(false);
+    });
+
+    it('should detect legacy format with + character', () => {
+      // Create a string that produces + in base64
+      expect(isLegacyFormat('abc+def')).toBe(true);
+    });
+
+    it('should detect legacy format with / character', () => {
+      expect(isLegacyFormat('abc/def')).toBe(true);
     });
   });
 
