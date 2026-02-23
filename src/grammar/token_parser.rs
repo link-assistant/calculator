@@ -2,7 +2,7 @@
 
 use crate::error::CalculatorError;
 use crate::grammar::{is_math_function, DateTimeGrammar, NumberGrammar, Token, TokenKind};
-use crate::types::{BinaryOp, Expression, Unit};
+use crate::types::{BinaryOp, DataSizeUnit, Expression, Unit};
 
 /// Internal token-based parser.
 pub struct TokenParser<'a> {
@@ -44,6 +44,13 @@ impl<'a> TokenParser<'a> {
             self.advance(); // consume "at"
             let time = self.parse_primary()?;
             left = Expression::at_time(left, time);
+        }
+
+        // Check for "as" keyword (unit conversion, e.g. "741 KB as MB")
+        if self.check_as() {
+            self.advance(); // consume "as"
+            let target_unit = self.parse_unit_for_conversion()?;
+            left = Expression::unit_conversion(left, target_unit);
         }
 
         Ok(left)
@@ -452,6 +459,49 @@ impl<'a> TokenParser<'a> {
 
     fn check_at(&self) -> bool {
         matches!(self.current_kind(), Some(TokenKind::At))
+    }
+
+    fn check_as(&self) -> bool {
+        matches!(self.current_kind(), Some(TokenKind::As))
+    }
+
+    /// Parses a unit name after the `as` keyword.
+    ///
+    /// Handles both abbreviated (e.g., `MB`, `KiB`) and full-name (e.g., `mebibytes`)
+    /// forms. Multi-token unit names (e.g., identifier followed by another identifier)
+    /// are handled by consuming one or two tokens as needed.
+    fn parse_unit_for_conversion(&mut self) -> Result<Unit, CalculatorError> {
+        // The next token should be an identifier (the unit name)
+        if let Some(TokenKind::Identifier(id)) = self.current_kind() {
+            let unit_str = id.clone();
+            self.advance();
+
+            // Try to parse the unit string
+            if let Some(data_size) = DataSizeUnit::parse(&unit_str) {
+                return Ok(Unit::DataSize(data_size));
+            }
+
+            // Try case-insensitive matching for common full names
+            let lower = unit_str.to_lowercase();
+            if let Some(data_size) = DataSizeUnit::parse(&lower) {
+                return Ok(Unit::DataSize(data_size));
+            }
+
+            // Try treating it as a currency (e.g., "741 USD as EUR")
+            if let Some(currency_code) = crate::types::CurrencyDatabase::parse_currency(&unit_str) {
+                return Ok(Unit::currency(&currency_code));
+            }
+
+            // Return error with helpful message
+            Err(CalculatorError::parse(format!(
+                "Unknown unit '{unit_str}' after 'as'. Supported data size units include: \
+                 B, KB, MB, GB, TB, PB (SI decimal) and KiB, MiB, GiB, TiB, PiB (IEC binary)."
+            )))
+        } else {
+            Err(CalculatorError::parse(
+                "Expected a unit name after 'as' (e.g., 'MB', 'MiB', 'gigabytes')",
+            ))
+        }
     }
 
     fn current(&self) -> Option<&Token> {

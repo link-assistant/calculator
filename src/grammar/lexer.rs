@@ -29,6 +29,8 @@ pub enum TokenKind {
     Comma,
     /// The "at" keyword for temporal context.
     At,
+    /// The "as" keyword for unit conversion (e.g., "741 KB as MB").
+    As,
     /// End of input.
     Eof,
 }
@@ -213,6 +215,7 @@ impl Lexer {
         // Check for keywords
         let kind = match text.to_lowercase().as_str() {
             "at" => TokenKind::At,
+            "as" => TokenKind::As,
             _ => TokenKind::Identifier(text.clone()),
         };
 

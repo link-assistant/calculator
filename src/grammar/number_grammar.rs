@@ -1,7 +1,7 @@
 //! Grammar for parsing numbers with optional units.
 
 use crate::error::CalculatorError;
-use crate::types::{CurrencyDatabase, Decimal, Unit};
+use crate::types::{CurrencyDatabase, DataSizeUnit, Decimal, Unit};
 
 /// Grammar for parsing numbers with optional units.
 #[derive(Debug, Default)]
@@ -49,6 +49,11 @@ impl NumberGrammar {
     /// Parses a unit string.
     pub fn parse_unit(&self, s: &str) -> Result<Unit, CalculatorError> {
         let s = s.trim();
+
+        // Try to parse as data size unit first (before currency, to avoid conflicts)
+        if let Some(data_size) = DataSizeUnit::parse(s) {
+            return Ok(Unit::DataSize(data_size));
+        }
 
         // Try to parse as currency
         if let Some(currency_code) = CurrencyDatabase::parse_currency(s) {
