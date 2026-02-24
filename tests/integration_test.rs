@@ -810,3 +810,6 @@ mod api_rate_update_tests {
 
 // Data size, mass, and crypto unit conversion tests have been moved to
 // tests/unit_conversion_tests.rs to keep file sizes under the 1000-line limit.
+
+// Currency issues #51, #52, #53 tests have been moved to
+// tests/currency_issues_tests.rs to keep file sizes under the 1000-line limit.
