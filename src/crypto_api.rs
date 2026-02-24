@@ -150,7 +150,10 @@ pub async fn fetch_crypto_prices(
 
     for (id, ticker) in &id_to_ticker {
         if let Some(coin_data) = json.get(id.as_str()).and_then(|v| v.as_object()) {
-            if let Some(price) = coin_data.get(vs.as_str()).and_then(serde_json::Value::as_f64) {
+            if let Some(price) = coin_data
+                .get(vs.as_str())
+                .and_then(serde_json::Value::as_f64)
+            {
                 let info = ExchangeRateInfo::new(price, COINGECKO_SOURCE, &today)
                     .with_fetched_at(&timestamp);
                 result.insert(ticker.clone(), info);
