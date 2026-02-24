@@ -80,6 +80,13 @@ pub enum Expression {
         /// The variable of integration.
         variable: String,
     },
+    /// Unit conversion expression (e.g., "741 KB as MB").
+    UnitConversion {
+        /// The expression to convert.
+        value: Box<Expression>,
+        /// The target unit.
+        target_unit: Unit,
+    },
 }
 
 impl Expression {
@@ -171,6 +178,15 @@ impl Expression {
         }
     }
 
+    /// Creates a unit conversion expression (e.g., "741 KB as MB").
+    #[must_use]
+    pub fn unit_conversion(value: Expression, target_unit: Unit) -> Self {
+        Self::UnitConversion {
+            value: Box::new(value),
+            target_unit,
+        }
+    }
+
     /// Converts the expression to links notation format.
     ///
     /// Links notation uses minimal parentheses, only adding them where
@@ -257,19 +273,30 @@ impl Expression {
                 let integrand_str = integrand.to_lino_internal(None);
                 format!("integrate {integrand_str} d{variable}")
             }
+            Self::UnitConversion { value, target_unit } => {
+                let value_str = value.to_lino_internal(None);
+                format!("({value_str} as {target_unit})")
+            }
         }
     }
 
     /// Returns true if this expression needs parentheses when used as a unary operand.
     fn needs_parens_for_unary(&self) -> bool {
-        matches!(self, Self::Binary { .. } | Self::AtTime { .. })
+        matches!(
+            self,
+            Self::Binary { .. } | Self::AtTime { .. } | Self::UnitConversion { .. }
+        )
     }
 
     /// Returns true if this expression needs parentheses when used as a power base.
     fn needs_parens_for_power(&self) -> bool {
         matches!(
             self,
-            Self::Binary { .. } | Self::Negate(_) | Self::AtTime { .. } | Self::Power { .. }
+            Self::Binary { .. }
+                | Self::Negate(_)
+                | Self::AtTime { .. }
+                | Self::Power { .. }
+                | Self::UnitConversion { .. }
         )
     }
 
@@ -289,6 +316,7 @@ impl Expression {
                 1 + args.iter().map(Expression::depth).max().unwrap_or(0)
             }
             Self::IndefiniteIntegral { integrand, .. } => 1 + integrand.depth(),
+            Self::UnitConversion { value, .. } => 1 + value.depth(),
         }
     }
 
@@ -409,6 +437,9 @@ impl Expression {
             } => {
                 format!("\\int {} \\, d{}", integrand.to_latex(), variable)
             }
+            Self::UnitConversion { value, target_unit } => {
+                format!("{} \\to \\text{{{target_unit}}}", value.to_latex())
+            }
         }
     }
 }
@@ -443,6 +474,9 @@ impl fmt::Display for Expression {
                 variable,
             } => {
                 write!(f, "integrate {integrand} d{variable}")
+            }
+            Self::UnitConversion { value, target_unit } => {
+                write!(f, "{value} as {target_unit}")
             }
         }
     }

@@ -518,6 +518,56 @@ impl Value {
         }
     }
 
+    /// Converts this value to the given unit.
+    ///
+    /// Supports conversion between data size units (KB, KiB, MB, MiB, etc.)
+    /// and currency conversions (USD → EUR, etc.).
+    pub fn convert_to_unit(
+        &self,
+        target_unit: &Unit,
+        currency_db: &mut CurrencyDatabase,
+    ) -> Result<Self, CalculatorError> {
+        match (&self.unit, target_unit) {
+            // Data size to data size conversion
+            (Unit::DataSize(from), Unit::DataSize(to)) => {
+                let value_f64 = self.as_decimal().ok_or_else(|| {
+                    CalculatorError::InvalidOperation(
+                        "data size conversion requires a numeric value".into(),
+                    )
+                })?;
+                let result = from.convert(value_f64.to_f64(), *to);
+                Ok(Value::number_with_unit(
+                    Decimal::from_f64(result),
+                    Unit::DataSize(*to),
+                ))
+            }
+            // Currency to currency conversion
+            (Unit::Currency(from), Unit::Currency(to)) => {
+                let amount = self.as_decimal().ok_or_else(|| {
+                    CalculatorError::InvalidOperation(
+                        "currency conversion requires a numeric value".into(),
+                    )
+                })?;
+                let converted = currency_db.convert(amount.to_f64(), from, to)?;
+                Ok(Value::currency(Decimal::from_f64(converted), to))
+            }
+            // Dimensionless value: just apply the target unit (e.g. "5 as MB")
+            (Unit::None, Unit::DataSize(_)) => {
+                let value_f64 = self.as_decimal().ok_or_else(|| {
+                    CalculatorError::InvalidOperation(
+                        "unit conversion requires a numeric value".into(),
+                    )
+                })?;
+                Ok(Value::number_with_unit(value_f64, target_unit.clone()))
+            }
+            (from_unit, to_unit) => Err(CalculatorError::InvalidOperation(format!(
+                "Cannot convert {} to {}",
+                from_unit.display_name(),
+                to_unit.display_name()
+            ))),
+        }
+    }
+
     /// Negates the value.
     #[must_use]
     pub fn negate(&self) -> Self {

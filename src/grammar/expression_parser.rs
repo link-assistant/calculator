@@ -201,6 +201,10 @@ impl ExpressionParser {
                 // or display the symbolic representation
                 evaluate_indefinite_integral(integrand, variable)
             }
+            Expression::UnitConversion { value, target_unit } => {
+                let val = self.evaluate_expr(value)?;
+                val.convert_to_unit(target_unit, &mut self.currency_db)
+            }
         }
     }
 
@@ -357,6 +361,17 @@ impl ExpressionParser {
                     integrand, variable
                 ));
                 let result = evaluate_indefinite_integral(integrand, variable)?;
+                steps.push(format!("= {}", result.to_display_string()));
+                Ok(result)
+            }
+            Expression::UnitConversion { value, target_unit } => {
+                let val = self.evaluate_expr_with_steps(value, steps)?;
+                steps.push(format!(
+                    "Convert: {} to {}",
+                    val.to_display_string(),
+                    target_unit.display_name()
+                ));
+                let result = val.convert_to_unit(target_unit, &mut self.currency_db)?;
                 steps.push(format!("= {}", result.to_display_string()));
                 Ok(result)
             }
@@ -559,6 +574,10 @@ impl ExpressionParser {
                 "nested integration",
                 "nested indefinite integrals are not supported",
             )),
+            Expression::UnitConversion { value, target_unit } => {
+                let val = self.evaluate_expr_with_var(value, var_name, var_value)?;
+                val.convert_to_unit(target_unit, &mut self.currency_db)
+            }
         }
     }
 }

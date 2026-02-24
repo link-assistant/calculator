@@ -414,15 +414,7 @@ impl Calculator {
         }
     }
 
-    /// Calculates the result of an expression.
-    ///
-    /// # Arguments
-    ///
-    /// * `input` - The expression to calculate
-    ///
-    /// # Returns
-    ///
-    /// A JSON string containing the calculation result.
+    /// Calculates the result of an expression, returning a JSON string.
     #[wasm_bindgen]
     pub fn calculate(&mut self, input: &str) -> String {
         let result = self.calculate_internal(input);
@@ -577,9 +569,9 @@ impl Calculator {
             Expression::Variable(name) if name == var => {
                 Expression::number(Decimal::from_f64(value))
             }
-            Expression::Variable(_) => expr.clone(),
-            Expression::Number { .. } => expr.clone(),
-            Expression::DateTime(_) => expr.clone(),
+            Expression::Variable(_) | Expression::Number { .. } | Expression::DateTime(_) => {
+                expr.clone()
+            }
             Expression::Binary { left, op, right } => Expression::binary(
                 Self::substitute_variable(left, var, value),
                 *op,
@@ -611,6 +603,13 @@ impl Calculator {
             } => Expression::indefinite_integral(
                 Self::substitute_variable(integrand, var, value),
                 variable.clone(),
+            ),
+            Expression::UnitConversion {
+                value: v,
+                target_unit,
+            } => Expression::unit_conversion(
+                Self::substitute_variable(v, var, value),
+                target_unit.clone(),
             ),
         }
     }
