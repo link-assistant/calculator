@@ -19,6 +19,8 @@ pub enum TokenKind {
     Slash,
     /// The power/exponent operator.
     Caret,
+    /// The percent operator (e.g., `3%` means `0.03`).
+    Percent,
     /// Left parenthesis.
     LeftParen,
     /// Right parenthesis.
@@ -146,6 +148,10 @@ impl Lexer {
             '^' => {
                 self.advance();
                 Token::new(TokenKind::Caret, start, self.pos, "^".to_string())
+            }
+            '%' => {
+                self.advance();
+                Token::new(TokenKind::Percent, start, self.pos, "%".to_string())
             }
             '(' => {
                 self.advance();
@@ -306,5 +312,23 @@ mod tests {
         let mut lexer = Lexer::new("84 USD - 34 EUR");
         let tokens = lexer.tokenize().unwrap();
         assert_eq!(tokens.len(), 6); // 84 USD - 34 EUR eof
+    }
+
+    #[test]
+    fn test_tokenize_percent() {
+        let mut lexer = Lexer::new("3%");
+        let tokens = lexer.tokenize().unwrap();
+        assert_eq!(tokens.len(), 3); // 3 % eof
+        assert!(matches!(tokens[0].kind, TokenKind::Number(ref s) if s == "3"));
+        assert!(matches!(tokens[1].kind, TokenKind::Percent));
+    }
+
+    #[test]
+    fn test_tokenize_percent_expression() {
+        let mut lexer = Lexer::new("3% * 50");
+        let tokens = lexer.tokenize().unwrap();
+        assert_eq!(tokens.len(), 5); // 3 % * 50 eof
+        assert!(matches!(tokens[1].kind, TokenKind::Percent));
+        assert!(matches!(tokens[2].kind, TokenKind::Star));
     }
 }

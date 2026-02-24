@@ -2,7 +2,7 @@
 
 use crate::error::CalculatorError;
 use crate::grammar::{is_math_function, DateTimeGrammar, NumberGrammar, Token, TokenKind};
-use crate::types::{BinaryOp, DataSizeUnit, Expression, MassUnit, Unit};
+use crate::types::{BinaryOp, DataSizeUnit, Decimal, Expression, MassUnit, Unit};
 
 /// Internal token-based parser.
 pub struct TokenParser<'a> {
@@ -87,7 +87,19 @@ impl<'a> TokenParser<'a> {
             return Ok(Expression::negate(expr));
         }
 
-        self.parse_primary()
+        let expr = self.parse_primary()?;
+
+        // Handle postfix percent operator: expr% → expr / 100
+        if matches!(self.current_kind(), Some(TokenKind::Percent)) {
+            self.advance();
+            return Ok(Expression::binary(
+                expr,
+                BinaryOp::Divide,
+                Expression::number(Decimal::new(100)),
+            ));
+        }
+
+        Ok(expr)
     }
 
     fn parse_primary(&mut self) -> Result<Expression, CalculatorError> {
@@ -103,9 +115,6 @@ impl<'a> TokenParser<'a> {
         if let Some(TokenKind::Number(n)) = self.current_kind() {
             let num_str = n.clone();
             self.advance();
-
-            // Check for power operator after number (without unit)
-            // This is handled in parse_power, so we just need to handle units here
 
             // Check for unit (identifier following number that is not a function)
             let unit = if let Some(TokenKind::Identifier(id)) = self.current_kind() {

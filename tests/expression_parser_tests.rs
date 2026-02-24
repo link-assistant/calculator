@@ -146,3 +146,43 @@ fn test_evaluate_function_with_expression() {
     let (value, _, _) = parser.parse_and_evaluate("sqrt(4 + 12)").unwrap();
     assert_eq!(value.to_display_string(), "4");
 }
+
+// Tests for percentage operator
+#[test]
+fn test_evaluate_percent_times_number() {
+    // Issue #59: 3% * 50 should be interpreted as 0.03 * 50 = 1.5
+    let mut parser = ExpressionParser::new();
+    let (value, _, _) = parser.parse_and_evaluate("3% * 50").unwrap();
+    assert_eq!(value.to_display_string(), "1.5");
+}
+
+#[test]
+fn test_evaluate_percent_standalone() {
+    // 50% should evaluate to 0.5
+    let mut parser = ExpressionParser::new();
+    let (value, _, _) = parser.parse_and_evaluate("50%").unwrap();
+    assert_eq!(value.to_display_string(), "0.5");
+}
+
+#[test]
+fn test_evaluate_percent_addition() {
+    // 100 + 10% should be 100 + 0.1 = 100.1
+    let mut parser = ExpressionParser::new();
+    let (value, _, _) = parser.parse_and_evaluate("100 + 10%").unwrap();
+    assert_eq!(value.to_display_string(), "100.1");
+}
+
+#[test]
+fn test_evaluate_percent_of_expression() {
+    // (3 + 2)% * 10 should be 0.05 * 10 = 0.5
+    let mut parser = ExpressionParser::new();
+    let (value, _, _) = parser.parse_and_evaluate("(3 + 2)% * 10").unwrap();
+    assert_eq!(value.to_display_string(), "0.5");
+}
+
+#[test]
+fn test_parse_percent_expression() {
+    let parser = ExpressionParser::new();
+    // 3% * 50 should parse without error
+    assert!(parser.parse("3% * 50").is_ok());
+}

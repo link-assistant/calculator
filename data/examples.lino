@@ -7,6 +7,8 @@
 (example (expression "-5 + 3") (description "Negative numbers") (category "arithmetic"))
 (example (expression "3.14 + 2.86") (description "Decimal numbers") (category "arithmetic"))
 (example (expression "100 * 1.5") (description "Multiplication with decimals") (category "arithmetic"))
+(example (expression "3% * 50") (description "Percentage as decimal factor") (category "arithmetic"))
+(example (expression "50%") (description "Percentage value") (category "arithmetic"))
 (example (expression "100 USD") (description "Currency value") (category "currency"))
 (example (expression "100 USD + 50 USD") (description "Same currency addition") (category "currency"))
 (example (expression "84 USD - 34 EUR") (description "Currency conversion") (category "currency"))
