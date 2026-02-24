@@ -31,6 +31,10 @@ pub enum TokenKind {
     At,
     /// The "as" keyword for unit conversion (e.g., "741 KB as MB").
     As,
+    /// The "in" keyword for unit conversion (e.g., "19 TON in USD").
+    In,
+    /// The "to" keyword for unit conversion (e.g., "19 TON to USD").
+    To,
     /// End of input.
     Eof,
 }
@@ -216,6 +220,8 @@ impl Lexer {
         let kind = match text.to_lowercase().as_str() {
             "at" => TokenKind::At,
             "as" => TokenKind::As,
+            "in" => TokenKind::In,
+            "to" => TokenKind::To,
             _ => TokenKind::Identifier(text.clone()),
         };
 

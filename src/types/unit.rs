@@ -9,12 +9,14 @@ pub enum Unit {
     /// No unit (dimensionless).
     #[default]
     None,
-    /// Currency unit (e.g., USD, EUR).
+    /// Currency unit (e.g., USD, EUR, TON crypto).
     Currency(String),
     /// Time duration unit.
     Duration(DurationUnit),
     /// Data size unit (e.g., KB, MiB, GB).
     DataSize(DataSizeUnit),
+    /// Mass/weight unit (e.g., kg, ton, lb).
+    Mass(MassUnit),
     /// Custom unit.
     Custom(String),
 }
@@ -203,6 +205,82 @@ impl DataSizeUnit {
     }
 }
 
+/// Mass/weight units.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+pub enum MassUnit {
+    /// 1 milligram = 0.001 grams
+    Milligram,
+    /// 1 gram
+    Gram,
+    /// 1 kilogram = 1000 grams
+    Kilogram,
+    /// 1 metric ton = 1000 kilograms
+    MetricTon,
+    /// 1 pound ≈ 453.592 grams
+    Pound,
+    /// 1 ounce ≈ 28.3495 grams
+    Ounce,
+}
+
+impl MassUnit {
+    /// Returns the number of grams this unit represents (as f64).
+    #[must_use]
+    pub fn grams(self) -> f64 {
+        match self {
+            Self::Milligram => 0.001,
+            Self::Gram => 1.0,
+            Self::Kilogram => 1000.0,
+            Self::MetricTon => 1_000_000.0,
+            Self::Pound => 453.592_37,
+            Self::Ounce => 28.349_523,
+        }
+    }
+
+    /// Converts a value from this unit to another mass unit.
+    #[must_use]
+    pub fn convert(self, value: f64, to: Self) -> f64 {
+        value * self.grams() / to.grams()
+    }
+
+    /// Returns the standard abbreviation for this unit.
+    #[must_use]
+    pub const fn abbreviation(self) -> &'static str {
+        match self {
+            Self::Milligram => "mg",
+            Self::Gram => "g",
+            Self::Kilogram => "kg",
+            Self::MetricTon => "t",
+            Self::Pound => "lb",
+            Self::Ounce => "oz",
+        }
+    }
+
+    /// Parses a string into a `MassUnit`, returning `None` if not recognized.
+    #[must_use]
+    pub fn parse(s: &str) -> Option<Self> {
+        match s {
+            "mg" | "milligram" | "milligrams" => Some(Self::Milligram),
+            "g" | "gram" | "grams" => Some(Self::Gram),
+            "kg" | "kgs" | "kilogram" | "kilograms" => Some(Self::Kilogram),
+            // Metric ton: "tons" plural is unambiguous mass, "tonne/tonnes" for SI spelling.
+            // Note: "ton" (singular) is intentionally omitted here to avoid ambiguity with
+            // the TON cryptocurrency. Use "tons", "tonne", or "tonnes" for mass.
+            "t" | "tons" | "tonne" | "tonnes" | "metric_ton" | "metric_tons" => {
+                Some(Self::MetricTon)
+            }
+            "lb" | "lbs" | "pound" | "pounds" => Some(Self::Pound),
+            "oz" | "ounce" | "ounces" => Some(Self::Ounce),
+            _ => None,
+        }
+    }
+}
+
+impl std::fmt::Display for MassUnit {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.abbreviation())
+    }
+}
+
 impl Unit {
     /// Creates a currency unit.
     pub fn currency(code: &str) -> Self {
@@ -213,6 +291,12 @@ impl Unit {
     #[must_use]
     pub const fn data_size(unit: DataSizeUnit) -> Self {
         Self::DataSize(unit)
+    }
+
+    /// Creates a mass unit.
+    #[must_use]
+    pub const fn mass(unit: MassUnit) -> Self {
+        Self::Mass(unit)
     }
 
     /// Checks if the unit is a currency.
@@ -231,6 +315,12 @@ impl Unit {
     #[must_use]
     pub fn is_data_size(&self) -> bool {
         matches!(self, Self::DataSize(_))
+    }
+
+    /// Checks if the unit is a mass unit.
+    #[must_use]
+    pub fn is_mass(&self) -> bool {
+        matches!(self, Self::Mass(_))
     }
 
     /// Checks if two units are compatible for the given operation.
@@ -259,6 +349,10 @@ impl Unit {
                 // Data sizes can be added/subtracted (with conversion between units)
                 matches!(op, "+" | "-")
             }
+            (Self::Mass(_), Self::Mass(_)) => {
+                // Mass units can be added/subtracted (with conversion between units)
+                matches!(op, "+" | "-")
+            }
             _ => false,
         }
     }
@@ -271,6 +365,7 @@ impl Unit {
             Self::Currency(code) => code.clone(),
             Self::Duration(d) => d.to_string(),
             Self::DataSize(d) => d.abbreviation().to_string(),
+            Self::Mass(m) => m.abbreviation().to_string(),
             Self::Custom(name) => name.clone(),
         }
     }
@@ -283,6 +378,7 @@ impl fmt::Display for Unit {
             Self::Currency(code) => write!(f, "{code}"),
             Self::Duration(d) => write!(f, "{d}"),
             Self::DataSize(d) => write!(f, "{d}"),
+            Self::Mass(m) => write!(f, "{m}"),
             Self::Custom(name) => write!(f, "{name}"),
         }
     }

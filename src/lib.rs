@@ -31,6 +31,7 @@
 #![allow(clippy::cast_possible_wrap)]
 #![allow(clippy::match_same_arms)]
 
+pub mod crypto_api;
 pub mod currency_api;
 pub mod error;
 pub mod grammar;
@@ -459,6 +460,43 @@ impl Calculator {
             self.parser
                 .currency_db_mut()
                 .set_rate_with_info(&base_upper, &target_upper, info);
+
+            count += 1;
+        }
+
+        count
+    }
+
+    /// Updates cryptocurrency exchange rates from API response.
+    /// Returns the number of rates updated.
+    ///
+    /// Args: `base` (fiat currency, e.g., "USD"), `date` (e.g., "2026-01-25"),
+    /// `rates_json` (e.g., `{"TON": 5.42, "BTC": 95000.0}`).
+    #[wasm_bindgen]
+    pub fn update_crypto_rates_from_api(
+        &mut self,
+        base: &str,
+        date: &str,
+        rates_json: &str,
+    ) -> usize {
+        let rates: std::collections::HashMap<String, f64> = match serde_json::from_str(rates_json) {
+            Ok(r) => r,
+            Err(_) => return 0,
+        };
+
+        let base_upper = base.to_uppercase();
+        let timestamp = chrono::Utc::now().to_rfc3339();
+        let mut count = 0;
+
+        for (ticker, price) in rates {
+            let ticker_upper = ticker.to_uppercase();
+            // Store rate as: 1 ticker = price base_currency
+            let info = types::ExchangeRateInfo::new(price, crypto_api::COINGECKO_SOURCE, date)
+                .with_fetched_at(&timestamp);
+
+            self.parser
+                .currency_db_mut()
+                .set_rate_with_info(&ticker_upper, &base_upper, info);
 
             count += 1;
         }
