@@ -171,6 +171,19 @@ impl Lexer {
             }
             _ if ch.is_ascii_digit() || ch == '.' => self.scan_number(),
             _ if ch.is_alphabetic() => self.scan_identifier(),
+            // Currency symbols used as prefix notation (e.g., $10, €5, £3)
+            // These are recognized as single-character identifiers and mapped to ISO codes
+            // by CurrencyDatabase::parse_currency().
+            '$' | '€' | '£' | '¥' | '₽' | '₹' | '₩' | '₿' => {
+                self.advance();
+                let symbol = ch.to_string();
+                Token::new(
+                    TokenKind::Identifier(symbol.clone()),
+                    start,
+                    self.pos,
+                    symbol,
+                )
+            }
             _ => {
                 return Err(CalculatorError::parse(format!(
                     "Unexpected character '{ch}' at position {start}"

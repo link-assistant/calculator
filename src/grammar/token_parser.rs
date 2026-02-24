@@ -140,6 +140,33 @@ impl<'a> TokenParser<'a> {
         // Standalone identifier (could be a function call, unit, variable, or datetime part)
         if let Some(TokenKind::Identifier(id)) = self.current_kind() {
             let id = id.clone();
+
+            // Check for prefix currency symbol notation (e.g., $10, €5, £3).
+            // Only applies to single-character currency symbols (not alphabetic currency codes
+            // like "USD", "EUR", "Feb" which could also be month names or other identifiers).
+            // We specifically check that the identifier is a single Unicode currency symbol character.
+            if id.chars().count() == 1 {
+                let ch = id.chars().next().unwrap();
+                if !ch.is_ascii_alphabetic() {
+                    // It's a non-ASCII character or a single special char — check if it's a currency symbol
+                    if let Some(currency_code) = crate::types::CurrencyDatabase::parse_currency(&id)
+                    {
+                        if let Some(TokenKind::Number(_)) = self.peek_kind() {
+                            self.advance(); // consume currency symbol
+                            if let Some(TokenKind::Number(n)) = self.current_kind() {
+                                let num_str = n.clone();
+                                self.advance();
+                                let value = self.number_grammar.parse_number(&num_str)?;
+                                return Ok(Expression::number_with_unit(
+                                    value,
+                                    Unit::currency(&currency_code),
+                                ));
+                            }
+                        }
+                    }
+                }
+            }
+
             self.advance();
 
             // Check if this is a function call (identifier followed by left paren)

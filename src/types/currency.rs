@@ -123,6 +123,11 @@ impl Currency {
     pub fn rub() -> Self {
         Self::new("RUB", "Russian Ruble", "₽", 2)
     }
+
+    #[must_use]
+    pub fn inr() -> Self {
+        Self::new("INR", "Indian Rupee", "₹", 2)
+    }
 }
 
 /// A database of exchange rates, supporting historical data.
@@ -167,6 +172,7 @@ impl CurrencyDatabase {
             Currency::chf(),
             Currency::cny(),
             Currency::rub(),
+            Currency::inr(),
         ];
 
         for currency in currencies {
@@ -186,6 +192,7 @@ impl CurrencyDatabase {
         self.set_rate_with_info("USD", "CHF", ExchangeRateInfo::default_rate(0.88));
         self.set_rate_with_info("USD", "CNY", ExchangeRateInfo::default_rate(7.25));
         self.set_rate_with_info("USD", "RUB", ExchangeRateInfo::default_rate(89.5));
+        self.set_rate_with_info("USD", "INR", ExchangeRateInfo::default_rate(86.5));
 
         // EUR base rates
         self.set_rate_with_info("EUR", "USD", ExchangeRateInfo::default_rate(1.087));
@@ -345,17 +352,41 @@ impl CurrencyDatabase {
             return Ok(amount);
         }
 
-        match self.rates.get(&(from_upper.clone(), to_upper.clone())) {
-            Some(info) => {
-                self.last_used_rate = Some((from_upper, to_upper, info.clone()));
-                Ok(amount * info.rate)
-            }
-            None => Err(CalculatorError::CurrencyConversion {
-                from: from_upper,
-                to: to_upper,
-                reason: "No exchange rate available".to_string(),
-            }),
+        if let Some(info) = self.rates.get(&(from_upper.clone(), to_upper.clone())) {
+            let result = amount * info.rate;
+            self.last_used_rate = Some((from_upper, to_upper, info.clone()));
+            return Ok(result);
         }
+
+        // Try triangulation via USD as a bridge currency.
+        // This handles cross-currency pairs like INR→RUB or RUB→INR
+        // where no direct rate exists but both currencies have USD rates.
+        if from_upper != "USD" && to_upper != "USD" {
+            if let (Some(from_usd_info), Some(usd_to_info)) = (
+                self.rates
+                    .get(&(from_upper.clone(), "USD".to_string()))
+                    .cloned(),
+                self.rates
+                    .get(&("USD".to_string(), to_upper.clone()))
+                    .cloned(),
+            ) {
+                let triangulated_rate = from_usd_info.rate * usd_to_info.rate;
+                let triangulated_info = ExchangeRateInfo {
+                    rate: triangulated_rate,
+                    source: format!("{} (via USD)", from_usd_info.source),
+                    date: from_usd_info.date,
+                    fetched_at: None,
+                };
+                self.last_used_rate = Some((from_upper, to_upper, triangulated_info));
+                return Ok(amount * triangulated_rate);
+            }
+        }
+
+        Err(CalculatorError::CurrencyConversion {
+            from: from_upper,
+            to: to_upper,
+            reason: "No exchange rate available".to_string(),
+        })
     }
 
     /// Converts with a specific date for historical rates.
@@ -438,6 +469,9 @@ impl CurrencyDatabase {
             "CHF" | "FR" => return Some("CHF".to_string()),
             "CNY" | "RMB" => return Some("CNY".to_string()),
             "RUB" | "₽" => return Some("RUB".to_string()),
+            "INR" | "₹" => return Some("INR".to_string()),
+            "KRW" | "₩" => return Some("KRW".to_string()),
+            "BTC" | "₿" => return Some("BTC".to_string()),
             _ => {}
         }
 
@@ -455,6 +489,18 @@ impl CurrencyDatabase {
             "franc" | "francs" | "swiss franc" | "swiss francs" => return Some("CHF".to_string()),
             "yuan" | "renminbi" | "chinese yuan" => return Some("CNY".to_string()),
             "ruble" | "rubles" | "rouble" | "roubles" => return Some("RUB".to_string()),
+            // Russian language names for RUB (all grammatical cases/forms)
+            "рубль" | "рубля" | "рублей" | "рублю" | "рублём" | "рублем" | "рубли" => {
+                return Some("RUB".to_string())
+            }
+            // Russian language names for INR (Indian Rupee, all grammatical cases/forms)
+            "рупия" | "рупии" | "рупий" | "рупию" | "рупией" | "рупиях" => {
+                return Some("INR".to_string())
+            }
+            // English names for INR
+            "rupee" | "rupees" | "indian rupee" | "indian rupees" => {
+                return Some("INR".to_string())
+            }
             // Cryptocurrency natural language names and common aliases
             "toncoin" | "the open network" => return Some("TON".to_string()),
             "bitcoin" => return Some("BTC".to_string()),
