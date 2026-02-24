@@ -420,23 +420,69 @@ impl CurrencyDatabase {
     }
 
     /// Parses a currency code from a string.
+    ///
+    /// Handles:
+    /// - Standard ISO 4217 fiat currency codes (USD, EUR, GBP, etc.)
+    /// - Common fiat currency symbols ($, €, £, ¥)
+    /// - Natural language fiat names (dollars, euros, pounds, yen)
+    /// - Cryptocurrency codes and natural language names (TON, BTC, ETH, bitcoin, etc.)
     #[must_use]
     pub fn parse_currency(input: &str) -> Option<String> {
         let input = input.trim().to_uppercase();
-        // Common currency codes
+        // Fiat currency codes and symbols
         match input.as_str() {
-            "USD" | "US$" | "$" => Some("USD".to_string()),
-            "EUR" | "€" => Some("EUR".to_string()),
-            "GBP" | "£" => Some("GBP".to_string()),
-            "JPY" | "¥" => Some("JPY".to_string()),
-            "CHF" | "FR" => Some("CHF".to_string()),
-            "CNY" | "RMB" => Some("CNY".to_string()),
-            "RUB" | "₽" => Some("RUB".to_string()),
-            code if code.len() == 3 && code.chars().all(|c| c.is_ascii_alphabetic()) => {
-                Some(code.to_string())
-            }
-            _ => None,
+            "USD" | "US$" | "$" => return Some("USD".to_string()),
+            "EUR" | "€" => return Some("EUR".to_string()),
+            "GBP" | "£" => return Some("GBP".to_string()),
+            "JPY" | "¥" => return Some("JPY".to_string()),
+            "CHF" | "FR" => return Some("CHF".to_string()),
+            "CNY" | "RMB" => return Some("CNY".to_string()),
+            "RUB" | "₽" => return Some("RUB".to_string()),
+            _ => {}
         }
+
+        // Natural language fiat currency names (lowercase comparison)
+        let input_lower = input.to_lowercase();
+        match input_lower.as_str() {
+            "dollar" | "dollars" | "usdollar" | "usdollars" | "us dollar" | "us dollars" => {
+                return Some("USD".to_string())
+            }
+            "euro" | "euros" => return Some("EUR".to_string()),
+            "pound" | "pounds" | "sterling" | "british pound" | "british pounds" => {
+                return Some("GBP".to_string())
+            }
+            "yen" | "japanese yen" => return Some("JPY".to_string()),
+            "franc" | "francs" | "swiss franc" | "swiss francs" => return Some("CHF".to_string()),
+            "yuan" | "renminbi" | "chinese yuan" => return Some("CNY".to_string()),
+            "ruble" | "rubles" | "rouble" | "roubles" => return Some("RUB".to_string()),
+            // Cryptocurrency natural language names and common aliases
+            "toncoin" | "the open network" => return Some("TON".to_string()),
+            "bitcoin" => return Some("BTC".to_string()),
+            "ethereum" | "ether" => return Some("ETH".to_string()),
+            "litecoin" => return Some("LTC".to_string()),
+            "dogecoin" | "doge" => return Some("DOGE".to_string()),
+            "solana" | "sol" => return Some("SOL".to_string()),
+            "ripple" | "xrp" => return Some("XRP".to_string()),
+            "cardano" | "ada" => return Some("ADA".to_string()),
+            "polkadot" | "dot" => return Some("DOT".to_string()),
+            "chainlink" | "link" => return Some("LINK".to_string()),
+            "uniswap" | "uni" => return Some("UNI".to_string()),
+            "binancecoin" | "bnb" | "binance coin" => return Some("BNB".to_string()),
+            _ => {}
+        }
+
+        // Standard 3-letter alphabetic codes (handles most crypto tickers: BTC, ETH, TON, etc.)
+        if input.len() == 3 && input.chars().all(|c| c.is_ascii_alphabetic()) {
+            return Some(input);
+        }
+
+        // Allow 2-5 letter crypto tickers (e.g., BNB=3, DOGE=4, MATIC=5, SOL=3)
+        // Only accept if all characters are ASCII alphabetic
+        if input.len() >= 2 && input.len() <= 5 && input.chars().all(|c| c.is_ascii_alphabetic()) {
+            return Some(input);
+        }
+
+        None
     }
 }
 

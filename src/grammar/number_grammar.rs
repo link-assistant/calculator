@@ -1,7 +1,7 @@
 //! Grammar for parsing numbers with optional units.
 
 use crate::error::CalculatorError;
-use crate::types::{CurrencyDatabase, DataSizeUnit, Decimal, Unit};
+use crate::types::{CurrencyDatabase, DataSizeUnit, Decimal, MassUnit, Unit};
 
 /// Grammar for parsing numbers with optional units.
 #[derive(Debug, Default)]
@@ -55,7 +55,12 @@ impl NumberGrammar {
             return Ok(Unit::DataSize(data_size));
         }
 
-        // Try to parse as currency
+        // Try to parse as mass unit (before currency, to avoid "t" being treated as currency)
+        if let Some(mass) = MassUnit::parse(s) {
+            return Ok(Unit::Mass(mass));
+        }
+
+        // Try to parse as cryptocurrency or fiat currency alias
         if let Some(currency_code) = CurrencyDatabase::parse_currency(s) {
             return Ok(Unit::currency(&currency_code));
         }

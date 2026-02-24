@@ -2,7 +2,7 @@
 
 use crate::error::CalculatorError;
 use crate::grammar::{is_math_function, DateTimeGrammar, NumberGrammar, Token, TokenKind};
-use crate::types::{BinaryOp, DataSizeUnit, Expression, Unit};
+use crate::types::{BinaryOp, DataSizeUnit, Expression, MassUnit, Unit};
 
 /// Internal token-based parser.
 pub struct TokenParser<'a> {
@@ -46,9 +46,9 @@ impl<'a> TokenParser<'a> {
             left = Expression::at_time(left, time);
         }
 
-        // Check for "as" keyword (unit conversion, e.g. "741 KB as MB")
-        if self.check_as() {
-            self.advance(); // consume "as"
+        // Check for "as", "in", or "to" keyword (unit conversion, e.g. "741 KB as MB", "19 TON in USD")
+        if self.check_as() || self.check_in() || self.check_to() {
+            self.advance(); // consume "as"/"in"/"to"
             let target_unit = self.parse_unit_for_conversion()?;
             left = Expression::unit_conversion(left, target_unit);
         }
@@ -465,41 +465,64 @@ impl<'a> TokenParser<'a> {
         matches!(self.current_kind(), Some(TokenKind::As))
     }
 
-    /// Parses a unit name after the `as` keyword.
+    fn check_in(&self) -> bool {
+        matches!(self.current_kind(), Some(TokenKind::In))
+    }
+
+    fn check_to(&self) -> bool {
+        matches!(self.current_kind(), Some(TokenKind::To))
+    }
+
+    /// Parses a unit name after the `as`, `in`, or `to` keyword.
     ///
-    /// Handles both abbreviated (e.g., `MB`, `KiB`) and full-name (e.g., `mebibytes`)
-    /// forms. Multi-token unit names (e.g., identifier followed by another identifier)
-    /// are handled by consuming one or two tokens as needed.
+    /// Handles:
+    /// - Data size units (e.g., `MB`, `KiB`, `mebibytes`)
+    /// - Mass units (e.g., `kg`, `tons`, `pounds`)
+    /// - Currency codes and natural language names (e.g., `USD`, `dollars`, `BTC`, `toncoin`)
     fn parse_unit_for_conversion(&mut self) -> Result<Unit, CalculatorError> {
         // The next token should be an identifier (the unit name)
         if let Some(TokenKind::Identifier(id)) = self.current_kind() {
             let unit_str = id.clone();
             self.advance();
 
-            // Try to parse the unit string
+            // Try to parse the unit string (exact match)
             if let Some(data_size) = DataSizeUnit::parse(&unit_str) {
                 return Ok(Unit::DataSize(data_size));
             }
 
-            // Try case-insensitive matching for common full names
+            // Try mass unit (e.g., "kg", "tons", "pounds")
+            if let Some(mass) = MassUnit::parse(&unit_str) {
+                return Ok(Unit::Mass(mass));
+            }
+
+            // Try case-insensitive matching for data size
             let lower = unit_str.to_lowercase();
             if let Some(data_size) = DataSizeUnit::parse(&lower) {
                 return Ok(Unit::DataSize(data_size));
             }
 
-            // Try treating it as a currency (e.g., "741 USD as EUR")
+            // Try case-insensitive mass unit
+            if let Some(mass) = MassUnit::parse(&lower) {
+                return Ok(Unit::Mass(mass));
+            }
+
+            // Try treating it as a currency code or natural language alias
+            // (e.g., "USD", "EUR", "dollars", "euros", "BTC", "toncoin")
             if let Some(currency_code) = crate::types::CurrencyDatabase::parse_currency(&unit_str) {
                 return Ok(Unit::currency(&currency_code));
             }
 
             // Return error with helpful message
             Err(CalculatorError::parse(format!(
-                "Unknown unit '{unit_str}' after 'as'. Supported data size units include: \
-                 B, KB, MB, GB, TB, PB (SI decimal) and KiB, MiB, GiB, TiB, PiB (IEC binary)."
+                "Unknown unit '{unit_str}'. Supported conversions: \
+                 data sizes (B, KB, MB, GB, KiB, MiB, GiB, ...), \
+                 mass (g, kg, tons, lb, oz), \
+                 currencies (USD, EUR, GBP, TON, BTC, ETH, ...) and natural language \
+                 aliases (dollars, euros, bitcoin, toncoin, ...)."
             )))
         } else {
             Err(CalculatorError::parse(
-                "Expected a unit name after 'as' (e.g., 'MB', 'MiB', 'gigabytes')",
+                "Expected a unit name after 'as'/'in'/'to' (e.g., 'MB', 'kg', 'USD', 'dollars')",
             ))
         }
     }

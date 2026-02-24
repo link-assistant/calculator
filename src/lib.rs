@@ -31,6 +31,7 @@
 #![allow(clippy::cast_possible_wrap)]
 #![allow(clippy::match_same_arms)]
 
+pub mod crypto_api;
 pub mod currency_api;
 pub mod error;
 pub mod grammar;
@@ -465,6 +466,43 @@ impl Calculator {
 
         count
     }
+
+    /// Updates cryptocurrency exchange rates from API response.
+    /// Returns the number of rates updated.
+    ///
+    /// Args: `base` (fiat currency, e.g., "USD"), `date` (e.g., "2026-01-25"),
+    /// `rates_json` (e.g., `{"TON": 5.42, "BTC": 95000.0}`).
+    #[wasm_bindgen]
+    pub fn update_crypto_rates_from_api(
+        &mut self,
+        base: &str,
+        date: &str,
+        rates_json: &str,
+    ) -> usize {
+        let rates: std::collections::HashMap<String, f64> = match serde_json::from_str(rates_json) {
+            Ok(r) => r,
+            Err(_) => return 0,
+        };
+
+        let base_upper = base.to_uppercase();
+        let timestamp = chrono::Utc::now().to_rfc3339();
+        let mut count = 0;
+
+        for (ticker, price) in rates {
+            let ticker_upper = ticker.to_uppercase();
+            // Store rate as: 1 ticker = price base_currency
+            let info = types::ExchangeRateInfo::new(price, crypto_api::COINGECKO_SOURCE, date)
+                .with_fetched_at(&timestamp);
+
+            self.parser
+                .currency_db_mut()
+                .set_rate_with_info(&ticker_upper, &base_upper, info);
+
+            count += 1;
+        }
+
+        count
+    }
 }
 
 impl Calculator {
@@ -805,68 +843,9 @@ impl Calculator {
 mod tests {
     use super::*;
 
-    #[test]
-    fn test_calculator_creation() {
-        let calc = Calculator::new();
-        assert!(!Calculator::version().is_empty());
-        let _ = calc;
-    }
-
-    #[test]
-    fn test_simple_addition() {
-        let mut calc = Calculator::new();
-        let result = calc.calculate_internal("2 + 3");
-        assert!(result.success);
-        assert_eq!(result.result, "5");
-    }
-
-    #[test]
-    fn test_simple_subtraction() {
-        let mut calc = Calculator::new();
-        let result = calc.calculate_internal("10 - 4");
-        assert!(result.success);
-        assert_eq!(result.result, "6");
-    }
-
-    #[test]
-    fn test_simple_multiplication() {
-        let mut calc = Calculator::new();
-        let result = calc.calculate_internal("3 * 4");
-        assert!(result.success);
-        assert_eq!(result.result, "12");
-    }
-
-    #[test]
-    fn test_simple_division() {
-        let mut calc = Calculator::new();
-        let result = calc.calculate_internal("15 / 3");
-        assert!(result.success);
-        assert_eq!(result.result, "5");
-    }
-
-    #[test]
-    fn test_decimal_numbers() {
-        let mut calc = Calculator::new();
-        let result = calc.calculate_internal("3.14 + 2.86");
-        assert!(result.success);
-        assert_eq!(result.result, "6");
-    }
-
-    #[test]
-    fn test_negative_numbers() {
-        let mut calc = Calculator::new();
-        let result = calc.calculate_internal("-5 + 3");
-        assert!(result.success);
-        assert_eq!(result.result, "-2");
-    }
-
-    #[test]
-    fn test_parentheses() {
-        let mut calc = Calculator::new();
-        let result = calc.calculate_internal("(2 + 3) * 4");
-        assert!(result.success);
-        assert_eq!(result.result, "20");
-    }
+    // Tests for private helper functions that can only be tested here.
+    // Public API tests have been moved to tests/ directory to keep this file
+    // under the 1000-line limit.
 
     #[test]
     fn test_issue_link_generation() {
@@ -879,95 +858,6 @@ mod tests {
     fn test_truncate() {
         assert_eq!(truncate("hello world", 5), "hello");
         assert_eq!(truncate("hi", 10), "hi");
-    }
-
-    #[test]
-    fn test_load_rate_from_lino() {
-        let mut calc = Calculator::new();
-        let content = "rate:
-  from USD
-  to EUR
-  value 0.85
-  date 1999-01-04
-  source 'frankfurter.dev (ECB)'";
-
-        let result = calc.load_rate_from_lino(content);
-        assert!(result.is_ok());
-
-        // Test that the rate was loaded by doing a calculation with the historical date
-        // Note: This tests that the rate is in the database, but the full
-        // "at date" functionality requires the date context to be set during evaluation
-    }
-
-    #[test]
-    fn test_load_rates_batch() {
-        let mut calc = Calculator::new();
-        let content1 = "rate:
-  from USD
-  to EUR
-  value 0.85
-  date 1999-01-04
-  source 'test'";
-
-        let content2 = "rate:
-  from EUR
-  to USD
-  value 1.18
-  date 1999-01-04
-  source 'test'";
-
-        let result = calc.load_rates_batch(&[content1, content2]);
-        assert!(result.is_ok());
-        assert_eq!(result.unwrap(), 2);
-    }
-
-    #[test]
-    fn test_load_rates_from_consolidated_lino_legacy_format() {
-        let mut calc = Calculator::new();
-        // Legacy format: rates: as root, data: for rates
-        let content = "rates:
-  from USD
-  to EUR
-  source 'frankfurter.dev (ECB)'
-  data:
-    2021-01-25 0.8234
-    2021-02-01 0.8315
-    2021-02-08 0.8402";
-
-        let result = calc.load_rates_from_consolidated_lino(content);
-        assert!(result.is_ok());
-        assert_eq!(result.unwrap(), 3);
-    }
-
-    #[test]
-    fn test_load_rates_from_consolidated_lino_new_format() {
-        let mut calc = Calculator::new();
-        // New format: conversion: as root, rates: for rates
-        let content = "conversion:
-  from USD
-  to RUB
-  source 'cbr.ru (Central Bank of Russia)'
-  rates:
-    2021-02-08 74.2602
-    2021-02-09 74.1192
-    2026-01-25 76.03";
-
-        let result = calc.load_rates_from_consolidated_lino(content);
-        assert!(result.is_ok());
-        assert_eq!(result.unwrap(), 3);
-    }
-
-    #[test]
-    fn test_load_rates_from_consolidated_lino_empty() {
-        let mut calc = Calculator::new();
-        let content = "conversion:
-  from USD
-  to EUR
-  source 'test'
-  rates:";
-
-        let result = calc.load_rates_from_consolidated_lino(content);
-        assert!(result.is_err());
     }
 
     #[test]
@@ -985,7 +875,7 @@ mod tests {
         let result = calc.load_rates_from_consolidated_lino(content);
         assert!(result.is_ok());
 
-        // Verify the historical rate can be retrieved from the database
+        // Verify the historical rate can be retrieved from the database (uses private `parser` field)
         let date = types::DateTime::from_date(chrono::NaiveDate::from_ymd_opt(2021, 2, 8).unwrap());
         let rate = calc
             .parser

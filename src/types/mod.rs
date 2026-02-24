@@ -13,5 +13,5 @@ pub use datetime::DateTime;
 pub use decimal::Decimal;
 pub use expression::{BinaryOp, Expression};
 pub use rational::{Rational, RepeatingDecimal};
-pub use unit::{DataSizeUnit, Unit};
+pub use unit::{DataSizeUnit, DurationUnit, MassUnit, Unit};
 pub use value::{Value, ValueKind};

@@ -206,6 +206,14 @@ impl Value {
                 let converted_decimal = Decimal::from_f64(converted);
                 Ok(Value::currency(a_dec + converted_decimal, c1))
             }
+            // Mass + different mass unit (convert to first unit's type)
+            (Unit::Mass(m1), Unit::Mass(m2)) if m1 != m2 => {
+                let a_val = a.to_f64();
+                let b_val = b.to_f64();
+                let b_converted = m2.convert(b_val, *m1);
+                let result = Decimal::from_f64(a_val + b_converted);
+                Ok(Value::number_with_unit(result, Unit::Mass(*m1)))
+            }
             (u1, u2) if u1 == u2 => Ok(Value::rational_with_unit(a + b, u1.clone())),
             (u1, u2) => Err(CalculatorError::unit_mismatch(
                 "add",
@@ -328,6 +336,14 @@ impl Value {
                 };
                 let converted_decimal = Decimal::from_f64(converted);
                 Ok(Value::currency(a_dec - converted_decimal, c1))
+            }
+            // Mass - different mass unit (convert to first unit's type)
+            (Unit::Mass(m1), Unit::Mass(m2)) if m1 != m2 => {
+                let a_val = a.to_f64();
+                let b_val = b.to_f64();
+                let b_converted = m2.convert(b_val, *m1);
+                let result = Decimal::from_f64(a_val - b_converted);
+                Ok(Value::number_with_unit(result, Unit::Mass(*m1)))
             }
             (u1, u2) if u1 == u2 => Ok(Value::rational_with_unit(a - b, u1.clone())),
             (u1, u2) => Err(CalculatorError::unit_mismatch(
@@ -551,8 +567,30 @@ impl Value {
                 let converted = currency_db.convert(amount.to_f64(), from, to)?;
                 Ok(Value::currency(Decimal::from_f64(converted), to))
             }
+            // Mass to mass conversion
+            (Unit::Mass(from), Unit::Mass(to)) => {
+                let value_f64 = self.as_decimal().ok_or_else(|| {
+                    CalculatorError::InvalidOperation(
+                        "mass conversion requires a numeric value".into(),
+                    )
+                })?;
+                let result = from.convert(value_f64.to_f64(), *to);
+                Ok(Value::number_with_unit(
+                    Decimal::from_f64(result),
+                    Unit::Mass(*to),
+                ))
+            }
             // Dimensionless value: just apply the target unit (e.g. "5 as MB")
             (Unit::None, Unit::DataSize(_)) => {
+                let value_f64 = self.as_decimal().ok_or_else(|| {
+                    CalculatorError::InvalidOperation(
+                        "unit conversion requires a numeric value".into(),
+                    )
+                })?;
+                Ok(Value::number_with_unit(value_f64, target_unit.clone()))
+            }
+            // Dimensionless value: just apply the mass target unit (e.g. "5 as kg")
+            (Unit::None, Unit::Mass(_)) => {
                 let value_f64 = self.as_decimal().ok_or_else(|| {
                     CalculatorError::InvalidOperation(
                         "unit conversion requires a numeric value".into(),

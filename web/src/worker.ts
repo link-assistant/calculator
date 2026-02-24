@@ -1,11 +1,12 @@
 // Web Worker for running WASM calculations in the background
 // This prevents blocking the main UI thread
 
-import init, { Calculator, fetch_exchange_rates } from '@wasm/link_calculator';
+import init, { Calculator, fetch_exchange_rates, fetch_crypto_rates } from '@wasm/link_calculator';
 
 interface CalculatorInstance {
   calculate(input: string): string;
   update_rates_from_api(base: string, date: string, rates_json: string): number;
+  update_crypto_rates_from_api(base: string, date: string, rates_json: string): number;
 }
 
 interface CalculatorStatic {
@@ -21,10 +22,19 @@ interface ExchangeRatesResponse {
   rates_json: string;
 }
 
+interface CryptoRatesResponse {
+  success: boolean;
+  date: string;
+  base: string;
+  error?: string;
+  rates_json: string;
+}
+
 let calculator: CalculatorInstance | null = null;
 let ratesLoaded = false;
 let ratesLoading = false;
 let ratesError: string | null = null;
+let cryptoRatesError: string | null = null;
 
 async function initWasm() {
   try {
@@ -34,8 +44,9 @@ async function initWasm() {
     const version = CalcClass.version();
     self.postMessage({ type: 'ready', data: { version } });
 
-    // Fetch exchange rates in the background after WASM is initialized
+    // Fetch exchange rates and crypto rates in the background after WASM is initialized
     fetchExchangeRates();
+    fetchCryptoRates();
   } catch (error) {
     console.error('Failed to initialize WASM:', error);
     self.postMessage({
@@ -114,6 +125,47 @@ async function fetchExchangeRates() {
   }
 }
 
+async function fetchCryptoRates(vsCurrency = 'usd') {
+  try {
+    const responseJson = await fetch_crypto_rates(vsCurrency);
+    const response: CryptoRatesResponse = JSON.parse(responseJson);
+
+    if (response.success) {
+      cryptoRatesError = null;
+
+      if (calculator) {
+        calculator.update_crypto_rates_from_api(
+          response.base,
+          response.date,
+          response.rates_json
+        );
+      }
+
+      self.postMessage({
+        type: 'cryptoRatesLoaded',
+        data: {
+          success: true,
+          base: response.base,
+          date: response.date
+        }
+      });
+    } else {
+      cryptoRatesError = response.error || 'Unknown error fetching crypto rates';
+      self.postMessage({
+        type: 'cryptoRatesLoaded',
+        data: { success: false, error: cryptoRatesError }
+      });
+    }
+  } catch (error) {
+    cryptoRatesError = `Failed to fetch crypto rates: ${error}`;
+    console.error('Failed to fetch crypto rates:', error);
+    self.postMessage({
+      type: 'cryptoRatesLoaded',
+      data: { success: false, error: cryptoRatesError }
+    });
+  }
+}
+
 self.onmessage = async (e: MessageEvent) => {
   const { type, expression, baseCurrency } = e.data;
 
@@ -140,6 +192,7 @@ self.onmessage = async (e: MessageEvent) => {
   } else if (type === 'refreshRates') {
     // Allow manual refresh of exchange rates
     fetchExchangeRates();
+    fetchCryptoRates();
   } else if (type === 'fetchRates') {
     // Fetch rates for a specific base currency
     if (!baseCurrency) {

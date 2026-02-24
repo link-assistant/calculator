@@ -4,7 +4,7 @@ use js_sys::Promise;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::future_to_promise;
 
-use crate::currency_api;
+use crate::{crypto_api, currency_api};
 
 /// Initializes the WASM module. Call this once before using other functions.
 #[wasm_bindgen(start)]
@@ -350,6 +350,106 @@ pub fn parse_consolidated_lino_rates(content: String) -> String {
 
     serde_json::to_string(&result)
         .unwrap_or_else(|_| r#"{"success":false,"error":"Serialization failed"}"#.to_string())
+}
+
+/// Response from fetching cryptocurrency rates.
+#[wasm_bindgen]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[allow(clippy::unsafe_derive_deserialize)] // wasm_bindgen adds unsafe methods
+pub struct CryptoRatesResponse {
+    /// Whether the fetch was successful.
+    pub success: bool,
+    /// The date of the rates (today's date).
+    date: String,
+    /// The base fiat currency (e.g., "USD").
+    base: String,
+    /// Error message if fetch failed.
+    error: Option<String>,
+    /// The rates as a JSON string (ticker -> price in base currency).
+    rates_json: String,
+}
+
+#[wasm_bindgen]
+impl CryptoRatesResponse {
+    /// Gets the date of the rates.
+    #[wasm_bindgen(getter)]
+    pub fn date(&self) -> String {
+        self.date.clone()
+    }
+
+    /// Gets the base fiat currency.
+    #[wasm_bindgen(getter)]
+    pub fn base(&self) -> String {
+        self.base.clone()
+    }
+
+    /// Gets the error message.
+    #[wasm_bindgen(getter)]
+    pub fn error(&self) -> Option<String> {
+        self.error.clone()
+    }
+
+    /// Gets the crypto rates as a JSON string (ticker -> price in base currency).
+    #[wasm_bindgen(getter)]
+    pub fn rates_json(&self) -> String {
+        self.rates_json.clone()
+    }
+}
+
+/// Fetches current cryptocurrency prices in a given fiat currency.
+///
+/// Fetches prices for the most popular cryptocurrencies from CoinGecko (free API, no key needed).
+///
+/// # Arguments
+/// * `vs_currency` - The fiat currency to price in (e.g., "usd", "eur")
+///
+/// # Returns
+/// A Promise that resolves to a JSON string with `CryptoRatesResponse`.
+#[wasm_bindgen]
+pub fn fetch_crypto_rates(vs_currency: String) -> Promise {
+    future_to_promise(async move {
+        let tickers = &[
+            "TON", "BTC", "ETH", "BNB", "SOL", "XRP", "ADA", "DOGE", "DOT", "LTC", "LINK", "UNI",
+        ];
+        let today = chrono::Utc::now().format("%Y-%m-%d").to_string();
+
+        match crypto_api::fetch_crypto_prices(tickers, &vs_currency).await {
+            Ok(prices) => {
+                // Build a rates map: ticker -> price
+                let rates_map: std::collections::HashMap<String, f64> = prices
+                    .iter()
+                    .map(|(ticker, info)| (ticker.clone(), info.rate))
+                    .collect();
+
+                let rates_json =
+                    serde_json::to_string(&rates_map).unwrap_or_else(|_| "{}".to_string());
+
+                let response = CryptoRatesResponse {
+                    success: true,
+                    date: today,
+                    base: vs_currency.to_uppercase(),
+                    error: None,
+                    rates_json,
+                };
+                let json = serde_json::to_string(&response).unwrap_or_else(|_| {
+                    r#"{"success":false,"error":"Serialization failed"}"#.to_string()
+                });
+                Ok(JsValue::from_str(&json))
+            }
+            Err(e) => {
+                let response = CryptoRatesResponse {
+                    success: false,
+                    date: today,
+                    base: vs_currency.to_uppercase(),
+                    error: Some(e.to_string()),
+                    rates_json: String::new(),
+                };
+                let json = serde_json::to_string(&response)
+                    .unwrap_or_else(|_| format!(r#"{{"success":false,"error":"{}"}}"#, e));
+                Ok(JsValue::from_str(&json))
+            }
+        }
+    })
 }
 
 #[cfg(test)]
