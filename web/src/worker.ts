@@ -34,7 +34,6 @@ let calculator: CalculatorInstance | null = null;
 let ratesLoaded = false;
 let ratesLoading = false;
 let ratesError: string | null = null;
-let cryptoRatesLoaded = false;
 let cryptoRatesError: string | null = null;
 
 async function initWasm() {
@@ -132,7 +131,6 @@ async function fetchCryptoRates(vsCurrency = 'usd') {
     const response: CryptoRatesResponse = JSON.parse(responseJson);
 
     if (response.success) {
-      cryptoRatesLoaded = true;
       cryptoRatesError = null;
 
       if (calculator) {

@@ -7,4 +7,5 @@ declare module '@wasm/link_calculator' {
   // Explicitly declare the functions that TypeScript might not recognize
   export function fetch_exchange_rates(base_currency: string): Promise<string>;
   export function fetch_historical_rates(base_currency: string, date: string): Promise<string>;
+  export function fetch_crypto_rates(vs_currency: string): Promise<string>;
 }
