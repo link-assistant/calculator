@@ -128,6 +128,11 @@ impl Currency {
     pub fn inr() -> Self {
         Self::new("INR", "Indian Rupee", "₹", 2)
     }
+
+    #[must_use]
+    pub fn clf() -> Self {
+        Self::new("CLF", "Chilean Unidad de Fomento", "UF", 4)
+    }
 }
 
 /// A database of exchange rates, supporting historical data.
@@ -173,6 +178,7 @@ impl CurrencyDatabase {
             Currency::cny(),
             Currency::rub(),
             Currency::inr(),
+            Currency::clf(),
         ];
 
         for currency in currencies {
@@ -193,6 +199,8 @@ impl CurrencyDatabase {
         self.set_rate_with_info("USD", "CNY", ExchangeRateInfo::default_rate(7.25));
         self.set_rate_with_info("USD", "RUB", ExchangeRateInfo::default_rate(89.5));
         self.set_rate_with_info("USD", "INR", ExchangeRateInfo::default_rate(86.5));
+        // CLF (Chilean Unidad de Fomento, also known as UF): 1 USD ≈ 0.022 CLF (1 CLF ≈ 45 USD)
+        self.set_rate_with_info("USD", "CLF", ExchangeRateInfo::default_rate(0.022));
 
         // EUR base rates
         self.set_rate_with_info("EUR", "USD", ExchangeRateInfo::default_rate(1.087));
@@ -471,6 +479,8 @@ impl CurrencyDatabase {
             "RUB" | "₽" => return Some("RUB".to_string()),
             "INR" | "₹" => return Some("INR".to_string()),
             "KRW" | "₩" => return Some("KRW".to_string()),
+            // CLF is the ISO 4217 code; UF is the widely used Chilean abbreviation
+            "CLF" | "UF" => return Some("CLF".to_string()),
             "BTC" | "₿" => return Some("BTC".to_string()),
             _ => {}
         }
@@ -501,6 +511,8 @@ impl CurrencyDatabase {
             "rupee" | "rupees" | "indian rupee" | "indian rupees" => {
                 return Some("INR".to_string())
             }
+            // CLF: Chilean Unidad de Fomento (also known as UF)
+            "unidad de fomento" | "unidad fomento" | "fomento" => return Some("CLF".to_string()),
             // Cryptocurrency natural language names and common aliases
             "toncoin" | "the open network" => return Some("TON".to_string()),
             "bitcoin" => return Some("BTC".to_string()),
