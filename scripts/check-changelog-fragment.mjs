@@ -63,6 +63,7 @@ function isSourceFile(filePath) {
     /^src\//,
     /^tests\//,
     /^scripts\//,
+    /^web\//,
     /^Cargo\.toml$/,
   ];
 
