@@ -16,7 +16,7 @@
  * - lino-arguments: Unified configuration from CLI args, env vars, and .lenv files
  */
 
-import { readFileSync, writeFileSync, appendFileSync, readdirSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, appendFileSync, readdirSync, unlinkSync, existsSync } from 'fs';
 import { join } from 'path';
 import {
   getRustRoot,
@@ -145,17 +145,15 @@ function updateCargoToml(newVersion) {
 }
 
 /**
- * Check if a git tag exists for this version
+ * Check if Cargo.toml already has the given version
+ * (i.e., the version bump was already applied in a previous run)
  * @param {string} version
- * @returns {Promise<boolean>}
+ * @returns {boolean}
  */
-async function checkTagExists(version) {
-  try {
-    await $`git rev-parse v${version}`.run({ capture: true });
-    return true;
-  } catch {
-    return false;
-  }
+function isVersionAlreadyBumped(version) {
+  const cargoToml = readFileSync(CARGO_TOML, 'utf-8');
+  const match = cargoToml.match(/^version\s*=\s*"([^"]+)"/m);
+  return match ? match[1] === version : false;
 }
 
 /**
@@ -227,6 +225,13 @@ function collectChangelog(version) {
     writeFileSync(CHANGELOG_FILE, content, 'utf-8');
   }
 
+  // Remove processed fragment files so they are not picked up on future runs
+  for (const f of files) {
+    const filePath = join(CHANGELOG_DIR, f);
+    unlinkSync(filePath);
+    console.log(`Removed ${filePath}`);
+  }
+
   console.log(`Collected ${files.length} changelog fragment(s)`);
 }
 
@@ -239,9 +244,12 @@ async function main() {
     const current = getCurrentVersion();
     const newVersion = calculateNewVersion(current, bumpType);
 
-    // Check if this version was already released
-    if (await checkTagExists(newVersion)) {
-      console.log(`Tag v${newVersion} already exists`);
+    // Check if Cargo.toml was already bumped to the new version in a previous run.
+    // We use Cargo.toml as the source of truth (not git tags), because a tag can exist
+    // from a failed/partial release without the version being fully published.
+    // The upstream check-release-needed.mjs already verifies crates.io publication status.
+    if (isVersionAlreadyBumped(newVersion)) {
+      console.log(`Cargo.toml already at version ${newVersion} (bump was applied in a previous run)`);
       setOutput('already_released', 'true');
       setOutput('new_version', newVersion);
       return;
@@ -253,9 +261,13 @@ async function main() {
     // Collect changelog fragments
     collectChangelog(newVersion);
 
-    // Stage Cargo.toml and CHANGELOG.md
+    // Stage Cargo.toml, CHANGELOG.md, and removed changelog fragments
     // Use the paths determined by rust-root configuration
     await $`git add ${CARGO_TOML} ${CHANGELOG_FILE}`;
+    // Stage deleted changelog fragments (if any)
+    if (existsSync(CHANGELOG_DIR)) {
+      await $`git add ${CHANGELOG_DIR}`;
+    }
 
     // Check if there are changes to commit
     try {
@@ -276,16 +288,16 @@ async function main() {
     await $`git commit -m ${commitMsg}`;
     console.log(`Committed version ${newVersion}`);
 
-    // Create tag
+    // Create tag (force update in case a previous partial release left an orphan tag)
     const tagMsg = description
       ? `Release v${newVersion}\n\n${description}`
       : `Release v${newVersion}`;
-    await $`git tag -a v${newVersion} -m ${tagMsg}`;
+    await $`git tag -f -a v${newVersion} -m ${tagMsg}`;
     console.log(`Created tag v${newVersion}`);
 
-    // Push changes and tag
+    // Push changes and tag (force push tag to overwrite any orphan tag from a failed release)
     await $`git push`;
-    await $`git push --tags`;
+    await $`git push origin v${newVersion} --force`;
     console.log('Pushed changes and tags');
 
     setOutput('version_committed', 'true');

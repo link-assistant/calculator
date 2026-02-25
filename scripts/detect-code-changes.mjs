@@ -33,6 +33,7 @@
  *   - docs-changed: 'true' if any .md files changed
  *   - workflow-changed: 'true' if any .github/workflows/ files changed
  *   - any-code-changed: 'true' if any code files changed (excludes docs, changelog.d, experiments, examples)
+ *     Detects: .rs, .toml, .mjs, .ts, .tsx, .js, .css, .html, .yml, .yaml files and workflow changes
  */
 
 import { execSync } from 'child_process';
@@ -182,8 +183,8 @@ function detectChanges() {
   }
   console.log('');
 
-  // Check if any code files changed (.rs, .toml, .mjs, .yml, .yaml, or workflow files)
-  const codePattern = /\.(rs|toml|mjs|js|yml|yaml)$|\.github\/workflows\//;
+  // Check if any code files changed (.rs, .toml, .mjs, .ts, .tsx, .js, .css, .html, .yml, .yaml, or workflow files)
+  const codePattern = /\.(rs|toml|mjs|ts|tsx|js|css|html|yml|yaml)$|\.github\/workflows\//;
   const codeChanged = codeChangedFiles.some((file) => codePattern.test(file));
   setOutput('any-code-changed', codeChanged ? 'true' : 'false');
 
