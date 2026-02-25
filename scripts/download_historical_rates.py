@@ -72,6 +72,7 @@ CBR_CURRENCIES = {
     "R01820": "JPY",  # Japanese Yen
     "R01775": "CHF",  # Swiss Franc
     "R01375": "CNY",  # Chinese Yuan
+    "R01270": "INR",  # Indian Rupee (100 INR = X RUB nominal)
 }
 
 
