@@ -3,9 +3,9 @@ state:	CLOSED
 author:	konard
 labels:	bug
 comments:	0
-assignees:	
-projects:	
-milestone:	
+assignees:
+projects:
+milestone:
 number:	113
 --
 Full CI run log: https://github.com/link-assistant/agent/actions/runs/20885464993/job/60008012717
