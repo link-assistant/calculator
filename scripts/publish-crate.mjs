@@ -39,8 +39,10 @@ const { use } = eval(
 );
 
 // Import link-foundation libraries
-const { $ } = await use('command-stream');
-const { makeConfig } = await use('lino-arguments');
+// Note: pinned versions to avoid `npm show` registry calls for @latest (which can cause 403 errors in CI)
+// See: https://github.com/link-assistant/calculator/issues/76
+const { $ } = await use('command-stream@0.9.4');
+const { makeConfig } = await use('lino-arguments@0.2.5');
 
 // Parse CLI arguments
 // Support both CARGO_REGISTRY_TOKEN (cargo's native env var) and CARGO_TOKEN (backwards compat)

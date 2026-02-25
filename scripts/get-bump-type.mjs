@@ -39,7 +39,9 @@ const { use } = eval(
 );
 
 // Import lino-arguments for CLI argument parsing
-const { makeConfig } = await use('lino-arguments');
+// Note: pinned version to avoid `npm show` registry calls for @latest (which can cause 403 errors in CI)
+// See: https://github.com/link-assistant/calculator/issues/76
+const { makeConfig } = await use('lino-arguments@0.2.5');
 
 // Parse CLI arguments
 const config = makeConfig({
