@@ -1,7 +1,7 @@
 // Web Worker for running WASM calculations in the background
 // This prevents blocking the main UI thread
 
-import init, { Calculator, fetch_exchange_rates, fetch_crypto_rates, fetch_cbr_rates } from '@wasm/link_calculator';
+import init, { Calculator, fetch_exchange_rates, fetch_crypto_rates, fetch_cbr_rates, parse_consolidated_lino_rates } from '@wasm/link_calculator';
 
 interface CalculatorInstance {
   calculate(input: string): string;
@@ -128,6 +128,61 @@ async function fetchExchangeRates() {
   }
 }
 
+// Currency pairs to load from local .lino files as fallback when CBR CORS fails.
+// These files are served from GitHub Pages at /calculator/data/currency/
+// and are updated weekly by the update-currency-rates.yml CI workflow.
+const LINO_RUB_PAIRS = [
+  'usd-rub',
+  'eur-rub',
+  'gbp-rub',
+  'jpy-rub',
+  'chf-rub',
+  'cny-rub',
+  'inr-rub',
+];
+
+/// Load CBR rates from local .lino files served via GitHub Pages.
+/// This is a fallback for when the cbr.ru API is blocked by CORS.
+/// Returns the number of rate pairs successfully loaded.
+async function loadCbrRatesFromLinoFiles(): Promise<number> {
+  const baseUrl = '/calculator/data/currency';
+  const ratesJson: Record<string, number> = {};
+  let latestDate = '';
+
+  for (const pair of LINO_RUB_PAIRS) {
+    const [from] = pair.split('-');
+    try {
+      const response = await fetch(`${baseUrl}/${pair}.lino`);
+      if (!response.ok) {
+        console.debug(`[CBR fallback] ${pair}.lino not found (${response.status})`);
+        continue;
+      }
+      const content = await response.text();
+      const parsed = JSON.parse(parse_consolidated_lino_rates(content));
+
+      if (parsed.success && parsed.rates && parsed.rates.length > 0) {
+        // Get the latest rate (last entry in chronological order)
+        const latestEntry = parsed.rates[parsed.rates.length - 1];
+        ratesJson[from] = latestEntry.value;
+        if (latestEntry.date > latestDate) {
+          latestDate = latestEntry.date;
+        }
+        console.debug(`[CBR fallback] Loaded ${pair}: 1 ${from.toUpperCase()} = ${latestEntry.value} RUB (${latestEntry.date})`);
+      }
+    } catch (err) {
+      console.debug(`[CBR fallback] Failed to load ${pair}.lino:`, err);
+    }
+  }
+
+  const loadedCount = Object.keys(ratesJson).length;
+  if (loadedCount > 0 && calculator) {
+    const ratesJsonStr = JSON.stringify(ratesJson);
+    calculator.update_cbr_rates_from_api(latestDate, ratesJsonStr);
+  }
+
+  return loadedCount;
+}
+
 async function fetchCbrRates() {
   try {
     const responseJson = await fetch_cbr_rates();
@@ -150,20 +205,53 @@ async function fetchCbrRates() {
         }
       });
     } else {
-      // CBR rates are optional - log but don't block other functionality
-      console.warn('Failed to fetch CBR rates:', response.error);
+      // CBR direct fetch failed - try loading from local .lino files
+      console.warn('[CBR] Direct CBR API fetch failed (likely CORS), falling back to local .lino files:', response.error);
+      const loadedCount = await loadCbrRatesFromLinoFiles();
       self.postMessage({
         type: 'cbrRatesLoaded',
-        data: { success: false, error: response.error }
+        data: {
+          success: loadedCount > 0,
+          error: loadedCount > 0 ? undefined : response.error,
+          source: loadedCount > 0 ? 'local .lino files (CBR data)' : undefined,
+          loadedCount
+        }
       });
     }
   } catch (error) {
-    // CBR rates are optional - log but don't block other functionality
-    console.warn('Failed to fetch CBR rates:', error);
-    self.postMessage({
-      type: 'cbrRatesLoaded',
-      data: { success: false, error: `Failed to fetch CBR rates: ${error}` }
-    });
+    // CBR direct fetch threw (typically CORS error in browser) - try local .lino files fallback
+    console.warn('[CBR] Direct CBR API request failed (CORS error expected in browser):', error);
+    console.info('[CBR] Falling back to local .lino files served via GitHub Pages...');
+
+    try {
+      const loadedCount = await loadCbrRatesFromLinoFiles();
+      if (loadedCount > 0) {
+        console.info(`[CBR] Successfully loaded ${loadedCount} RUB rate pairs from local .lino files`);
+        self.postMessage({
+          type: 'cbrRatesLoaded',
+          data: {
+            success: true,
+            source: 'local .lino files (CBR data)',
+            loadedCount
+          }
+        });
+      } else {
+        console.warn('[CBR] Local .lino files also unavailable. Using hardcoded default rates for RUB.');
+        self.postMessage({
+          type: 'cbrRatesLoaded',
+          data: {
+            success: false,
+            error: `CBR CORS blocked and local .lino files unavailable. Original error: ${error}`
+          }
+        });
+      }
+    } catch (fallbackError) {
+      console.error('[CBR] Fallback to local .lino files failed:', fallbackError);
+      self.postMessage({
+        type: 'cbrRatesLoaded',
+        data: { success: false, error: `Failed to fetch CBR rates: ${error}` }
+      });
+    }
   }
 }
 

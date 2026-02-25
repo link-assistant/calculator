@@ -300,6 +300,12 @@ jobs:
         working-directory: web
         run: npm ci || npm install
 
+      - name: Copy currency data files to web public directory
+        run: |
+          mkdir -p web/public/data/currency
+          cp data/currency/*.lino web/public/data/currency/
+          echo "Copied $(ls data/currency/*.lino | wc -l) .lino files to web/public/data/currency/"
+
       - name: Type check
         working-directory: web
         run: npx tsc --noEmit
