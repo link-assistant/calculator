@@ -86,9 +86,8 @@ fn test_cbr_rates_provide_direct_inr_rub_rate() {
         .parse()
         .expect("Result should be a number");
     assert!(
-        (result_f64 - 9.266928).abs() < 0.01,
-        "11 INR should be ~9.27 RUB using CBR direct rate, got {}",
-        result_f64
+        (result_f64 - 9.266_928).abs() < 0.01,
+        "11 INR should be ~9.27 RUB using CBR direct rate, got {result_f64}",
     );
 }
 
@@ -110,8 +109,7 @@ fn test_issue_70_rub_usd_inr_uses_cbr_rates() {
     let steps_str = result.steps.join("\n");
     assert!(
         steps_str.contains("cbr.ru (Central Bank of Russia)"),
-        "Steps should reference CBR as the rate source for RUB conversions, got: {}",
-        steps_str
+        "Steps should reference CBR as the rate source for RUB conversions, got: {steps_str}",
     );
 }
 
@@ -129,13 +127,11 @@ fn test_cbr_rate_source_shown_in_steps() {
     let steps_str = result.steps.join("\n");
     assert!(
         steps_str.contains("cbr.ru (Central Bank of Russia)"),
-        "Steps should show CBR as rate source, got: {}",
-        steps_str
+        "Steps should show CBR as rate source, got: {steps_str}",
     );
     assert!(
         steps_str.contains("2026-02-25"),
-        "Steps should show CBR date, got: {}",
-        steps_str
+        "Steps should show CBR date, got: {steps_str}",
     );
 }
 
@@ -157,7 +153,6 @@ fn test_cbr_rates_eliminate_triangulation_for_inr_rub() {
     // Should NOT contain "via USD" since we now have a direct INR→RUB rate from CBR
     assert!(
         !steps_str.contains("via USD"),
-        "Steps should NOT contain 'via USD' when direct CBR INR→RUB rate is available, got: {}",
-        steps_str
+        "Steps should NOT contain 'via USD' when direct CBR INR→RUB rate is available, got: {steps_str}",
     );
 }

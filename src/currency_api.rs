@@ -506,7 +506,7 @@ mod tests {
         // INR rate: 100 INR = 84.2448 RUB → 1 INR = 0.842448 RUB
         let inr_rate = rates.get("inr").expect("INR rate should exist");
         assert!(
-            (*inr_rate - 0.842448).abs() < 0.001,
+            (*inr_rate - 0.842_448).abs() < 0.001,
             "INR rate should be ~0.842448 (100 INR = 84.2448 RUB)"
         );
     }
@@ -559,7 +559,7 @@ mod tests {
         let jpy_rate = rates.get("jpy").expect("JPY rate should exist");
         // 100 JPY = 49.4989 RUB → 1 JPY = 0.494989 RUB
         assert!(
-            (*jpy_rate - 0.494989).abs() < 0.001,
+            (*jpy_rate - 0.494_989).abs() < 0.001,
             "JPY rate should be ~0.494989"
         );
     }
