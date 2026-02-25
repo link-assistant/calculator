@@ -6,6 +6,9 @@ use wasm_bindgen_futures::future_to_promise;
 
 use crate::{crypto_api, currency_api};
 
+/// The base currency for CBR rates (all CBR rates are expressed relative to RUB).
+const CBR_BASE_CURRENCY: &str = "RUB";
+
 /// Initializes the WASM module. Call this once before using other functions.
 #[wasm_bindgen(start)]
 pub fn wasm_init() {
@@ -130,6 +133,45 @@ pub fn fetch_historical_rates(base_currency: String, date: String) -> Promise {
                     success: false,
                     date: String::new(),
                     base: base_currency.to_uppercase(),
+                    error: Some(e.to_string()),
+                    rates_json: String::new(),
+                };
+                let json = serde_json::to_string(&response)
+                    .unwrap_or_else(|_| format!(r#"{{"success":false,"error":"{}"}}"#, e));
+                Ok(JsValue::from_str(&json))
+            }
+        }
+    })
+}
+
+/// Fetches current exchange rates from the Central Bank of Russia (cbr.ru).
+///
+/// Returns a Promise that resolves to a JSON string with `ExchangeRatesResponse`.
+/// The base currency is always "RUB", and the rates are "1 CURRENCY = X RUB".
+/// These rates should be used for all RUB-related currency conversions.
+#[wasm_bindgen]
+pub fn fetch_cbr_rates() -> Promise {
+    future_to_promise(async move {
+        match currency_api::fetch_cbr_rates().await {
+            Ok((date, rates)) => {
+                let rates_json = serde_json::to_string(&rates).unwrap_or_else(|_| "{}".to_string());
+                let response = ExchangeRatesResponse {
+                    success: true,
+                    date,
+                    base: CBR_BASE_CURRENCY.to_string(),
+                    error: None,
+                    rates_json,
+                };
+                let json = serde_json::to_string(&response).unwrap_or_else(|_| {
+                    r#"{"success":false,"error":"Serialization failed"}"#.to_string()
+                });
+                Ok(JsValue::from_str(&json))
+            }
+            Err(e) => {
+                let response = ExchangeRatesResponse {
+                    success: false,
+                    date: String::new(),
+                    base: CBR_BASE_CURRENCY.to_string(),
                     error: Some(e.to_string()),
                     rates_json: String::new(),
                 };

@@ -467,6 +467,49 @@ impl Calculator {
         count
     }
 
+    /// Updates RUB exchange rates from the Central Bank of Russia (cbr.ru) API response.
+    /// Returns the number of rates updated.
+    ///
+    /// The CBR rates format: `{"usd": 76.63, "eur": 90.58, "inr": 0.842, ...}`
+    /// where each value represents "1 CURRENCY = X RUB".
+    ///
+    /// These rates take priority over ECB/Frankfurter rates for RUB conversions,
+    /// since CBR provides official RUB rates directly (no cross-rate needed).
+    ///
+    /// Args: `date` (e.g., "2026-02-25"), `rates_json` (currency_code → RUB amount).
+    #[wasm_bindgen]
+    pub fn update_cbr_rates_from_api(&mut self, date: &str, rates_json: &str) -> usize {
+        let rates: std::collections::HashMap<String, f64> = match serde_json::from_str(rates_json) {
+            Ok(r) => r,
+            Err(_) => return 0,
+        };
+
+        let timestamp = chrono::Utc::now().to_rfc3339();
+        let mut count = 0;
+
+        for (currency, rub_per_unit) in rates {
+            let currency_upper = currency.to_uppercase();
+
+            // Skip RUB itself
+            if currency_upper == "RUB" {
+                continue;
+            }
+
+            // Store: 1 CURRENCY = rub_per_unit RUB
+            let info =
+                types::ExchangeRateInfo::new(rub_per_unit, currency_api::CBR_API_SOURCE, date)
+                    .with_fetched_at(&timestamp);
+
+            self.parser
+                .currency_db_mut()
+                .set_rate_with_info(&currency_upper, "RUB", info);
+
+            count += 1;
+        }
+
+        count
+    }
+
     /// Updates cryptocurrency exchange rates from API response.
     /// Returns the number of rates updated.
     ///

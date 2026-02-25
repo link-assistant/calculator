@@ -1,12 +1,13 @@
 // Web Worker for running WASM calculations in the background
 // This prevents blocking the main UI thread
 
-import init, { Calculator, fetch_exchange_rates, fetch_crypto_rates } from '@wasm/link_calculator';
+import init, { Calculator, fetch_exchange_rates, fetch_crypto_rates, fetch_cbr_rates } from '@wasm/link_calculator';
 
 interface CalculatorInstance {
   calculate(input: string): string;
   update_rates_from_api(base: string, date: string, rates_json: string): number;
   update_crypto_rates_from_api(base: string, date: string, rates_json: string): number;
+  update_cbr_rates_from_api(date: string, rates_json: string): number;
 }
 
 interface CalculatorStatic {
@@ -45,6 +46,8 @@ async function initWasm() {
     self.postMessage({ type: 'ready', data: { version } });
 
     // Fetch exchange rates and crypto rates in the background after WASM is initialized
+    // Fetch CBR rates first so RUB conversions use official Russian Central Bank rates
+    fetchCbrRates();
     fetchExchangeRates();
     fetchCryptoRates();
   } catch (error) {
@@ -125,6 +128,45 @@ async function fetchExchangeRates() {
   }
 }
 
+async function fetchCbrRates() {
+  try {
+    const responseJson = await fetch_cbr_rates();
+    const response: ExchangeRatesResponse = JSON.parse(responseJson);
+
+    if (response.success) {
+      // Apply CBR rates to the calculator (RUB-based rates from Central Bank of Russia)
+      if (calculator) {
+        calculator.update_cbr_rates_from_api(
+          response.date,
+          response.rates_json
+        );
+      }
+
+      self.postMessage({
+        type: 'cbrRatesLoaded',
+        data: {
+          success: true,
+          date: response.date
+        }
+      });
+    } else {
+      // CBR rates are optional - log but don't block other functionality
+      console.warn('Failed to fetch CBR rates:', response.error);
+      self.postMessage({
+        type: 'cbrRatesLoaded',
+        data: { success: false, error: response.error }
+      });
+    }
+  } catch (error) {
+    // CBR rates are optional - log but don't block other functionality
+    console.warn('Failed to fetch CBR rates:', error);
+    self.postMessage({
+      type: 'cbrRatesLoaded',
+      data: { success: false, error: `Failed to fetch CBR rates: ${error}` }
+    });
+  }
+}
+
 async function fetchCryptoRates(vsCurrency = 'usd') {
   try {
     const responseJson = await fetch_crypto_rates(vsCurrency);
@@ -191,6 +233,7 @@ self.onmessage = async (e: MessageEvent) => {
     }
   } else if (type === 'refreshRates') {
     // Allow manual refresh of exchange rates
+    fetchCbrRates();
     fetchExchangeRates();
     fetchCryptoRates();
   } else if (type === 'fetchRates') {

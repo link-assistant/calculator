@@ -1,0 +1,2 @@
+### Added
+- Central Bank of Russia (cbr.ru) integration for RUB exchange rates. When computing expressions involving RUB (e.g., `10 RUB + 10 USD + 11 INR`), the calculator now fetches official rates directly from cbr.ru instead of relying on ECB cross-rates via USD. This provides more accurate RUB conversions and eliminates triangulation for currencies that CBR supports directly (USD, EUR, INR, GBP, JPY, CHF, CNY and 50+ more). Fixes #70.
