@@ -108,6 +108,20 @@ impl ExpressionParser {
                 Ok(Value::rational_with_unit(rational, unit.clone()))
             }
             Expression::DateTime(dt) => Ok(Value::datetime(dt.clone())),
+            Expression::Now => Ok(Value::datetime(DateTime::now())),
+            Expression::Until(target) => {
+                let target_val = self.evaluate_expr(target)?;
+                let now = DateTime::now();
+                match &target_val.kind {
+                    ValueKind::DateTime(target_dt) => {
+                        let seconds = target_dt.signed_subtract_seconds(&now);
+                        Ok(Value::duration(seconds))
+                    }
+                    _ => Err(CalculatorError::InvalidOperation(
+                        "until requires a datetime expression".into(),
+                    )),
+                }
+            }
             Expression::Binary { left, op, right } => {
                 let left_val = self.evaluate_expr(left)?;
                 let right_val = self.evaluate_expr(right)?;
@@ -223,7 +237,54 @@ impl ExpressionParser {
             }
             Expression::DateTime(dt) => {
                 steps.push(format!("DateTime value: {dt}"));
-                Ok(Value::datetime(dt.clone()))
+                let dt_val = Value::datetime(dt.clone());
+                // For standalone datetime, show time from now
+                let now = DateTime::now();
+                let seconds = dt.signed_subtract_seconds(&now);
+                if seconds > 0 {
+                    steps.push(format!(
+                        "Time until: {}",
+                        Value::duration(seconds).to_display_string()
+                    ));
+                } else if seconds < 0 {
+                    steps.push(format!(
+                        "Time since: {} ago",
+                        Value::duration(-seconds).to_display_string()
+                    ));
+                }
+                Ok(dt_val)
+            }
+            Expression::Now => {
+                let now = DateTime::now();
+                steps.push(format!("Current time: {now}"));
+                Ok(Value::datetime(now))
+            }
+            Expression::Until(target) => {
+                let target_val = self.evaluate_expr_with_steps(target, steps)?;
+                let now = DateTime::now();
+                match &target_val.kind {
+                    ValueKind::DateTime(target_dt) => {
+                        let seconds = target_dt.signed_subtract_seconds(&now);
+                        let duration = Value::duration(seconds);
+                        if seconds >= 0 {
+                            steps.push(format!(
+                                "Time until {}: {}",
+                                target_val.to_display_string(),
+                                duration.to_display_string()
+                            ));
+                        } else {
+                            steps.push(format!(
+                                "Time since {}: {} ago",
+                                target_val.to_display_string(),
+                                Value::duration(-seconds).to_display_string()
+                            ));
+                        }
+                        Ok(duration)
+                    }
+                    _ => Err(CalculatorError::InvalidOperation(
+                        "until requires a datetime expression".into(),
+                    )),
+                }
             }
             Expression::Binary { left, op, right } => {
                 let left_val = self.evaluate_expr_with_steps(left, steps)?;
@@ -500,6 +561,20 @@ impl ExpressionParser {
                 Ok(Value::rational_with_unit(rational, unit.clone()))
             }
             Expression::DateTime(dt) => Ok(Value::datetime(dt.clone())),
+            Expression::Now => Ok(Value::datetime(DateTime::now())),
+            Expression::Until(target) => {
+                let target_val = self.evaluate_expr_with_var(target, var_name, var_value)?;
+                let now = DateTime::now();
+                match &target_val.kind {
+                    ValueKind::DateTime(target_dt) => {
+                        let seconds = target_dt.signed_subtract_seconds(&now);
+                        Ok(Value::duration(seconds))
+                    }
+                    _ => Err(CalculatorError::InvalidOperation(
+                        "until requires a datetime expression".into(),
+                    )),
+                }
+            }
             Expression::Binary { left, op, right } => {
                 let left_val = self.evaluate_expr_with_var(left, var_name, var_value)?;
                 let right_val = self.evaluate_expr_with_var(right, var_name, var_value)?;

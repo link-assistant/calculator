@@ -650,8 +650,12 @@ impl Calculator {
             Expression::Variable(name) if name == var => {
                 Expression::number(Decimal::from_f64(value))
             }
-            Expression::Variable(_) | Expression::Number { .. } | Expression::DateTime(_) => {
-                expr.clone()
+            Expression::Variable(_)
+            | Expression::Number { .. }
+            | Expression::DateTime(_)
+            | Expression::Now => expr.clone(),
+            Expression::Until(inner) => {
+                Expression::Until(Box::new(Self::substitute_variable(inner, var, value)))
             }
             Expression::Binary { left, op, right } => Expression::binary(
                 Self::substitute_variable(left, var, value),

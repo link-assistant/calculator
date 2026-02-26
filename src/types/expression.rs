@@ -49,6 +49,10 @@ pub enum Expression {
     Number { value: Decimal, unit: Unit },
     /// A literal datetime.
     DateTime(DateTime),
+    /// The current time ("now").
+    Now,
+    /// "until <datetime>" - duration from now to a target datetime.
+    Until(Box<Expression>),
     /// A binary operation.
     Binary {
         left: Box<Expression>,
@@ -212,7 +216,12 @@ impl Expression {
                     format!("({num_str} {unit})")
                 }
             }
-            Self::DateTime(dt) => dt.to_string(),
+            Self::DateTime(dt) => format!("({})", dt),
+            Self::Now => "(now)".to_string(),
+            Self::Until(inner) => {
+                let inner_str = inner.to_lino_internal(None);
+                format!("(until {inner_str})")
+            }
             Self::Binary { left, op, right } => {
                 let left_str = left.to_lino_internal(Some(op));
                 let right_str = right.to_lino_internal(Some(op));
@@ -304,13 +313,13 @@ impl Expression {
     #[must_use]
     pub fn depth(&self) -> usize {
         match self {
-            Self::Number { .. } | Self::DateTime(_) | Self::Variable(_) => 1,
+            Self::Number { .. } | Self::DateTime(_) | Self::Variable(_) | Self::Now => 1,
             Self::Binary { left, right, .. }
             | Self::Power {
                 base: left,
                 exponent: right,
             } => 1 + left.depth().max(right.depth()),
-            Self::Negate(inner) | Self::Group(inner) => 1 + inner.depth(),
+            Self::Negate(inner) | Self::Group(inner) | Self::Until(inner) => 1 + inner.depth(),
             Self::AtTime { value, time } => 1 + value.depth().max(time.depth()),
             Self::FunctionCall { args, .. } => {
                 1 + args.iter().map(Expression::depth).max().unwrap_or(0)
@@ -333,6 +342,10 @@ impl Expression {
                 }
             }
             Self::DateTime(dt) => format!("\\text{{{dt}}}"),
+            Self::Now => "\\text{now}".to_string(),
+            Self::Until(inner) => {
+                format!("\\text{{until }} {}", inner.to_latex())
+            }
             Self::Binary { left, op, right } => {
                 let left_str = left.to_latex();
                 let right_str = right.to_latex();
@@ -455,6 +468,8 @@ impl fmt::Display for Expression {
                 }
             }
             Self::DateTime(dt) => write!(f, "{dt}"),
+            Self::Now => write!(f, "now"),
+            Self::Until(inner) => write!(f, "until {inner}"),
             Self::Binary { left, op, right } => write!(f, "{left} {op} {right}"),
             Self::Negate(inner) => write!(f, "-{inner}"),
             Self::Group(inner) => write!(f, "({inner})"),

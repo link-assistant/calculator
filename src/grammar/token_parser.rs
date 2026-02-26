@@ -103,6 +103,20 @@ impl<'a> TokenParser<'a> {
     }
 
     fn parse_primary(&mut self) -> Result<Expression, CalculatorError> {
+        // Handle "until" keyword: "until <datetime>"
+        if self.check_until() {
+            self.advance(); // consume "until"
+                            // Try to parse the rest as a datetime directly by collecting tokens
+            let save_pos = self.pos;
+            if let Ok(target) = self.try_parse_until_target() {
+                return Ok(Expression::Until(Box::new(target)));
+            }
+            // Fallback: parse as normal expression
+            self.pos = save_pos;
+            let target = self.parse_primary()?;
+            return Ok(Expression::Until(Box::new(target)));
+        }
+
         // Parenthesized expression
         if self.check(&TokenKind::LeftParen) {
             self.advance();
@@ -141,14 +155,29 @@ impl<'a> TokenParser<'a> {
         if let Some(TokenKind::Identifier(id)) = self.current_kind() {
             let id = id.clone();
 
+            // Check for "now" keyword
+            if id.to_lowercase() == "now" {
+                self.advance();
+                // Check for optional timezone after "now" (e.g., "now UTC", "now EST")
+                if let Some(TokenKind::Identifier(tz)) = self.current_kind() {
+                    let tz_lower = tz.to_lowercase();
+                    // Collect "now" + timezone as a combined datetime string
+                    if crate::types::DateTime::parse(&format!("now {tz_lower}")).is_ok() {
+                        let combined = format!("now {}", tz);
+                        self.advance();
+                        match crate::types::DateTime::parse(&combined) {
+                            Ok(dt) => return Ok(Expression::DateTime(dt)),
+                            Err(_) => return Ok(Expression::Now),
+                        }
+                    }
+                }
+                return Ok(Expression::Now);
+            }
+
             // Check for prefix currency symbol notation (e.g., $10, €5, £3).
-            // Only applies to single-character currency symbols (not alphabetic currency codes
-            // like "USD", "EUR", "Feb" which could also be month names or other identifiers).
-            // We specifically check that the identifier is a single Unicode currency symbol character.
             if id.chars().count() == 1 {
                 let ch = id.chars().next().unwrap();
                 if !ch.is_ascii_alphabetic() {
-                    // It's a non-ASCII character or a single special char — check if it's a currency symbol
                     if let Some(currency_code) = crate::types::CurrencyDatabase::parse_currency(&id)
                     {
                         if let Some(TokenKind::Number(_)) = self.peek_kind() {
@@ -179,7 +208,7 @@ impl<'a> TokenParser<'a> {
                 return self.parse_natural_integral();
             }
 
-            // If it looks like a datetime start (month name), try to parse more
+            // If it looks like a datetime start (month name, "time", "current", etc.), try to parse more
             if DateTimeGrammar::looks_like_datetime(&id) {
                 return self.try_parse_datetime_from_tokens(&id);
             }
@@ -232,6 +261,57 @@ impl<'a> TokenParser<'a> {
         Ok(Expression::function_call(name, args))
     }
 
+    /// Tries to parse the remaining tokens after "until" as a datetime expression.
+    /// Handles cases like "until 11:59pm EST January 26th" where the datetime
+    /// starts with a number rather than a month name.
+    fn try_parse_until_target(&mut self) -> Result<Expression, CalculatorError> {
+        let mut parts: Vec<String> = Vec::new();
+
+        while !self.is_at_end() {
+            match self.current_kind() {
+                Some(TokenKind::Number(n)) => {
+                    parts.push(n.clone());
+                    self.advance();
+                }
+                Some(TokenKind::Identifier(id)) => {
+                    let id_lower = id.to_lowercase();
+                    if matches!(id_lower.as_str(), "st" | "nd" | "rd" | "th") {
+                        if let Some(last) = parts.last_mut() {
+                            if last.chars().all(|c| c.is_ascii_digit()) {
+                                last.push_str(id);
+                                self.advance();
+                                continue;
+                            }
+                        }
+                    }
+                    parts.push(id.clone());
+                    self.advance();
+                }
+                Some(TokenKind::Comma) => {
+                    parts.push(",".to_string());
+                    self.advance();
+                }
+                Some(TokenKind::Colon) => {
+                    parts.push(":".to_string());
+                    self.advance();
+                }
+                _ => break,
+            }
+        }
+
+        if parts.is_empty() {
+            return Err(CalculatorError::parse(
+                "until requires a datetime expression",
+            ));
+        }
+
+        let datetime_str = parts.join(" ").replace(" , ", ", ").replace(" : ", ":");
+        match crate::types::DateTime::parse(&datetime_str) {
+            Ok(dt) => Ok(Expression::DateTime(dt)),
+            Err(e) => Err(e),
+        }
+    }
+
     fn try_parse_datetime_from_tokens(
         &mut self,
         first: &str,
@@ -240,6 +320,7 @@ impl<'a> TokenParser<'a> {
         let mut parts = vec![first.to_string()];
 
         // Look for patterns like: Jan 22, 2026 or Jan 27, 8:59am UTC
+        // Also handles: Monday, January 26th, 2026
         // Collect: numbers, identifiers, colons, commas
         while !self.is_at_end() {
             match self.current_kind() {
@@ -248,6 +329,19 @@ impl<'a> TokenParser<'a> {
                     self.advance();
                 }
                 Some(TokenKind::Identifier(id)) => {
+                    // Handle ordinal suffixes: if previous part is a number and
+                    // this is "st", "nd", "rd", or "th", attach without space
+                    let id_lower = id.to_lowercase();
+                    if matches!(id_lower.as_str(), "st" | "nd" | "rd" | "th") {
+                        // Append to previous number part (ordinal suffix)
+                        if let Some(last) = parts.last_mut() {
+                            if last.chars().all(|c| c.is_ascii_digit()) {
+                                last.push_str(id);
+                                self.advance();
+                                continue;
+                            }
+                        }
+                    }
                     parts.push(id.clone());
                     self.advance();
                 }
@@ -507,6 +601,10 @@ impl<'a> TokenParser<'a> {
 
     fn check_to(&self) -> bool {
         matches!(self.current_kind(), Some(TokenKind::To))
+    }
+
+    fn check_until(&self) -> bool {
+        matches!(self.current_kind(), Some(TokenKind::Until))
     }
 
     /// Parses a unit name after the `as`, `in`, or `to` keyword.

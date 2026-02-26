@@ -24,6 +24,21 @@ impl DateTimeGrammar {
     pub fn looks_like_datetime(input: &str) -> bool {
         let input = input.trim().to_lowercase();
 
+        // Check for "now" keyword
+        if input == "now" || input.starts_with("now ") || input.ends_with(" now") {
+            return true;
+        }
+
+        // Check for "time" keyword combined with timezone
+        if input == "time" || input.starts_with("time ") || input.ends_with(" time") {
+            return true;
+        }
+
+        // Check for "current time" phrase
+        if input.contains("current") {
+            return true;
+        }
+
         // Check for month names
         let month_names = [
             "jan",
@@ -57,6 +72,22 @@ impl DateTimeGrammar {
             }
         }
 
+        // Check for day names (indicates a date expression)
+        let day_names = [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday",
+        ];
+        for day in &day_names {
+            if input.contains(day) {
+                return true;
+            }
+        }
+
         // Check for time patterns (am/pm)
         if input.contains("am") || input.contains("pm") {
             return true;
@@ -65,6 +96,19 @@ impl DateTimeGrammar {
         // Check for timezone indicators
         if input.contains("utc") || input.contains("gmt") {
             return true;
+        }
+
+        // Check for common timezone abbreviations
+        let tz_abbrevs = ["est", "edt", "cst", "cdt", "mst", "mdt", "pst", "pdt"];
+        for tz in &tz_abbrevs {
+            // Match as whole word (not substring)
+            if input == *tz
+                || input.starts_with(&format!("{tz} "))
+                || input.ends_with(&format!(" {tz}"))
+                || input.contains(&format!(" {tz} "))
+            {
+                return true;
+            }
         }
 
         // Check for ISO date pattern (YYYY-MM-DD)

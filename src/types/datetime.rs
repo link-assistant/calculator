@@ -44,6 +44,17 @@ impl Ord for DateTime {
 }
 
 impl DateTime {
+    /// Creates a `DateTime` representing the current UTC time.
+    #[must_use]
+    pub fn now() -> Self {
+        Self {
+            inner: Utc::now(),
+            offset_seconds: Some(0),
+            has_time: true,
+            has_date: true,
+        }
+    }
+
     /// Creates a new `DateTime` from a chrono `DateTime`.
     #[must_use]
     pub const fn from_utc(dt: ChronoDateTime<Utc>, has_date: bool, has_time: bool) -> Self {
@@ -94,24 +105,205 @@ impl DateTime {
     pub fn parse(input: &str) -> Result<Self, CalculatorError> {
         let input = input.trim();
 
+        // Check for "now" keyword variants
+        if let Some(dt) = Self::try_parse_now(input) {
+            return Ok(dt);
+        }
+
+        // Check for "UTC time" / "time UTC" / "current time" variants
+        if let Some(dt) = Self::try_parse_current_time_phrase(input) {
+            return Ok(dt);
+        }
+
+        // Pre-process: strip day names and ordinal suffixes
+        let cleaned = Self::preprocess_natural_date(input);
+        let input_to_parse = if cleaned != input { &cleaned } else { input };
+
         // Try various date formats
-        if let Some(dt) = Self::try_parse_date_formats(input) {
+        if let Some(dt) = Self::try_parse_date_formats(input_to_parse) {
             return Ok(dt);
         }
 
         // Try various time formats
-        if let Some(dt) = Self::try_parse_time_formats(input) {
+        if let Some(dt) = Self::try_parse_time_formats(input_to_parse) {
             return Ok(dt);
         }
 
         // Try datetime formats
-        if let Some(dt) = Self::try_parse_datetime_formats(input) {
+        if let Some(dt) = Self::try_parse_datetime_formats(input_to_parse) {
             return Ok(dt);
+        }
+
+        // If preprocessing changed the input, also try with original
+        if cleaned != input {
+            if let Some(dt) = Self::try_parse_date_formats(input) {
+                return Ok(dt);
+            }
+            if let Some(dt) = Self::try_parse_time_formats(input) {
+                return Ok(dt);
+            }
+            if let Some(dt) = Self::try_parse_datetime_formats(input) {
+                return Ok(dt);
+            }
         }
 
         Err(CalculatorError::InvalidDateTime(format!(
             "Could not parse '{input}' as a date or time"
         )))
+    }
+
+    /// Checks if input represents "now" (current time).
+    fn try_parse_now(input: &str) -> Option<Self> {
+        let lower = input.to_lowercase();
+        let trimmed = lower.trim();
+
+        // Exact "now" or "now" with timezone
+        match trimmed {
+            "now" => return Some(Self::now()),
+            "now utc" | "utc now" | "now gmt" | "gmt now" => return Some(Self::now()),
+            _ => {}
+        }
+
+        // "now <timezone>" pattern
+        if let Some(rest) = trimmed.strip_prefix("now ") {
+            let rest = rest.trim();
+            if let Some(offset) = Self::parse_tz_abbreviation(rest) {
+                let mut dt = Self::now();
+                dt.set_offset(Some(offset));
+                return Some(dt);
+            }
+        }
+
+        // "<timezone> now" pattern
+        if let Some(rest) = trimmed.strip_suffix(" now") {
+            let rest = rest.trim();
+            if let Some(offset) = Self::parse_tz_abbreviation(rest) {
+                let mut dt = Self::now();
+                dt.set_offset(Some(offset));
+                return Some(dt);
+            }
+        }
+
+        None
+    }
+
+    /// Checks if input represents a "current time" phrase.
+    fn try_parse_current_time_phrase(input: &str) -> Option<Self> {
+        let lower = input.to_lowercase();
+        let trimmed = lower.trim();
+
+        // Phrases that mean "current UTC time"
+        let current_time_phrases = [
+            "utc time",
+            "time utc",
+            "current time",
+            "current time utc",
+            "utc current time",
+            "current utc time",
+            "gmt time",
+            "time gmt",
+        ];
+
+        if current_time_phrases.contains(&trimmed) {
+            return Some(Self::now());
+        }
+
+        None
+    }
+
+    /// Pre-processes natural date strings by removing day names, ordinal suffixes,
+    /// and the "on" preposition.
+    fn preprocess_natural_date(input: &str) -> String {
+        let mut result = input.to_string();
+
+        // Remove day names (case-insensitive)
+        let day_names = [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday",
+            "mon",
+            "tue",
+            "wed",
+            "thu",
+            "fri",
+            "sat",
+            "sun",
+        ];
+        let lower = result.to_lowercase();
+        for day in &day_names {
+            if let Some(pos) = lower.find(day) {
+                let end = pos + day.len();
+                // Remove the day name and any trailing comma/space
+                let prefix = result[..pos].trim_end().to_string();
+                let suffix_raw = result[end..].trim_start().to_string();
+                let suffix = suffix_raw
+                    .strip_prefix(',')
+                    .unwrap_or(&suffix_raw)
+                    .trim_start()
+                    .to_string();
+                result = if prefix.is_empty() {
+                    suffix
+                } else {
+                    format!("{prefix} {suffix}")
+                };
+                result = result.trim().to_string();
+                break;
+            }
+        }
+
+        // Remove "on " preposition (often between time and date)
+        result = result.replace(" on ", " ");
+
+        // Remove ordinal suffixes from day numbers (1st, 2nd, 3rd, 4th-31st)
+        let re_result = regex::Regex::new(r"(\d{1,2})(st|nd|rd|th)\b");
+        if let Ok(re) = re_result {
+            result = re.replace_all(&result, "$1").to_string();
+        }
+
+        result
+    }
+
+    /// Parses common timezone abbreviations to `FixedOffset`.
+    fn parse_tz_abbreviation(tz: &str) -> Option<FixedOffset> {
+        let offset_hours = match tz.to_uppercase().as_str() {
+            "UTC" | "GMT" | "Z" => 0,
+            // US timezones
+            "EST" => -5,
+            "EDT" => -4,
+            "CST" => -6,
+            "CDT" => -5,
+            "MST" => -7,
+            "MDT" => -6,
+            "PST" => -8,
+            "PDT" => -7,
+            "AKST" => -9,
+            "AKDT" => -8,
+            "HST" | "HAST" => -10,
+            // European timezones
+            "CET" => 1,
+            "CEST" => 2,
+            "EET" => 2,
+            "EEST" => 3,
+            "WET" => 0,
+            "WEST" => 1,
+            "GMT+1" | "BST" => 1,
+            // Asian timezones
+            "IST" => 5, // India Standard Time (5:30 handled separately)
+            "JST" => 9,
+            "KST" => 9,
+            "CST+8" | "SGT" | "HKT" | "PHT" => 8,
+            // Australian timezones
+            "AEST" => 10,
+            "AEDT" => 11,
+            "ACST" => 9, // Actually +9:30
+            "AWST" => 8,
+            _ => return None,
+        };
+        FixedOffset::east_opt(offset_hours * 3600)
     }
 
     fn try_parse_date_formats(input: &str) -> Option<Self> {
@@ -227,6 +419,16 @@ impl DateTime {
             return (time_part, Some(FixedOffset::east_opt(0).unwrap()));
         }
 
+        // Check for common timezone abbreviations as suffix
+        // Try to match the last word as a timezone abbreviation
+        if let Some(last_space) = input.rfind(' ') {
+            let potential_tz = &input[last_space + 1..];
+            if let Some(offset) = Self::parse_tz_abbreviation(potential_tz) {
+                let time_part = input[..last_space].trim();
+                return (time_part, Some(offset));
+            }
+        }
+
         // Check for explicit offset like +05:00 or -08:00
         if let Some(idx) = input.rfind('+').or_else(|| {
             // Find the last minus that's not at the start
@@ -282,6 +484,12 @@ impl DateTime {
             }
         }
 
+        // Try "time <date>" pattern: "11:59pm EST January 26"
+        // Look for a time-like pattern at the start followed by a date
+        if let Some(dt) = Self::try_parse_time_then_date(input) {
+            return Some(dt);
+        }
+
         // ISO 8601 format
         if let Ok(dt) = ChronoDateTime::parse_from_rfc3339(input) {
             return Some(Self {
@@ -300,6 +508,63 @@ impl DateTime {
                 has_time: true,
                 has_date: true,
             });
+        }
+
+        None
+    }
+
+    /// Try to parse "time date" patterns like "11:59pm EST January 26"
+    fn try_parse_time_then_date(input: &str) -> Option<Self> {
+        let input = input.trim();
+
+        // Look for am/pm pattern or HH:MM pattern at the start
+        let words: Vec<&str> = input.split_whitespace().collect();
+        if words.len() < 2 {
+            return None;
+        }
+
+        // Try progressively longer prefixes as the time part
+        for split_at in 1..words.len() {
+            let time_candidate = words[..split_at].join(" ");
+            let date_candidate = words[split_at..].join(" ");
+
+            if let Some(time_dt) = Self::try_parse_time_formats(&time_candidate) {
+                // Try the remaining as a date (partial or full)
+                if let Some(date) = Self::parse_partial_date(&date_candidate) {
+                    let datetime = date.and_time(time_dt.inner.time()).and_utc();
+                    let mut result = Self {
+                        inner: datetime,
+                        offset_seconds: time_dt.offset_seconds,
+                        has_time: true,
+                        has_date: true,
+                    };
+                    // If time had a timezone, adjust the UTC time accordingly
+                    if let Some(offset) = time_dt.offset_seconds.and_then(FixedOffset::east_opt) {
+                        let local = result.inner.naive_utc();
+                        if let Some(adj) = offset.from_local_datetime(&local).single() {
+                            result.inner = adj.with_timezone(&Utc);
+                        }
+                    }
+                    return Some(result);
+                }
+                if let Some(date_dt) = Self::try_parse_date_formats(&date_candidate) {
+                    let date = date_dt.inner.date_naive();
+                    let datetime = date.and_time(time_dt.inner.time()).and_utc();
+                    let mut result = Self {
+                        inner: datetime,
+                        offset_seconds: time_dt.offset_seconds,
+                        has_time: true,
+                        has_date: true,
+                    };
+                    if let Some(offset) = time_dt.offset_seconds.and_then(FixedOffset::east_opt) {
+                        let local = result.inner.naive_utc();
+                        if let Some(adj) = offset.from_local_datetime(&local).single() {
+                            result.inner = adj.with_timezone(&Utc);
+                        }
+                    }
+                    return Some(result);
+                }
+            }
         }
 
         None
@@ -352,10 +617,22 @@ impl DateTime {
         &self.inner
     }
 
-    /// Subtracts another DateTime, returning a Duration.
+    /// Subtracts another DateTime, returning a Duration (absolute value).
     pub fn subtract(&self, other: &Self) -> std::time::Duration {
         let diff = self.inner.signed_duration_since(other.inner);
         diff.to_std().unwrap_or_default()
+    }
+
+    /// Subtracts another DateTime, returning signed seconds (positive if self > other).
+    #[must_use]
+    pub fn signed_subtract_seconds(&self, other: &Self) -> i64 {
+        self.inner.signed_duration_since(other.inner).num_seconds()
+    }
+
+    /// Returns the inner chrono DateTime (for comparisons, etc.).
+    #[must_use]
+    pub fn inner_utc(&self) -> ChronoDateTime<Utc> {
+        self.inner
     }
 
     /// Adds a duration to this DateTime.
