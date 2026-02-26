@@ -2,8 +2,8 @@
 
 A grammar-based expression calculator with DateTime and Currency support, built with Rust WebAssembly and React.
 
-[![CI/CD Pipeline](https://github.com/link-assistant/calculator/workflows/CI/badge.svg)](https://github.com/link-assistant/calculator/actions)
-[![Deploy](https://github.com/link-assistant/calculator/workflows/Deploy%20to%20GitHub%20Pages/badge.svg)](https://link-assistant.github.io/calculator/)
+[![CI/CD Pipeline](https://github.com/link-assistant/calculator/workflows/CI%2FCD%20Pipeline/badge.svg)](https://github.com/link-assistant/calculator/actions)
+[![Crates.io](https://img.shields.io/crates/v/link-calculator.svg)](https://crates.io/crates/link-calculator)
 [![Rust Version](https://img.shields.io/badge/rust-1.70%2B-blue.svg)](https://www.rust-lang.org/)
 [![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)
 

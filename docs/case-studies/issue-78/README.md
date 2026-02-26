@@ -3,15 +3,17 @@
 ## Overview
 
 **Issue:** https://github.com/link-assistant/calculator/issues/78
-**Status:** Root cause found and fixed
-**Severity:** High — the automated release pipeline never committed version bumps to git
+**Status:** Root causes found and fixed (multiple iterations)
+**Severity:** High — the automated release pipeline never committed version bumps to git, and the web app always showed a stale version
 
 ### Symptoms
 
 1. `Cargo.toml` version stuck at `0.1.0` on `main` branch despite GitHub release `v0.2.0` existing
 2. 37+ changelog fragments accumulated in `changelog.d/` without being cleared
-3. WASM-compiled web app footer showed wrong version (because it reads from `CARGO_PKG_VERSION` at compile time, which remained `0.1.0`)
+3. WASM-compiled web app footer showed wrong version (because it reads from `CARGO_PKG_VERSION` at compile time)
 4. Auto-release job ran on every push to `main` but logged "No changes to commit" after modifying Cargo.toml
+5. After the first fix (PR#79), a `v0.1.1` release was created instead of the correct `v0.2.1` because Cargo.toml had been reverted to `0.1.0`
+6. Web footer still showed `v0.1.0` even after the `v0.1.1` release succeeded, because the CI build/deploy run in parallel with the version bump
 
 ---
 
@@ -23,74 +25,67 @@
 | 2026-02-25T00:11 | Auto-release job runs for PR #66, logs "Updated Cargo.toml to 0.2.0" but "No changes to commit" — yet v0.2.0 release is created on GitHub and published to crates.io |
 | 2026-02-25T18:27 | Auto-release job fails with npm 403 error (investigated in issue #76) |
 | 2026-02-25T20:18 | PR #77 merged (pins npm packages), auto-release runs again — same "No changes to commit" pattern |
-| 2026-02-25 (this fix) | Root cause identified and fixed |
+| 2026-02-26T09:09 | PR #79 merged (fixes `version-and-commit.mjs` bug), auto-release runs → creates `v0.1.1` release (wrong — should have been v0.2.x) |
+| 2026-02-26T09:10 | CI run [22435338053](https://github.com/link-assistant/calculator/actions/runs/22435338053): `v0.1.1` committed to git, published to crates.io, GitHub Release created |
+| 2026-02-26 | Web footer still shows `v0.1.0` — the web deploy ran in parallel with auto-release using the old Cargo.toml |
 
 ---
 
 ## Root Cause Analysis
 
-### Root Cause 1: `git diff --cached --quiet` exit code not properly handled in `version-and-commit.mjs`
+### Root Cause 1 (Fixed in PR#79): `git diff --cached --quiet` exit code not properly handled
 
 **File:** `scripts/version-and-commit.mjs`
-**Line:** The `try/catch` block for detecting staged changes
 
-**The Code:**
-```javascript
-// Check if there are changes to commit
-try {
-  await $`git diff --cached --quiet`.run({ capture: true });
-  // No changes to commit
-  console.log('No changes to commit');
-  setOutput('version_committed', 'false');
-  setOutput('new_version', newVersion);
-  return;
-} catch {
-  // There are changes to commit (git diff exits with 1 when there are differences)
-}
-```
+**The Bug:** `command-stream`'s `$` function has `errexit: false` as the default setting. This means the `try/catch` block for detecting staged changes **never reached the catch**, because `git diff --cached --quiet` (which exits 1 when there ARE staged changes) never threw an exception.
 
-**The Bug:** `command-stream`'s `$` function has `errexit: false` as the default setting (see `$.state.mjs` line 26: `errexit: false`). This means `$` tagged template literals **do NOT throw on non-zero exit codes by default**.
-
-- `git diff --cached --quiet` exits with code **0** if there are NO staged changes
-- `git diff --cached --quiet` exits with code **1** if there ARE staged changes
-- With `errexit: false`, `await $\`git diff --cached --quiet\`` **never throws**, regardless of exit code
-- Therefore, the `catch` block is **never reached**
-- "No changes to commit" is **always** logged, even when Cargo.toml and CHANGELOG.md are staged
+**Fix:** Replace `try/catch` with explicit `diffResult.code === 0` check.
 
 **Evidence:**
 - CI run [22414258821](https://github.com/link-assistant/calculator/actions/runs/22414258821): "Updated ./Cargo.toml to version 0.2.0" → "No changes to commit"
-- `get-version.mjs` running immediately after reports "Current version: 0.2.0" — confirming the file WAS written
-- Same pattern seen in run [22375851874](https://github.com/link-assistant/calculator/actions/runs/22375851874)
+- CI run [22375851874](https://github.com/link-assistant/calculator/actions/runs/22375851874): same pattern
 
-**Fix:** Replace `try/catch` with explicit exit code check:
-```javascript
-const diffResult = await $`git diff --cached --quiet`.run({ capture: true });
-if (diffResult.code === 0) {
-  // No changes to commit
-  console.log('No changes to commit');
-  setOutput('version_committed', 'false');
-  setOutput('new_version', newVersion);
-  return;
-}
-// There are changes to commit
+---
+
+### Root Cause 2: Version ordering became wrong after the fix
+
+**Symptom:** After PR#79 fixed the scripting bug, the auto-release created `v0.1.1` instead of the expected `v0.2.1`.
+
+**Why:** In PR#79, commit `47fc9fc1` reverted Cargo.toml from 0.2.0 back to 0.1.0 to pass the `version-check` CI (which blocks manual version changes in PRs). When the fixed pipeline ran, it computed:
+```
+0.1.0 + patch (one fragment with patch) = 0.1.1
 ```
 
-### Root Cause 2: Cargo.toml version out of sync
+But crates.io already had 0.2.0. So the release ordering became: v0.1.0 → v0.2.0 → v0.1.1 (semantically incorrect).
 
-Because the version commit was never made to git, `Cargo.toml` on `main` still shows `0.1.0` even though:
-- crates.io has `link-calculator@0.2.0` published
-- GitHub has a `v0.2.0` release
-- A `v0.2.0` tag exists on GitHub
+**Fix (PR#80):** Add a `minor` changelog fragment so the next auto-release computes:
+```
+0.1.1 + minor = 0.2.0 (already exists → pipeline treats as success, syncs git to 0.2.0)
+```
+After that sync, subsequent releases will compute from 0.2.0 (producing 0.2.1, 0.3.0, etc.).
 
-**Fix:** Manually bump `Cargo.toml` to `0.2.0` and clean up `CHANGELOG.md` to reflect the accumulated changes.
+---
 
-### Root Cause 3: Changelog fragments never cleaned from git
+### Root Cause 3: Web footer always shows stale version after release
 
-The 37+ changelog fragments in `changelog.d/` were deleted from disk in CI but since the commit never happened, they remain in the git repository. This causes every subsequent push to `main` to:
-1. Find 37+ fragments (they still exist in git)
-2. Attempt another release (same "No changes to commit" loop)
+**Symptom:** After every release, `link-assistant.github.io/calculator/` shows the old version in the footer until the NEXT code change triggers a new CI run.
 
-**Fix:** Clean the `changelog.d/` directory as part of this fix commit.
+**Why:** The CI/CD pipeline job dependency graph is:
+```
+lint + test → wasm-build → web-build → deploy-pages
+lint + test → build     → auto-release
+```
+
+The `wasm-build`, `web-build`, and `deploy-pages` jobs run **in parallel** with `auto-release`. They check out the code and compile the WASM with the **current** Cargo.toml (before the version bump). The auto-release job then pushes a new commit bumping the version. But since that push uses `GITHUB_TOKEN`, GitHub Actions does **not** trigger a new CI run (by design, to prevent infinite loops).
+
+**Evidence:**
+- CI run [22435338053](https://github.com/link-assistant/calculator/actions/runs/22435338053): The `auto-release` job ran at 09:11, pushing commit `7e854bb0` (Cargo.toml = 0.1.1). But the `web-build` and `deploy-pages` jobs had already started earlier (09:10) with the old Cargo.toml (0.1.0). The deployed web app therefore shows `v0.1.0`.
+
+**Fix (PR#80):** Add a new `deploy-after-release` job that:
+1. Depends on `auto-release` completing successfully AND having committed a new version
+2. Checks out `ref: main` (getting the version-bumped Cargo.toml)
+3. Rebuilds the WASM with the new `CARGO_PKG_VERSION`
+4. Rebuilds and redeploys the web app to GitHub Pages
 
 ---
 
@@ -99,40 +94,36 @@ The 37+ changelog fragments in `changelog.d/` were deleted from disk in CI but s
 ### Issue #76 (Resolved): npm 403 in CI
 The auto-release job also failed with `npm error 403` when fetching `command-stream@latest` via `use-m`. Fixed in PR #77 by pinning package versions.
 
-### Version Display in Web Footer
-The web app displays version from `Calculator.version()` (WASM), which reads `CARGO_PKG_VERSION` at compile time. Since Cargo.toml was stuck at `0.1.0`, the deployed web app showed `v0.1.0` in the footer even after the v0.2.0 GitHub release.
-
-**Fix:** Once `Cargo.toml` is bumped to `0.2.0` and the WASM is rebuilt and deployed, the footer will show `v0.2.0`.
+### No crates.io badge in README
+The README had no badge linking to the crates.io page. Added `[![Crates.io](https://img.shields.io/crates/v/link-calculator.svg)](https://crates.io/crates/link-calculator)` badge in PR #80.
 
 ---
 
 ## Data Collected
 
-- `ci-run-22414258821.log` — latest CI run showing "No changes to commit" bug
-- `ci-run-22375851874.log` — earlier run with same bug, confirms it's systemic
+- `ci-run-22414258821.log` — CI run showing "No changes to commit" bug (pre-fix)
+- `ci-run-22375851874.log` — Earlier run with same bug, confirms it's systemic
 - `ci-run-22410298646.log` — npm 403 failure run (issue #76)
-- `rust-template-release.yml` — reference template workflow for comparison
+- `ci-run-22435338053-latest.log` — Latest run showing v0.1.1 correctly committed but web deployed with old version
+- `rust-template-release.yml` — Reference template workflow for comparison
 
 ---
 
-## Fix Summary
+## Fix Summary (PR#80)
 
-1. **`scripts/version-and-commit.mjs`**: Replace `try/catch` exit code detection with explicit `diffResult.code` check
-2. **`Cargo.toml`**: Bump version to `0.2.0` to match published release
-3. **`CHANGELOG.md`**: Add consolidated changelog entry for all changes since `0.1.0`
-4. **`changelog.d/`**: Clean up all accumulated changelog fragments (they are consumed into CHANGELOG.md)
-
----
-
-## How the Bug Was Introduced
-
-The `try/catch` pattern was probably inspired by shell scripting where `set -e` causes scripts to exit on error. The equivalent in `command-stream` would be enabling `errexit` mode. The bug was introduced when the code was converted from shell scripts to Node.js scripts without accounting for this behavioral difference.
+1. **`.github/workflows/release.yml`**:
+   - Add `outputs` to `auto-release` job (`version_committed`, `new_version`) so downstream jobs can inspect results
+   - Add new `deploy-after-release` job that runs after `auto-release` when a new version was committed, rebuilding the WASM and web app with the correct version
+2. **`README.md`**: Add crates.io badge, fix CI/CD badge URL to match actual workflow name
+3. **`changelog.d/20260226_090000_fix_web_version_display.md`**: Changelog fragment for version bump (minor — adds new CI job feature)
 
 ---
 
-## Upstream Issue
+## How Root Cause 3 Was Introduced
 
-This bug could affect any project using `command-stream` with the same pattern. The library's default `errexit: false` behavior is not obvious and differs from the "throw on error" expectation of `async/await` code. Consider reporting to the `command-stream` maintainers.
+The CI pipeline was designed to minimize build time by running jobs in parallel. Web build and auto-release both run after lint+test, so they start at the same time. The assumption was that `GITHUB_TOKEN` pushes would trigger new CI runs, but GitHub Actions intentionally prevents this to avoid infinite recursion loops. This is documented behavior but easy to miss when designing the pipeline.
+
+The fix makes `deploy-after-release` an explicit sequential step after `auto-release`, trading a small amount of pipeline parallelism for correctness: the deployed web app always matches the latest published version.
 
 ---
 
@@ -140,8 +131,12 @@ This bug could affect any project using `command-stream` with the same pattern. 
 
 - Issue #78: https://github.com/link-assistant/calculator/issues/78
 - Issue #76 (npm 403): https://github.com/link-assistant/calculator/issues/76
-- PR #66 (version fix attempt): https://github.com/link-assistant/calculator/pull/66
+- PR #66 (initial version fix attempt): https://github.com/link-assistant/calculator/pull/66
 - PR #77 (npm pinning fix): https://github.com/link-assistant/calculator/pull/77
+- PR #79 (version-and-commit.mjs fix): https://github.com/link-assistant/calculator/pull/79
+- PR #80 (this PR — deploy-after-release fix): https://github.com/link-assistant/calculator/pull/80
 - command-stream source: https://www.npmjs.com/package/command-stream
+- GitHub Actions: Triggering a workflow — GITHUB_TOKEN restrictions: https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/triggering-a-workflow#triggering-a-workflow-from-a-workflow
 - CI run 22414258821: https://github.com/link-assistant/calculator/actions/runs/22414258821
 - CI run 22375851874: https://github.com/link-assistant/calculator/actions/runs/22375851874
+- CI run 22435338053: https://github.com/link-assistant/calculator/actions/runs/22435338053
