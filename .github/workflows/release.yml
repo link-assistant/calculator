@@ -504,10 +504,16 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: web/dist
+          # Use a unique name to avoid 409 Conflict with the artifact uploaded by
+          # the earlier deploy-pages job within the same workflow run.
+          # Both upload-pages-artifact and deploy-pages support custom artifact names.
+          name: github-pages-after-release
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-after-release
 
   # === MANUAL INSTANT RELEASE ===
   # Manual release via workflow_dispatch - only after CI passes
