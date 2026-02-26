@@ -109,13 +109,38 @@ The README had no badge linking to the crates.io page. Added `[![Crates.io](http
 
 ---
 
-## Fix Summary (PR#80)
+### Root Cause 4 (Fixed in PR#81): 409 Conflict when uploading GitHub Pages artifact in `deploy-after-release`
 
+**Symptom:** After applying the `deploy-after-release` fix (PR#80), the CI run [22439390199](https://github.com/link-assistant/calculator/actions/runs/22439390199) failed at the "Upload artifact" step of the `deploy-after-release` job with:
+
+```
+Failed to CreateArtifact: Received non-retryable error: Failed request: (409) Conflict: an artifact with this name already exists on the workflow run
+```
+
+**Why:** `actions/upload-pages-artifact` always uses the fixed artifact name `github-pages` (its hardcoded default). Since both `deploy-pages` and `deploy-after-release` call this action in the **same workflow run**, the second upload in `deploy-after-release` fails with a 409 Conflict because the name is already taken by the first upload in `deploy-pages`.
+
+**Fix:** Use a unique artifact name in `deploy-after-release`:
+- Pass `name: github-pages-after-release` to `actions/upload-pages-artifact@v3`
+- Pass `artifact_name: github-pages-after-release` to `actions/deploy-pages@v4`
+
+Both actions support custom artifact names via their `name`/`artifact_name` inputs, documented in:
+- https://github.com/actions/upload-pages-artifact (supports `name` input)
+- https://github.com/actions/deploy-pages (supports `artifact_name` input)
+
+---
+
+## Fix Summary
+
+### PR#80 Fixes
 1. **`.github/workflows/release.yml`**:
    - Add `outputs` to `auto-release` job (`version_committed`, `new_version`) so downstream jobs can inspect results
    - Add new `deploy-after-release` job that runs after `auto-release` when a new version was committed, rebuilding the WASM and web app with the correct version
 2. **`README.md`**: Add crates.io badge, fix CI/CD badge URL to match actual workflow name
 3. **`changelog.d/20260226_090000_fix_web_version_display.md`**: Changelog fragment for version bump (minor — adds new CI job feature)
+
+### PR#81 Fixes
+1. **`.github/workflows/release.yml`**: Fix `deploy-after-release` job to use unique Pages artifact name (`github-pages-after-release`) to avoid 409 Conflict with the artifact uploaded by the earlier `deploy-pages` job.
+2. **`changelog.d/20260226_120000_fix_deploy_after_release_409_conflict.md`**: Changelog fragment (patch).
 
 ---
 
@@ -124,6 +149,10 @@ The README had no badge linking to the crates.io page. Added `[![Crates.io](http
 The CI pipeline was designed to minimize build time by running jobs in parallel. Web build and auto-release both run after lint+test, so they start at the same time. The assumption was that `GITHUB_TOKEN` pushes would trigger new CI runs, but GitHub Actions intentionally prevents this to avoid infinite recursion loops. This is documented behavior but easy to miss when designing the pipeline.
 
 The fix makes `deploy-after-release` an explicit sequential step after `auto-release`, trading a small amount of pipeline parallelism for correctness: the deployed web app always matches the latest published version.
+
+## How Root Cause 4 Was Introduced
+
+When adding the `deploy-after-release` job (PR#80), the developer copied the GitHub Pages deployment steps from `deploy-pages` without realizing that `actions/upload-pages-artifact` uses a hardcoded default artifact name `github-pages`. This is a subtle limitation of the GitHub Pages deployment actions: multiple jobs in the same workflow run cannot both upload a `github-pages` artifact.
 
 ---
 
@@ -134,9 +163,13 @@ The fix makes `deploy-after-release` an explicit sequential step after `auto-rel
 - PR #66 (initial version fix attempt): https://github.com/link-assistant/calculator/pull/66
 - PR #77 (npm pinning fix): https://github.com/link-assistant/calculator/pull/77
 - PR #79 (version-and-commit.mjs fix): https://github.com/link-assistant/calculator/pull/79
-- PR #80 (this PR — deploy-after-release fix): https://github.com/link-assistant/calculator/pull/80
+- PR #80 (deploy-after-release fix): https://github.com/link-assistant/calculator/pull/80
+- PR #81 (409 Conflict fix): https://github.com/link-assistant/calculator/pull/81
 - command-stream source: https://www.npmjs.com/package/command-stream
 - GitHub Actions: Triggering a workflow — GITHUB_TOKEN restrictions: https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/triggering-a-workflow#triggering-a-workflow-from-a-workflow
+- actions/upload-pages-artifact: https://github.com/actions/upload-pages-artifact
+- actions/deploy-pages: https://github.com/actions/deploy-pages
 - CI run 22414258821: https://github.com/link-assistant/calculator/actions/runs/22414258821
 - CI run 22375851874: https://github.com/link-assistant/calculator/actions/runs/22375851874
 - CI run 22435338053: https://github.com/link-assistant/calculator/actions/runs/22435338053
+- CI run 22439390199 (409 Conflict failure): https://github.com/link-assistant/calculator/actions/runs/22439390199
