@@ -37,6 +37,8 @@ pub enum TokenKind {
     In,
     /// The "to" keyword for unit conversion (e.g., "19 TON to USD").
     To,
+    /// The "until" keyword for duration until a datetime.
+    Until,
     /// End of input.
     Eof,
 }
@@ -241,6 +243,7 @@ impl Lexer {
             "as" => TokenKind::As,
             "in" => TokenKind::In,
             "to" => TokenKind::To,
+            "until" => TokenKind::Until,
             _ => TokenKind::Identifier(text.clone()),
         };
 
