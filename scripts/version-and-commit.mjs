@@ -272,16 +272,19 @@ async function main() {
     }
 
     // Check if there are changes to commit
-    try {
-      await $`git diff --cached --quiet`.run({ capture: true });
+    // NOTE: command-stream's $ has errexit=false by default, so it does NOT throw on non-zero
+    // exit codes. We must check the result.code explicitly instead of relying on try/catch.
+    // git diff --cached --quiet exits 0 = no staged changes, exits 1 = there ARE staged changes.
+    // See: https://github.com/link-assistant/calculator/issues/78
+    const diffResult = await $`git diff --cached --quiet`.run({ capture: true });
+    if (diffResult.code === 0) {
       // No changes to commit
       console.log('No changes to commit');
       setOutput('version_committed', 'false');
       setOutput('new_version', newVersion);
       return;
-    } catch {
-      // There are changes to commit (git diff exits with 1 when there are differences)
     }
+    // diffResult.code === 1: there ARE staged changes, proceed with commit
 
     // Commit changes
     const commitMsg = description
