@@ -21,6 +21,7 @@ import { join } from 'path';
 import {
   getRustRoot,
   getCargoTomlPath,
+  getCargoLockPath,
   getChangelogDir,
   getChangelogPath,
   parseRustRootConfig,
@@ -67,6 +68,7 @@ const rustRoot = getRustRoot({ rustRoot: rustRootConfig || undefined, verbose: t
 
 // Get paths based on detected/configured rust root
 const CARGO_TOML = getCargoTomlPath({ rustRoot });
+const CARGO_LOCK = getCargoLockPath({ rustRoot });
 const CHANGELOG_DIR = getChangelogDir({ rustRoot });
 const CHANGELOG_FILE = getChangelogPath({ rustRoot });
 
@@ -263,9 +265,18 @@ async function main() {
     // Collect changelog fragments
     collectChangelog(newVersion);
 
-    // Stage Cargo.toml, CHANGELOG.md, and removed changelog fragments
+    // Update Cargo.lock to match the new version in Cargo.toml.
+    // After bumping the version field in Cargo.toml, Cargo.lock becomes stale
+    // (it still contains the old version). Running `cargo update --workspace`
+    // regenerates Cargo.lock so that `cargo package --list` doesn't fail with
+    // "files in the working directory contain changes that were not yet committed".
+    // See: https://github.com/link-assistant/calculator/issues/78
+    await $`cargo update --workspace`;
+    console.log('Updated Cargo.lock to reflect new version');
+
+    // Stage Cargo.toml, Cargo.lock, CHANGELOG.md, and removed changelog fragments
     // Use the paths determined by rust-root configuration
-    await $`git add ${CARGO_TOML} ${CHANGELOG_FILE}`;
+    await $`git add ${CARGO_TOML} ${CARGO_LOCK} ${CHANGELOG_FILE}`;
     // Stage deleted changelog fragments (if any)
     if (existsSync(CHANGELOG_DIR)) {
       await $`git add ${CHANGELOG_DIR}`;
