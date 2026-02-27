@@ -193,11 +193,11 @@ impl Expression {
 
     /// Converts the expression to links notation format.
     ///
-    /// Links notation uses minimal parentheses, only adding them where
-    /// necessary to clarify structure. The rules are:
+    /// Links notation wraps all compound expressions in parentheses:
     /// - Atomic values (numbers, variables) don't need parentheses
-    /// - Binary operations are wrapped in a single set of parentheses
-    /// - Explicit groups from the input are preserved
+    /// - All other expressions are wrapped in outer `()`
+    /// - Function calls use space-separated args: `(func (arg1 arg2 arg3))`
+    /// - Power uses `^` operator with spaces: `(x ^ 2)`
     #[must_use]
     pub fn to_lino(&self) -> String {
         self.to_lino_internal(None)
@@ -254,33 +254,28 @@ impl Expression {
             }
             Self::FunctionCall { name, args } => {
                 if args.is_empty() {
-                    name.clone()
+                    format!("({name})")
                 } else {
                     let args_str = args
                         .iter()
                         .map(|a| a.to_lino_internal(None))
                         .collect::<Vec<_>>()
-                        .join(", ");
-                    format!("{name}({args_str})")
+                        .join(" ");
+                    format!("({name} ({args_str}))")
                 }
             }
             Self::Variable(name) => name.clone(),
             Self::Power { base, exponent } => {
                 let base_str = base.to_lino_internal(None);
                 let exp_str = exponent.to_lino_internal(None);
-                // Add parens around base if it's a complex expression
-                if base.needs_parens_for_power() {
-                    format!("({base_str})^{exp_str}")
-                } else {
-                    format!("{base_str}^{exp_str}")
-                }
+                format!("({base_str} ^ {exp_str})")
             }
             Self::IndefiniteIntegral {
                 integrand,
                 variable,
             } => {
                 let integrand_str = integrand.to_lino_internal(None);
-                format!("integrate {integrand_str} d{variable}")
+                format!("(integrate {integrand_str} d{variable})")
             }
             Self::UnitConversion { value, target_unit } => {
                 let value_str = value.to_lino_internal(None);
@@ -298,6 +293,9 @@ impl Expression {
     }
 
     /// Returns true if this expression needs parentheses when used as a power base.
+    /// Note: Currently unused since `to_lino()` always wraps Power in parens,
+    /// but kept for potential use in `to_latex()` or other representations.
+    #[allow(dead_code)]
     fn needs_parens_for_power(&self) -> bool {
         matches!(
             self,

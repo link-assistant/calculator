@@ -17,13 +17,17 @@ pub fn evaluate_indefinite_integral(
     // Check for known special integrals
     let symbolic_result = try_symbolic_integral(integrand, variable);
 
+    // Generate the links notation for the integral expression
+    let integral_expr = Expression::indefinite_integral(integrand.clone(), variable);
+    let lino = integral_expr.to_lino();
+
     if let Some(result) = symbolic_result {
         // Return a special value that indicates symbolic result
         // For now, we'll create an error with the symbolic result as a message
         // since the Value type doesn't support symbolic results yet
         let latex_result = symbolic_result_to_latex(&result);
         Err(CalculatorError::SymbolicResult {
-            expression: format!("∫ {} d{}", integrand, variable),
+            expression: lino,
             result,
             latex_input: format!("\\int {} \\, d{}", integrand.to_latex(), variable),
             latex_result,
@@ -31,7 +35,7 @@ pub fn evaluate_indefinite_integral(
     } else {
         // For unknown integrals, provide a helpful message
         Err(CalculatorError::SymbolicResult {
-            expression: format!("∫ {} d{}", integrand, variable),
+            expression: lino,
             result: "Cannot compute symbolic result. Use definite integral with bounds: integrate(expr, var, lower, upper)".to_string(),
             latex_input: format!("\\int {} \\, d{}", integrand.to_latex(), variable),
             latex_result: "\\text{Use definite integral with bounds}".to_string(),
