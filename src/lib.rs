@@ -123,6 +123,10 @@ pub struct CalculationResult {
     pub result: String,
     /// The input interpreted in links notation format.
     pub lino_interpretation: String,
+    /// Alternative links notation interpretations the user can switch between.
+    /// The first element is always the currently selected (default) interpretation.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub alternative_lino: Option<Vec<String>>,
     /// Step-by-step explanation of the calculation (raw text for backwards compatibility).
     pub steps: Vec<String>,
     /// Step-by-step explanation with i18n support.
@@ -164,6 +168,7 @@ impl CalculationResult {
         Self {
             result,
             lino_interpretation: lino,
+            alternative_lino: None,
             steps,
             steps_i18n: None,
             success: true,
@@ -211,6 +216,7 @@ impl CalculationResult {
         Self {
             result,
             lino_interpretation: lino,
+            alternative_lino: None,
             steps,
             steps_i18n: None,
             success: true,
@@ -237,6 +243,7 @@ impl CalculationResult {
         Self {
             result,
             lino_interpretation: lino,
+            alternative_lino: None,
             steps,
             steps_i18n: Some(steps_i18n),
             success: true,
@@ -264,6 +271,7 @@ impl CalculationResult {
         Self {
             result,
             lino_interpretation: lino,
+            alternative_lino: None,
             steps,
             steps_i18n: None,
             success: true,
@@ -291,6 +299,7 @@ impl CalculationResult {
         Self {
             result,
             lino_interpretation: expression.to_string(),
+            alternative_lino: None,
             steps: vec![
                 format!("Input: {}", expression),
                 "Computed symbolic result".to_string(),
@@ -316,6 +325,7 @@ impl CalculationResult {
         Self {
             result: String::new(),
             lino_interpretation: String::new(),
+            alternative_lino: None,
             steps: Vec::new(),
             steps_i18n: None,
             success: false,
@@ -339,6 +349,7 @@ impl CalculationResult {
         Self {
             result: String::new(),
             lino_interpretation: String::new(),
+            alternative_lino: None,
             steps: Vec::new(),
             steps_i18n: None,
             success: false,
@@ -551,7 +562,14 @@ impl Calculator {
 impl Calculator {
     /// Internal calculation method that returns a proper Result type.
     pub fn calculate_internal(&mut self, input: &str) -> CalculationResult {
-        match self.parser.parse_and_evaluate(input) {
+        // Try to parse the expression to generate alternative interpretations
+        let alternatives = self
+            .parser
+            .parse(input)
+            .ok()
+            .and_then(|expr| expr.alternative_lino());
+
+        let mut result = match self.parser.parse_and_evaluate(input) {
             Ok((value, steps, lino)) => CalculationResult::success_with_value(&value, lino, steps),
             Err(CalculatorError::SymbolicResult {
                 expression,
@@ -570,7 +588,12 @@ impl Calculator {
                 )
             }
             Err(e) => CalculationResult::failure_with_i18n(&e, input),
-        }
+        };
+
+        // Attach alternative interpretations if available
+        result.alternative_lino = alternatives;
+
+        result
     }
 
     /// Generates plot data for an integral expression.

@@ -45,6 +45,8 @@
 (example (expression "integrate sin(x) dx") (description "Indefinite integral of sin(x)") (category "integration"))
 (example (expression "integrate cos(x) dx") (description "Indefinite integral of cos(x)") (category "integration"))
 (example (expression "integrate exp(x) dx") (description "Indefinite integral of exp(x)") (category "integration"))
+(example (expression "2 * 3 + 4") (description "Mixed precedence (has alternative interpretations)") (category "arithmetic"))
+(example (expression "1 + 2 * 3 + 4") (description "Multiple operators with precedence") (category "arithmetic"))
 (example (expression "19 ton in usd") (description "TON cryptocurrency to US dollars") (category "crypto"))
 (example (expression "19 ton to usd") (description "TON crypto to USD (to keyword)") (category "crypto"))
 (example (expression "19 toncoin in dollars") (description "TON crypto using natural language") (category "crypto"))

@@ -284,6 +284,123 @@ impl Expression {
         }
     }
 
+    /// Generates alternative links notation interpretations for this expression.
+    ///
+    /// Returns `None` if there is only one natural interpretation.
+    /// Returns `Some(vec)` with the default interpretation first, followed by alternatives.
+    ///
+    /// Ambiguity arises from:
+    /// - Binary operations where precedence changes meaning (e.g., `2 + 3 * 4`)
+    /// - Function calls that could also be read as other structures
+    #[must_use]
+    pub fn alternative_lino(&self) -> Option<Vec<String>> {
+        let default_lino = self.to_lino();
+        let mut alternatives = Vec::new();
+
+        self.collect_alternatives(&mut alternatives);
+
+        if alternatives.is_empty() {
+            return None;
+        }
+
+        // Remove duplicates and the default interpretation
+        alternatives.retain(|a| a != &default_lino);
+        alternatives.dedup();
+
+        if alternatives.is_empty() {
+            return None;
+        }
+
+        // Default first, then alternatives
+        let mut result = vec![default_lino];
+        result.extend(alternatives);
+        Some(result)
+    }
+
+    /// Collects alternative lino representations based on expression structure.
+    fn collect_alternatives(&self, alternatives: &mut Vec<String>) {
+        match self {
+            // For expressions with mixed precedence, show the explicit grouping
+            Self::Binary { left, op, right } => {
+                // Check if either child has a different-precedence binary operation
+                // e.g., in `2 + 3 * 4`, show both `(2 + (3 * 4))` and `((2 + 3) * 4)`
+                let has_different_precedence_child =
+                    Self::has_different_precedence_child(left, *op)
+                        || Self::has_different_precedence_child(right, *op);
+
+                if has_different_precedence_child {
+                    // Alternative: re-group with opposite precedence assumption
+                    // left-to-right grouping
+                    let alt = self.to_lino_left_to_right();
+                    alternatives.push(alt);
+                }
+            }
+            // For function calls with multiple args, show the mathematical notation alternative
+            Self::FunctionCall { name, args } if !args.is_empty() => {
+                // Alternative: traditional mathematical notation
+                let args_str = args
+                    .iter()
+                    .map(|a| a.to_lino_internal(None))
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                let alt = format!("(expression \"{name}({args_str})\")");
+                alternatives.push(alt);
+            }
+            _ => {}
+        }
+    }
+
+    /// Checks if a child expression has a binary op with different precedence.
+    fn has_different_precedence_child(child: &Expression, parent_op: BinaryOp) -> bool {
+        if let Self::Binary { op, .. } = child {
+            return op.precedence() != parent_op.precedence();
+        }
+        false
+    }
+
+    /// Generates a left-to-right grouped lino notation (alternative grouping).
+    fn to_lino_left_to_right(&self) -> String {
+        match self {
+            Self::Binary { left, op, right } => {
+                // In left-to-right: ((left op1 right_left) op2 right_right)
+                // or: (left_left op1 (left_right op2 right))
+                // depending on where the different-precedence child is
+                if let Self::Binary {
+                    left: rl,
+                    op: rop,
+                    right: rr,
+                } = right.as_ref()
+                {
+                    if rop.precedence() != op.precedence() {
+                        // Default: left op (rl rop rr) => already `(left op (rl rop rr))`
+                        // Alternative: (left op rl) rop rr => `((left op rl) rop rr)`
+                        let new_left =
+                            Self::binary(left.as_ref().clone(), *op, rl.as_ref().clone());
+                        let new_expr = Self::binary(new_left, *rop, rr.as_ref().clone());
+                        return new_expr.to_lino();
+                    }
+                }
+                if let Self::Binary {
+                    left: ll,
+                    op: lop,
+                    right: lr,
+                } = left.as_ref()
+                {
+                    if lop.precedence() != op.precedence() {
+                        // Default: (ll lop lr) op right => already `((ll lop lr) op right)`
+                        // Alternative: ll lop (lr op right) => `(ll lop (lr op right))`
+                        let new_right =
+                            Self::binary(lr.as_ref().clone(), *op, right.as_ref().clone());
+                        let new_expr = Self::binary(ll.as_ref().clone(), *lop, new_right);
+                        return new_expr.to_lino();
+                    }
+                }
+                self.to_lino()
+            }
+            _ => self.to_lino(),
+        }
+    }
+
     /// Returns true if this expression needs parentheses when used as a unary operand.
     fn needs_parens_for_unary(&self) -> bool {
         matches!(

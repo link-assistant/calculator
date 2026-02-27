@@ -24,12 +24,22 @@ fn main() {
         "factorial(5)",
         "pi()",
         "e()",
+        // Expressions with multiple interpretations
+        "2 + 3 * 4",
+        "2 * 3 + 4",
+        "1 + 2 + 3 * 4",
     ];
 
     for expr in &test_cases {
         let result = calc.calculate_internal(expr);
         println!("Input:  {expr}");
         println!("Lino:   {}", result.lino_interpretation);
+        if let Some(alts) = &result.alternative_lino {
+            println!("Alternatives:");
+            for (i, alt) in alts.iter().enumerate() {
+                println!("  [{}]: {alt}", i + 1);
+            }
+        }
         println!("Result: {}", result.result);
         println!("---");
     }
