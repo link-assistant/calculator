@@ -1,3 +1,7 @@
+---
+bump: minor
+---
+
 ### Fixed
 - Function calls now render in proper links notation: `integrate(x^2, x, 0, 3)` → `(integrate ((x ^ 2) x 0 3))` instead of keeping mathematical notation
 - Power expressions now wrap in parentheses with spaces: `2^3` → `(2 ^ 3)` instead of `2^3`
