@@ -150,6 +150,7 @@ function App() {
   const [ratesLoading, setRatesLoading] = useState(false);
   const [ratesInfo, setRatesInfo] = useState<{ date?: string; base?: string } | null>(null);
   const [computationTime, setComputationTime] = useState<number | null>(null);
+  const [selectedLinoIndex, setSelectedLinoIndex] = useState(0);
   const [preferredCurrency, setPreferredCurrency] = useState<string>(() => {
     const prefs = loadPreferences();
     return prefs.currency || detectUserCurrency();
@@ -177,6 +178,7 @@ function App() {
         setVersion(data.version);
       } else if (type === 'result') {
         setResult(data);
+        setSelectedLinoIndex(0); // Reset to default interpretation
         // Capture computation time from worker if provided
         if (data.computation_time_ms !== undefined) {
           setComputationTime(data.computation_time_ms);
@@ -446,9 +448,24 @@ function App() {
           {result && result.success && result.lino_interpretation && (
             <div className="input-interpretation-section">
               <h2>{t('result.input')}</h2>
-              <div className="lino-value">
-                <ColorCodedLino lino={result.lino_interpretation} />
-              </div>
+              {result.alternative_lino && result.alternative_lino.length > 1 ? (
+                <div className="lino-alternatives">
+                  {result.alternative_lino.map((alt, idx) => (
+                    <button
+                      key={idx}
+                      className={`lino-alt-button${idx === selectedLinoIndex ? ' selected' : ''}`}
+                      onClick={() => setSelectedLinoIndex(idx)}
+                      title={t('result.interpretationAlt', { n: idx + 1, defaultValue: `Interpretation ${idx + 1}` })}
+                    >
+                      <ColorCodedLino lino={alt} />
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="lino-value">
+                  <ColorCodedLino lino={result.lino_interpretation} />
+                </div>
+              )}
             </div>
           )}
 

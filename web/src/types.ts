@@ -48,6 +48,8 @@ export interface CalculationStep {
 export interface CalculationResult {
   result: string;
   lino_interpretation: string;
+  /** Alternative links notation interpretations the user can switch between. */
+  alternative_lino?: string[];
   /** Step-by-step explanation (raw text for backwards compatibility). */
   steps: string[];
   /** Step-by-step explanation with i18n support. */

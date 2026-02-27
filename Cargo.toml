@@ -24,6 +24,10 @@ path = "src/main.rs"
 name = "test_advanced_math"
 path = "experiments/test_advanced_math.rs"
 
+[[example]]
+name = "test_issue84_lino"
+path = "experiments/test_issue84_lino.rs"
+
 [dependencies]
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"
