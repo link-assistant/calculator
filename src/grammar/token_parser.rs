@@ -28,7 +28,19 @@ impl<'a> TokenParser<'a> {
     }
 
     pub fn parse_expression(&mut self) -> Result<Expression, CalculatorError> {
-        self.parse_additive()
+        self.parse_equality()
+    }
+
+    fn parse_equality(&mut self) -> Result<Expression, CalculatorError> {
+        let left = self.parse_additive()?;
+
+        if self.check(&TokenKind::Equals) {
+            self.advance(); // consume '='
+            let right = self.parse_additive()?;
+            return Ok(Expression::equality(left, right));
+        }
+
+        Ok(left)
     }
 
     fn parse_additive(&mut self) -> Result<Expression, CalculatorError> {

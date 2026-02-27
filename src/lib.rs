@@ -719,6 +719,10 @@ impl Calculator {
                 Self::substitute_variable(v, var, value),
                 target_unit.clone(),
             ),
+            Expression::Equality { left, right } => Expression::equality(
+                Self::substitute_variable(left, var, value),
+                Self::substitute_variable(right, var, value),
+            ),
         }
     }
 
