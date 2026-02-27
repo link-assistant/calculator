@@ -454,7 +454,10 @@ function App() {
                     <button
                       key={idx}
                       className={`lino-alt-button${idx === selectedLinoIndex ? ' selected' : ''}`}
-                      onClick={() => setSelectedLinoIndex(idx)}
+                      onClick={() => {
+                        setSelectedLinoIndex(idx);
+                        calculate(alt);
+                      }}
                       title={t('result.interpretationAlt', { n: idx + 1, defaultValue: `Interpretation ${idx + 1}` })}
                     >
                       <ColorCodedLino lino={alt} />
