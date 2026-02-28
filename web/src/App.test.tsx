@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 
@@ -57,6 +57,7 @@ vi.mock('./hooks', () => ({
     expression: '',
     setExpression: vi.fn(),
     copyShareLink: vi.fn().mockResolvedValue(true),
+    wasLoadedFromUrl: vi.fn().mockReturnValue(false),
   }),
   useDelayedLoading: (loading: boolean) => loading,
 }));
@@ -355,5 +356,168 @@ describe('Currency Detection', () => {
     render(<App />);
     // Component should render without errors
     expect(screen.getByText('Link.Calculator')).toBeInTheDocument();
+  });
+});
+
+describe('App Component - Interpretation Switching', () => {
+  let originalResizeObserver: typeof ResizeObserver;
+  // Track all worker instances (new Worker() may be called multiple times due to re-renders)
+  const allWorkerInstances: Array<{
+    onmessage: ((event: MessageEvent) => void) | null;
+    onerror: ((event: ErrorEvent) => void) | null;
+    postMessage: ReturnType<typeof vi.fn>;
+    terminate: ReturnType<typeof vi.fn>;
+  }> = [];
+
+  // Shared postMessage spy across all worker instances
+  const sharedPostMessage = vi.fn();
+
+  class CapturedMockWorker {
+    onmessage: ((event: MessageEvent) => void) | null = null;
+    onerror: ((event: ErrorEvent) => void) | null = null;
+    postMessage = sharedPostMessage;
+    terminate = vi.fn();
+
+    constructor() {
+      allWorkerInstances.push(this);
+    }
+  }
+
+  // Returns the most recently created worker instance (the active one)
+  function getActiveWorker() {
+    return allWorkerInstances[allWorkerInstances.length - 1];
+  }
+
+  beforeEach(() => {
+    originalResizeObserver = window.ResizeObserver;
+    window.ResizeObserver = MockResizeObserver as unknown as typeof ResizeObserver;
+    allWorkerInstances.length = 0;
+    sharedPostMessage.mockClear();
+    vi.stubGlobal('Worker', CapturedMockWorker);
+  });
+
+  afterEach(() => {
+    window.ResizeObserver = originalResizeObserver;
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  async function simulateWorkerReady() {
+    await act(async () => {
+      const worker = getActiveWorker();
+      worker?.onmessage?.(
+        new MessageEvent('message', { data: { type: 'ready', data: { version: '1.0.0' } } })
+      );
+    });
+  }
+
+  async function simulateWorkerResult(result: object) {
+    await act(async () => {
+      const worker = getActiveWorker();
+      worker?.onmessage?.(
+        new MessageEvent('message', { data: { type: 'result', data: result } })
+      );
+    });
+  }
+
+  it('should render alternative interpretations when result has multiple alternatives', async () => {
+    render(<App />);
+    await simulateWorkerReady();
+
+    // Simulate a result with multiple interpretations
+    await simulateWorkerResult({
+      result: '7',
+      lino_interpretation: '(1 + (2 * 3))',
+      alternative_lino: ['(1 + (2 * 3))', '((1 + 2) * 3)'],
+      steps: [],
+      success: true,
+    });
+
+    // Both interpretation buttons should be rendered
+    const altButtons = document.querySelectorAll('.lino-alt-button');
+    expect(altButtons).toHaveLength(2);
+  });
+
+  it('should highlight first interpretation as selected by default', async () => {
+    render(<App />);
+    await simulateWorkerReady();
+
+    await simulateWorkerResult({
+      result: '7',
+      lino_interpretation: '(1 + (2 * 3))',
+      alternative_lino: ['(1 + (2 * 3))', '((1 + 2) * 3)'],
+      steps: [],
+      success: true,
+    });
+
+    const altButtons = document.querySelectorAll('.lino-alt-button');
+    expect(altButtons[0]).toHaveClass('selected');
+    expect(altButtons[1]).not.toHaveClass('selected');
+  });
+
+  it('should trigger recalculation when switching to a different interpretation', async () => {
+    render(<App />);
+    await simulateWorkerReady();
+    sharedPostMessage.mockClear(); // Clear any calls from initial setup
+
+    await simulateWorkerResult({
+      result: '7',
+      lino_interpretation: '(1 + (2 * 3))',
+      alternative_lino: ['(1 + (2 * 3))', '((1 + 2) * 3)'],
+      steps: [],
+      success: true,
+    });
+
+    // Click the second interpretation
+    const altButtons = document.querySelectorAll('.lino-alt-button');
+    await userEvent.click(altButtons[1]);
+
+    // Verify postMessage was called with the selected interpretation
+    expect(sharedPostMessage).toHaveBeenCalledWith({
+      type: 'calculate',
+      expression: '((1 + 2) * 3)',
+    });
+  });
+
+  it('should highlight clicked interpretation as selected', async () => {
+    render(<App />);
+    await simulateWorkerReady();
+
+    await simulateWorkerResult({
+      result: '7',
+      lino_interpretation: '(1 + (2 * 3))',
+      alternative_lino: ['(1 + (2 * 3))', '((1 + 2) * 3)'],
+      steps: [],
+      success: true,
+    });
+
+    // Click the second interpretation
+    const altButtons = document.querySelectorAll('.lino-alt-button');
+    await userEvent.click(altButtons[1]);
+
+    // Second button should now be selected
+    const updatedButtons = document.querySelectorAll('.lino-alt-button');
+    expect(updatedButtons[1]).toHaveClass('selected');
+    expect(updatedButtons[0]).not.toHaveClass('selected');
+  });
+
+  it('should show single lino-value for result with single interpretation', async () => {
+    render(<App />);
+    await simulateWorkerReady();
+
+    await simulateWorkerResult({
+      result: '6',
+      lino_interpretation: '((1 + 2) + 3)',
+      alternative_lino: ['((1 + 2) + 3)'],
+      steps: [],
+      success: true,
+    });
+
+    // Should not show alt buttons, should show single lino-value
+    const altButtons = document.querySelectorAll('.lino-alt-button');
+    expect(altButtons).toHaveLength(0);
+
+    const linoValue = document.querySelector('.lino-value');
+    expect(linoValue).toBeInTheDocument();
   });
 });
