@@ -12,6 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.4.1] - 2026-02-28
+
+### Fixed
+- Clicking an alternative interpretation now triggers recalculation instead of only visually highlighting the selected button
+- Unified `.lino-alt-button` appearance with `.lino-value`: consistent font-family, font-size, text color in dark mode, and larger gap between items
+
 ## [0.4.0] - 2026-02-27
 
 ### Fixed
