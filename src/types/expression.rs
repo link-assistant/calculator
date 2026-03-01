@@ -91,6 +91,13 @@ pub enum Expression {
         /// The target unit.
         target_unit: Unit,
     },
+    /// Equality check expression (e.g., `1 * (2 / 3) = (1 * 2) / 3`).
+    Equality {
+        /// The left-hand side expression.
+        left: Box<Expression>,
+        /// The right-hand side expression.
+        right: Box<Expression>,
+    },
 }
 
 impl Expression {
@@ -191,6 +198,15 @@ impl Expression {
         }
     }
 
+    /// Creates an equality check expression (e.g., `1 + 1 = 2`).
+    #[must_use]
+    pub fn equality(left: Expression, right: Expression) -> Self {
+        Self::Equality {
+            left: Box::new(left),
+            right: Box::new(right),
+        }
+    }
+
     /// Converts the expression to links notation format.
     ///
     /// Links notation wraps all compound expressions in parentheses:
@@ -280,6 +296,11 @@ impl Expression {
             Self::UnitConversion { value, target_unit } => {
                 let value_str = value.to_lino_internal(None);
                 format!("({value_str} as {target_unit})")
+            }
+            Self::Equality { left, right } => {
+                let left_str = left.to_lino_internal(None);
+                let right_str = right.to_lino_internal(None);
+                format!("({left_str} = {right_str})")
             }
         }
     }
@@ -441,6 +462,7 @@ impl Expression {
             }
             Self::IndefiniteIntegral { integrand, .. } => 1 + integrand.depth(),
             Self::UnitConversion { value, .. } => 1 + value.depth(),
+            Self::Equality { left, right } => 1 + left.depth().max(right.depth()),
         }
     }
 
@@ -568,6 +590,9 @@ impl Expression {
             Self::UnitConversion { value, target_unit } => {
                 format!("{} \\to \\text{{{target_unit}}}", value.to_latex())
             }
+            Self::Equality { left, right } => {
+                format!("{} = {}", left.to_latex(), right.to_latex())
+            }
         }
     }
 }
@@ -608,6 +633,7 @@ impl fmt::Display for Expression {
             Self::UnitConversion { value, target_unit } => {
                 write!(f, "{value} as {target_unit}")
             }
+            Self::Equality { left, right } => write!(f, "{left} = {right}"),
         }
     }
 }

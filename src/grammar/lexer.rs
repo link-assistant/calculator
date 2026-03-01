@@ -39,6 +39,8 @@ pub enum TokenKind {
     To,
     /// The "until" keyword for duration until a datetime.
     Until,
+    /// The equals sign for equality checks (e.g., `1 + 1 = 2`).
+    Equals,
     /// End of input.
     Eof,
 }
@@ -170,6 +172,10 @@ impl Lexer {
             ',' => {
                 self.advance();
                 Token::new(TokenKind::Comma, start, self.pos, ",".to_string())
+            }
+            '=' => {
+                self.advance();
+                Token::new(TokenKind::Equals, start, self.pos, "=".to_string())
             }
             _ if ch.is_ascii_digit() || ch == '.' => self.scan_number(),
             _ if ch.is_alphabetic() => self.scan_identifier(),

@@ -219,6 +219,11 @@ impl ExpressionParser {
                 let val = self.evaluate_expr(value)?;
                 val.convert_to_unit(target_unit, &mut self.currency_db)
             }
+            Expression::Equality { left, right } => {
+                let left_val = self.evaluate_expr(left)?;
+                let right_val = self.evaluate_expr(right)?;
+                Ok(Value::boolean(left_val == right_val))
+            }
         }
     }
 
@@ -433,6 +438,19 @@ impl ExpressionParser {
                     target_unit.display_name()
                 ));
                 let result = val.convert_to_unit(target_unit, &mut self.currency_db)?;
+                steps.push(format!("= {}", result.to_display_string()));
+                Ok(result)
+            }
+            Expression::Equality { left, right } => {
+                steps.push("Check equality:".to_string());
+                let left_val = self.evaluate_expr_with_steps(left, steps)?;
+                let right_val = self.evaluate_expr_with_steps(right, steps)?;
+                steps.push(format!(
+                    "Compare: {} = {}",
+                    left_val.to_display_string(),
+                    right_val.to_display_string()
+                ));
+                let result = Value::boolean(left_val == right_val);
                 steps.push(format!("= {}", result.to_display_string()));
                 Ok(result)
             }
@@ -652,6 +670,11 @@ impl ExpressionParser {
             Expression::UnitConversion { value, target_unit } => {
                 let val = self.evaluate_expr_with_var(value, var_name, var_value)?;
                 val.convert_to_unit(target_unit, &mut self.currency_db)
+            }
+            Expression::Equality { left, right } => {
+                let left_val = self.evaluate_expr_with_var(left, var_name, var_value)?;
+                let right_val = self.evaluate_expr_with_var(right, var_name, var_value)?;
+                Ok(Value::boolean(left_val == right_val))
             }
         }
     }
