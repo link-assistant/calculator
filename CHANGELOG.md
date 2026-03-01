@@ -13,6 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.5.0] - 2026-03-01
+
+### Added
+- Support for `=` as an equality check operator in expressions (e.g., `1 * (2 / 3) = (1 * 2) / 3` returns `true`)
+- Previously, using `=` in an expression would throw `Parse error: Unexpected character '=' at position N`
+- Both sides of the equality are evaluated and compared, returning `true` or `false`
+
 ## [0.4.1] - 2026-02-28
 
 ### Fixed
