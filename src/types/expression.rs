@@ -291,7 +291,7 @@ impl Expression {
                 variable,
             } => {
                 let integrand_str = integrand.to_lino_internal(None);
-                format!("(integrate {integrand_str} d{variable})")
+                format!("(integrate ({integrand_str} * (differential of ({variable}))))")
             }
             Self::UnitConversion { value, target_unit } => {
                 let value_str = value.to_lino_internal(None);

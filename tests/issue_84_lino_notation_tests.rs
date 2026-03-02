@@ -123,7 +123,10 @@ mod lino_notation_tests {
         let mut calc = Calculator::new();
         let result = calc.calculate_internal("integrate x^2 dx");
         assert!(result.success);
-        assert_eq!(result.lino_interpretation, "(integrate (x ^ 2) dx)");
+        assert_eq!(
+            result.lino_interpretation,
+            "(integrate ((x ^ 2) * (differential of (x))))"
+        );
     }
 
     #[test]
@@ -131,7 +134,22 @@ mod lino_notation_tests {
         let mut calc = Calculator::new();
         let result = calc.calculate_internal("integrate sin(x)/x dx");
         assert!(result.success);
-        assert_eq!(result.lino_interpretation, "(integrate ((sin (x)) / x) dx)");
+        assert_eq!(
+            result.lino_interpretation,
+            "(integrate (((sin (x)) / x) * (differential of (x))))"
+        );
+    }
+
+    #[test]
+    fn test_indefinite_integral_cos_x_lino() {
+        // Issue #89: integrate cos(x) dx should produce explicit lino notation
+        let mut calc = Calculator::new();
+        let result = calc.calculate_internal("integrate cos(x) dx");
+        assert!(result.success);
+        assert_eq!(
+            result.lino_interpretation,
+            "(integrate ((cos (x)) * (differential of (x))))"
+        );
     }
 
     #[test]
@@ -147,6 +165,7 @@ mod lino_notation_tests {
             "pi()",
             "abs(-5)",
             "integrate x^2 dx",
+            "integrate cos(x) dx",
         ];
 
         for expr in expressions {
