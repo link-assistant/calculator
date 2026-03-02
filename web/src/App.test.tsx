@@ -60,6 +60,10 @@ vi.mock('./hooks', () => ({
     wasLoadedFromUrl: vi.fn().mockReturnValue(false),
   }),
   useDelayedLoading: (loading: boolean) => loading,
+  useExpressionCache: () => ({
+    getCachedResult: vi.fn().mockReturnValue(null),
+    cacheResult: vi.fn(),
+  }),
 }));
 
 // Mock i18n module
