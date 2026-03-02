@@ -201,8 +201,7 @@ mod issue_23_until_and_natural_dates {
     fn test_until_with_on_and_day_name() {
         let mut calc = Calculator::new();
         // The exact input from the issue report
-        let result =
-            calc.calculate_internal("until 11:59pm EST on Monday, January 26th");
+        let result = calc.calculate_internal("until 11:59pm EST on Monday, January 26th");
         assert!(
             result.success,
             "until 11:59pm EST on Monday, January 26th should succeed: {:?}",
@@ -224,8 +223,7 @@ mod issue_23_until_and_natural_dates {
         let mut calc = Calculator::new();
         // The second form from the issue: standalone time+date with "on" and day name
         // Previously returned "11" (wrong), should now return a datetime
-        let result =
-            calc.calculate_internal("11:59pm EST on Monday, January 26th");
+        let result = calc.calculate_internal("11:59pm EST on Monday, January 26th");
         assert!(
             result.success,
             "11:59pm EST on Monday, January 26th should succeed: {:?}",
@@ -272,8 +270,7 @@ mod issue_23_until_and_natural_dates {
     #[test]
     fn test_time_with_on_day_name_lino_is_datetime() {
         let mut calc = Calculator::new();
-        let result =
-            calc.calculate_internal("11:59pm EST on Monday, January 26th");
+        let result = calc.calculate_internal("11:59pm EST on Monday, January 26th");
         assert!(result.success);
         // Lino should be a datetime wrapped in parens, not just "11"
         assert!(

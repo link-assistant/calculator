@@ -6,16 +6,16 @@ use link_calculator::Calculator;
 
 fn main() {
     let mut calc = Calculator::new();
-    
+
     let inputs = [
         "until 11:59pm EST on Monday, January 26th",
         "11:59pm EST on Monday, January 26th",
         "until Jan 27, 11:59pm UTC",
         "11:59pm EST January 26th",
         "11:59pm EST on January 26",
-        "Jan 1, 12:00am UTC",  // past date for comparison
+        "Jan 1, 12:00am UTC", // past date for comparison
     ];
-    
+
     for input in &inputs {
         let result = calc.calculate_internal(input);
         println!("Input: '{}'", input);
