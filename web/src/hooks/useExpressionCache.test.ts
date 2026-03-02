@@ -15,7 +15,6 @@ const realLocalStorage = (() => {
     clear: () => { store = {}; },
     get length() { return Object.keys(store).length; },
     key: (index: number) => Object.keys(store)[index] ?? null,
-    // Allow spreading for Object.keys(localStorage) checks in tests
     [Symbol.iterator]() {
       const keys = Object.keys(store);
       let index = 0;
@@ -74,6 +73,128 @@ describe('useExpressionCache', () => {
     localStorage.clear();
   });
 
+  // ─── Storage format ──────────────────────────────────────────────────────────
+
+  describe('indented Links Notation storage format', () => {
+    it('should store cache entries using indented Links Notation (like currency rates)', () => {
+      const { result } = renderHook(() => useExpressionCache('1.0.0'));
+
+      act(() => {
+        result.current.cacheResult('2 + 3', makeResult('5', '((2) + (3))'));
+      });
+
+      const raw = localStorage.getItem('lc_cache_v3_2 + 3');
+      expect(raw).not.toBeNull();
+
+      // Indented format: first line is the section identifier followed by colon
+      expect(raw).toMatch(/^cache-entry:/m);
+      // Key-value pairs are indented with 2 spaces
+      expect(raw).toMatch(/^  expression /m);
+      expect(raw).toMatch(/^  appVersion /m);
+      expect(raw).toMatch(/^result:/m);
+      expect(raw).toMatch(/^  result /m);
+      expect(raw).toMatch(/^steps:/m);
+      // Must NOT be JSON
+      expect(raw).not.toMatch(/^\{/);
+      expect(raw).not.toMatch(/^\[/);
+    });
+
+    it('should store the cache index using indented Links Notation', () => {
+      const { result } = renderHook(() => useExpressionCache('1.0.0'));
+
+      act(() => {
+        result.current.cacheResult('2 + 3', makeResult('5'));
+      });
+
+      const raw = localStorage.getItem('lc_cache_index_v3');
+      expect(raw).not.toBeNull();
+      // Index uses indented section header
+      expect(raw).toMatch(/^cache-index:/m);
+      // Keys are listed as indented items
+      expect(raw).toMatch(/^  /m);
+      // Must NOT be JSON
+      expect(raw).not.toMatch(/^\[/);
+      expect(raw).not.toMatch(/^\{/);
+    });
+
+    it('should include steps as indented list in the steps section', () => {
+      const { result } = renderHook(() => useExpressionCache('1.0.0'));
+      const calcResult = makeResultWithSteps('5', [
+        'Input expression: 2 + 3',
+        'Compute: 2 + 3',
+        '= 5',
+      ]);
+
+      act(() => {
+        result.current.cacheResult('2 + 3', calcResult);
+      });
+
+      const raw = localStorage.getItem('lc_cache_v3_2 + 3');
+      expect(raw).not.toBeNull();
+      // Steps section must be present with each step indented
+      expect(raw).toMatch(/^steps:/m);
+      expect(raw).toContain("'Input expression: 2 + 3'");
+    });
+
+    it('should store alternative_lino values in a dedicated section', () => {
+      const { result } = renderHook(() => useExpressionCache('1.0.0'));
+      const calcResult: CalculationResult = {
+        result: '0.(3)',
+        lino_interpretation: '(1/3)',
+        alternative_lino: ['0.333...', '0.3\u0305'],
+        steps: [],
+        success: true,
+      };
+
+      act(() => {
+        result.current.cacheResult('1 / 3', calcResult);
+      });
+
+      const raw = localStorage.getItem('lc_cache_v3_1 / 3');
+      expect(raw).not.toBeNull();
+      // alternative-lino section must appear
+      expect(raw).toMatch(/^alternative-lino:/m);
+    });
+
+    it('should produce indented format matching currency-rates style (section colon + indented pairs)', () => {
+      const { result } = renderHook(() => useExpressionCache('1.0.0'));
+
+      act(() => {
+        result.current.cacheResult('2 + 3', makeResult('5', '((2) + (3))'));
+      });
+
+      const raw = localStorage.getItem('lc_cache_v3_2 + 3')!;
+      // The format must follow the pattern:
+      //   section-name:
+      //     key value
+      //     key value
+      // (same as currency rate files: "conversion:\n  from USD\n  to EUR")
+      const lines = raw.split('\n');
+      // First non-empty line should be a section header
+      const sectionHeaderPattern = /^\S.*:$/;
+      expect(lines[0]).toMatch(sectionHeaderPattern);
+      // Second line should be indented
+      expect(lines[1]).toMatch(/^  /);
+    });
+
+    it('should use v3 localStorage keys (not v2)', () => {
+      const { result } = renderHook(() => useExpressionCache('1.0.0'));
+
+      act(() => {
+        result.current.cacheResult('2 + 3', makeResult('5'));
+      });
+
+      // v3 keys must exist
+      expect(localStorage.getItem('lc_cache_v3_2 + 3')).not.toBeNull();
+      expect(localStorage.getItem('lc_cache_index_v3')).not.toBeNull();
+      // v2 keys must NOT exist
+      expect(localStorage.getItem('lc_cache_v2_2 + 3')).toBeNull();
+      expect(localStorage.getItem('lc_cache_index_v2')).toBeNull();
+    });
+  });
+
+  // ─── getCachedResult ─────────────────────────────────────────────────────────
+
   describe('getCachedResult', () => {
     it('should return null for an expression not in cache', () => {
       const { result } = renderHook(() => useExpressionCache('1.0.0'));
@@ -125,7 +246,8 @@ describe('useExpressionCache', () => {
     });
 
     it('should return null for corrupted cache entry', () => {
-      localStorage.setItem('lc_cache_v2_broken', 'not-valid-lino!!!@@@###');
+      // Store garbage at the v3 key
+      localStorage.setItem('lc_cache_v3_broken', 'not-valid-lino!!!@@@###');
       const { result } = renderHook(() => useExpressionCache('1.0.0'));
       expect(result.current.getCachedResult('broken')).toBeNull();
     });
@@ -189,36 +311,22 @@ describe('useExpressionCache', () => {
       const cached = result.current.getCachedResult('2 + 3');
       expect(cached).not.toBeNull();
       expect(Array.isArray(cached!.steps)).toBe(true);
+      expect(cached!.steps).toHaveLength(0);
     });
 
-    it('should store entries in Links Notation format', () => {
+    it('should preserve success flag correctly', () => {
       const { result } = renderHook(() => useExpressionCache('1.0.0'));
 
       act(() => {
         result.current.cacheResult('2 + 3', makeResult('5'));
       });
 
-      const raw = localStorage.getItem('lc_cache_v2_2 + 3');
-      expect(raw).not.toBeNull();
-      // Links Notation uses parentheses for structure, not JSON braces
-      expect(raw).toContain('(');
-      expect(raw).not.toMatch(/^\{/); // should NOT start with JSON object brace
-    });
-
-    it('should store the cache index in Links Notation format', () => {
-      const { result } = renderHook(() => useExpressionCache('1.0.0'));
-
-      act(() => {
-        result.current.cacheResult('2 + 3', makeResult('5'));
-      });
-
-      const raw = localStorage.getItem('lc_cache_index_v2');
-      expect(raw).not.toBeNull();
-      // Array in Links Notation is parenthesized: ('item1' 'item2')
-      expect(raw).toContain('(');
-      expect(raw).not.toMatch(/^\[/); // should NOT start with JSON array bracket
+      const cached = result.current.getCachedResult('2 + 3');
+      expect(cached!.success).toBe(true);
     });
   });
+
+  // ─── cacheResult ─────────────────────────────────────────────────────────────
 
   describe('cacheResult', () => {
     it('should not cache failed results', () => {
@@ -240,7 +348,7 @@ describe('useExpressionCache', () => {
       });
 
       // Nothing should be stored for empty expressions
-      expect(localStorage.getItem('lc_cache_v2_')).toBeNull();
+      expect(localStorage.getItem('lc_cache_v3_')).toBeNull();
     });
 
     it('should overwrite an existing entry for the same expression', () => {
@@ -329,7 +437,7 @@ describe('useExpressionCache', () => {
       const calcResult: CalculationResult = {
         result: '0.(3)',
         lino_interpretation: '(1/3)',
-        alternative_lino: ['0.333...', '0.3̅'],
+        alternative_lino: ['0.333...', '0.3\u0305'],
         steps: [],
         success: true,
       };
@@ -342,6 +450,7 @@ describe('useExpressionCache', () => {
       expect(cached).not.toBeNull();
       expect(cached!.result).toBe('0.(3)');
       expect(Array.isArray(cached!.alternative_lino)).toBe(true);
+      expect(cached!.alternative_lino).toEqual(['0.333...', '0.3\u0305']);
     });
 
     it('should handle expressions with special characters', () => {
@@ -397,6 +506,216 @@ describe('useExpressionCache', () => {
       for (let i = 6; i <= 55; i++) {
         expect(result.current.getCachedResult(`expr ${i}`)).not.toBeNull();
       }
+    });
+
+    it('should cache results with latex_input and latex_result fields', () => {
+      const { result } = renderHook(() => useExpressionCache('1.0.0'));
+      const calcResult: CalculationResult = {
+        result: '5',
+        lino_interpretation: '((2) + (3))',
+        steps: [],
+        success: true,
+        latex_input: '2 + 3',
+        latex_result: '5',
+      };
+
+      act(() => {
+        result.current.cacheResult('2 + 3', calcResult);
+      });
+
+      const cached = result.current.getCachedResult('2 + 3');
+      expect(cached).not.toBeNull();
+      expect(cached!.latex_input).toBe('2 + 3');
+      expect(cached!.latex_result).toBe('5');
+    });
+
+    it('should not include alternative_lino in cached result when original has none', () => {
+      const { result } = renderHook(() => useExpressionCache('1.0.0'));
+
+      act(() => {
+        result.current.cacheResult('2 + 3', makeResult('5'));
+      });
+
+      const cached = result.current.getCachedResult('2 + 3');
+      expect(cached).not.toBeNull();
+      // alternative_lino should not be present when the original had none
+      expect(cached!.alternative_lino).toBeUndefined();
+    });
+
+    it('should cache currency conversion with long exchange rate step', () => {
+      const { result } = renderHook(() => useExpressionCache('1.0.0'));
+      const calcResult: CalculationResult = {
+        result: '91.50 EUR',
+        lino_interpretation: '((100 USD) in EUR)',
+        steps: [
+          'Input expression: 100 USD in EUR',
+          'Exchange rate: 1 USD = 0.915 EUR (source: frankfurter.dev (ECB), date: 2026-03-01)',
+          '= 91.5 EUR',
+        ],
+        success: true,
+      };
+
+      act(() => {
+        result.current.cacheResult('100 USD in EUR', calcResult);
+      });
+
+      const cached = result.current.getCachedResult('100 USD in EUR');
+      expect(cached).not.toBeNull();
+      expect(cached!.result).toBe('91.50 EUR');
+      expect(cached!.steps[1]).toContain('frankfurter.dev (ECB)');
+    });
+
+    it('should invalidate a v1 cache entry when read with v2', () => {
+      // Version 1.0.0 caches a result
+      const { result: r1 } = renderHook(() => useExpressionCache('1.0.0'));
+      act(() => {
+        r1.current.cacheResult('2 + 3', makeResult('5'));
+      });
+
+      // The v1 entry is readable by v1
+      expect(r1.current.getCachedResult('2 + 3')?.result).toBe('5');
+
+      // Version 2.0.0 cannot read the v1 entry (version mismatch)
+      const { result: r2 } = renderHook(() => useExpressionCache('2.0.0'));
+      expect(r2.current.getCachedResult('2 + 3')).toBeNull();
+
+      // Version 2.0.0 caches the same expression with its own version tag
+      act(() => {
+        r2.current.cacheResult('2 + 3', makeResult('5 (v2)'));
+      });
+
+      // v2 can now read its own entry
+      expect(r2.current.getCachedResult('2 + 3')?.result).toBe('5 (v2)');
+    });
+
+    it('should handle expressions with Unicode characters', () => {
+      const { result } = renderHook(() => useExpressionCache('1.0.0'));
+      const calcResult = makeResult('3.14159', '\u03c0'); // π
+
+      act(() => {
+        result.current.cacheResult('\u03c0', calcResult); // π
+      });
+
+      const cached = result.current.getCachedResult('\u03c0');
+      expect(cached).not.toBeNull();
+      expect(cached!.result).toBe('3.14159');
+    });
+
+    it('should handle expressions with single quotes in steps', () => {
+      const { result } = renderHook(() => useExpressionCache('1.0.0'));
+      const calcResult = makeResultWithSteps("5", [
+        "Evaluate: 2 + 3",
+        "Result is Euler's number: e = 2.718...",
+        "= 5",
+      ]);
+
+      act(() => {
+        result.current.cacheResult('2 + 3', calcResult);
+      });
+
+      const cached = result.current.getCachedResult('2 + 3');
+      expect(cached).not.toBeNull();
+      expect(cached!.steps[1]).toContain("Euler's");
+    });
+  });
+
+  // ─── Round-trip fidelity ──────────────────────────────────────────────────────
+
+  describe('round-trip fidelity', () => {
+    it('should round-trip a simple arithmetic result', () => {
+      const { result } = renderHook(() => useExpressionCache('1.0.0'));
+      const original = makeResult('5', '((2) + (3))');
+
+      act(() => {
+        result.current.cacheResult('2 + 3', original);
+      });
+
+      const cached = result.current.getCachedResult('2 + 3');
+      expect(cached?.result).toBe(original.result);
+      expect(cached?.lino_interpretation).toBe(original.lino_interpretation);
+      expect(cached?.success).toBe(original.success);
+    });
+
+    it('should round-trip a currency conversion result', () => {
+      const { result } = renderHook(() => useExpressionCache('1.0.0'));
+      const original: CalculationResult = {
+        result: '91.50 EUR',
+        lino_interpretation: '((100 USD) in EUR)',
+        steps: [
+          'Input expression: 100 USD in EUR',
+          'Exchange rate: 1 USD = 0.915 EUR (source: frankfurter.dev (ECB), date: 2026-03-01)',
+          '= 91.5 EUR',
+        ],
+        success: true,
+      };
+
+      act(() => {
+        result.current.cacheResult('100 USD in EUR', original);
+      });
+
+      const cached = result.current.getCachedResult('100 USD in EUR');
+      expect(cached?.result).toBe(original.result);
+      expect(cached?.lino_interpretation).toBe(original.lino_interpretation);
+      expect(cached?.steps).toEqual(original.steps);
+    });
+
+    it('should round-trip a repeating decimal result with alternative_lino', () => {
+      const { result } = renderHook(() => useExpressionCache('1.0.0'));
+      const original: CalculationResult = {
+        result: '0.(3)',
+        lino_interpretation: '(1/3)',
+        alternative_lino: ['0.333...', '0.3\u0305'],
+        steps: [],
+        success: true,
+      };
+
+      act(() => {
+        result.current.cacheResult('1 / 3', original);
+      });
+
+      const cached = result.current.getCachedResult('1 / 3');
+      expect(cached?.result).toBe(original.result);
+      expect(cached?.lino_interpretation).toBe(original.lino_interpretation);
+      expect(cached?.alternative_lino).toEqual(original.alternative_lino);
+    });
+
+    it('should round-trip a result with multiple calculation steps', () => {
+      const { result } = renderHook(() => useExpressionCache('1.0.0'));
+      const steps = [
+        'Input expression: 2 + 3',
+        'Parse: 2 + 3',
+        'Evaluate addition',
+        'Result: 5',
+      ];
+      const original = makeResultWithSteps('5', steps);
+
+      act(() => {
+        result.current.cacheResult('2 + 3', original);
+      });
+
+      const cached = result.current.getCachedResult('2 + 3');
+      expect(cached?.steps).toEqual(steps);
+      expect(cached?.steps).toHaveLength(4);
+    });
+
+    it('should round-trip a result with latex fields', () => {
+      const { result } = renderHook(() => useExpressionCache('1.0.0'));
+      const original: CalculationResult = {
+        result: '5',
+        lino_interpretation: '((2) + (3))',
+        steps: [],
+        success: true,
+        latex_input: '2 + 3',
+        latex_result: '5',
+      };
+
+      act(() => {
+        result.current.cacheResult('2 + 3', original);
+      });
+
+      const cached = result.current.getCachedResult('2 + 3');
+      expect(cached?.latex_input).toBe(original.latex_input);
+      expect(cached?.latex_result).toBe(original.latex_result);
     });
   });
 });
