@@ -556,9 +556,10 @@ impl CurrencyDatabase {
             "rupie" | "rupien" | "indische rupie" => return Some("INR".to_string()),
             // French language names for currencies ("en" preposition added to lexer)
             // USD: dollar - singular "dollar" already handled; add French-specific forms
-            "dollar américain" | "dollars américains" | "dollar americain" | "dollars americains" => {
-                return Some("USD".to_string())
-            }
+            "dollar américain"
+            | "dollars américains"
+            | "dollar americain"
+            | "dollars americains" => return Some("USD".to_string()),
             // EUR: euro/euros - already handled above
             // GBP: livre sterling (la livre sterling) - "sterling" invariable
             "livre sterling" | "livres sterling" | "livres sterlings" | "livre" | "livres" => {
@@ -596,21 +597,33 @@ impl CurrencyDatabase {
             "卢比" | "印度卢比" => return Some("INR".to_string()),
             // Hindi language names for currencies ("में" postposition added to lexer)
             // USD: डॉलर (ḍŏlar); अमेरिकी डॉलर full form
-            "डॉलर" | "अमेरिकी डॉलर" => return Some("USD".to_string()),
+            "डॉलर" | "अमेरिकी डॉलर" => {
+                return Some("USD".to_string())
+            }
             // EUR: यूरो (yūro) - invariable
             "यूरो" => return Some("EUR".to_string()),
             // GBP: पाउंड (pā'uṃḍ); ब्रिटिश पाउंड; पाउंड स्टर्लिंग
-            "पाउंड" | "ब्रिटिश पाउंड" | "पाउंड स्टर्लिंग" => return Some("GBP".to_string()),
+            "पाउंड" | "ब्रिटिश पाउंड" | "पाउंड स्टर्लिंग" => {
+                return Some("GBP".to_string())
+            }
             // JPY: येन (yen); जापानी येन full form
             "येन" | "जापानी येन" => return Some("JPY".to_string()),
             // CHF: फ्रैंक (frank); स्विस फ्रैंक full form
-            "फ्रैंक" | "स्विस फ्रैंक" => return Some("CHF".to_string()),
+            "फ्रैंक" | "स्विस फ्रैंक" => {
+                return Some("CHF".to_string())
+            }
             // CNY: युआन (yuan); चीनी युआन full form; रेनमिनबी alt.
-            "युआन" | "चीनी युआन" | "रेनमिनबी" => return Some("CNY".to_string()),
+            "युआन" | "चीनी युआन" | "रेनमिनबी" => {
+                return Some("CNY".to_string())
+            }
             // RUB: रूबल (rūbal); रूसी रूबल; रशियन रूबल
-            "रूबल" | "रूसी रूबल" | "रशियन रूबल" => return Some("RUB".to_string()),
+            "रूबल" | "रूसी रूबल" | "रशियन रूबल" => {
+                return Some("RUB".to_string())
+            }
             // INR: रुपया (rupayā) singular; रुपये (rupaye) plural/oblique; रुपयों oblique plural; भारतीय रुपया full
-            "रुपया" | "रुपये" | "रुपयों" | "भारतीय रुपया" => return Some("INR".to_string()),
+            "रुपया" | "रुपये" | "रुपयों" | "भारतीय रुपया" => {
+                return Some("INR".to_string())
+            }
             // Arabic language names for currencies ("إلى" preposition added to lexer)
             // USD: دولار (dūlār); دولارات plural; دولار أمريكي full
             "دولار" | "دولارات" | "دولار أمريكي" | "دولارات أمريكية" => {
@@ -625,11 +638,15 @@ impl CurrencyDatabase {
             // JPY: ين ياباني; ين short
             "ين ياباني" | "ين" => return Some("JPY".to_string()),
             // CHF: فرنك سويسري; فرنكات سويسرية plural; فرنك short
-            "فرنك سويسري" | "فرنكات سويسرية" | "فرنك" => return Some("CHF".to_string()),
+            "فرنك سويسري" | "فرنكات سويسرية" | "فرنك" => {
+                return Some("CHF".to_string())
+            }
             // CNY: يوان صيني; يوان short; رنمينبي alt.
             "يوان صيني" | "يوان" | "رنمينبي" => return Some("CNY".to_string()),
             // RUB: روبل روسي; روبلات روسية plural; روبل short
-            "روبل روسي" | "روبلات روسية" | "روبل" => return Some("RUB".to_string()),
+            "روبل روسي" | "روبلات روسية" | "روبل" => {
+                return Some("RUB".to_string())
+            }
             // INR: روبية هندية; روبيات هندية plural; روبية short; روبيات short plural
             "روبية هندية" | "روبيات هندية" | "روبية" | "روبيات" => {
                 return Some("INR".to_string())
