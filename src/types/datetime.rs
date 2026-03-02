@@ -21,6 +21,10 @@ pub struct DateTime {
     has_time: bool,
     /// Whether this includes a date component.
     has_date: bool,
+    /// Optional label for named time expressions (e.g., "current UTC time").
+    /// When set, the display format includes the label and timezone info.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    label: Option<String>,
 }
 
 impl PartialEq for DateTime {
@@ -52,17 +56,38 @@ impl DateTime {
             offset_seconds: Some(0),
             has_time: true,
             has_date: true,
+            label: None,
         }
+    }
+
+    /// Creates a `DateTime` representing the current time with a descriptive label.
+    /// The label is shown in the display format, e.g., `('current UTC time': 2026-03-02 20:40:13 UTC (+00:00))`.
+    #[must_use]
+    pub fn now_with_label(label: impl Into<String>, offset_seconds: Option<i32>) -> Self {
+        Self {
+            inner: Utc::now(),
+            offset_seconds,
+            has_time: true,
+            has_date: true,
+            label: Some(label.into()),
+        }
+    }
+
+    /// Returns whether this datetime has a label (i.e., represents a named live time expression).
+    #[must_use]
+    pub fn is_live_time(&self) -> bool {
+        self.label.is_some()
     }
 
     /// Creates a new `DateTime` from a chrono `DateTime`.
     #[must_use]
-    pub const fn from_utc(dt: ChronoDateTime<Utc>, has_date: bool, has_time: bool) -> Self {
+    pub fn from_utc(dt: ChronoDateTime<Utc>, has_date: bool, has_time: bool) -> Self {
         Self {
             inner: dt,
             offset_seconds: None,
             has_time,
             has_date,
+            label: None,
         }
     }
 
@@ -75,6 +100,7 @@ impl DateTime {
             offset_seconds: None,
             has_time: false,
             has_date: true,
+            label: None,
         }
     }
 
@@ -88,6 +114,7 @@ impl DateTime {
             offset_seconds: None,
             has_time: true,
             has_date: false,
+            label: None,
         }
     }
 
@@ -187,25 +214,55 @@ impl DateTime {
         None
     }
 
+    /// Formats the timezone offset for display, e.g., `UTC (+00:00)` or `(+05:30)`.
+    fn format_tz_for_display(offset_seconds: i32) -> String {
+        let sign = if offset_seconds >= 0 { "+" } else { "-" };
+        let abs_secs = offset_seconds.abs();
+        let hours = abs_secs / 3600;
+        let minutes = (abs_secs % 3600) / 60;
+        format!("({sign}{hours:02}:{minutes:02})")
+    }
+
     /// Checks if input represents a "current time" phrase.
     fn try_parse_current_time_phrase(input: &str) -> Option<Self> {
         let lower = input.to_lowercase();
         let trimmed = lower.trim();
 
-        // Phrases that mean "current UTC time"
-        let current_time_phrases = [
-            "utc time",
-            "time utc",
-            "current time",
-            "current time utc",
-            "utc current time",
-            "current utc time",
-            "gmt time",
-            "time gmt",
+        // Phrases that mean "current UTC time" — map phrase to (label, offset_seconds)
+        let current_time_phrases: &[(&str, &str, Option<i32>)] = &[
+            ("utc time", "current UTC time", Some(0)),
+            ("time utc", "current UTC time", Some(0)),
+            ("current time", "current UTC time", Some(0)),
+            ("current time utc", "current UTC time", Some(0)),
+            ("utc current time", "current UTC time", Some(0)),
+            ("current utc time", "current UTC time", Some(0)),
+            ("gmt time", "current GMT time", Some(0)),
+            ("time gmt", "current GMT time", Some(0)),
         ];
 
-        if current_time_phrases.contains(&trimmed) {
-            return Some(Self::now());
+        for (phrase, label, offset) in current_time_phrases {
+            if trimmed == *phrase {
+                return Some(Self::now_with_label(*label, *offset));
+            }
+        }
+
+        // "<timezone> time" and "time <timezone>" patterns for known timezones
+        // e.g., "EST time", "time PST"
+        let (tz_part, prefix) = if let Some(rest) = trimmed.strip_suffix(" time") {
+            (rest.trim(), true)
+        } else if let Some(rest) = trimmed.strip_prefix("time ") {
+            (rest.trim(), true)
+        } else {
+            ("", false)
+        };
+
+        if prefix && !tz_part.is_empty() {
+            if let Some(offset) = Self::parse_tz_abbreviation(tz_part) {
+                let tz_upper = tz_part.to_uppercase();
+                let label = format!("current {tz_upper} time");
+                let offset_secs = offset.local_minus_utc();
+                return Some(Self::now_with_label(label, Some(offset_secs)));
+            }
         }
 
         None
@@ -479,6 +536,7 @@ impl DateTime {
                         offset_seconds: time_dt.offset_seconds,
                         has_time: true,
                         has_date: true,
+                        label: None,
                     });
                 }
             }
@@ -497,6 +555,7 @@ impl DateTime {
                 offset_seconds: Some(dt.timezone().local_minus_utc()),
                 has_time: true,
                 has_date: true,
+                label: None,
             });
         }
 
@@ -507,6 +566,7 @@ impl DateTime {
                 offset_seconds: None,
                 has_time: true,
                 has_date: true,
+                label: None,
             });
         }
 
@@ -537,6 +597,7 @@ impl DateTime {
                         offset_seconds: time_dt.offset_seconds,
                         has_time: true,
                         has_date: true,
+                        label: None,
                     };
                     // If time had a timezone, adjust the UTC time accordingly
                     if let Some(offset) = time_dt.offset_seconds.and_then(FixedOffset::east_opt) {
@@ -555,6 +616,7 @@ impl DateTime {
                         offset_seconds: time_dt.offset_seconds,
                         has_time: true,
                         has_date: true,
+                        label: None,
                     };
                     if let Some(offset) = time_dt.offset_seconds.and_then(FixedOffset::east_opt) {
                         let local = result.inner.naive_utc();
@@ -644,6 +706,7 @@ impl DateTime {
             offset_seconds: self.offset_seconds,
             has_time: self.has_time,
             has_date: self.has_date,
+            label: None,
         }
     }
 
@@ -657,6 +720,26 @@ impl DateTime {
 
 impl fmt::Display for DateTime {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        // When a label is present (e.g., "current UTC time"), use the enhanced format:
+        // 'current UTC time': 2026-03-02 20:40:13 (+00:00)
+        if let Some(ref label) = self.label {
+            let offset_secs = self.offset_seconds.unwrap_or(0);
+            let tz_display = Self::format_tz_for_display(offset_secs);
+            if let Some(offset) = self.get_offset() {
+                let local = self.inner.with_timezone(&offset);
+                return write!(
+                    f,
+                    "'{label}': {} {tz_display}",
+                    local.format("%Y-%m-%d %H:%M:%S")
+                );
+            }
+            return write!(
+                f,
+                "'{label}': {} {tz_display}",
+                self.inner.format("%Y-%m-%d %H:%M:%S")
+            );
+        }
+
         if self.has_date && self.has_time {
             if let Some(offset) = self.get_offset() {
                 let local = self.inner.with_timezone(&offset);
