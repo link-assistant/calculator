@@ -140,6 +140,7 @@ fn test_crypto_direct_unit_conversion_steps_show_rate_info() {
 
 /// `1 ETH in EUR` — the exact expression from issue #72.
 /// Crypto-to-fiat cross-rate conversion must show source, date, and exact rate in steps.
+/// For a cross-rate (ETH→USD→EUR), both individual hops must appear as separate steps.
 #[test]
 fn test_issue_72_eth_in_eur_steps_show_rate_info() {
     let mut calc = calc_with_eth_and_eur_rates();
@@ -173,6 +174,49 @@ fn test_issue_72_eth_in_eur_steps_show_rate_info() {
     assert!(
         steps_text.contains("2026-02-25"),
         "Steps should contain the rate date value. Steps:\n{steps_text}"
+    );
+
+    // Cross-rate: ETH→EUR goes via USD, so both hops must be shown explicitly.
+    assert!(
+        steps_text.contains("ETH") && steps_text.contains("USD"),
+        "Steps should show the ETH→USD hop for the cross-rate conversion. Steps:\n{steps_text}"
+    );
+    assert!(
+        steps_text.contains("USD") && steps_text.contains("EUR"),
+        "Steps should show the USD→EUR hop for the cross-rate conversion. Steps:\n{steps_text}"
+    );
+
+    // Count distinct "Exchange rate:" lines — must be at least 2 for the two hops.
+    let exchange_rate_count = result
+        .steps
+        .iter()
+        .filter(|s| s.starts_with("Exchange rate:"))
+        .count();
+    assert!(
+        exchange_rate_count >= 2,
+        "Cross-rate conversion should produce at least 2 'Exchange rate:' steps (ETH→USD and USD→EUR), got {exchange_rate_count}. Steps:\n{steps_text}"
+    );
+}
+
+/// `1 ETH in EUR` cross-rate shows the ETH→USD rate value explicitly.
+#[test]
+fn test_issue_72_eth_in_eur_shows_eth_usd_rate() {
+    let mut calc = calc_with_eth_and_eur_rates();
+
+    let result = calc.calculate_internal("1 ETH in EUR");
+    assert!(result.success, "1 ETH in EUR should succeed: {:?}", result.error);
+
+    let steps_text = result.steps.join("\n");
+
+    // The ETH→USD hop should show the rate 1625.0
+    assert!(
+        steps_text.contains("1625"),
+        "Steps should show the ETH→USD rate (1625). Steps:\n{steps_text}"
+    );
+    // The USD→EUR hop should show the rate 0.92
+    assert!(
+        steps_text.contains("0.92"),
+        "Steps should show the USD→EUR rate (0.92). Steps:\n{steps_text}"
     );
 }
 

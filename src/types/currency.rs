@@ -148,8 +148,9 @@ pub struct CurrencyDatabase {
     legacy_rates: HashMap<(String, String), f64>,
     /// Historical rates: (from, to, `date_string`) -> rate info
     historical_rates: HashMap<(String, String, String), ExchangeRateInfo>,
-    /// The last rate info used in a conversion (for step display).
-    last_used_rate: Option<(String, String, ExchangeRateInfo)>,
+    /// All rate infos used in the last conversion (for step display).
+    /// May contain multiple entries for cross-rate (triangulated) conversions.
+    last_used_rates: Vec<(String, String, ExchangeRateInfo)>,
 }
 
 impl CurrencyDatabase {
@@ -161,7 +162,7 @@ impl CurrencyDatabase {
             rates: HashMap::new(),
             legacy_rates: HashMap::new(),
             historical_rates: HashMap::new(),
-            last_used_rate: None,
+            last_used_rates: Vec::new(),
         };
         db.initialize_default_currencies();
         db.initialize_default_rates();
@@ -318,15 +319,16 @@ impl CurrencyDatabase {
             .map(|info| info.rate)
     }
 
-    /// Gets the last used rate info (for display in calculation steps).
+    /// Gets all rate infos used in the last conversion (for display in calculation steps).
+    /// Returns multiple entries for cross-rate (triangulated) conversions.
     #[must_use]
-    pub fn get_last_used_rate(&self) -> Option<&(String, String, ExchangeRateInfo)> {
-        self.last_used_rate.as_ref()
+    pub fn get_last_used_rates(&self) -> &[(String, String, ExchangeRateInfo)] {
+        &self.last_used_rates
     }
 
     /// Clears the last used rate info.
     pub fn clear_last_used_rate(&mut self) {
-        self.last_used_rate = None;
+        self.last_used_rates.clear();
     }
 
     /// Gets a historical exchange rate for a specific date.
@@ -356,13 +358,13 @@ impl CurrencyDatabase {
         let to_upper = to.to_uppercase();
 
         if from_upper == to_upper {
-            self.last_used_rate = None;
+            self.last_used_rates.clear();
             return Ok(amount);
         }
 
         if let Some(info) = self.rates.get(&(from_upper.clone(), to_upper.clone())) {
             let result = amount * info.rate;
-            self.last_used_rate = Some((from_upper, to_upper, info.clone()));
+            self.last_used_rates = vec![(from_upper, to_upper, info.clone())];
             return Ok(result);
         }
 
@@ -379,13 +381,11 @@ impl CurrencyDatabase {
                     .cloned(),
             ) {
                 let triangulated_rate = from_usd_info.rate * usd_to_info.rate;
-                let triangulated_info = ExchangeRateInfo {
-                    rate: triangulated_rate,
-                    source: format!("{} (via USD)", from_usd_info.source),
-                    date: from_usd_info.date,
-                    fetched_at: None,
-                };
-                self.last_used_rate = Some((from_upper, to_upper, triangulated_info));
+                // Store both individual rate steps so callers can show each hop explicitly
+                self.last_used_rates = vec![
+                    (from_upper, "USD".to_string(), from_usd_info),
+                    ("USD".to_string(), to_upper, usd_to_info),
+                ];
                 return Ok(amount * triangulated_rate);
             }
         }
@@ -410,7 +410,7 @@ impl CurrencyDatabase {
         let date_str = format!("{}", date.as_chrono().format("%Y-%m-%d"));
 
         if from_upper == to_upper {
-            self.last_used_rate = None;
+            self.last_used_rates.clear();
             return Ok(amount);
         }
 
@@ -420,7 +420,7 @@ impl CurrencyDatabase {
             .get(&(from_upper.clone(), to_upper.clone(), date_str))
             .cloned()
         {
-            self.last_used_rate = Some((from_upper, to_upper, info.clone()));
+            self.last_used_rates = vec![(from_upper, to_upper, info.clone())];
             return Ok(amount * info.rate);
         }
 
@@ -430,7 +430,7 @@ impl CurrencyDatabase {
             .get(&(from_upper.clone(), to_upper.clone()))
             .cloned()
         {
-            self.last_used_rate = Some((from_upper, to_upper, info.clone()));
+            self.last_used_rates = vec![(from_upper, to_upper, info.clone())];
             return Ok(amount * info.rate);
         }
 
@@ -658,7 +658,9 @@ mod tests {
         let result = db.convert(100.0, "USD", "RUB").unwrap();
         assert_eq!(result, 7500.0);
 
-        let last_rate = db.get_last_used_rate().unwrap();
+        let last_rates = db.get_last_used_rates();
+        assert_eq!(last_rates.len(), 1);
+        let last_rate = &last_rates[0];
         assert_eq!(last_rate.0, "USD");
         assert_eq!(last_rate.1, "RUB");
         assert_eq!(last_rate.2.rate, 75.0);
@@ -671,6 +673,6 @@ mod tests {
         let mut db = CurrencyDatabase::new();
         let result = db.convert(100.0, "USD", "USD").unwrap();
         assert_eq!(result, 100.0);
-        assert!(db.get_last_used_rate().is_none());
+        assert!(db.get_last_used_rates().is_empty());
     }
 }
