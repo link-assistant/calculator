@@ -140,7 +140,19 @@ impl<'a> TokenParser<'a> {
         // Number with optional unit
         if let Some(TokenKind::Number(n)) = self.current_kind() {
             let num_str = n.clone();
+            let save_pos = self.pos;
             self.advance();
+
+            // If followed by a Colon, this might be a time like "11:59pm EST on Monday, January 26th"
+            // Try collecting all remaining tokens as a datetime string first.
+            if matches!(self.current_kind(), Some(TokenKind::Colon)) {
+                if let Ok(dt) = self.try_parse_time_starting_with_number(&num_str) {
+                    return Ok(dt);
+                }
+                // Datetime parse failed — restore position and fall through to plain number
+                self.pos = save_pos;
+                self.advance(); // re-consume the number token
+            }
 
             // Check for unit (identifier following number that is not a function)
             let unit = if let Some(TokenKind::Identifier(id)) = self.current_kind() {
@@ -315,6 +327,55 @@ impl<'a> TokenParser<'a> {
             return Err(CalculatorError::parse(
                 "until requires a datetime expression",
             ));
+        }
+
+        let datetime_str = parts.join(" ").replace(" , ", ", ").replace(" : ", ":");
+        match crate::types::DateTime::parse(&datetime_str) {
+            Ok(dt) => Ok(Expression::DateTime(dt)),
+            Err(e) => Err(e),
+        }
+    }
+
+    /// Tries to parse a time/datetime expression that starts with a number followed by a colon,
+    /// e.g. "11:59pm EST on Monday, January 26th".
+    /// The `hour_str` is the number already consumed, and the current position is at the Colon.
+    fn try_parse_time_starting_with_number(
+        &mut self,
+        hour_str: &str,
+    ) -> Result<Expression, CalculatorError> {
+        let mut parts = vec![hour_str.to_string()];
+
+        while !self.is_at_end() {
+            match self.current_kind() {
+                Some(TokenKind::Number(n)) => {
+                    parts.push(n.clone());
+                    self.advance();
+                }
+                Some(TokenKind::Identifier(id)) => {
+                    let id_lower = id.to_lowercase();
+                    // Attach ordinal suffixes directly to preceding number
+                    if matches!(id_lower.as_str(), "st" | "nd" | "rd" | "th") {
+                        if let Some(last) = parts.last_mut() {
+                            if last.chars().all(|c| c.is_ascii_digit()) {
+                                last.push_str(id);
+                                self.advance();
+                                continue;
+                            }
+                        }
+                    }
+                    parts.push(id.clone());
+                    self.advance();
+                }
+                Some(TokenKind::Comma) => {
+                    parts.push(",".to_string());
+                    self.advance();
+                }
+                Some(TokenKind::Colon) => {
+                    parts.push(":".to_string());
+                    self.advance();
+                }
+                _ => break,
+            }
         }
 
         let datetime_str = parts.join(" ").replace(" , ", ", ").replace(" : ", ":");

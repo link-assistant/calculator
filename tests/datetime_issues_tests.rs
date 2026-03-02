@@ -195,6 +195,95 @@ mod issue_23_until_and_natural_dates {
             result.lino_interpretation
         );
     }
+
+    // Tests for the exact failing input from issue #23
+    #[test]
+    fn test_until_with_on_and_day_name() {
+        let mut calc = Calculator::new();
+        // The exact input from the issue report
+        let result = calc.calculate_internal("until 11:59pm EST on Monday, January 26th");
+        assert!(
+            result.success,
+            "until 11:59pm EST on Monday, January 26th should succeed: {:?}",
+            result.error
+        );
+        // Result should be a duration (positive or negative depending on date)
+        assert!(
+            result.result.contains("day")
+                || result.result.contains("hour")
+                || result.result.contains("minute")
+                || result.result.contains("second"),
+            "until should produce a duration: {}",
+            result.result
+        );
+    }
+
+    #[test]
+    fn test_time_with_on_and_day_name() {
+        let mut calc = Calculator::new();
+        // The second form from the issue: standalone time+date with "on" and day name
+        // Previously returned "11" (wrong), should now return a datetime
+        let result = calc.calculate_internal("11:59pm EST on Monday, January 26th");
+        assert!(
+            result.success,
+            "11:59pm EST on Monday, January 26th should succeed: {:?}",
+            result.error
+        );
+        // Result should be a datetime, not the number 11
+        assert_ne!(
+            result.result, "11",
+            "Result should not be just the number 11"
+        );
+        assert!(
+            result.result.contains('-') || result.result.contains(':'),
+            "Result should be a datetime: {}",
+            result.result
+        );
+    }
+
+    #[test]
+    fn test_time_with_on_preposition() {
+        let mut calc = Calculator::new();
+        // "on" preposition before date without day name
+        let result = calc.calculate_internal("11:59pm EST on January 26");
+        assert!(
+            result.success,
+            "11:59pm EST on January 26 should succeed: {:?}",
+            result.error
+        );
+        assert_ne!(result.result, "11", "Result should not be the number 11");
+    }
+
+    #[test]
+    fn test_time_with_timezone_and_ordinal_date() {
+        let mut calc = Calculator::new();
+        // Time with timezone and ordinal date (no "on")
+        let result = calc.calculate_internal("11:59pm EST January 26th");
+        assert!(
+            result.success,
+            "11:59pm EST January 26th should succeed: {:?}",
+            result.error
+        );
+        assert_ne!(result.result, "11", "Result should not be the number 11");
+    }
+
+    #[test]
+    fn test_time_with_on_day_name_lino_is_datetime() {
+        let mut calc = Calculator::new();
+        let result = calc.calculate_internal("11:59pm EST on Monday, January 26th");
+        assert!(result.success);
+        // Lino should be a datetime wrapped in parens, not just "11"
+        assert!(
+            result.lino_interpretation.starts_with('(')
+                && result.lino_interpretation.ends_with(')'),
+            "Lino should be datetime in parens: '{}'",
+            result.lino_interpretation
+        );
+        assert_ne!(
+            result.lino_interpretation, "(11)",
+            "Lino should not be just '(11)'"
+        );
+    }
 }
 
 mod issue_68_utc_time {
