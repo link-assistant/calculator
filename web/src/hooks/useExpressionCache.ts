@@ -1,9 +1,10 @@
 import { useCallback } from 'react';
+import { jsonToLino, linoToJson } from 'lino-objects-codec';
 import type { CalculationResult } from '../types';
 
-const CACHE_KEY_PREFIX = 'lc_cache_v1_';
+const CACHE_KEY_PREFIX = 'lc_cache_v2_';
 const MAX_CACHE_ENTRIES = 50;
-const CACHE_INDEX_KEY = 'lc_cache_index_v1';
+const CACHE_INDEX_KEY = 'lc_cache_index_v2';
 
 interface CacheEntry {
   expression: string;
@@ -26,30 +27,51 @@ function getCacheKey(expression: string): string {
 function getCacheIndex(): string[] {
   try {
     const raw = localStorage.getItem(CACHE_INDEX_KEY);
-    return raw ? JSON.parse(raw) : [];
+    if (!raw) return [];
+    const parsed = linoToJson({ lino: raw });
+    // linoToJson unwraps single-element arrays to scalars; normalise back to array
+    if (Array.isArray(parsed)) return parsed as string[];
+    if (typeof parsed === 'string') return [parsed];
+    return [];
   } catch {
     return [];
   }
 }
 
 /**
- * Persist the cache index.
+ * Persist the cache index in Links Notation format.
  */
 function saveCacheIndex(index: string[]): void {
   try {
-    localStorage.setItem(CACHE_INDEX_KEY, JSON.stringify(index));
+    localStorage.setItem(CACHE_INDEX_KEY, jsonToLino({ json: index }));
   } catch {
     // localStorage may be unavailable (private browsing, quota exceeded)
   }
 }
 
 /**
+ * Restore CalculationResult field types after linoToJson round-trip.
+ *
+ * linoToJson converts numeric-looking strings (e.g., "5") to numbers.
+ * CalculationResult.result and .lino_interpretation are always strings,
+ * so we coerce them back explicitly.
+ */
+function coerceResult(raw: unknown): CalculationResult {
+  const r = raw as Record<string, unknown>;
+  return {
+    ...(r as CalculationResult),
+    result: r.result !== undefined ? String(r.result) : '',
+    lino_interpretation: r.lino_interpretation !== undefined ? String(r.lino_interpretation) : '',
+  };
+}
+
+/**
  * Hook that provides caching of calculation results in localStorage.
  *
- * The cache stores results keyed by expression and tagged with the app version.
- * When loading a cached result, if the stored version does not match the
- * current app version the cached entry is ignored and the expression is
- * recalculated fresh.
+ * Cache entries are stored in Links Notation format (human-readable),
+ * matching the convention used for currency rates and preferences in
+ * this application. Each entry includes the app version so stale
+ * results are automatically discarded after an upgrade.
  *
  * Cache size is bounded to MAX_CACHE_ENTRIES; the oldest entry is evicted
  * when the limit is exceeded (LRU-like, by insertion order).
@@ -67,12 +89,13 @@ export function useExpressionCache(appVersion: string) {
         const raw = localStorage.getItem(getCacheKey(expression));
         if (!raw) return null;
 
-        const entry: CacheEntry = JSON.parse(raw);
+        const entry = linoToJson({ lino: raw }) as Record<string, unknown> | null;
+        if (!entry || typeof entry !== 'object') return null;
 
         // Invalidate if app version changed
         if (entry.appVersion !== appVersion) return null;
 
-        return entry.result;
+        return coerceResult(entry.result);
       } catch {
         return null;
       }
@@ -113,7 +136,7 @@ export function useExpressionCache(appVersion: string) {
           }
         }
 
-        localStorage.setItem(key, JSON.stringify(entry));
+        localStorage.setItem(key, jsonToLino({ json: entry }));
         saveCacheIndex(index);
       } catch {
         // localStorage may be unavailable or quota exceeded — fail silently
