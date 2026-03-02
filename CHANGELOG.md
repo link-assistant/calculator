@@ -17,6 +17,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.6.0] - 2026-03-02
+
+### Added
+- Cache expression results in `localStorage` for instant page loads. Cached results are keyed by expression and app version, so stale entries are automatically invalidated after an upgrade.
+- LRU-style eviction caps the cache at 50 entries, keeping `localStorage` usage bounded.
+
 ## [0.5.3] - 2026-03-02
 
 ## Added
