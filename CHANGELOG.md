@@ -15,6 +15,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.5.2] - 2026-03-02
+
+### Fixed
+- Currency conversion steps now always show the exchange rate source, effective date, and exact rate value for `as`/`in`/`to` unit conversion expressions (e.g. `1 ETH in EUR`, `100 USD as EUR`)
+- Previously, the rate metadata was only shown in steps for arithmetic currency expressions (e.g. `0 RUB + 1 USD`), but was silently omitted for direct unit-conversion syntax
+- Both fiat-to-fiat (USD→EUR) and crypto-to-fiat (ETH→USD, ETH→EUR via cross-rate) conversions are now covered uniformly
+
+### Fixed
+- Fixed parsing of time expressions that start with a number followed by a colon, such as `11:59pm EST on Monday, January 26th`. Previously these returned just the number (e.g. `11`); now they are correctly parsed as datetime values. Fixes #23.
+
+### Added
+- Universal on-screen keyboard for mathematical expression input (issue #48)
+  - Collapsed by default, toggled by a button below the input field
+  - Includes digit keys (0-9), basic operators (+, −, ×, ÷), parentheses, power (^), and percent (%)
+  - Includes math function shortcut keys: sin, cos, tan, ln, log, √
+  - Includes mathematical constants: π (pi), e
+  - Backspace key to delete the last character or selected text
+  - Calculate (=) button to trigger evaluation
+  - Keyboard inserts text at the current cursor position in the input field
+  - Full internationalization (i18n) support in 7 languages
+
 ## [0.5.1] - 2026-03-02
 
 ### Fixed
