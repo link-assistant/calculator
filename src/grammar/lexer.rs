@@ -243,13 +243,15 @@ impl Lexer {
             }
         }
 
-        // Check for keywords
+        // Check for keywords (including Russian equivalents)
         let kind = match text.to_lowercase().as_str() {
             "at" => TokenKind::At,
             "as" => TokenKind::As,
             "in" => TokenKind::In,
             "to" => TokenKind::To,
             "until" => TokenKind::Until,
+            // Russian preposition "в" means "in/into" (used for conversions like "в долларах")
+            "в" => TokenKind::In,
             _ => TokenKind::Identifier(text.clone()),
         };
 

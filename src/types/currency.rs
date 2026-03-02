@@ -500,8 +500,34 @@ impl CurrencyDatabase {
             "yuan" | "renminbi" | "chinese yuan" => return Some("CNY".to_string()),
             "ruble" | "rubles" | "rouble" | "roubles" => return Some("RUB".to_string()),
             // Russian language names for RUB (all grammatical cases/forms)
-            "рубль" | "рубля" | "рублей" | "рублю" | "рублём" | "рублем" | "рубли" => {
-                return Some("RUB".to_string())
+            // Nominative: рубль, рубли; Genitive: рубля, рублей;
+            // Dative: рублю, рублям; Instrumental: рублём/рублем, рублями;
+            // Prepositional: рубле, рублях
+            "рубль" | "рубля" | "рубле" | "рубли" | "рублей" | "рублям" | "рублю" | "рублём"
+            | "рублем" | "рублями" | "рублях" => return Some("RUB".to_string()),
+            // Russian language names for USD (all grammatical cases/forms)
+            // Nominative: доллар, доллары; Genitive: доллара, долларов;
+            // Dative: доллару, долларам; Accusative: доллар, доллары;
+            // Instrumental: долларом, долларами; Prepositional: долларе, долларах
+            "доллар" | "доллара" | "долларе" | "доллары" | "долларов" | "долларам" | "доллару"
+            | "долларом" | "долларами" | "долларах" => {
+                return Some("USD".to_string())
+            }
+            // Russian language names for EUR (all grammatical cases/forms)
+            // Nominative: евро (indeclinable in Russian)
+            "евро" => return Some("EUR".to_string()),
+            // Russian language names for GBP (all grammatical cases/forms)
+            // фунт (pound), фунт стерлингов (pound sterling)
+            "фунт" | "фунта" | "фунте" | "фунты" | "фунтов" | "фунтам" | "фунту" | "фунтом"
+            | "фунтами" | "фунтах" => return Some("GBP".to_string()),
+            // Russian language names for CNY (all grammatical cases/forms)
+            // юань (yuan)
+            "юань" | "юаня" | "юане" | "юани" | "юаней" | "юаням" | "юаню" | "юанем" | "юанями"
+            | "юанях" => return Some("CNY".to_string()),
+            // Russian language names for JPY (all grammatical cases/forms)
+            // иена (yen)
+            "иена" | "иены" | "иене" | "иену" | "иеной" | "иенами" | "иенах" | "иен" => {
+                return Some("JPY".to_string())
             }
             // Russian language names for INR (Indian Rupee, all grammatical cases/forms)
             "рупия" | "рупии" | "рупий" | "рупию" | "рупией" | "рупиях" => {
