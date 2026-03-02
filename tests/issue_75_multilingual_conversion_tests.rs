@@ -9,11 +9,11 @@
 //! Pattern tested: `NUMBER CURRENCY_NAME KEYWORD TARGET_CURRENCY`
 //!
 //! Language-specific conversion keywords added to the lexer:
-//! - Russian: "в" → TokenKind::In  (already implemented)
-//! - French:  "en" → TokenKind::In
-//! - Chinese: "换成"/"兑换成"/"转换为"/"兑成"/"转为" → TokenKind::To
-//! - Hindi:   "में" → TokenKind::In  (postposition)
-//! - Arabic:  "إلى" → TokenKind::To
+//! - Russian: "в" → `TokenKind::In`  (already implemented)
+//! - French:  "en" → `TokenKind::In`
+//! - Chinese: "换成"/"兑换成"/"转换为"/"兑成"/"转为" → `TokenKind::To`
+//! - Hindi:   "में" → `TokenKind::In`  (postposition)
+//! - Arabic:  "إلى" → `TokenKind::To`
 //! - German:  "in" (identical to English, no change needed)
 
 use link_calculator::Calculator;
