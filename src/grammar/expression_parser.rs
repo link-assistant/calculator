@@ -307,8 +307,9 @@ impl ExpressionParser {
 
                 let result = self.apply_binary_op(&left_val, *op, &right_val)?;
 
-                // If a currency conversion was used, add rate info to steps
-                if let Some((from, to, rate_info)) = self.currency_db.get_last_used_rate() {
+                // If a currency conversion was used, add rate info to steps.
+                // For cross-rate (triangulated) conversions there may be multiple entries.
+                for (from, to, rate_info) in self.currency_db.get_last_used_rates() {
                     steps.push(format!(
                         "Exchange rate: {}",
                         rate_info.format_for_display(from, to)
@@ -437,7 +438,21 @@ impl ExpressionParser {
                     val.to_display_string(),
                     target_unit.display_name()
                 ));
+
+                // Clear any previous rate tracking before the conversion
+                self.currency_db.clear_last_used_rate();
+
                 let result = val.convert_to_unit(target_unit, &mut self.currency_db)?;
+
+                // If a currency conversion was used, add rate info to steps.
+                // For cross-rate (triangulated) conversions there may be multiple entries.
+                for (from, to, rate_info) in self.currency_db.get_last_used_rates() {
+                    steps.push(format!(
+                        "Exchange rate: {}",
+                        rate_info.format_for_display(from, to)
+                    ));
+                }
+
                 steps.push(format!("= {}", result.to_display_string()));
                 Ok(result)
             }
