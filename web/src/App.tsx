@@ -258,6 +258,18 @@ function App() {
     }
   }, [wasmReady, input, wasLoadedFromUrl, getCachedResult, calculate]);
 
+  // Auto-refresh live time expressions (e.g., "UTC time", "now") every second.
+  // This keeps the displayed time current without manual re-calculation.
+  useEffect(() => {
+    if (!result?.is_live_time || !wasmReady || !input.trim()) {
+      return;
+    }
+    const intervalId = setInterval(() => {
+      calculate(input);
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, [result?.is_live_time, wasmReady, input, calculate]);
+
   // Handle Enter key press to trigger calculation
   const handleKeyDown = useCallback((e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
