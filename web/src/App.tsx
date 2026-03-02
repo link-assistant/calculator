@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef, lazy, Suspense, KeyboardEvent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
-import { useTheme, useUrlExpression, useDelayedLoading } from './hooks';
+import { useTheme, useUrlExpression, useDelayedLoading, useExpressionCache } from './hooks';
 import { SUPPORTED_LANGUAGES, loadPreferences, savePreferences } from './i18n';
 import { generateIssueUrl, type PageState } from './utils/reportIssue';
 import { AutoResizeTextarea, ColorCodedLino, RepeatingDecimalNotations, UniversalKeyboard, type AutoResizeTextareaRef } from './components';
@@ -157,6 +157,13 @@ function App() {
   });
   const [keyboardOpen, setKeyboardOpen] = useState(false);
 
+  const { getCachedResult, cacheResult } = useExpressionCache(version);
+  // Ref wrappers so the worker onmessage closure always sees the latest callbacks
+  const cacheResultRef = useRef(cacheResult);
+  cacheResultRef.current = cacheResult;
+  // Tracks the expression currently being calculated so results can be cached correctly
+  const pendingExpressionRef = useRef<string>('');
+
   const workerRef = useRef<Worker | null>(null);
   const settingsRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<AutoResizeTextareaRef>(null);
@@ -185,6 +192,10 @@ function App() {
           setComputationTime(data.computation_time_ms);
         }
         setLoading(false);
+        // Cache the successful result for faster subsequent loads
+        if (data.success) {
+          cacheResultRef.current(pendingExpressionRef.current, data);
+        }
       } else if (type === 'error') {
         setResult({
           result: '',
@@ -227,17 +238,25 @@ function App() {
       return;
     }
 
+    pendingExpressionRef.current = expr;
     setLoading(true);
     setComputationTime(null);
     workerRef.current.postMessage({ type: 'calculate', expression: expr });
   }, [wasmReady, input]);
 
-  // Auto-calculate when expression is loaded from URL
+  // Auto-calculate when expression is loaded from URL.
+  // If a cached result exists for the current app version, display it immediately
+  // while the fresh calculation runs in the background.
   useEffect(() => {
     if (wasmReady && input.trim() && wasLoadedFromUrl()) {
+      const cached = getCachedResult(input);
+      if (cached) {
+        setResult(cached);
+        setSelectedLinoIndex(0);
+      }
       calculate(input);
     }
-  }, [wasmReady, input, wasLoadedFromUrl, calculate]);
+  }, [wasmReady, input, wasLoadedFromUrl, getCachedResult, calculate]);
 
   // Handle Enter key press to trigger calculation
   const handleKeyDown = useCallback((e: KeyboardEvent<HTMLTextAreaElement>) => {
