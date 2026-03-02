@@ -243,15 +243,24 @@ impl Lexer {
             }
         }
 
-        // Check for keywords (including Russian equivalents)
+        // Check for keywords (including multilingual equivalents)
         let kind = match text.to_lowercase().as_str() {
             "at" => TokenKind::At,
             "as" => TokenKind::As,
             "in" => TokenKind::In,
             "to" => TokenKind::To,
             "until" => TokenKind::Until,
-            // Russian preposition "в" means "in/into" (used for conversions like "в долларах")
+            // Russian: "в" means "in/into" (e.g. "1000 рублей в долларах")
             "в" => TokenKind::In,
+            // French: "en" means "in/into" (e.g. "1000 dollars en euros")
+            // Note: German "in" is identical to English "in", no extra entry needed.
+            "en" => TokenKind::In,
+            // Chinese: conversion phrases (e.g. "1000美元换成欧元")
+            "换成" | "兑换成" | "转换为" | "兑成" | "转为" => TokenKind::To,
+            // Hindi: "में" means "in" as postposition (e.g. "1000 डॉलर में यूरो")
+            "में" => TokenKind::In,
+            // Arabic: "إلى" means "to/into" (e.g. "1000 دولار إلى يورو")
+            "إلى" => TokenKind::To,
             _ => TokenKind::Identifier(text.clone()),
         };
 
