@@ -1,7 +1,7 @@
 //! Grammar for parsing numbers with optional units.
 
 use crate::error::CalculatorError;
-use crate::types::{CurrencyDatabase, DataSizeUnit, Decimal, MassUnit, Unit};
+use crate::types::{CurrencyDatabase, DataSizeUnit, Decimal, DurationUnit, MassUnit, Unit};
 
 /// Grammar for parsing numbers with optional units.
 #[derive(Debug, Default)]
@@ -60,12 +60,15 @@ impl NumberGrammar {
             return Ok(Unit::Mass(mass));
         }
 
+        // Try to parse as duration unit (before currency, to avoid e.g. "h" being treated as a currency)
+        if let Some(dur) = DurationUnit::parse(s) {
+            return Ok(Unit::Duration(dur));
+        }
+
         // Try to parse as cryptocurrency or fiat currency alias
         if let Some(currency_code) = CurrencyDatabase::parse_currency(s) {
             return Ok(Unit::currency(&currency_code));
         }
-
-        // Could add more unit types here (duration, length, etc.)
 
         // If nothing matches, treat as custom unit
         if s.is_empty() {

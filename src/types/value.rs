@@ -168,6 +168,48 @@ impl Value {
             (ValueKind::Duration { seconds: s1 }, ValueKind::Duration { seconds: s2 }) => {
                 Ok(Value::duration(s1 + s2))
             }
+            // DateTime + number-with-duration-unit (e.g. "now + 10 days")
+            (ValueKind::DateTime(dt), ValueKind::Rational(r))
+                if matches!(other.unit, Unit::Duration(_)) =>
+            {
+                if let Unit::Duration(dur_unit) = &other.unit {
+                    let seconds = dur_unit.to_secs(r.to_f64()) as i64;
+                    Ok(Value::datetime(dt.add_duration(seconds)))
+                } else {
+                    unreachable!()
+                }
+            }
+            (ValueKind::DateTime(dt), ValueKind::Number(n))
+                if matches!(other.unit, Unit::Duration(_)) =>
+            {
+                if let Unit::Duration(dur_unit) = &other.unit {
+                    let seconds = dur_unit.to_secs(n.to_f64()) as i64;
+                    Ok(Value::datetime(dt.add_duration(seconds)))
+                } else {
+                    unreachable!()
+                }
+            }
+            // number-with-duration-unit + DateTime (commutative, e.g. "10 days + now")
+            (ValueKind::Rational(r), ValueKind::DateTime(dt))
+                if matches!(self.unit, Unit::Duration(_)) =>
+            {
+                if let Unit::Duration(dur_unit) = &self.unit {
+                    let seconds = dur_unit.to_secs(r.to_f64()) as i64;
+                    Ok(Value::datetime(dt.add_duration(seconds)))
+                } else {
+                    unreachable!()
+                }
+            }
+            (ValueKind::Number(n), ValueKind::DateTime(dt))
+                if matches!(self.unit, Unit::Duration(_)) =>
+            {
+                if let Unit::Duration(dur_unit) = &self.unit {
+                    let seconds = dur_unit.to_secs(n.to_f64()) as i64;
+                    Ok(Value::datetime(dt.add_duration(seconds)))
+                } else {
+                    unreachable!()
+                }
+            }
             _ => Err(CalculatorError::InvalidOperation(format!(
                 "Cannot add {} and {}",
                 self.type_name(),
@@ -299,6 +341,27 @@ impl Value {
             }
             (ValueKind::Duration { seconds: s1 }, ValueKind::Duration { seconds: s2 }) => {
                 Ok(Value::duration(s1 - s2))
+            }
+            // DateTime - number-with-duration-unit (e.g. "now - 10 days")
+            (ValueKind::DateTime(dt), ValueKind::Rational(r))
+                if matches!(other.unit, Unit::Duration(_)) =>
+            {
+                if let Unit::Duration(dur_unit) = &other.unit {
+                    let seconds = dur_unit.to_secs(r.to_f64()) as i64;
+                    Ok(Value::datetime(dt.add_duration(-seconds)))
+                } else {
+                    unreachable!()
+                }
+            }
+            (ValueKind::DateTime(dt), ValueKind::Number(n))
+                if matches!(other.unit, Unit::Duration(_)) =>
+            {
+                if let Unit::Duration(dur_unit) = &other.unit {
+                    let seconds = dur_unit.to_secs(n.to_f64()) as i64;
+                    Ok(Value::datetime(dt.add_duration(-seconds)))
+                } else {
+                    unreachable!()
+                }
             }
             _ => Err(CalculatorError::InvalidOperation(format!(
                 "Cannot subtract {} from {}",
