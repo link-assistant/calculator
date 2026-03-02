@@ -974,3 +974,143 @@ footer a:hover {
   background: transparent;
   color: var(--text);
 }
+
+/* Universal Keyboard toggle button */
+.keyboard-toggle-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.keyboard-toggle-button {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.keyboard-toggle-button:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--surface-hover);
+}
+
+.keyboard-toggle-button.active {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+.keyboard-toggle-button svg {
+  flex-shrink: 0;
+}
+
+/* Universal Keyboard */
+.universal-keyboard {
+  margin-top: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.625rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  animation: keyboard-slide-in 0.15s ease-out;
+}
+
+@keyframes keyboard-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.keyboard-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.375rem;
+}
+
+.keyboard-row-actions {
+  grid-template-columns: 1fr 2fr;
+}
+
+.keyboard-key {
+  padding: 0.625rem 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  cursor: pointer;
+  transition: all 0.1s;
+  text-align: center;
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+@media (min-width: 640px) {
+  .keyboard-key {
+    padding: 0.75rem 0.5rem;
+    font-size: 1rem;
+    min-height: 2.75rem;
+  }
+}
+
+.keyboard-key:hover:not(:disabled) {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.keyboard-key:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.keyboard-key:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.keyboard-key-backspace {
+  background: var(--surface-hover);
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+.keyboard-key-backspace:hover:not(:disabled) {
+  background: var(--error);
+  border-color: var(--error);
+  color: white;
+}
+
+.keyboard-key-calculate {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.keyboard-key-calculate:hover:not(:disabled) {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+  color: white;
+}

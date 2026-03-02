@@ -89,6 +89,12 @@ issueReport:
   descriptionPlaceholder 'يرجى وصف المشكلة التي واجهتها'
   issueTitle 'مشكلة في التعبير: {{expression}}'
   defaultIssueTitle 'تقرير المشكلة'
+keyboard:
+  label 'لوحة المفاتيح الشاملة'
+  showKeyboard 'إظهار لوحة المفاتيح'
+  hideKeyboard 'إخفاء لوحة المفاتيح'
+  backspace مسح
+  calculate حساب
 common:
   yes نعم
   no لا

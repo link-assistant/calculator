@@ -89,6 +89,12 @@ issueReport:
   descriptionPlaceholder 'Bitte beschreiben Sie das aufgetretene Problem'
   issueTitle 'Problem mit Ausdruck: {{expression}}'
   defaultIssueTitle Problembericht
+keyboard:
+  label 'Universelle Tastatur'
+  showKeyboard 'Tastatur anzeigen'
+  hideKeyboard 'Tastatur ausblenden'
+  backspace Rücktaste
+  calculate Berechnen
 common:
   yes Ja
   no Nein

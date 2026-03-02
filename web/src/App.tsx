@@ -4,7 +4,7 @@ import type { TFunction } from 'i18next';
 import { useTheme, useUrlExpression, useDelayedLoading } from './hooks';
 import { SUPPORTED_LANGUAGES, loadPreferences, savePreferences } from './i18n';
 import { generateIssueUrl, type PageState } from './utils/reportIssue';
-import { AutoResizeTextarea, ColorCodedLino, RepeatingDecimalNotations, type AutoResizeTextareaRef } from './components';
+import { AutoResizeTextarea, ColorCodedLino, RepeatingDecimalNotations, UniversalKeyboard, type AutoResizeTextareaRef } from './components';
 import { getExamplesForDisplay } from './examples';
 import type { CalculationResult, ErrorInfo } from './types';
 
@@ -155,6 +155,7 @@ function App() {
     const prefs = loadPreferences();
     return prefs.currency || detectUserCurrency();
   });
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
 
   const workerRef = useRef<Worker | null>(null);
   const settingsRef = useRef<HTMLDivElement>(null);
@@ -259,6 +260,51 @@ function App() {
   const handleExampleClick = (example: string) => {
     setInput(example);
   };
+
+  // Handle keyboard key press - inserts text at cursor position in textarea
+  const handleKeyboardKeyPress = useCallback((text: string) => {
+    const textarea = textareaRef.current?.textarea;
+    if (!textarea) {
+      setInput(prev => prev + text);
+      return;
+    }
+    const start = textarea.selectionStart ?? textarea.value.length;
+    const end = textarea.selectionEnd ?? textarea.value.length;
+    const newValue = textarea.value.slice(0, start) + text + textarea.value.slice(end);
+    setInput(newValue);
+    // Restore cursor position after React re-render
+    requestAnimationFrame(() => {
+      const newPos = start + text.length;
+      textarea.focus();
+      textarea.setSelectionRange(newPos, newPos);
+    });
+  }, [setInput]);
+
+  // Handle keyboard backspace - removes character before cursor
+  const handleKeyboardBackspace = useCallback(() => {
+    const textarea = textareaRef.current?.textarea;
+    if (!textarea) {
+      setInput(prev => prev.slice(0, -1));
+      return;
+    }
+    const start = textarea.selectionStart ?? textarea.value.length;
+    const end = textarea.selectionEnd ?? textarea.value.length;
+    if (start === end && start > 0) {
+      const newValue = textarea.value.slice(0, start - 1) + textarea.value.slice(end);
+      setInput(newValue);
+      requestAnimationFrame(() => {
+        textarea.focus();
+        textarea.setSelectionRange(start - 1, start - 1);
+      });
+    } else if (start !== end) {
+      const newValue = textarea.value.slice(0, start) + textarea.value.slice(end);
+      setInput(newValue);
+      requestAnimationFrame(() => {
+        textarea.focus();
+        textarea.setSelectionRange(start, start);
+      });
+    }
+  }, [setInput]);
 
   const handleCopyLink = async () => {
     const success = await copyShareLink();
@@ -442,6 +488,30 @@ function App() {
                 </button>
               </div>
             </div>
+            {/* Keyboard toggle button - below the input field */}
+            <div className="keyboard-toggle-wrapper">
+              <button
+                className={`keyboard-toggle-button${keyboardOpen ? ' active' : ''}`}
+                onClick={() => setKeyboardOpen(prev => !prev)}
+                aria-expanded={keyboardOpen}
+                aria-label={keyboardOpen ? t('keyboard.hideKeyboard', 'Hide keyboard') : t('keyboard.showKeyboard', 'Show keyboard')}
+                type="button"
+              >
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                  <path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 5H5v-2h2v2zm10 0H7v-2h10v2zm0-3h-2v-2h2v2zm0-3h-2V8h2v2zm-3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/>
+                </svg>
+                {keyboardOpen ? t('keyboard.hideKeyboard', 'Hide keyboard') : t('keyboard.showKeyboard', 'Show keyboard')}
+              </button>
+            </div>
+            {/* Universal keyboard - visible when keyboardOpen */}
+            {keyboardOpen && (
+              <UniversalKeyboard
+                onKeyPress={handleKeyboardKeyPress}
+                onBackspace={handleKeyboardBackspace}
+                onCalculate={calculate}
+                disabled={!wasmReady}
+              />
+            )}
           </div>
 
           {/* Input interpretation section - before Result */}
