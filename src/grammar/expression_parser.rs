@@ -264,11 +264,8 @@ impl ExpressionParser {
                 Ok(dt_val)
             }
             Expression::Now => {
-                let now = DateTime::now_with_label(
-                    "current UTC time",
-                    Some(0),
-                    Some("UTC".to_string()),
-                );
+                let now =
+                    DateTime::now_with_label("current UTC time", Some(0), Some("UTC".to_string()));
                 steps.push(format!("Current time: {now}"));
                 Ok(Value::datetime(now))
             }

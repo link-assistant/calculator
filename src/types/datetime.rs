@@ -223,7 +223,11 @@ impl DateTime {
                 let tz_upper = rest.to_uppercase();
                 let label = format!("current {tz_upper} time");
                 let offset_secs = offset.local_minus_utc();
-                return Some(Self::now_with_label(label, Some(offset_secs), Some(tz_upper)));
+                return Some(Self::now_with_label(
+                    label,
+                    Some(offset_secs),
+                    Some(tz_upper),
+                ));
             }
         }
 
@@ -234,7 +238,11 @@ impl DateTime {
                 let tz_upper = rest.to_uppercase();
                 let label = format!("current {tz_upper} time");
                 let offset_secs = offset.local_minus_utc();
-                return Some(Self::now_with_label(label, Some(offset_secs), Some(tz_upper)));
+                return Some(Self::now_with_label(
+                    label,
+                    Some(offset_secs),
+                    Some(tz_upper),
+                ));
             }
         }
 
@@ -771,8 +779,7 @@ impl fmt::Display for DateTime {
         // ('current UTC time': 2026-03-02 20:40:13 UTC (+00:00))
         if let Some(ref label) = self.label {
             let offset_secs = self.offset_seconds.unwrap_or(0);
-            let tz_display =
-                Self::format_tz_for_display(offset_secs, self.tz_abbrev.as_deref());
+            let tz_display = Self::format_tz_for_display(offset_secs, self.tz_abbrev.as_deref());
             if let Some(offset) = self.get_offset() {
                 let local = self.inner.with_timezone(&offset);
                 return write!(
