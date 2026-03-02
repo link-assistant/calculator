@@ -500,8 +500,34 @@ impl CurrencyDatabase {
             "yuan" | "renminbi" | "chinese yuan" => return Some("CNY".to_string()),
             "ruble" | "rubles" | "rouble" | "roubles" => return Some("RUB".to_string()),
             // Russian language names for RUB (all grammatical cases/forms)
-            "рубль" | "рубля" | "рублей" | "рублю" | "рублём" | "рублем" | "рубли" => {
-                return Some("RUB".to_string())
+            // Nominative: рубль, рубли; Genitive: рубля, рублей;
+            // Dative: рублю, рублям; Instrumental: рублём/рублем, рублями;
+            // Prepositional: рубле, рублях
+            "рубль" | "рубля" | "рубле" | "рубли" | "рублей" | "рублям" | "рублю" | "рублём"
+            | "рублем" | "рублями" | "рублях" => return Some("RUB".to_string()),
+            // Russian language names for USD (all grammatical cases/forms)
+            // Nominative: доллар, доллары; Genitive: доллара, долларов;
+            // Dative: доллару, долларам; Accusative: доллар, доллары;
+            // Instrumental: долларом, долларами; Prepositional: долларе, долларах
+            "доллар" | "доллара" | "долларе" | "доллары" | "долларов" | "долларам" | "доллару"
+            | "долларом" | "долларами" | "долларах" => {
+                return Some("USD".to_string())
+            }
+            // Russian language names for EUR (all grammatical cases/forms)
+            // Nominative: евро (indeclinable in Russian)
+            "евро" => return Some("EUR".to_string()),
+            // Russian language names for GBP (all grammatical cases/forms)
+            // фунт (pound), фунт стерлингов (pound sterling)
+            "фунт" | "фунта" | "фунте" | "фунты" | "фунтов" | "фунтам" | "фунту" | "фунтом"
+            | "фунтами" | "фунтах" => return Some("GBP".to_string()),
+            // Russian language names for CNY (all grammatical cases/forms)
+            // юань (yuan)
+            "юань" | "юаня" | "юане" | "юани" | "юаней" | "юаням" | "юаню" | "юанем" | "юанями"
+            | "юанях" => return Some("CNY".to_string()),
+            // Russian language names for JPY (all grammatical cases/forms)
+            // иена (yen)
+            "иена" | "иены" | "иене" | "иену" | "иеной" | "иенами" | "иенах" | "иен" => {
+                return Some("JPY".to_string())
             }
             // Russian language names for INR (Indian Rupee, all grammatical cases/forms)
             "рупия" | "рупии" | "рупий" | "рупию" | "рупией" | "рупиях" => {
@@ -513,6 +539,118 @@ impl CurrencyDatabase {
             }
             // CLF: Chilean Unidad de Fomento (also known as UF)
             "unidad de fomento" | "unidad fomento" | "fomento" => return Some("CLF".to_string()),
+            // German language names for currencies
+            // USD: Dollar (der Dollar) - "in" preposition identical to English
+            "us-dollar" => return Some("USD".to_string()),
+            // EUR: Euro - same as English, already handled above
+            // GBP: Pfund (das Pfund) - invariant with numbers; "pfund sterling" formal
+            "pfund" | "pfund sterling" | "britisches pfund" => return Some("GBP".to_string()),
+            // JPY: Yen - same as English, already handled above
+            // CHF: Franken (der Franken) - German uses "Franken" not "Franc"
+            "franken" | "schweizer franken" => return Some("CHF".to_string()),
+            // CNY: Yuan - same as English; "renminbi" already handled above; "chinesischer yuan" added
+            "chinesischer yuan" => return Some("CNY".to_string()),
+            // RUB: Rubel (der Rubel) - German spelling; "rubeln" dative plural
+            "rubel" | "rubeln" | "russischer rubel" => return Some("RUB".to_string()),
+            // INR: Rupie (die Rupie) - German; plural "rupien"
+            "rupie" | "rupien" | "indische rupie" => return Some("INR".to_string()),
+            // French language names for currencies ("en" preposition added to lexer)
+            // USD: dollar - singular "dollar" already handled; add French-specific forms
+            "dollar américain"
+            | "dollars américains"
+            | "dollar americain"
+            | "dollars americains" => return Some("USD".to_string()),
+            // EUR: euro/euros - already handled above
+            // GBP: livre sterling (la livre sterling) - "sterling" invariable
+            "livre sterling" | "livres sterling" | "livres sterlings" | "livre" | "livres" => {
+                return Some("GBP".to_string())
+            }
+            // JPY: yen/yens - "yen" already handled; add "yens" and French full form
+            "yens" | "yen japonais" | "yens japonais" => return Some("JPY".to_string()),
+            // CHF: franc suisse - "franc"/"francs" already handled; add "franc suisse" forms
+            "franc suisse" | "francs suisses" => return Some("CHF".to_string()),
+            // CNY: yuan/yuans - "yuan" already handled; add French plural and full forms
+            "yuans" | "yuan chinois" | "yuans chinois" => return Some("CNY".to_string()),
+            // RUB: French "rouble russe" / "roubles russes" (English "ruble"/"rubles" and base
+            // "rouble"/"roubles" already handled in the English section above)
+            "rouble russe" | "roubles russes" => return Some("RUB".to_string()),
+            // INR: roupie/roupies (French spelling differs from English "rupee")
+            "roupie" | "roupies" | "roupie indienne" | "roupies indiennes" => {
+                return Some("INR".to_string())
+            }
+            // Chinese (Simplified) language names for currencies ("换成"/"兑换成" etc. added to lexer)
+            // USD: 美元 (měi yuán) standard; 美金 (měi jīn) colloquial
+            "美元" | "美金" => return Some("USD".to_string()),
+            // EUR: 欧元 (ōu yuán)
+            "欧元" => return Some("EUR".to_string()),
+            // GBP: 英镑 (yīng bàng)
+            "英镑" => return Some("GBP".to_string()),
+            // JPY: 日元 (rì yuán) simplified; 日圆 (rì yuán) traditional
+            "日元" | "日圆" => return Some("JPY".to_string()),
+            // CHF: 瑞士法郎 (ruì shì fǎ láng); 法郎 short form
+            "瑞士法郎" | "法郎" => return Some("CHF".to_string()),
+            // CNY: 人民币 (rén mín bì) official name; 元 (yuán) unit; 块 (kuài) colloquial
+            "人民币" | "元" | "块" => return Some("CNY".to_string()),
+            // RUB: 卢布 (lú bù)
+            "卢布" => return Some("RUB".to_string()),
+            // INR: 卢比 (lú bǐ) short; 印度卢比 full form
+            "卢比" | "印度卢比" => return Some("INR".to_string()),
+            // Hindi language names for currencies ("में" postposition added to lexer)
+            // USD: डॉलर (ḍŏlar); अमेरिकी डॉलर full form
+            "डॉलर" | "अमेरिकी डॉलर" => {
+                return Some("USD".to_string())
+            }
+            // EUR: यूरो (yūro) - invariable
+            "यूरो" => return Some("EUR".to_string()),
+            // GBP: पाउंड (pā'uṃḍ); ब्रिटिश पाउंड; पाउंड स्टर्लिंग
+            "पाउंड" | "ब्रिटिश पाउंड" | "पाउंड स्टर्लिंग" => {
+                return Some("GBP".to_string())
+            }
+            // JPY: येन (yen); जापानी येन full form
+            "येन" | "जापानी येन" => return Some("JPY".to_string()),
+            // CHF: फ्रैंक (frank); स्विस फ्रैंक full form
+            "फ्रैंक" | "स्विस फ्रैंक" => {
+                return Some("CHF".to_string())
+            }
+            // CNY: युआन (yuan); चीनी युआन full form; रेनमिनबी alt.
+            "युआन" | "चीनी युआन" | "रेनमिनबी" => {
+                return Some("CNY".to_string())
+            }
+            // RUB: रूबल (rūbal); रूसी रूबल; रशियन रूबल
+            "रूबल" | "रूसी रूबल" | "रशियन रूबल" => {
+                return Some("RUB".to_string())
+            }
+            // INR: रुपया (rupayā) singular; रुपये (rupaye) plural/oblique; रुपयों oblique plural; भारतीय रुपया full
+            "रुपया" | "रुपये" | "रुपयों" | "भारतीय रुपया" => {
+                return Some("INR".to_string())
+            }
+            // Arabic language names for currencies ("إلى" preposition added to lexer)
+            // USD: دولار (dūlār); دولارات plural; دولار أمريكي full
+            "دولار" | "دولارات" | "دولار أمريكي" | "دولارات أمريكية" => {
+                return Some("USD".to_string())
+            }
+            // EUR: يورو (yūrū) - invariable loanword
+            "يورو" => return Some("EUR".to_string()),
+            // GBP: جنيه إسترليني; جنيهات إسترلينية plural; جنيه short; جنيهات short plural
+            "جنيه إسترليني" | "جنيهات إسترلينية" | "جنيه" | "جنيهات" => {
+                return Some("GBP".to_string())
+            }
+            // JPY: ين ياباني; ين short
+            "ين ياباني" | "ين" => return Some("JPY".to_string()),
+            // CHF: فرنك سويسري; فرنكات سويسرية plural; فرنك short
+            "فرنك سويسري" | "فرنكات سويسرية" | "فرنك" => {
+                return Some("CHF".to_string())
+            }
+            // CNY: يوان صيني; يوان short; رنمينبي alt.
+            "يوان صيني" | "يوان" | "رنمينبي" => return Some("CNY".to_string()),
+            // RUB: روبل روسي; روبلات روسية plural; روبل short
+            "روبل روسي" | "روبلات روسية" | "روبل" => {
+                return Some("RUB".to_string())
+            }
+            // INR: روبية هندية; روبيات هندية plural; روبية short; روبيات short plural
+            "روبية هندية" | "روبيات هندية" | "روبية" | "روبيات" => {
+                return Some("INR".to_string())
+            }
             // Cryptocurrency natural language names and common aliases
             "toncoin" | "the open network" => return Some("TON".to_string()),
             "bitcoin" => return Some("BTC".to_string()),
