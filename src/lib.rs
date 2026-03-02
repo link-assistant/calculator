@@ -579,7 +579,7 @@ impl Calculator {
         let alternatives = parsed_expr.as_ref().and_then(Expression::alternative_lino);
         let is_live_time = parsed_expr
             .as_ref()
-            .is_some_and(Self::expr_contains_live_time);
+            .is_some_and(Expression::contains_live_time);
 
         let mut result = match self.parser.parse_and_evaluate(input) {
             Ok((value, steps, lino)) => {
@@ -615,36 +615,6 @@ impl Calculator {
         result.alternative_lino = alternatives;
 
         result
-    }
-
-    /// Returns true if the expression contains a live time reference (e.g., "current UTC time").
-    fn expr_contains_live_time(expr: &Expression) -> bool {
-        match expr {
-            Expression::DateTime(dt) => dt.is_live_time(),
-            Expression::Now => true,
-            Expression::Until(inner) => Self::expr_contains_live_time(inner),
-            Expression::Binary { left, right, .. } => {
-                Self::expr_contains_live_time(left) || Self::expr_contains_live_time(right)
-            }
-            Expression::Negate(inner) | Expression::Group(inner) => {
-                Self::expr_contains_live_time(inner)
-            }
-            Expression::AtTime { value, time } => {
-                Self::expr_contains_live_time(value) || Self::expr_contains_live_time(time)
-            }
-            Expression::FunctionCall { args, .. } => args.iter().any(Self::expr_contains_live_time),
-            Expression::Power { base, exponent } => {
-                Self::expr_contains_live_time(base) || Self::expr_contains_live_time(exponent)
-            }
-            Expression::UnitConversion { value, .. } => Self::expr_contains_live_time(value),
-            Expression::Equality { left, right } => {
-                Self::expr_contains_live_time(left) || Self::expr_contains_live_time(right)
-            }
-            Expression::IndefiniteIntegral { integrand, .. } => {
-                Self::expr_contains_live_time(integrand)
-            }
-            Expression::Number { .. } | Expression::Variable(_) => false,
-        }
     }
 
     /// Generates plot data for an integral expression.
