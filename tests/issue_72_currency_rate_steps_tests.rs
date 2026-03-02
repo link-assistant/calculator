@@ -204,7 +204,11 @@ fn test_issue_72_eth_in_eur_shows_eth_usd_rate() {
     let mut calc = calc_with_eth_and_eur_rates();
 
     let result = calc.calculate_internal("1 ETH in EUR");
-    assert!(result.success, "1 ETH in EUR should succeed: {:?}", result.error);
+    assert!(
+        result.success,
+        "1 ETH in EUR should succeed: {:?}",
+        result.error
+    );
 
     let steps_text = result.steps.join("\n");
 
