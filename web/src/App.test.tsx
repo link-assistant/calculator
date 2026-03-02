@@ -30,6 +30,11 @@ vi.mock('react-i18next', () => ({
         'footer.poweredBy': 'Powered by Rust + WebAssembly',
         'footer.viewOnGitHub': 'View on GitHub',
         'footer.reportIssue': 'Report Issue',
+        'keyboard.showKeyboard': 'Show keyboard',
+        'keyboard.hideKeyboard': 'Hide keyboard',
+        'keyboard.label': 'Universal Keyboard',
+        'keyboard.backspace': 'Backspace',
+        'keyboard.calculate': 'Calculate',
       };
       let result = translations[key] || key;
       if (params) {
@@ -519,5 +524,88 @@ describe('App Component - Interpretation Switching', () => {
 
     const linoValue = document.querySelector('.lino-value');
     expect(linoValue).toBeInTheDocument();
+  });
+});
+
+describe('App Component - Universal Keyboard', () => {
+  let originalResizeObserver: typeof ResizeObserver;
+
+  beforeEach(() => {
+    originalResizeObserver = window.ResizeObserver;
+    window.ResizeObserver = MockResizeObserver as unknown as typeof ResizeObserver;
+    // Restore Worker stub (may have been removed by previous test suite's vi.unstubAllGlobals)
+    class SimpleWorker {
+      onmessage: ((event: MessageEvent) => void) | null = null;
+      onerror: ((event: ErrorEvent) => void) | null = null;
+      postMessage = vi.fn();
+      terminate = vi.fn();
+    }
+    vi.stubGlobal('Worker', SimpleWorker);
+  });
+
+  afterEach(() => {
+    window.ResizeObserver = originalResizeObserver;
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it('should render the keyboard toggle button', () => {
+    render(<App />);
+    const toggleButton = document.querySelector('.keyboard-toggle-button');
+    expect(toggleButton).toBeInTheDocument();
+  });
+
+  it('should not show keyboard by default', () => {
+    render(<App />);
+    const keyboard = document.querySelector('.universal-keyboard');
+    expect(keyboard).not.toBeInTheDocument();
+  });
+
+  it('should show keyboard when toggle button is clicked', async () => {
+    render(<App />);
+    const toggleButton = document.querySelector('.keyboard-toggle-button') as HTMLButtonElement;
+    expect(toggleButton).toBeInTheDocument();
+
+    await userEvent.click(toggleButton);
+
+    const keyboard = document.querySelector('.universal-keyboard');
+    expect(keyboard).toBeInTheDocument();
+  });
+
+  it('should hide keyboard when toggle button is clicked again', async () => {
+    render(<App />);
+    const toggleButton = document.querySelector('.keyboard-toggle-button') as HTMLButtonElement;
+
+    // Open keyboard
+    await userEvent.click(toggleButton);
+    expect(document.querySelector('.universal-keyboard')).toBeInTheDocument();
+
+    // Close keyboard
+    await userEvent.click(toggleButton);
+    expect(document.querySelector('.universal-keyboard')).not.toBeInTheDocument();
+  });
+
+  it('toggle button should have active class when keyboard is open', async () => {
+    render(<App />);
+    const toggleButton = document.querySelector('.keyboard-toggle-button') as HTMLButtonElement;
+
+    expect(toggleButton).not.toHaveClass('active');
+
+    await userEvent.click(toggleButton);
+
+    const updatedButton = document.querySelector('.keyboard-toggle-button');
+    expect(updatedButton).toHaveClass('active');
+  });
+
+  it('toggle button should have correct aria-expanded state', async () => {
+    render(<App />);
+    const toggleButton = document.querySelector('.keyboard-toggle-button') as HTMLButtonElement;
+
+    expect(toggleButton).toHaveAttribute('aria-expanded', 'false');
+
+    await userEvent.click(toggleButton);
+
+    const updatedButton = document.querySelector('.keyboard-toggle-button') as HTMLButtonElement;
+    expect(updatedButton).toHaveAttribute('aria-expanded', 'true');
   });
 });

@@ -89,6 +89,12 @@ issueReport:
   descriptionPlaceholder 'कृपया आपको जो समस्या आई उसका वर्णन करें'
   issueTitle 'अभिव्यक्ति में समस्या: {{expression}}'
   defaultIssueTitle 'समस्या रिपोर्ट'
+keyboard:
+  label 'यूनिवर्सल कीबोर्ड'
+  showKeyboard 'कीबोर्ड दिखाएं'
+  hideKeyboard 'कीबोर्ड छुपाएं'
+  backspace बैकस्पेस
+  calculate गणना
 common:
   yes हाँ
   no नहीं
