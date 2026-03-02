@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.5.1] - 2026-03-02
+
+### Fixed
+
+- Improved Links Notation for indefinite integrals to be more explicit and unambiguous. The differential variable is now shown as `(differential of (x))` and the multiplication between the integrand and differential is made explicit. For example, `integrate cos(x) dx` now produces `(integrate ((cos (x)) * (differential of (x))))` instead of `(integrate (cos (x)) dx)`.
+
 ## [0.5.0] - 2026-03-01
 
 ### Added
