@@ -2,7 +2,7 @@
 // This prevents blocking the main UI thread
 
 import init, { Calculator, fetch_exchange_rates, fetch_crypto_rates, fetch_cbr_rates, parse_consolidated_lino_rates } from '@wasm/link_calculator';
-import { isMissingRatesError } from './worker-utils';
+import { createRateCoordination } from './worker-rate-coordination';
 
 interface CalculatorInstance {
   calculate(input: string): string;
@@ -38,30 +38,9 @@ let ratesLoading = false;
 let ratesError: string | null = null;
 let cryptoRatesError: string | null = null;
 
-// Promises that resolve when each rate source finishes loading (success or failure).
-// Calculations that need currency rates will await these before executing.
-let ecbRatesReady: Promise<void>;
-let cbrRatesReady: Promise<void>;
-let cryptoRatesReady: Promise<void>;
-let resolveEcbRates: () => void;
-let resolveCbrRates: () => void;
-let resolveCryptoRates: () => void;
-
-// Initialize the rate-readiness promises
-function initRatePromises(): void {
-  ecbRatesReady = new Promise<void>((resolve) => { resolveEcbRates = resolve; });
-  cbrRatesReady = new Promise<void>((resolve) => { resolveCbrRates = resolve; });
-  cryptoRatesReady = new Promise<void>((resolve) => { resolveCryptoRates = resolve; });
-}
-initRatePromises();
-
-/**
- * Wait for all exchange rate sources to finish loading.
- * Returns a promise that resolves when ECB, CBR, and crypto rates have all completed.
- */
-function allRatesReady(): Promise<void> {
-  return Promise.all([ecbRatesReady, cbrRatesReady, cryptoRatesReady]).then(() => {});
-}
+// Rate coordination: calculations await rateCoordination.allRatesReady() before
+// executing, ensuring exchange rates are available on the first attempt.
+const rateCoordination = createRateCoordination();
 
 async function initWasm() {
   try {
@@ -101,7 +80,7 @@ async function fetchExchangeRates() {
 
     if (response.success) {
       ratesLoaded = true;
-        ratesError = null;
+      ratesError = null;
 
       // Parse the rates and count them
       const rates = JSON.parse(response.rates_json);
@@ -151,7 +130,7 @@ async function fetchExchangeRates() {
   } finally {
     ratesLoading = false;
     self.postMessage({ type: 'ratesLoading', data: { loading: false } });
-    resolveEcbRates();
+    rateCoordination.resolveEcb();
   }
 }
 
@@ -280,7 +259,7 @@ async function fetchCbrRates() {
       });
     }
   } finally {
-    resolveCbrRates();
+    rateCoordination.resolveCbr();
   }
 }
 
@@ -323,17 +302,16 @@ async function fetchCryptoRates(vsCurrency = 'usd') {
       data: { success: false, error: cryptoRatesError }
     });
   } finally {
-    resolveCryptoRates();
+    rateCoordination.resolveCrypto();
   }
 }
 
 /**
- * Execute a calculation, waiting for exchange rates if needed.
+ * Execute a calculation, ensuring exchange rates are loaded first.
  *
- * Strategy: attempt the calculation immediately. If it succeeds or fails with
- * a non-currency error, return the result right away. If it fails because
- * exchange rates are missing and rate sources are still loading, await the
- * rate promises and then execute the calculation once — no retry loop.
+ * Waits for all rate sources to finish loading before calculating.
+ * The rate promises resolve instantly if rates are already loaded,
+ * so there is no delay for subsequent calculations.
  */
 async function executeCalculation(expression: string): Promise<void> {
   if (!calculator) {
@@ -344,20 +322,14 @@ async function executeCalculation(expression: string): Promise<void> {
     return;
   }
 
+  // Wait for all exchange rate sources to finish loading before calculating.
+  // This ensures currency conversions have rates available on first attempt.
+  // If rates are already loaded, this resolves immediately (no delay).
+  await rateCoordination.allRatesReady();
+
   try {
     const resultJson = calculator.calculate(expression);
     const result = JSON.parse(resultJson);
-
-    if (isMissingRatesError(result)) {
-      // Rates are not available yet — wait for all rate sources to finish loading,
-      // then execute the calculation with the loaded rates.
-      await allRatesReady();
-      const retryJson = calculator.calculate(expression);
-      const retryResult = JSON.parse(retryJson);
-      self.postMessage({ type: 'result', data: retryResult });
-      return;
-    }
-
     self.postMessage({ type: 'result', data: result });
   } catch (error) {
     console.error('Calculation error:', error);
@@ -375,7 +347,7 @@ self.onmessage = async (e: MessageEvent) => {
     await executeCalculation(expression);
   } else if (type === 'refreshRates') {
     // Reset rate promises for the new fetch cycle
-    initRatePromises();
+    rateCoordination.reset();
     // Allow manual refresh of exchange rates
     fetchCbrRates();
     fetchExchangeRates();
