@@ -6,7 +6,7 @@ import { SUPPORTED_LANGUAGES, loadPreferences, savePreferences } from './i18n';
 import { generateIssueUrl, type PageState } from './utils/reportIssue';
 import { AutoResizeTextarea, ColorCodedLino, RepeatingDecimalNotations, UniversalKeyboard, type AutoResizeTextareaRef } from './components';
 import { getExamplesForDisplay } from './examples';
-import type { CalculationResult, ErrorInfo } from './types';
+import type { CalculationPlan, CalculationResult, ErrorInfo } from './types';
 
 // SVG Logo component for Link.Calculator branding
 const LinkCalculatorLogo = ({ size = 24 }: { size?: number }) => (
@@ -184,6 +184,28 @@ function App() {
       if (type === 'ready') {
         setWasmReady(true);
         setVersion(data.version);
+      } else if (type === 'plan') {
+        // Plan arrives immediately (before rates are fetched).
+        // Show the interpretation so the user sees feedback right away.
+        const plan = data as CalculationPlan;
+        if (plan.success && plan.lino_interpretation) {
+          setResult(prev => {
+            // Only update interpretation fields — keep existing result/steps
+            // if we're still loading (they'll be replaced by the full result).
+            const base = prev || {
+              result: '',
+              steps: [],
+              success: false,
+            };
+            return {
+              ...base,
+              lino_interpretation: plan.lino_interpretation,
+              alternative_lino: plan.alternative_lino,
+              is_live_time: plan.is_live_time || undefined,
+            };
+          });
+          setSelectedLinoIndex(0);
+        }
       } else if (type === 'result') {
         setResult(data);
         setSelectedLinoIndex(0); // Reset to default interpretation

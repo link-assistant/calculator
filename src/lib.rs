@@ -36,8 +36,12 @@ pub mod currency_api;
 pub mod error;
 pub mod grammar;
 pub mod lino;
+pub mod plan;
 pub mod types;
+mod utils;
 pub mod wasm;
+
+pub use plan::{CalculationPlan, RateSource};
 
 use error::{CalculatorError, ErrorInfo};
 use grammar::ExpressionParser;
@@ -377,43 +381,7 @@ impl CalculationResult {
     }
 }
 
-/// Generates a GitHub issue link for unrecognized input.
-fn generate_issue_link(input: &str, error: &str) -> String {
-    let title = format!("Unrecognized input: {}", truncate(input, 50));
-    let body = format!(
-        "## Input that failed to parse\n\n```\n{}\n```\n\n## Error message\n\n```\n{}\n```\n\n## Expected behavior\n\nPlease describe what you expected the calculator to do with this input.",
-        input, error
-    );
-    format!(
-        "https://github.com/link-assistant/calculator/issues/new?title={}&body={}",
-        urlencoding_encode(&title),
-        urlencoding_encode(&body)
-    )
-}
-
-fn truncate(s: &str, max_chars: usize) -> &str {
-    match s.char_indices().nth(max_chars) {
-        Some((idx, _)) => &s[..idx],
-        None => s,
-    }
-}
-
-fn urlencoding_encode(s: &str) -> String {
-    let mut result = String::new();
-    for c in s.chars() {
-        match c {
-            'A'..='Z' | 'a'..='z' | '0'..='9' | '-' | '_' | '.' | '~' => result.push(c),
-            ' ' => result.push_str("%20"),
-            '\n' => result.push_str("%0A"),
-            _ => {
-                for byte in c.to_string().as_bytes() {
-                    result.push_str(&format!("%{byte:02X}"));
-                }
-            }
-        }
-    }
-    result
-}
+use utils::generate_issue_link;
 
 /// The main calculator struct.
 #[wasm_bindgen]
@@ -437,9 +405,34 @@ impl Calculator {
         }
     }
 
-    /// Calculates the result of an expression, returning a JSON string.
+    /// Plans a calculation without executing it, returning a JSON string.
+    ///
+    /// Parses the expression to determine:
+    /// - Links notation interpretation (default and alternatives)
+    /// - Which rate sources are required (ECB, CBR, Crypto)
+    /// - Which currency codes are referenced
+    /// - Whether the expression contains live time references
+    ///
+    /// The worker should call this first, fetch the required rate sources,
+    /// then call `execute()` to get the actual result.
     #[wasm_bindgen]
-    pub fn calculate(&mut self, input: &str) -> String {
+    pub fn plan(&self, input: &str) -> String {
+        let plan = self.plan_internal(input);
+        serde_json::to_string(&plan).unwrap_or_else(|e| {
+            format!(
+                r#"{{"success":false,"error":"Serialization error: {}"}}"#,
+                e
+            )
+        })
+    }
+
+    /// Executes a calculation, returning a JSON string with the full result.
+    ///
+    /// This is the same as `calculate()` but named to clarify the plan→execute pipeline.
+    /// The worker should call `plan()` first to determine required rate sources,
+    /// fetch them, then call `execute()`.
+    #[wasm_bindgen]
+    pub fn execute(&mut self, input: &str) -> String {
         let result = self.calculate_internal(input);
         serde_json::to_string(&result).unwrap_or_else(|e| {
             format!(
@@ -447,6 +440,14 @@ impl Calculator {
                 e
             )
         })
+    }
+
+    /// Calculates the result of an expression, returning a JSON string.
+    ///
+    /// Kept for backwards compatibility. Equivalent to `execute()`.
+    #[wasm_bindgen]
+    pub fn calculate(&mut self, input: &str) -> String {
+        self.execute(input)
     }
 
     /// Returns the version of the calculator.
@@ -571,6 +572,19 @@ impl Calculator {
 }
 
 impl Calculator {
+    /// Internal planning method — parses expression and determines requirements.
+    pub fn plan_internal(&self, input: &str) -> CalculationPlan {
+        let input = input.trim();
+        if input.is_empty() {
+            return plan::empty_plan();
+        }
+
+        match self.parser.parse(input) {
+            Ok(expr) => plan::create_plan(input, &expr),
+            Err(e) => plan::error_plan(input, &e.to_string()),
+        }
+    }
+
     /// Internal calculation method that returns a proper Result type.
     pub fn calculate_internal(&mut self, input: &str) -> CalculationResult {
         // Try to parse the expression to generate alternative interpretations
@@ -938,27 +952,9 @@ impl Calculator {
 mod tests {
     use super::*;
 
-    // Tests for private helper functions that can only be tested here.
-    // Public API tests have been moved to tests/ directory to keep this file
-    // under the 1000-line limit.
-
-    #[test]
-    fn test_issue_link_generation() {
-        let link = generate_issue_link("invalid input", "Parse error");
-        assert!(link.contains("github.com"));
-        assert!(link.contains("issues/new"));
-    }
-
-    #[test]
-    fn test_truncate() {
-        assert_eq!(truncate("hello world", 5), "hello");
-        assert_eq!(truncate("hi", 10), "hi");
-    }
-
     #[test]
     fn test_lino_rates_used_in_historical_conversion() {
         let mut calc = Calculator::new();
-        // Load rates in the new .lino format
         let content = "conversion:
   from USD
   to RUB
@@ -970,7 +966,6 @@ mod tests {
         let result = calc.load_rates_from_consolidated_lino(content);
         assert!(result.is_ok());
 
-        // Verify the historical rate can be retrieved from the database (uses private `parser` field)
         let date = types::DateTime::from_date(chrono::NaiveDate::from_ymd_opt(2021, 2, 8).unwrap());
         let rate = calc
             .parser

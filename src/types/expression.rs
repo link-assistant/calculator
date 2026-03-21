@@ -472,6 +472,59 @@ impl Expression {
         }
     }
 
+    /// Collects all currency codes referenced in this expression.
+    ///
+    /// Walks the AST and gathers every `Unit::Currency(code)` value, including
+    /// target units in `UnitConversion` nodes. The returned set contains
+    /// uppercase currency codes (e.g., "USD", "RUB", "TON").
+    #[must_use]
+    pub fn collect_currencies(&self) -> std::collections::HashSet<String> {
+        let mut currencies = std::collections::HashSet::new();
+        self.collect_currencies_inner(&mut currencies);
+        currencies
+    }
+
+    fn collect_currencies_inner(&self, currencies: &mut std::collections::HashSet<String>) {
+        match self {
+            Self::Number { unit, .. } => {
+                if let Unit::Currency(code) = unit {
+                    currencies.insert(code.to_uppercase());
+                }
+            }
+            Self::Binary { left, right, .. }
+            | Self::Power {
+                base: left,
+                exponent: right,
+            }
+            | Self::Equality { left, right } => {
+                left.collect_currencies_inner(currencies);
+                right.collect_currencies_inner(currencies);
+            }
+            Self::Negate(inner) | Self::Group(inner) | Self::Until(inner) => {
+                inner.collect_currencies_inner(currencies);
+            }
+            Self::AtTime { value, time } => {
+                value.collect_currencies_inner(currencies);
+                time.collect_currencies_inner(currencies);
+            }
+            Self::FunctionCall { args, .. } => {
+                for arg in args {
+                    arg.collect_currencies_inner(currencies);
+                }
+            }
+            Self::IndefiniteIntegral { integrand, .. } => {
+                integrand.collect_currencies_inner(currencies);
+            }
+            Self::UnitConversion { value, target_unit } => {
+                value.collect_currencies_inner(currencies);
+                if let Unit::Currency(code) = target_unit {
+                    currencies.insert(code.to_uppercase());
+                }
+            }
+            Self::DateTime(_) | Self::Now | Self::Variable(_) => {}
+        }
+    }
+
     /// Returns the depth of the expression tree.
     #[must_use]
     pub fn depth(&self) -> usize {

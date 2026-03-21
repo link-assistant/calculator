@@ -1,9 +1,23 @@
 // Web Worker for running WASM calculations in the background
 // This prevents blocking the main UI thread
+//
+// Architecture: plan → fetch rates → execute
+//
+// 1. calculator.plan(expr) — parses the AST to determine required rate sources,
+//    LINO interpretation, and alternatives. No rates needed, instant.
+// 2. Fetch only the rate sources the plan requires (ECB, CBR, Crypto).
+//    Pure math expressions skip this step entirely.
+// 3. calculator.execute(expr) — evaluates the expression with rates loaded.
+//
+// The plan is sent to the main thread immediately so the UI can show the
+// interpretation and busy indicator while rates are being fetched.
 
 import init, { Calculator, fetch_exchange_rates, fetch_crypto_rates, fetch_cbr_rates, parse_consolidated_lino_rates } from '@wasm/link_calculator';
+import { createRateCoordination, type RateSource } from './worker-rate-coordination';
 
 interface CalculatorInstance {
+  plan(input: string): string;
+  execute(input: string): string;
   calculate(input: string): string;
   update_rates_from_api(base: string, date: string, rates_json: string): number;
   update_crypto_rates_from_api(base: string, date: string, rates_json: string): number;
@@ -31,11 +45,27 @@ interface CryptoRatesResponse {
   rates_json: string;
 }
 
+/** Shape of the plan returned by calculator.plan() in Rust. */
+interface CalculationPlan {
+  expression: string;
+  lino_interpretation: string;
+  alternative_lino?: string[];
+  required_sources: RateSource[];
+  currencies: string[];
+  is_live_time: boolean;
+  success: boolean;
+  error?: string;
+}
+
 let calculator: CalculatorInstance | null = null;
 let ratesLoaded = false;
 let ratesLoading = false;
 let ratesError: string | null = null;
 let cryptoRatesError: string | null = null;
+
+// On-demand rate coordination: calculations detect which rate sources they
+// need and wait only for those. Sources that aren't needed are never fetched.
+const rateCoordination = createRateCoordination();
 
 async function initWasm() {
   try {
@@ -45,11 +75,12 @@ async function initWasm() {
     const version = CalcClass.version();
     self.postMessage({ type: 'ready', data: { version } });
 
-    // Fetch exchange rates and crypto rates in the background after WASM is initialized
-    // Fetch CBR rates first so RUB conversions use official Russian Central Bank rates
-    fetchCbrRates();
-    fetchExchangeRates();
-    fetchCryptoRates();
+    // Register rate fetchers so the coordination module can trigger them
+    // on demand. No rates are fetched eagerly — they load when a calculation
+    // first needs them.
+    rateCoordination.registerFetcher('ecb', fetchExchangeRates);
+    rateCoordination.registerFetcher('cbr', fetchCbrRates);
+    rateCoordination.registerFetcher('crypto', fetchCryptoRates);
   } catch (error) {
     console.error('Failed to initialize WASM:', error);
     self.postMessage({
@@ -125,6 +156,7 @@ async function fetchExchangeRates() {
   } finally {
     ratesLoading = false;
     self.postMessage({ type: 'ratesLoading', data: { loading: false } });
+    rateCoordination.markLoaded('ecb');
   }
 }
 
@@ -252,6 +284,8 @@ async function fetchCbrRates() {
         data: { success: false, error: `Failed to fetch CBR rates: ${error}` }
       });
     }
+  } finally {
+    rateCoordination.markLoaded('cbr');
   }
 }
 
@@ -293,6 +327,71 @@ async function fetchCryptoRates(vsCurrency = 'usd') {
       type: 'cryptoRatesLoaded',
       data: { success: false, error: cryptoRatesError }
     });
+  } finally {
+    rateCoordination.markLoaded('crypto');
+  }
+}
+
+/**
+ * Plan → Fetch → Execute pipeline.
+ *
+ * 1. Plan: Parse the expression in Rust to determine required rate sources,
+ *    LINO interpretation, and alternatives. Sends `plan` message immediately
+ *    so the UI can show interpretation while waiting.
+ *
+ * 2. Fetch: Load only the rate sources the plan requires. Already-loaded
+ *    sources resolve instantly. Pure math expressions skip this entirely.
+ *
+ * 3. Execute: Run the full calculation with rates guaranteed available.
+ *    Sends `result` message with the computed value, steps, and metadata.
+ */
+async function executeCalculation(expression: string): Promise<void> {
+  if (!calculator) {
+    self.postMessage({
+      type: 'error',
+      data: { error: 'Calculator not initialized' }
+    });
+    return;
+  }
+
+  // Step 1: Plan — parse the expression to discover requirements
+  let plan: CalculationPlan;
+  try {
+    const planJson = calculator.plan(expression);
+    plan = JSON.parse(planJson);
+  } catch (error) {
+    console.error('Plan error:', error);
+    self.postMessage({
+      type: 'error',
+      data: { error: `Failed to plan calculation: ${error}` }
+    });
+    return;
+  }
+
+  // Send the plan to the main thread so the UI can show the interpretation
+  // immediately (before rates are loaded). This gives instant feedback.
+  self.postMessage({ type: 'plan', data: plan });
+
+  // If the plan failed to parse, we still try executing — the execute step
+  // will produce a proper error message with i18n support.
+  // But we can skip rate fetching since we don't know what's needed.
+
+  // Step 2: Fetch — load only the required rate sources
+  if (plan.success && plan.required_sources.length > 0) {
+    await rateCoordination.ensureRatesForSources(new Set(plan.required_sources));
+  }
+
+  // Step 3: Execute — run the calculation with rates loaded
+  try {
+    const resultJson = calculator.execute(expression);
+    const result = JSON.parse(resultJson);
+    self.postMessage({ type: 'result', data: result });
+  } catch (error) {
+    console.error('Calculation error:', error);
+    self.postMessage({
+      type: 'error',
+      data: { error: `Calculation failed: ${error}` }
+    });
   }
 }
 
@@ -300,27 +399,9 @@ self.onmessage = async (e: MessageEvent) => {
   const { type, expression, baseCurrency } = e.data;
 
   if (type === 'calculate') {
-    if (!calculator) {
-      self.postMessage({
-        type: 'error',
-        data: { error: 'Calculator not initialized' }
-      });
-      return;
-    }
-
-    try {
-      const resultJson = calculator.calculate(expression);
-      const result = JSON.parse(resultJson);
-      self.postMessage({ type: 'result', data: result });
-    } catch (error) {
-      console.error('Calculation error:', error);
-      self.postMessage({
-        type: 'error',
-        data: { error: `Calculation failed: ${error}` }
-      });
-    }
+    await executeCalculation(expression);
   } else if (type === 'refreshRates') {
-    // Allow manual refresh of exchange rates
+    // Manual refresh: re-fetch all sources that were previously loaded
     fetchCbrRates();
     fetchExchangeRates();
     fetchCryptoRates();
