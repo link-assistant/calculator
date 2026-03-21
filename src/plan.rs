@@ -88,15 +88,27 @@ pub fn create_plan(input: &str, expr: &Expression) -> CalculationPlan {
     currencies.sort();
 
     let mut sources_set = std::collections::HashSet::new();
+    // Track whether ECB was added only because of USD (not EUR, GBP, etc.)
+    let mut ecb_only_for_usd = true;
     for code in &currencies {
-        for source in currency_to_sources(code) {
+        let sources = currency_to_sources(code);
+        for &source in &sources {
+            if source == RateSource::Ecb && code.to_uppercase() != "USD" {
+                ecb_only_for_usd = false;
+            }
             sources_set.insert(source);
         }
     }
 
-    // If we have any multi-currency expression, add ECB for triangulation
-    if currencies.len() >= 2 && !sources_set.is_empty() {
-        sources_set.insert(RateSource::Ecb);
+    // Optimization: if ECB was added only because USD is present, and CBR or
+    // Crypto already covers the USD conversion path, remove ECB to avoid an
+    // unnecessary network request. CBR provides USD↔RUB rates, and CoinGecko
+    // crypto rates are denominated in USD, so both serve as USD rate sources.
+    if ecb_only_for_usd
+        && sources_set.contains(&RateSource::Ecb)
+        && (sources_set.contains(&RateSource::Cbr) || sources_set.contains(&RateSource::Crypto))
+    {
+        sources_set.remove(&RateSource::Ecb);
     }
 
     let mut required_sources: Vec<RateSource> = sources_set.into_iter().collect();
