@@ -116,6 +116,70 @@ pub struct RepeatingDecimalFormats {
     pub fraction: String,
 }
 
+/// Rate sources that the calculator can fetch data from.
+///
+/// These correspond to the three independent APIs the web worker integrates with:
+/// - `ecb` — Fiat currency rates via Frankfurter API (European Central Bank data)
+/// - `cbr` — RUB-based rates from the Central Bank of Russia
+/// - `crypto` — Cryptocurrency rates via CoinGecko
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum RateSource {
+    /// European Central Bank (fiat currencies: USD, EUR, GBP, JPY, …).
+    Ecb,
+    /// Central Bank of Russia (RUB-based rates).
+    Cbr,
+    /// CoinGecko (cryptocurrencies: BTC, ETH, TON, …).
+    Crypto,
+}
+
+/// A calculation plan produced by `Calculator::plan()`.
+///
+/// Contains everything the worker needs to know *before* executing the
+/// calculation: which rate sources to fetch, how the expression was
+/// interpreted, and what alternatives exist.
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+pub struct CalculationPlan {
+    /// The input expression, trimmed.
+    pub expression: String,
+    /// Links notation interpretation of the expression (default interpretation).
+    pub lino_interpretation: String,
+    /// Alternative links notation interpretations, if any.
+    /// The first element is always the default (same as `lino_interpretation`).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub alternative_lino: Option<Vec<String>>,
+    /// Rate sources that must be loaded before this expression can be executed.
+    /// Empty for pure math expressions.
+    pub required_sources: Vec<RateSource>,
+    /// Currency codes found in the expression (e.g., ["USD", "RUB", "TON"]).
+    pub currencies: Vec<String>,
+    /// Whether the expression contains a live time reference (auto-refresh needed).
+    pub is_live_time: bool,
+    /// Whether the expression was parsed successfully.
+    pub success: bool,
+    /// Error message if parsing failed.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<String>,
+}
+
+/// Maps a currency code to the rate source(s) that provide its exchange rate.
+fn currency_to_sources(code: &str) -> Vec<RateSource> {
+    let upper = code.to_uppercase();
+
+    // Check if it's a cryptocurrency (known to CoinGecko)
+    if crypto_api::coingecko_id(&upper).is_some() {
+        return vec![RateSource::Crypto];
+    }
+
+    // RUB needs CBR rates
+    if upper == "RUB" {
+        return vec![RateSource::Cbr];
+    }
+
+    // All other currencies are fiat, served by ECB/Frankfurter
+    vec![RateSource::Ecb]
+}
+
 /// Result of a calculation operation.
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct CalculationResult {
@@ -437,9 +501,34 @@ impl Calculator {
         }
     }
 
-    /// Calculates the result of an expression, returning a JSON string.
+    /// Plans a calculation without executing it, returning a JSON string.
+    ///
+    /// Parses the expression to determine:
+    /// - Links notation interpretation (default and alternatives)
+    /// - Which rate sources are required (ECB, CBR, Crypto)
+    /// - Which currency codes are referenced
+    /// - Whether the expression contains live time references
+    ///
+    /// The worker should call this first, fetch the required rate sources,
+    /// then call `execute()` to get the actual result.
     #[wasm_bindgen]
-    pub fn calculate(&mut self, input: &str) -> String {
+    pub fn plan(&self, input: &str) -> String {
+        let plan = self.plan_internal(input);
+        serde_json::to_string(&plan).unwrap_or_else(|e| {
+            format!(
+                r#"{{"success":false,"error":"Serialization error: {}"}}"#,
+                e
+            )
+        })
+    }
+
+    /// Executes a calculation, returning a JSON string with the full result.
+    ///
+    /// This is the same as `calculate()` but named to clarify the plan→execute pipeline.
+    /// The worker should call `plan()` first to determine required rate sources,
+    /// fetch them, then call `execute()`.
+    #[wasm_bindgen]
+    pub fn execute(&mut self, input: &str) -> String {
         let result = self.calculate_internal(input);
         serde_json::to_string(&result).unwrap_or_else(|e| {
             format!(
@@ -447,6 +536,14 @@ impl Calculator {
                 e
             )
         })
+    }
+
+    /// Calculates the result of an expression, returning a JSON string.
+    ///
+    /// Kept for backwards compatibility. Equivalent to `execute()`.
+    #[wasm_bindgen]
+    pub fn calculate(&mut self, input: &str) -> String {
+        self.execute(input)
     }
 
     /// Returns the version of the calculator.
@@ -571,6 +668,80 @@ impl Calculator {
 }
 
 impl Calculator {
+    /// Internal planning method — parses expression and determines requirements.
+    pub fn plan_internal(&self, input: &str) -> CalculationPlan {
+        let input = input.trim();
+        if input.is_empty() {
+            return CalculationPlan {
+                expression: String::new(),
+                lino_interpretation: String::new(),
+                alternative_lino: None,
+                required_sources: Vec::new(),
+                currencies: Vec::new(),
+                is_live_time: false,
+                success: false,
+                error: Some("Empty input".to_string()),
+            };
+        }
+
+        match self.parser.parse(input) {
+            Ok(expr) => {
+                let lino = expr.to_lino();
+                let alternatives = expr.alternative_lino();
+                let is_live_time = expr.contains_live_time();
+
+                // Collect currencies from the AST and map to rate sources
+                let currencies_set = expr.collect_currencies();
+                let mut currencies: Vec<String> = currencies_set.iter().cloned().collect();
+                currencies.sort();
+
+                let mut sources_set = std::collections::HashSet::new();
+                for code in &currencies {
+                    for source in currency_to_sources(code) {
+                        sources_set.insert(source);
+                    }
+                }
+
+                // If we have any non-ECB fiat currency conversion that involves
+                // a currency *and* a different currency, we likely need ECB for
+                // triangulation. For example, TON→USD needs crypto + ecb.
+                if currencies.len() >= 2 && !sources_set.is_empty() {
+                    // Any multi-currency expression benefits from ECB as base
+                    sources_set.insert(RateSource::Ecb);
+                }
+
+                let mut required_sources: Vec<RateSource> =
+                    sources_set.into_iter().collect();
+                required_sources.sort_by_key(|s| match s {
+                    RateSource::Ecb => 0,
+                    RateSource::Cbr => 1,
+                    RateSource::Crypto => 2,
+                });
+
+                CalculationPlan {
+                    expression: input.to_string(),
+                    lino_interpretation: lino,
+                    alternative_lino: alternatives,
+                    required_sources,
+                    currencies,
+                    is_live_time,
+                    success: true,
+                    error: None,
+                }
+            }
+            Err(e) => CalculationPlan {
+                expression: input.to_string(),
+                lino_interpretation: String::new(),
+                alternative_lino: None,
+                required_sources: Vec::new(),
+                currencies: Vec::new(),
+                is_live_time: false,
+                success: false,
+                error: Some(e.to_string()),
+            },
+        }
+    }
+
     /// Internal calculation method that returns a proper Result type.
     pub fn calculate_internal(&mut self, input: &str) -> CalculationResult {
         // Try to parse the expression to generate alternative interpretations
