@@ -36,8 +36,12 @@ pub mod currency_api;
 pub mod error;
 pub mod grammar;
 pub mod lino;
+pub mod plan;
 pub mod types;
+mod utils;
 pub mod wasm;
+
+pub use plan::{CalculationPlan, RateSource};
 
 use error::{CalculatorError, ErrorInfo};
 use grammar::ExpressionParser;
@@ -114,70 +118,6 @@ pub struct RepeatingDecimalFormats {
     pub latex: String,
     /// Fraction representation: 1/3
     pub fraction: String,
-}
-
-/// Rate sources that the calculator can fetch data from.
-///
-/// These correspond to the three independent APIs the web worker integrates with:
-/// - `ecb` — Fiat currency rates via Frankfurter API (European Central Bank data)
-/// - `cbr` — RUB-based rates from the Central Bank of Russia
-/// - `crypto` — Cryptocurrency rates via CoinGecko
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]
-#[serde(rename_all = "lowercase")]
-pub enum RateSource {
-    /// European Central Bank (fiat currencies: USD, EUR, GBP, JPY, …).
-    Ecb,
-    /// Central Bank of Russia (RUB-based rates).
-    Cbr,
-    /// CoinGecko (cryptocurrencies: BTC, ETH, TON, …).
-    Crypto,
-}
-
-/// A calculation plan produced by `Calculator::plan()`.
-///
-/// Contains everything the worker needs to know *before* executing the
-/// calculation: which rate sources to fetch, how the expression was
-/// interpreted, and what alternatives exist.
-#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
-pub struct CalculationPlan {
-    /// The input expression, trimmed.
-    pub expression: String,
-    /// Links notation interpretation of the expression (default interpretation).
-    pub lino_interpretation: String,
-    /// Alternative links notation interpretations, if any.
-    /// The first element is always the default (same as `lino_interpretation`).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub alternative_lino: Option<Vec<String>>,
-    /// Rate sources that must be loaded before this expression can be executed.
-    /// Empty for pure math expressions.
-    pub required_sources: Vec<RateSource>,
-    /// Currency codes found in the expression (e.g., `["USD", "RUB", "TON"]`).
-    pub currencies: Vec<String>,
-    /// Whether the expression contains a live time reference (auto-refresh needed).
-    pub is_live_time: bool,
-    /// Whether the expression was parsed successfully.
-    pub success: bool,
-    /// Error message if parsing failed.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub error: Option<String>,
-}
-
-/// Maps a currency code to the rate source(s) that provide its exchange rate.
-fn currency_to_sources(code: &str) -> Vec<RateSource> {
-    let upper = code.to_uppercase();
-
-    // Check if it's a cryptocurrency (known to CoinGecko)
-    if crypto_api::coingecko_id(&upper).is_some() {
-        return vec![RateSource::Crypto];
-    }
-
-    // RUB needs CBR rates
-    if upper == "RUB" {
-        return vec![RateSource::Cbr];
-    }
-
-    // All other currencies are fiat, served by ECB/Frankfurter
-    vec![RateSource::Ecb]
 }
 
 /// Result of a calculation operation.
@@ -441,43 +381,7 @@ impl CalculationResult {
     }
 }
 
-/// Generates a GitHub issue link for unrecognized input.
-fn generate_issue_link(input: &str, error: &str) -> String {
-    let title = format!("Unrecognized input: {}", truncate(input, 50));
-    let body = format!(
-        "## Input that failed to parse\n\n```\n{}\n```\n\n## Error message\n\n```\n{}\n```\n\n## Expected behavior\n\nPlease describe what you expected the calculator to do with this input.",
-        input, error
-    );
-    format!(
-        "https://github.com/link-assistant/calculator/issues/new?title={}&body={}",
-        urlencoding_encode(&title),
-        urlencoding_encode(&body)
-    )
-}
-
-fn truncate(s: &str, max_chars: usize) -> &str {
-    match s.char_indices().nth(max_chars) {
-        Some((idx, _)) => &s[..idx],
-        None => s,
-    }
-}
-
-fn urlencoding_encode(s: &str) -> String {
-    let mut result = String::new();
-    for c in s.chars() {
-        match c {
-            'A'..='Z' | 'a'..='z' | '0'..='9' | '-' | '_' | '.' | '~' => result.push(c),
-            ' ' => result.push_str("%20"),
-            '\n' => result.push_str("%0A"),
-            _ => {
-                for byte in c.to_string().as_bytes() {
-                    result.push_str(&format!("%{byte:02X}"));
-                }
-            }
-        }
-    }
-    result
-}
+use utils::generate_issue_link;
 
 /// The main calculator struct.
 #[wasm_bindgen]
@@ -672,72 +576,12 @@ impl Calculator {
     pub fn plan_internal(&self, input: &str) -> CalculationPlan {
         let input = input.trim();
         if input.is_empty() {
-            return CalculationPlan {
-                expression: String::new(),
-                lino_interpretation: String::new(),
-                alternative_lino: None,
-                required_sources: Vec::new(),
-                currencies: Vec::new(),
-                is_live_time: false,
-                success: false,
-                error: Some("Empty input".to_string()),
-            };
+            return plan::empty_plan();
         }
 
         match self.parser.parse(input) {
-            Ok(expr) => {
-                let lino = expr.to_lino();
-                let alternatives = expr.alternative_lino();
-                let is_live_time = expr.contains_live_time();
-
-                // Collect currencies from the AST and map to rate sources
-                let currencies_set = expr.collect_currencies();
-                let mut currencies: Vec<String> = currencies_set.iter().cloned().collect();
-                currencies.sort();
-
-                let mut sources_set = std::collections::HashSet::new();
-                for code in &currencies {
-                    for source in currency_to_sources(code) {
-                        sources_set.insert(source);
-                    }
-                }
-
-                // If we have any non-ECB fiat currency conversion that involves
-                // a currency *and* a different currency, we likely need ECB for
-                // triangulation. For example, TON→USD needs crypto + ecb.
-                if currencies.len() >= 2 && !sources_set.is_empty() {
-                    // Any multi-currency expression benefits from ECB as base
-                    sources_set.insert(RateSource::Ecb);
-                }
-
-                let mut required_sources: Vec<RateSource> = sources_set.into_iter().collect();
-                required_sources.sort_by_key(|s| match s {
-                    RateSource::Ecb => 0,
-                    RateSource::Cbr => 1,
-                    RateSource::Crypto => 2,
-                });
-
-                CalculationPlan {
-                    expression: input.to_string(),
-                    lino_interpretation: lino,
-                    alternative_lino: alternatives,
-                    required_sources,
-                    currencies,
-                    is_live_time,
-                    success: true,
-                    error: None,
-                }
-            }
-            Err(e) => CalculationPlan {
-                expression: input.to_string(),
-                lino_interpretation: String::new(),
-                alternative_lino: None,
-                required_sources: Vec::new(),
-                currencies: Vec::new(),
-                is_live_time: false,
-                success: false,
-                error: Some(e.to_string()),
-            },
+            Ok(expr) => plan::create_plan(input, &expr),
+            Err(e) => plan::error_plan(input, &e.to_string()),
         }
     }
 
@@ -1108,27 +952,9 @@ impl Calculator {
 mod tests {
     use super::*;
 
-    // Tests for private helper functions that can only be tested here.
-    // Public API tests have been moved to tests/ directory to keep this file
-    // under the 1000-line limit.
-
-    #[test]
-    fn test_issue_link_generation() {
-        let link = generate_issue_link("invalid input", "Parse error");
-        assert!(link.contains("github.com"));
-        assert!(link.contains("issues/new"));
-    }
-
-    #[test]
-    fn test_truncate() {
-        assert_eq!(truncate("hello world", 5), "hello");
-        assert_eq!(truncate("hi", 10), "hi");
-    }
-
     #[test]
     fn test_lino_rates_used_in_historical_conversion() {
         let mut calc = Calculator::new();
-        // Load rates in the new .lino format
         let content = "conversion:
   from USD
   to RUB
@@ -1140,7 +966,6 @@ mod tests {
         let result = calc.load_rates_from_consolidated_lino(content);
         assert!(result.is_ok());
 
-        // Verify the historical rate can be retrieved from the database (uses private `parser` field)
         let date = types::DateTime::from_date(chrono::NaiveDate::from_ymd_opt(2021, 2, 8).unwrap());
         let rate = calc
             .parser
