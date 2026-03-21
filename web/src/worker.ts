@@ -44,7 +44,6 @@ let ratesError: string | null = null;
 let cryptoRatesError: string | null = null;
 
 // Track per-source loading status for the wait-for-rates mechanism
-let ecbLoaded = false;
 let ecbDone = false;   // true when fetch completed (success or failure)
 let cbrDone = false;
 let cryptoDone = false;
@@ -115,7 +114,6 @@ function loadCachedRates(): { ecb: boolean; cbr: boolean; crypto: boolean } {
   if (ecbEntry) {
     calculator.update_rates_from_api(ecbEntry.base, ecbEntry.date, ecbEntry.rates_json);
     ratesLoaded = true;
-    ecbLoaded = true;
     result.ecb = true;
     console.debug('[Rate cache] Loaded ECB rates from cache');
   }
@@ -196,8 +194,7 @@ async function fetchExchangeRates() {
 
     if (response.success) {
       ratesLoaded = true;
-      ecbLoaded = true;
-      ratesError = null;
+        ratesError = null;
 
       // Parse the rates and count them
       const rates = JSON.parse(response.rates_json);
