@@ -445,6 +445,33 @@ impl Expression {
         )
     }
 
+    /// Returns true if this expression contains a live time reference
+    /// (e.g., "now", "current UTC time", "UTC time").
+    /// Used to determine if the result should auto-refresh.
+    #[must_use]
+    pub fn contains_live_time(&self) -> bool {
+        match self {
+            Self::DateTime(dt) => dt.is_live_time(),
+            Self::Now => true,
+            Self::Until(inner) => inner.contains_live_time(),
+            Self::Binary { left, right, .. } => {
+                left.contains_live_time() || right.contains_live_time()
+            }
+            Self::Negate(inner) | Self::Group(inner) => inner.contains_live_time(),
+            Self::AtTime { value, time } => value.contains_live_time() || time.contains_live_time(),
+            Self::FunctionCall { args, .. } => args.iter().any(Self::contains_live_time),
+            Self::Power { base, exponent } => {
+                base.contains_live_time() || exponent.contains_live_time()
+            }
+            Self::UnitConversion { value, .. } => value.contains_live_time(),
+            Self::Equality { left, right } => {
+                left.contains_live_time() || right.contains_live_time()
+            }
+            Self::IndefiniteIntegral { integrand, .. } => integrand.contains_live_time(),
+            Self::Number { .. } | Self::Variable(_) => false,
+        }
+    }
+
     /// Returns the depth of the expression tree.
     #[must_use]
     pub fn depth(&self) -> usize {

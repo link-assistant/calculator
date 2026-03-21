@@ -68,4 +68,7 @@ export interface CalculationResult {
   repeating_decimal?: RepeatingDecimalFormats;
   /** Fraction representation (if applicable). */
   fraction?: string;
+  /** Whether the result represents a live (auto-updating) time expression.
+   * When true, the frontend should periodically re-calculate to keep the time current. */
+  is_live_time?: boolean;
 }

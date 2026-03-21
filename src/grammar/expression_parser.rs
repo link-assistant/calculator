@@ -108,7 +108,11 @@ impl ExpressionParser {
                 Ok(Value::rational_with_unit(rational, unit.clone()))
             }
             Expression::DateTime(dt) => Ok(Value::datetime(dt.clone())),
-            Expression::Now => Ok(Value::datetime(DateTime::now())),
+            Expression::Now => Ok(Value::datetime(DateTime::now_with_label(
+                "current UTC time",
+                Some(0),
+                Some("UTC".to_string()),
+            ))),
             Expression::Until(target) => {
                 let target_val = self.evaluate_expr(target)?;
                 let now = DateTime::now();
@@ -260,7 +264,8 @@ impl ExpressionParser {
                 Ok(dt_val)
             }
             Expression::Now => {
-                let now = DateTime::now();
+                let now =
+                    DateTime::now_with_label("current UTC time", Some(0), Some("UTC".to_string()));
                 steps.push(format!("Current time: {now}"));
                 Ok(Value::datetime(now))
             }
@@ -594,7 +599,11 @@ impl ExpressionParser {
                 Ok(Value::rational_with_unit(rational, unit.clone()))
             }
             Expression::DateTime(dt) => Ok(Value::datetime(dt.clone())),
-            Expression::Now => Ok(Value::datetime(DateTime::now())),
+            Expression::Now => Ok(Value::datetime(DateTime::now_with_label(
+                "current UTC time",
+                Some(0),
+                Some("UTC".to_string()),
+            ))),
             Expression::Until(target) => {
                 let target_val = self.evaluate_expr_with_var(target, var_name, var_value)?;
                 let now = DateTime::now();

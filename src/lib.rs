@@ -41,7 +41,7 @@ pub mod wasm;
 
 use error::{CalculatorError, ErrorInfo};
 use grammar::ExpressionParser;
-use types::Value;
+use types::{Expression, Value, ValueKind};
 use wasm_bindgen::prelude::*;
 
 /// Package version (matches Cargo.toml version).
@@ -159,6 +159,10 @@ pub struct CalculationResult {
     /// Fraction representation of the result (if applicable).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub fraction: Option<String>,
+    /// Whether the result represents a live (auto-updating) time expression.
+    /// When `true`, the frontend should periodically re-calculate the expression.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub is_live_time: Option<bool>,
 }
 
 impl CalculationResult {
@@ -181,6 +185,7 @@ impl CalculationResult {
             plot_data: None,
             repeating_decimal: None,
             fraction: None,
+            is_live_time: None,
         }
     }
 
@@ -229,6 +234,7 @@ impl CalculationResult {
             plot_data: None,
             repeating_decimal,
             fraction,
+            is_live_time: None,
         }
     }
 
@@ -256,6 +262,7 @@ impl CalculationResult {
             plot_data: None,
             repeating_decimal: None,
             fraction: None,
+            is_live_time: None,
         }
     }
 
@@ -284,6 +291,7 @@ impl CalculationResult {
             plot_data: None,
             repeating_decimal: None,
             fraction: None,
+            is_live_time: None,
         }
     }
 
@@ -315,6 +323,7 @@ impl CalculationResult {
             plot_data,
             repeating_decimal: None,
             fraction: None,
+            is_live_time: None,
         }
     }
 
@@ -338,6 +347,7 @@ impl CalculationResult {
             plot_data: None,
             repeating_decimal: None,
             fraction: None,
+            is_live_time: None,
         }
     }
 
@@ -362,6 +372,7 @@ impl CalculationResult {
             plot_data: None,
             repeating_decimal: None,
             fraction: None,
+            is_live_time: None,
         }
     }
 }
@@ -563,14 +574,24 @@ impl Calculator {
     /// Internal calculation method that returns a proper Result type.
     pub fn calculate_internal(&mut self, input: &str) -> CalculationResult {
         // Try to parse the expression to generate alternative interpretations
-        let alternatives = self
-            .parser
-            .parse(input)
-            .ok()
-            .and_then(|expr| expr.alternative_lino());
+        // and detect live time expressions before evaluation.
+        let parsed_expr = self.parser.parse(input).ok();
+        let alternatives = parsed_expr.as_ref().and_then(Expression::alternative_lino);
+        let is_live_time = parsed_expr
+            .as_ref()
+            .is_some_and(Expression::contains_live_time);
 
         let mut result = match self.parser.parse_and_evaluate(input) {
-            Ok((value, steps, lino)) => CalculationResult::success_with_value(&value, lino, steps),
+            Ok((value, steps, lino)) => {
+                let mut r = CalculationResult::success_with_value(&value, lino, steps);
+                // Also check if the value itself is a live time datetime
+                let value_is_live =
+                    matches!(&value.kind, ValueKind::DateTime(dt) if dt.is_live_time());
+                if is_live_time || value_is_live {
+                    r.is_live_time = Some(true);
+                }
+                r
+            }
             Err(CalculatorError::SymbolicResult {
                 expression,
                 result,
