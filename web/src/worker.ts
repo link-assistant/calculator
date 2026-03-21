@@ -38,8 +38,8 @@ let ratesLoading = false;
 let ratesError: string | null = null;
 let cryptoRatesError: string | null = null;
 
-// Rate coordination: calculations await rateCoordination.allRatesReady() before
-// executing, ensuring exchange rates are available on the first attempt.
+// On-demand rate coordination: calculations detect which rate sources they
+// need and wait only for those. Sources that aren't needed are never fetched.
 const rateCoordination = createRateCoordination();
 
 async function initWasm() {
@@ -50,11 +50,12 @@ async function initWasm() {
     const version = CalcClass.version();
     self.postMessage({ type: 'ready', data: { version } });
 
-    // Fetch exchange rates and crypto rates in the background after WASM is initialized
-    // Fetch CBR rates first so RUB conversions use official Russian Central Bank rates
-    fetchCbrRates();
-    fetchExchangeRates();
-    fetchCryptoRates();
+    // Register rate fetchers so the coordination module can trigger them
+    // on demand. No rates are fetched eagerly — they load when a calculation
+    // first needs them.
+    rateCoordination.registerFetcher('ecb', fetchExchangeRates);
+    rateCoordination.registerFetcher('cbr', fetchCbrRates);
+    rateCoordination.registerFetcher('crypto', fetchCryptoRates);
   } catch (error) {
     console.error('Failed to initialize WASM:', error);
     self.postMessage({
@@ -130,7 +131,7 @@ async function fetchExchangeRates() {
   } finally {
     ratesLoading = false;
     self.postMessage({ type: 'ratesLoading', data: { loading: false } });
-    rateCoordination.resolveEcb();
+    rateCoordination.markLoaded('ecb');
   }
 }
 
@@ -259,7 +260,7 @@ async function fetchCbrRates() {
       });
     }
   } finally {
-    rateCoordination.resolveCbr();
+    rateCoordination.markLoaded('cbr');
   }
 }
 
@@ -302,16 +303,19 @@ async function fetchCryptoRates(vsCurrency = 'usd') {
       data: { success: false, error: cryptoRatesError }
     });
   } finally {
-    rateCoordination.resolveCrypto();
+    rateCoordination.markLoaded('crypto');
   }
 }
 
 /**
- * Execute a calculation, ensuring exchange rates are loaded first.
+ * Execute a calculation, loading only the exchange rate sources it needs.
  *
- * Waits for all rate sources to finish loading before calculating.
- * The rate promises resolve instantly if rates are already loaded,
- * so there is no delay for subsequent calculations.
+ * 1. Scans the expression for currency keywords to detect required sources.
+ * 2. Triggers fetching for sources that haven't been loaded yet.
+ * 3. Waits only for the required sources (already-loaded sources resolve instantly).
+ * 4. Executes the calculation once rates are available.
+ *
+ * Pure math expressions skip rate loading entirely (zero delay).
  */
 async function executeCalculation(expression: string): Promise<void> {
   if (!calculator) {
@@ -322,10 +326,9 @@ async function executeCalculation(expression: string): Promise<void> {
     return;
   }
 
-  // Wait for all exchange rate sources to finish loading before calculating.
-  // This ensures currency conversions have rates available on first attempt.
-  // If rates are already loaded, this resolves immediately (no delay).
-  await rateCoordination.allRatesReady();
+  // Wait only for the rate sources this expression needs.
+  // Pure math expressions (no currency references) proceed immediately.
+  await rateCoordination.ensureRatesForExpression(expression);
 
   try {
     const resultJson = calculator.calculate(expression);
@@ -346,9 +349,7 @@ self.onmessage = async (e: MessageEvent) => {
   if (type === 'calculate') {
     await executeCalculation(expression);
   } else if (type === 'refreshRates') {
-    // Reset rate promises for the new fetch cycle
-    rateCoordination.reset();
-    // Allow manual refresh of exchange rates
+    // Manual refresh: re-fetch all sources that were previously loaded
     fetchCbrRates();
     fetchExchangeRates();
     fetchCryptoRates();
