@@ -208,8 +208,8 @@ function App() {
         setLoading(false);
       } else if (type === 'ratesLoading') {
         setRatesLoading(data.loading);
-      } else if (type === 'ratesLoaded' || type === 'cryptoRatesLoaded' || type === 'cbrRatesLoaded') {
-        if (data.success && type === 'ratesLoaded') {
+      } else if (type === 'ratesLoaded') {
+        if (data.success) {
           setRatesInfo({ date: data.date, base: data.base });
         }
       }

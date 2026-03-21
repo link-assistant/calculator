@@ -2,12 +2,7 @@
 // This prevents blocking the main UI thread
 
 import init, { Calculator, fetch_exchange_rates, fetch_crypto_rates, fetch_cbr_rates, parse_consolidated_lino_rates } from '@wasm/link_calculator';
-import {
-  ECB_CACHE_TTL_MS, CBR_CACHE_TTL_MS, CRYPTO_CACHE_TTL_MS,
-  RATE_CACHE_KEY_ECB, RATE_CACHE_KEY_CBR, RATE_CACHE_KEY_CRYPTO,
-  isMissingRatesError, loadCachedRate, saveCachedRate,
-  type RateCacheEntry, type CbrRateCacheEntry,
-} from './worker-utils';
+import { isMissingRatesError } from './worker-utils';
 
 interface CalculatorInstance {
   calculate(input: string): string;
@@ -43,108 +38,29 @@ let ratesLoading = false;
 let ratesError: string | null = null;
 let cryptoRatesError: string | null = null;
 
-// Track per-source loading status for the wait-for-rates mechanism
-let ecbDone = false;   // true when fetch completed (success or failure)
-let cbrDone = false;
-let cryptoDone = false;
+// Promises that resolve when each rate source finishes loading (success or failure).
+// Calculations that need currency rates will await these before executing.
+let ecbRatesReady: Promise<void>;
+let cbrRatesReady: Promise<void>;
+let cryptoRatesReady: Promise<void>;
+let resolveEcbRates: () => void;
+let resolveCbrRates: () => void;
+let resolveCryptoRates: () => void;
 
-// Pending calculation that is waiting for rates to load
-let pendingCalculation: { expression: string } | null = null;
-
-// Callbacks to notify when any rate source finishes loading
-let rateLoadedCallbacks: (() => void)[] = [];
-
-function notifyRateLoaded(): void {
-  const callbacks = rateLoadedCallbacks.slice();
-  rateLoadedCallbacks = [];
-  for (const cb of callbacks) {
-    cb();
-  }
-  // If there is a pending calculation, try it now
-  if (pendingCalculation) {
-    processPendingCalculation();
-  }
+// Initialize the rate-readiness promises
+function initRatePromises(): void {
+  ecbRatesReady = new Promise<void>((resolve) => { resolveEcbRates = resolve; });
+  cbrRatesReady = new Promise<void>((resolve) => { resolveCbrRates = resolve; });
+  cryptoRatesReady = new Promise<void>((resolve) => { resolveCryptoRates = resolve; });
 }
-
-function allRateSourcesDone(): boolean {
-  return ecbDone && cbrDone && cryptoDone;
-}
+initRatePromises();
 
 /**
- * Process a pending calculation that was waiting for rates.
- * Retries the calculation; if it still fails due to rates and more sources
- * are pending, keeps waiting. Otherwise sends the result.
+ * Wait for all exchange rate sources to finish loading.
+ * Returns a promise that resolves when ECB, CBR, and crypto rates have all completed.
  */
-async function processPendingCalculation(): Promise<void> {
-  if (!pendingCalculation || !calculator) return;
-
-  const { expression } = pendingCalculation;
-
-  try {
-    const resultJson = calculator.calculate(expression);
-    const result = JSON.parse(resultJson);
-
-    if (isMissingRatesError(result) && !allRateSourcesDone()) {
-      // Still waiting for more rate sources — keep pending
-      return;
-    }
-
-    // Calculation succeeded or all rate sources are done (nothing more to wait for)
-    pendingCalculation = null;
-    self.postMessage({ type: 'result', data: result });
-  } catch (error) {
-    pendingCalculation = null;
-    console.error('Calculation error:', error);
-    self.postMessage({
-      type: 'error',
-      data: { error: `Calculation failed: ${error}` }
-    });
-  }
-}
-
-/**
- * Load cached rates from localStorage and apply to calculator.
- * Returns which rate sources had valid cached data.
- */
-function loadCachedRates(): { ecb: boolean; cbr: boolean; crypto: boolean } {
-  const result = { ecb: false, cbr: false, crypto: false };
-  if (!calculator) return result;
-
-  const ecbEntry = loadCachedRate<RateCacheEntry>(RATE_CACHE_KEY_ECB, ECB_CACHE_TTL_MS);
-  if (ecbEntry) {
-    calculator.update_rates_from_api(ecbEntry.base, ecbEntry.date, ecbEntry.rates_json);
-    ratesLoaded = true;
-    result.ecb = true;
-    console.debug('[Rate cache] Loaded ECB rates from cache');
-  }
-
-  const cbrEntry = loadCachedRate<CbrRateCacheEntry>(RATE_CACHE_KEY_CBR, CBR_CACHE_TTL_MS);
-  if (cbrEntry) {
-    calculator.update_cbr_rates_from_api(cbrEntry.date, cbrEntry.rates_json);
-    result.cbr = true;
-    console.debug('[Rate cache] Loaded CBR rates from cache');
-  }
-
-  const cryptoEntry = loadCachedRate<RateCacheEntry>(RATE_CACHE_KEY_CRYPTO, CRYPTO_CACHE_TTL_MS);
-  if (cryptoEntry) {
-    calculator.update_crypto_rates_from_api(cryptoEntry.base, cryptoEntry.date, cryptoEntry.rates_json);
-    result.crypto = true;
-    console.debug('[Rate cache] Loaded crypto rates from cache');
-  }
-
-  return result;
-}
-
-function cacheEcbRates(base: string, date: string, rates_json: string): void {
-  saveCachedRate(RATE_CACHE_KEY_ECB, { timestamp: Date.now(), base, date, rates_json } as RateCacheEntry);
-}
-
-function cacheCbrRates(date: string, rates_json: string): void {
-  saveCachedRate(RATE_CACHE_KEY_CBR, { timestamp: Date.now(), date, rates_json } as CbrRateCacheEntry);
-}
-
-function cacheCryptoRates(base: string, date: string, rates_json: string): void {
-  saveCachedRate(RATE_CACHE_KEY_CRYPTO, { timestamp: Date.now(), base, date, rates_json } as RateCacheEntry);
+function allRatesReady(): Promise<void> {
+  return Promise.all([ecbRatesReady, cbrRatesReady, cryptoRatesReady]).then(() => {});
 }
 
 async function initWasm() {
@@ -155,16 +71,7 @@ async function initWasm() {
     const version = CalcClass.version();
     self.postMessage({ type: 'ready', data: { version } });
 
-    // Load cached rates immediately so calculations can proceed without waiting
-    const cached = loadCachedRates();
-    if (cached.ecb) {
-      self.postMessage({
-        type: 'ratesLoaded',
-        data: { success: true, source: 'cache' }
-      });
-    }
-
-    // Fetch fresh rates in the background (will update cache when done)
+    // Fetch exchange rates and crypto rates in the background after WASM is initialized
     // Fetch CBR rates first so RUB conversions use official Russian Central Bank rates
     fetchCbrRates();
     fetchExchangeRates();
@@ -211,9 +118,6 @@ async function fetchExchangeRates() {
         );
       }
 
-      // Cache for future page loads
-      cacheEcbRates(response.base, response.date, response.rates_json);
-
       self.postMessage({
         type: 'ratesLoaded',
         data: {
@@ -246,9 +150,8 @@ async function fetchExchangeRates() {
     });
   } finally {
     ratesLoading = false;
-    ecbDone = true;
     self.postMessage({ type: 'ratesLoading', data: { loading: false } });
-    notifyRateLoaded();
+    resolveEcbRates();
   }
 }
 
@@ -302,7 +205,6 @@ async function loadCbrRatesFromLinoFiles(): Promise<number> {
   if (loadedCount > 0 && calculator) {
     const ratesJsonStr = JSON.stringify(ratesJson);
     calculator.update_cbr_rates_from_api(latestDate, ratesJsonStr);
-    cacheCbrRates(latestDate, ratesJsonStr);
   }
 
   return loadedCount;
@@ -321,9 +223,6 @@ async function fetchCbrRates() {
           response.rates_json
         );
       }
-
-      // Cache for future page loads
-      cacheCbrRates(response.date, response.rates_json);
 
       self.postMessage({
         type: 'cbrRatesLoaded',
@@ -381,8 +280,7 @@ async function fetchCbrRates() {
       });
     }
   } finally {
-    cbrDone = true;
-    notifyRateLoaded();
+    resolveCbrRates();
   }
 }
 
@@ -401,9 +299,6 @@ async function fetchCryptoRates(vsCurrency = 'usd') {
           response.rates_json
         );
       }
-
-      // Cache for future page loads
-      cacheCryptoRates(response.base, response.date, response.rates_json);
 
       self.postMessage({
         type: 'cryptoRatesLoaded',
@@ -428,8 +323,48 @@ async function fetchCryptoRates(vsCurrency = 'usd') {
       data: { success: false, error: cryptoRatesError }
     });
   } finally {
-    cryptoDone = true;
-    notifyRateLoaded();
+    resolveCryptoRates();
+  }
+}
+
+/**
+ * Execute a calculation, waiting for exchange rates if needed.
+ *
+ * Strategy: attempt the calculation immediately. If it succeeds or fails with
+ * a non-currency error, return the result right away. If it fails because
+ * exchange rates are missing and rate sources are still loading, await the
+ * rate promises and then execute the calculation once — no retry loop.
+ */
+async function executeCalculation(expression: string): Promise<void> {
+  if (!calculator) {
+    self.postMessage({
+      type: 'error',
+      data: { error: 'Calculator not initialized' }
+    });
+    return;
+  }
+
+  try {
+    const resultJson = calculator.calculate(expression);
+    const result = JSON.parse(resultJson);
+
+    if (isMissingRatesError(result)) {
+      // Rates are not available yet — wait for all rate sources to finish loading,
+      // then execute the calculation with the loaded rates.
+      await allRatesReady();
+      const retryJson = calculator.calculate(expression);
+      const retryResult = JSON.parse(retryJson);
+      self.postMessage({ type: 'result', data: retryResult });
+      return;
+    }
+
+    self.postMessage({ type: 'result', data: result });
+  } catch (error) {
+    console.error('Calculation error:', error);
+    self.postMessage({
+      type: 'error',
+      data: { error: `Calculation failed: ${error}` }
+    });
   }
 }
 
@@ -437,36 +372,10 @@ self.onmessage = async (e: MessageEvent) => {
   const { type, expression, baseCurrency } = e.data;
 
   if (type === 'calculate') {
-    if (!calculator) {
-      self.postMessage({
-        type: 'error',
-        data: { error: 'Calculator not initialized' }
-      });
-      return;
-    }
-
-    try {
-      const resultJson = calculator.calculate(expression);
-      const result = JSON.parse(resultJson);
-
-      // If calculation failed due to missing rates and rate sources are still loading,
-      // queue it and wait for rates to arrive instead of returning an error immediately.
-      if (isMissingRatesError(result) && !allRateSourcesDone()) {
-        pendingCalculation = { expression };
-        // The calculation will be retried automatically when rate sources complete
-        // (see notifyRateLoaded). The main thread keeps showing the busy indicator.
-        return;
-      }
-
-      self.postMessage({ type: 'result', data: result });
-    } catch (error) {
-      console.error('Calculation error:', error);
-      self.postMessage({
-        type: 'error',
-        data: { error: `Calculation failed: ${error}` }
-      });
-    }
+    await executeCalculation(expression);
   } else if (type === 'refreshRates') {
+    // Reset rate promises for the new fetch cycle
+    initRatePromises();
     // Allow manual refresh of exchange rates
     fetchCbrRates();
     fetchExchangeRates();
