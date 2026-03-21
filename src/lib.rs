@@ -710,8 +710,7 @@ impl Calculator {
                     sources_set.insert(RateSource::Ecb);
                 }
 
-                let mut required_sources: Vec<RateSource> =
-                    sources_set.into_iter().collect();
+                let mut required_sources: Vec<RateSource> = sources_set.into_iter().collect();
                 required_sources.sort_by_key(|s| match s {
                     RateSource::Ecb => 0,
                     RateSource::Cbr => 1,

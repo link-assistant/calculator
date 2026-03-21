@@ -24,10 +24,7 @@ fn plan_usd_needs_ecb() {
     // Single currency doesn't need conversion, but if it's in the AST
     // we detect it. One currency doesn't trigger ECB triangulation.
     // However the plan maps USD → ECB.
-    assert!(
-        plan.required_sources.contains(&RateSource::Ecb)
-            || plan.required_sources.is_empty()
-    );
+    assert!(plan.required_sources.contains(&RateSource::Ecb) || plan.required_sources.is_empty());
 }
 
 #[test]
@@ -62,8 +59,7 @@ fn plan_crypto_needs_coingecko() {
 fn plan_mixed_expression_needs_all_sources() {
     let calc = Calculator::new();
     // The exact expression from issue #100
-    let plan =
-        calc.plan_internal("(1000 RUB + 500 RUB + 2000 RUB + 20 TON + 1000 RUB) in USD");
+    let plan = calc.plan_internal("(1000 RUB + 500 RUB + 2000 RUB + 20 TON + 1000 RUB) in USD");
     assert!(plan.success);
     assert!(plan.currencies.contains(&"RUB".to_string()));
     assert!(plan.currencies.contains(&"TON".to_string()));
