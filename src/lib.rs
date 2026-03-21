@@ -151,7 +151,7 @@ pub struct CalculationPlan {
     /// Rate sources that must be loaded before this expression can be executed.
     /// Empty for pure math expressions.
     pub required_sources: Vec<RateSource>,
-    /// Currency codes found in the expression (e.g., ["USD", "RUB", "TON"]).
+    /// Currency codes found in the expression (e.g., `["USD", "RUB", "TON"]`).
     pub currencies: Vec<String>,
     /// Whether the expression contains a live time reference (auto-refresh needed).
     pub is_live_time: bool,
