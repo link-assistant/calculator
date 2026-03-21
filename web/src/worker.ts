@@ -1,10 +1,23 @@
 // Web Worker for running WASM calculations in the background
 // This prevents blocking the main UI thread
+//
+// Architecture: plan → fetch rates → execute
+//
+// 1. calculator.plan(expr) — parses the AST to determine required rate sources,
+//    LINO interpretation, and alternatives. No rates needed, instant.
+// 2. Fetch only the rate sources the plan requires (ECB, CBR, Crypto).
+//    Pure math expressions skip this step entirely.
+// 3. calculator.execute(expr) — evaluates the expression with rates loaded.
+//
+// The plan is sent to the main thread immediately so the UI can show the
+// interpretation and busy indicator while rates are being fetched.
 
 import init, { Calculator, fetch_exchange_rates, fetch_crypto_rates, fetch_cbr_rates, parse_consolidated_lino_rates } from '@wasm/link_calculator';
-import { createRateCoordination } from './worker-rate-coordination';
+import { createRateCoordination, type RateSource } from './worker-rate-coordination';
 
 interface CalculatorInstance {
+  plan(input: string): string;
+  execute(input: string): string;
   calculate(input: string): string;
   update_rates_from_api(base: string, date: string, rates_json: string): number;
   update_crypto_rates_from_api(base: string, date: string, rates_json: string): number;
@@ -30,6 +43,18 @@ interface CryptoRatesResponse {
   base: string;
   error?: string;
   rates_json: string;
+}
+
+/** Shape of the plan returned by calculator.plan() in Rust. */
+interface CalculationPlan {
+  expression: string;
+  lino_interpretation: string;
+  alternative_lino?: string[];
+  required_sources: RateSource[];
+  currencies: string[];
+  is_live_time: boolean;
+  success: boolean;
+  error?: string;
 }
 
 let calculator: CalculatorInstance | null = null;
@@ -308,14 +333,17 @@ async function fetchCryptoRates(vsCurrency = 'usd') {
 }
 
 /**
- * Execute a calculation, loading only the exchange rate sources it needs.
+ * Plan → Fetch → Execute pipeline.
  *
- * 1. Scans the expression for currency keywords to detect required sources.
- * 2. Triggers fetching for sources that haven't been loaded yet.
- * 3. Waits only for the required sources (already-loaded sources resolve instantly).
- * 4. Executes the calculation once rates are available.
+ * 1. Plan: Parse the expression in Rust to determine required rate sources,
+ *    LINO interpretation, and alternatives. Sends `plan` message immediately
+ *    so the UI can show interpretation while waiting.
  *
- * Pure math expressions skip rate loading entirely (zero delay).
+ * 2. Fetch: Load only the rate sources the plan requires. Already-loaded
+ *    sources resolve instantly. Pure math expressions skip this entirely.
+ *
+ * 3. Execute: Run the full calculation with rates guaranteed available.
+ *    Sends `result` message with the computed value, steps, and metadata.
  */
 async function executeCalculation(expression: string): Promise<void> {
   if (!calculator) {
@@ -326,12 +354,36 @@ async function executeCalculation(expression: string): Promise<void> {
     return;
   }
 
-  // Wait only for the rate sources this expression needs.
-  // Pure math expressions (no currency references) proceed immediately.
-  await rateCoordination.ensureRatesForExpression(expression);
-
+  // Step 1: Plan — parse the expression to discover requirements
+  let plan: CalculationPlan;
   try {
-    const resultJson = calculator.calculate(expression);
+    const planJson = calculator.plan(expression);
+    plan = JSON.parse(planJson);
+  } catch (error) {
+    console.error('Plan error:', error);
+    self.postMessage({
+      type: 'error',
+      data: { error: `Failed to plan calculation: ${error}` }
+    });
+    return;
+  }
+
+  // Send the plan to the main thread so the UI can show the interpretation
+  // immediately (before rates are loaded). This gives instant feedback.
+  self.postMessage({ type: 'plan', data: plan });
+
+  // If the plan failed to parse, we still try executing — the execute step
+  // will produce a proper error message with i18n support.
+  // But we can skip rate fetching since we don't know what's needed.
+
+  // Step 2: Fetch — load only the required rate sources
+  if (plan.success && plan.required_sources.length > 0) {
+    await rateCoordination.ensureRatesForSources(new Set(plan.required_sources));
+  }
+
+  // Step 3: Execute — run the calculation with rates loaded
+  try {
+    const resultJson = calculator.execute(expression);
     const result = JSON.parse(resultJson);
     self.postMessage({ type: 'result', data: result });
   } catch (error) {

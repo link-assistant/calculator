@@ -45,6 +45,31 @@ export interface CalculationStep {
   text: string;
 }
 
+/**
+ * A calculation plan returned by calculator.plan() before execution.
+ *
+ * Contains the parsed interpretation and data requirements so the worker
+ * can fetch only the needed rate sources before executing.
+ */
+export interface CalculationPlan {
+  /** The input expression, trimmed. */
+  expression: string;
+  /** Links notation interpretation (default). */
+  lino_interpretation: string;
+  /** Alternative interpretations, if any. First is the default. */
+  alternative_lino?: string[];
+  /** Rate sources required for execution (e.g., ["ecb", "cbr", "crypto"]). */
+  required_sources: string[];
+  /** Currency codes found in the expression. */
+  currencies: string[];
+  /** Whether the expression contains live time references. */
+  is_live_time: boolean;
+  /** Whether parsing succeeded. */
+  success: boolean;
+  /** Error message if parsing failed. */
+  error?: string;
+}
+
 export interface CalculationResult {
   result: string;
   lino_interpretation: string;

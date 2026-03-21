@@ -1,19 +1,52 @@
 // On-demand rate coordination for the web worker.
 //
-// Instead of eagerly loading all rate sources at startup and blocking until
-// all finish, this module detects which rate sources a given expression needs
-// and loads only those. Calculations wait only for the sources they require.
+// The worker uses a plan→fetch→execute pipeline:
+//
+// 1. calculator.plan(expr) returns required_sources from the Rust AST
+// 2. This module ensures those sources are loaded (fetching if needed)
+// 3. calculator.execute(expr) runs with rates guaranteed available
 //
 // Rate sources:
-//   ECB  — fiat currencies via Frankfurter API (USD, EUR, GBP, …)
-//   CBR  — RUB-based rates from Central Bank of Russia
-//   Crypto — cryptocurrency rates via CoinGecko (BTC, ETH, TON, …)
+//   ecb    — fiat currencies via Frankfurter API (USD, EUR, GBP, …)
+//   cbr    — RUB-based rates from Central Bank of Russia
+//   crypto — cryptocurrency rates via CoinGecko (BTC, ETH, TON, …)
 
 /** The three independent rate sources the calculator supports. */
 export type RateSource = 'ecb' | 'cbr' | 'crypto';
 
 // ---------------------------------------------------------------------------
-// Expression → required rate sources detection
+// Rate source state management
+// ---------------------------------------------------------------------------
+
+export type SourceState = 'idle' | 'loading' | 'loaded';
+
+export interface RateCoordination {
+  /**
+   * Ensure the given rate sources are loaded, fetching any that are idle.
+   * This is the primary API — the worker passes plan.required_sources here.
+   * Returns a promise that resolves when all required sources are ready.
+   */
+  ensureRatesForSources: (sources: Set<RateSource>) => Promise<void>;
+  /**
+   * Legacy: detect required sources from expression text and wait for them.
+   * Kept for backwards compatibility with tests. Prefer ensureRatesForSources.
+   */
+  ensureRatesForExpression: (expression: string) => Promise<Set<RateSource>>;
+  /** Mark a source as loaded. Called from fetch callbacks. */
+  markLoaded: (source: RateSource) => void;
+  /** Mark a source as loading. Called when fetch starts. */
+  markLoading: (source: RateSource) => void;
+  /** Get the current state of a source. */
+  getState: (source: RateSource) => SourceState;
+  /** Register a fetch function for a source. */
+  registerFetcher: (source: RateSource, fetcher: () => Promise<void>) => void;
+}
+
+// ---------------------------------------------------------------------------
+// Expression → required rate sources detection (legacy heuristic)
+//
+// This is now only used as a fallback. The primary detection is done by
+// calculator.plan() in Rust, which walks the AST for authoritative results.
 // ---------------------------------------------------------------------------
 
 // Crypto tickers supported by our CoinGecko integration (must stay in sync
@@ -69,6 +102,9 @@ const FIAT_TOKENS = [
  * Detect which rate sources an expression requires by scanning for currency
  * keywords. This is a fast, conservative heuristic — it may return sources
  * that turn out to be unnecessary, but never misses a required source.
+ *
+ * NOTE: This is the legacy fallback. The primary detection is now done by
+ * calculator.plan() in Rust, which walks the parsed AST and is authoritative.
  *
  * Returns an empty set for expressions with no currency references (pure math).
  */
@@ -134,31 +170,7 @@ export function detectRequiredSources(expression: string): Set<RateSource> {
     }
   }
 
-  // If any currency conversion is happening, we likely need ECB as a base
-  // for triangulation (e.g., TON→USD needs crypto + ecb for cross-rates).
-  // If CBR is needed (RUB), ECB may also help for triangulation.
-  // However, we keep it minimal: only add ECB if fiat tokens are found.
-
   return sources;
-}
-
-// ---------------------------------------------------------------------------
-// Rate source state management
-// ---------------------------------------------------------------------------
-
-export type SourceState = 'idle' | 'loading' | 'loaded';
-
-export interface RateCoordination {
-  /** Detect required sources for the expression and wait for them to be loaded. */
-  ensureRatesForExpression: (expression: string) => Promise<Set<RateSource>>;
-  /** Mark a source as loaded. Called from fetch callbacks. */
-  markLoaded: (source: RateSource) => void;
-  /** Mark a source as loading. Called when fetch starts. */
-  markLoading: (source: RateSource) => void;
-  /** Get the current state of a source. */
-  getState: (source: RateSource) => SourceState;
-  /** Register a fetch function for a source. */
-  registerFetcher: (source: RateSource, fetcher: () => Promise<void>) => void;
 }
 
 export function createRateCoordination(): RateCoordination {
@@ -210,11 +222,13 @@ export function createRateCoordination(): RateCoordination {
     fetchers[source] = fetcher;
   }
 
-  async function ensureRatesForExpression(expression: string): Promise<Set<RateSource>> {
-    const needed = detectRequiredSources(expression);
-
+  /**
+   * Ensure the given rate sources are loaded, fetching any that are idle.
+   * This is the primary API used by the plan→execute pipeline.
+   */
+  async function ensureRatesForSources(needed: Set<RateSource>): Promise<void> {
     if (needed.size === 0) {
-      return needed;
+      return;
     }
 
     const waitFor: Promise<void>[] = [];
@@ -240,11 +254,20 @@ export function createRateCoordination(): RateCoordination {
     if (waitFor.length > 0) {
       await Promise.all(waitFor);
     }
+  }
 
+  /**
+   * Legacy: detect required sources from expression text and wait for them.
+   * Uses the TypeScript string heuristic. Kept for backwards compatibility.
+   */
+  async function ensureRatesForExpression(expression: string): Promise<Set<RateSource>> {
+    const needed = detectRequiredSources(expression);
+    await ensureRatesForSources(needed);
     return needed;
   }
 
   return {
+    ensureRatesForSources,
     ensureRatesForExpression,
     markLoaded,
     markLoading,

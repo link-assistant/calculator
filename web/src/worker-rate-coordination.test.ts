@@ -187,3 +187,105 @@ describe('createRateCoordination', () => {
     expect(coord.getState('ecb')).toBe('loaded');
   });
 });
+
+// ---------------------------------------------------------------------------
+// ensureRatesForSources (plan-based pipeline)
+// ---------------------------------------------------------------------------
+
+describe('ensureRatesForSources', () => {
+  it('resolves immediately for empty set', async () => {
+    const coord = createRateCoordination();
+    await coord.ensureRatesForSources(new Set());
+    // Should not throw or hang
+  });
+
+  it('triggers fetch for idle sources and waits', async () => {
+    const coord = createRateCoordination();
+
+    let resolveEcb!: () => void;
+    const ecbFetcher = vi.fn(async () => {
+      await new Promise<void>((r) => { resolveEcb = r; });
+      coord.markLoaded('ecb');
+    });
+
+    coord.registerFetcher('ecb', ecbFetcher);
+    coord.registerFetcher('cbr', vi.fn(async () => { coord.markLoaded('cbr'); }));
+    coord.registerFetcher('crypto', vi.fn(async () => { coord.markLoaded('crypto'); }));
+
+    let resolved = false;
+    const promise = coord.ensureRatesForSources(new Set(['ecb'] as const)).then(() => {
+      resolved = true;
+    });
+
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(ecbFetcher).toHaveBeenCalled();
+    expect(resolved).toBe(false);
+
+    resolveEcb();
+    await promise;
+    expect(resolved).toBe(true);
+    expect(coord.getState('ecb')).toBe('loaded');
+  });
+
+  it('already-loaded sources resolve instantly', async () => {
+    const coord = createRateCoordination();
+    const fetcher = vi.fn(async () => {});
+
+    coord.registerFetcher('ecb', fetcher);
+    coord.markLoaded('ecb');
+
+    await coord.ensureRatesForSources(new Set(['ecb'] as const));
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+
+  it('fetches multiple sources in parallel', async () => {
+    const coord = createRateCoordination();
+
+    let resolveEcb!: () => void;
+    let resolveCbr!: () => void;
+
+    coord.registerFetcher('ecb', vi.fn(async () => {
+      await new Promise<void>((r) => { resolveEcb = r; });
+      coord.markLoaded('ecb');
+    }));
+    coord.registerFetcher('cbr', vi.fn(async () => {
+      await new Promise<void>((r) => { resolveCbr = r; });
+      coord.markLoaded('cbr');
+    }));
+    coord.registerFetcher('crypto', vi.fn(async () => { coord.markLoaded('crypto'); }));
+
+    const promise = coord.ensureRatesForSources(new Set(['ecb', 'cbr'] as const));
+
+    await Promise.resolve();
+    await Promise.resolve();
+
+    // Both fetchers should have been called (parallel)
+    expect(coord.getState('ecb')).toBe('loading');
+    expect(coord.getState('cbr')).toBe('loading');
+
+    resolveEcb();
+    resolveCbr();
+    await promise;
+
+    expect(coord.getState('ecb')).toBe('loaded');
+    expect(coord.getState('cbr')).toBe('loaded');
+  });
+
+  it('only fetches sources that are not already loaded', async () => {
+    const coord = createRateCoordination();
+    const ecbFetcher = vi.fn(async () => { coord.markLoaded('ecb'); });
+    const cryptoFetcher = vi.fn(async () => { coord.markLoaded('crypto'); });
+
+    coord.registerFetcher('ecb', ecbFetcher);
+    coord.registerFetcher('cbr', vi.fn(async () => { coord.markLoaded('cbr'); }));
+    coord.registerFetcher('crypto', cryptoFetcher);
+
+    // Pre-load ECB
+    coord.markLoaded('ecb');
+
+    await coord.ensureRatesForSources(new Set(['ecb', 'crypto'] as const));
+    expect(ecbFetcher).not.toHaveBeenCalled(); // Already loaded
+    expect(cryptoFetcher).toHaveBeenCalled();   // Needed
+  });
+});
