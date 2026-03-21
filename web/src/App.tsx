@@ -156,6 +156,8 @@ function App() {
     return prefs.currency || detectUserCurrency();
   });
   const [keyboardOpen, setKeyboardOpen] = useState(false);
+  // Tracks whether a failed result should be retried when new rates arrive
+  const needsRateRetryRef = useRef(false);
 
   const { getCachedResult, cacheResult } = useExpressionCache(version);
   // Ref wrappers so the worker onmessage closure always sees the latest callbacks
@@ -194,6 +196,7 @@ function App() {
         setLoading(false);
         // Cache the successful result for faster subsequent loads
         if (data.success) {
+          needsRateRetryRef.current = false;
           cacheResultRef.current(pendingExpressionRef.current, data);
         }
       } else if (type === 'error') {
@@ -208,9 +211,15 @@ function App() {
         setLoading(false);
       } else if (type === 'ratesLoading') {
         setRatesLoading(data.loading);
-      } else if (type === 'ratesLoaded') {
+      } else if (type === 'ratesLoaded' || type === 'cryptoRatesLoaded' || type === 'cbrRatesLoaded') {
         if (data.success) {
-          setRatesInfo({ date: data.date, base: data.base });
+          if (type === 'ratesLoaded') {
+            setRatesInfo({ date: data.date, base: data.base });
+          }
+          // Retry calculation if the previous result was a failure waiting for rates
+          if (needsRateRetryRef.current && pendingExpressionRef.current) {
+            workerRef.current?.postMessage({ type: 'calculate', expression: pendingExpressionRef.current });
+          }
         }
       }
     };
@@ -247,8 +256,11 @@ function App() {
   // Auto-calculate when expression is loaded from URL.
   // If a cached result exists for the current app version, display it immediately
   // while the fresh calculation runs in the background.
+  // Mark for retry so that if the calculation fails due to rates not yet loaded,
+  // it will be automatically retried when rates arrive (fixes #100).
   useEffect(() => {
     if (wasmReady && input.trim() && wasLoadedFromUrl()) {
+      needsRateRetryRef.current = true;
       const cached = getCachedResult(input);
       if (cached) {
         setResult(cached);
