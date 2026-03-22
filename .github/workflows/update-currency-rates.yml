@@ -1,15 +1,18 @@
 name: Update Currency Rates
 
 on:
-  # Run weekly on Sunday at 00:00 UTC (after ECB weekend closure)
+  # Run daily at 17:00 UTC (after ECB publishes rates around 16:00 CET)
   schedule:
-    - cron: '0 0 * * 0'
+    - cron: '0 17 * * 1-5'
   # Allow manual trigger
   workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   update-rates:
@@ -18,13 +21,13 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
@@ -36,7 +39,7 @@ jobs:
       - name: Download latest rates from Central Banks
         run: |
           echo "Downloading currency rates from official Central Bank APIs..."
-          echo "- European Central Bank (ECB) via Frankfurter API"
+          echo "- European Central Bank (ECB) via Frankfurter API (frankfurter.dev)"
           echo "- Central Bank of Russia (CBR)"
           python scripts/download_historical_rates.py
 
@@ -62,5 +65,5 @@ jobs:
           - European Central Bank (ECB) via frankfurter.dev
           - Central Bank of Russia (CBR) via cbr.ru
 
-          This is an automated weekly update."
+          This is an automated daily update."
           git push

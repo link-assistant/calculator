@@ -1,0 +1,367 @@
+Update Currency Rates from Central Banks	UNKNOWN STEP	﻿2026-03-21T08:51:04.2293516Z Current runner version: '2.332.0'
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2317895Z ##[group]Runner Image Provisioner
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2318726Z Hosted Compute Agent
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2319320Z Version: 20260213.493
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2319894Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2320784Z Build Date: 2026-02-13T00:28:41Z
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2321455Z Worker ID: {8569f8cd-3902-4e53-b9b3-bfee22eebcce}
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2322188Z Azure Region: eastus
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2322774Z ##[endgroup]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2324285Z ##[group]Operating System
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2324899Z Ubuntu
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2325315Z 24.04.3
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2325923Z LTS
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2326353Z ##[endgroup]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2326839Z ##[group]Runner Image
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2327421Z Image: ubuntu-24.04
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2327947Z Version: 20260309.50.1
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2329127Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260309.50/images/ubuntu/Ubuntu2404-Readme.md
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2330589Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260309.50
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2331798Z ##[endgroup]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2332881Z ##[group]GITHUB_TOKEN Permissions
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2334917Z Contents: write
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2335602Z Metadata: read
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2336090Z ##[endgroup]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2338125Z Secret source: Actions
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2339102Z Prepare workflow directory
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2657502Z Prepare all required actions
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.2695110Z Getting action download info
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.5479366Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.6954888Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.9130543Z Complete job name: Update Currency Rates from Central Banks
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.9872813Z ##[group]Run actions/checkout@v4
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.9873656Z with:
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.9874053Z   fetch-depth: 0
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.9874674Z   token: ***
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.9875084Z   repository: link-assistant/calculator
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.9875591Z   ssh-strict: true
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.9875978Z   ssh-user: git
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.9876370Z   persist-credentials: true
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.9876812Z   clean: true
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.9877197Z   sparse-checkout-cone-mode: true
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.9877675Z   fetch-tags: false
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.9878056Z   show-progress: true
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.9878451Z   lfs: false
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.9878810Z   submodules: false
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.9879220Z   set-safe-directory: true
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:04.9879857Z ##[endgroup]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.0971205Z Syncing repository: link-assistant/calculator
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.0973195Z ##[group]Getting Git version info
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.0973977Z Working directory is '/home/runner/work/calculator/calculator'
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.0974930Z [command]/usr/bin/git version
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1050247Z git version 2.53.0
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1077330Z ##[endgroup]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1094468Z Temporarily overriding HOME='/home/runner/work/_temp/7e3f60af-59dd-44e2-8978-b0d13afc9bc0' before making global git config changes
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1096806Z Adding repository directory to the temporary git global config as a safe directory
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1109625Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/calculator/calculator
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1152951Z Deleting the contents of '/home/runner/work/calculator/calculator'
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1157549Z ##[group]Initializing the repository
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1162752Z [command]/usr/bin/git init /home/runner/work/calculator/calculator
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1262245Z hint: Using 'master' as the name for the initial branch. This default branch name
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1263659Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1264565Z hint: to use in all of your new repositories, which will suppress this warning,
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1266187Z hint: call:
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1266568Z hint:
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1267464Z hint: 	git config --global init.defaultBranch <name>
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1268508Z hint:
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1269494Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1271395Z hint: 'development'. The just-created branch can be renamed via this command:
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1272684Z hint:
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1273431Z hint: 	git branch -m <name>
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1274221Z hint:
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1275192Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1276886Z Initialized empty Git repository in /home/runner/work/calculator/calculator/.git/
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1281022Z [command]/usr/bin/git remote add origin https://github.com/link-assistant/calculator
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1317717Z ##[endgroup]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1318945Z ##[group]Disabling automatic garbage collection
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1323201Z [command]/usr/bin/git config --local gc.auto 0
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1354641Z ##[endgroup]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1355821Z ##[group]Setting up auth
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1362886Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1396388Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1858739Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.1892683Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.2153475Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.2188228Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.2462645Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.2502046Z ##[endgroup]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.2503290Z ##[group]Fetching the repository
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.2511267Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8459974Z From https://github.com/link-assistant/calculator
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8462719Z  * [new branch]        fix/interpretation-switching-and-styling -> origin/fix/interpretation-switching-and-styling
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8465147Z  * [new branch]        issue-1-177867357bb4  -> origin/issue-1-177867357bb4
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8467086Z  * [new branch]        issue-10-29cd40fd44ec -> origin/issue-10-29cd40fd44ec
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8468913Z  * [new branch]        issue-10-906c06b24318 -> origin/issue-10-906c06b24318
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8471080Z  * [new branch]        issue-12-521d7de0ce5c -> origin/issue-12-521d7de0ce5c
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8472249Z  * [new branch]        issue-15-c165278b653a -> origin/issue-15-c165278b653a
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8473142Z  * [new branch]        issue-18-0e402e025bcb -> origin/issue-18-0e402e025bcb
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8473997Z  * [new branch]        issue-18-4e281bffdafb -> origin/issue-18-4e281bffdafb
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8474836Z  * [new branch]        issue-18-c7fb805e332d -> origin/issue-18-c7fb805e332d
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8475678Z  * [new branch]        issue-20-f4641fe3fa73 -> origin/issue-20-f4641fe3fa73
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8476506Z  * [new branch]        issue-21-00d9b62d1dd9 -> origin/issue-21-00d9b62d1dd9
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8477351Z  * [new branch]        issue-23-284d0f952b95 -> origin/issue-23-284d0f952b95
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8478195Z  * [new branch]        issue-24-424bfe1d9448 -> origin/issue-24-424bfe1d9448
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8479064Z  * [new branch]        issue-26-137239214899 -> origin/issue-26-137239214899
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8485659Z  * [new branch]        issue-28-843686596f99 -> origin/issue-28-843686596f99
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8486483Z  * [new branch]        issue-3-a121916457d1  -> origin/issue-3-a121916457d1
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8487259Z  * [new branch]        issue-3-a2b225e34f02  -> origin/issue-3-a2b225e34f02
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8488036Z  * [new branch]        issue-30-8f4ab5105fd4 -> origin/issue-30-8f4ab5105fd4
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8489003Z  * [new branch]        issue-32-48aaa5aac83f -> origin/issue-32-48aaa5aac83f
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8489816Z  * [new branch]        issue-36-062e398233f0 -> origin/issue-36-062e398233f0
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8490846Z  * [new branch]        issue-39-e2e327ba7d66 -> origin/issue-39-e2e327ba7d66
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8491890Z  * [new branch]        issue-4-85a9c6b38859  -> origin/issue-4-85a9c6b38859
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8492880Z  * [new branch]        issue-4-indented-lino-format -> origin/issue-4-indented-lino-format
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8493855Z  * [new branch]        issue-40-4108c8844cfd -> origin/issue-40-4108c8844cfd
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8494694Z  * [new branch]        issue-43-f90f667367d8 -> origin/issue-43-f90f667367d8
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8495526Z  * [new branch]        issue-44-2e8fe384578e -> origin/issue-44-2e8fe384578e
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8496373Z  * [new branch]        issue-48-eb2232f8d0af -> origin/issue-48-eb2232f8d0af
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8497457Z  * [new branch]        issue-49-3b507ada7087 -> origin/issue-49-3b507ada7087
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8498625Z  * [new branch]        issue-54-80601a34362f -> origin/issue-54-80601a34362f
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8499815Z  * [new branch]        issue-55-710a161c6d1a -> origin/issue-55-710a161c6d1a
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8501070Z  * [new branch]        issue-57-d25d8a2289c6 -> origin/issue-57-d25d8a2289c6
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8502378Z  * [new branch]        issue-59-665164f1aeab -> origin/issue-59-665164f1aeab
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8503510Z  * [new branch]        issue-65-dc8bbe41ad79 -> origin/issue-65-dc8bbe41ad79
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8504613Z  * [new branch]        issue-70-26a7925868fd -> origin/issue-70-26a7925868fd
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8505685Z  * [new branch]        issue-72-98eb9f5ed44d -> origin/issue-72-98eb9f5ed44d
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8506711Z  * [new branch]        issue-73-4fcf091646b3 -> origin/issue-73-4fcf091646b3
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8507717Z  * [new branch]        issue-75-3f316d0d77cc -> origin/issue-75-3f316d0d77cc
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8508711Z  * [new branch]        issue-76-ffec47232870 -> origin/issue-76-ffec47232870
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8509715Z  * [new branch]        issue-78-6122a3f4ea93 -> origin/issue-78-6122a3f4ea93
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8510854Z  * [new branch]        issue-78-77af79d1eb84 -> origin/issue-78-77af79d1eb84
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8511866Z  * [new branch]        issue-78-ea74c7ac22e3 -> origin/issue-78-ea74c7ac22e3
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8512870Z  * [new branch]        issue-8-5702e04d5c57  -> origin/issue-8-5702e04d5c57
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8513876Z  * [new branch]        issue-83-f25eea411547 -> origin/issue-83-f25eea411547
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8514882Z  * [new branch]        issue-84-b3b0bace72bb -> origin/issue-84-b3b0bace72bb
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8515874Z  * [new branch]        issue-87-6713181c9bf4 -> origin/issue-87-6713181c9bf4
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8516868Z  * [new branch]        issue-89-baa3eade4565 -> origin/issue-89-baa3eade4565
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8517857Z  * [new branch]        issue-91-a39796270f6b -> origin/issue-91-a39796270f6b
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8518745Z  * [new branch]        main                  -> origin/main
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8519480Z  * [new tag]           v0.1.0                -> v0.1.0
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8520163Z  * [new tag]           v0.1.1                -> v0.1.1
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8521053Z  * [new tag]           v0.2.0                -> v0.2.0
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8521755Z  * [new tag]           v0.2.1                -> v0.2.1
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8522420Z  * [new tag]           v0.3.0                -> v0.3.0
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8523071Z  * [new tag]           v0.4.0                -> v0.4.0
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8523905Z  * [new tag]           v0.4.1                -> v0.4.1
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8524561Z  * [new tag]           v0.5.0                -> v0.5.0
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8525266Z  * [new tag]           v0.5.1                -> v0.5.1
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8525921Z  * [new tag]           v0.5.2                -> v0.5.2
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8526557Z  * [new tag]           v0.5.3                -> v0.5.3
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8527211Z  * [new tag]           v0.6.0                -> v0.6.0
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8662621Z [command]/usr/bin/git branch --list --remote origin/main
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8696470Z   origin/main
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8707865Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8735246Z 15b9f18e79f5e26f2cccb3ba5fff175b7d30cfbf
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8740241Z ##[endgroup]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8741522Z ##[group]Determining the checkout info
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8742671Z ##[endgroup]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8745949Z [command]/usr/bin/git sparse-checkout disable
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8914405Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8946551Z ##[group]Checking out the ref
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.8947838Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.9457946Z Switched to a new branch 'main'
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.9459549Z branch 'main' set up to track 'origin/main'.
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.9471402Z ##[endgroup]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.9514358Z [command]/usr/bin/git log -1 --format=%H
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.9540814Z 15b9f18e79f5e26f2cccb3ba5fff175b7d30cfbf
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.9823461Z ##[group]Run actions/setup-python@v5
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.9824242Z with:
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.9824666Z   python-version: 3.11
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.9825220Z   check-latest: false
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.9825987Z   token: ***
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.9826473Z   update-environment: true
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.9827103Z   allow-prereleases: false
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.9827729Z   freethreaded: false
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:05.9828245Z ##[endgroup]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.1519312Z ##[group]Installed versions
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.1941532Z Successfully set up CPython (3.11.15)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.1943846Z ##[endgroup]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2091566Z ##[group]Run git config --global user.name "github-actions[bot]"
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2093451Z [36;1mgit config --global user.name "github-actions[bot]"[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2095469Z [36;1mgit config --global user.email "github-actions[bot]@users.noreply.github.com"[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2210000Z shell: /usr/bin/bash -e {0}
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2211163Z env:
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2212163Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.15/x64
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2213972Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.15/x64/lib/pkgconfig
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2215790Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2217395Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2219068Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2220905Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.15/x64/lib
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2222311Z ##[endgroup]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2420343Z ##[group]Run echo "Downloading currency rates from official Central Bank APIs..."
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2422758Z [36;1mecho "Downloading currency rates from official Central Bank APIs..."[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2424656Z [36;1mecho "- European Central Bank (ECB) via Frankfurter API"[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2426120Z [36;1mecho "- Central Bank of Russia (CBR)"[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2427464Z [36;1mpython scripts/download_historical_rates.py[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2474084Z shell: /usr/bin/bash -e {0}
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2474982Z env:
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2475905Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.15/x64
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2477614Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.15/x64/lib/pkgconfig
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2479336Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2481166Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2482735Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2484286Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.15/x64/lib
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2485551Z ##[endgroup]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2564598Z Downloading currency rates from official Central Bank APIs...
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2566833Z - European Central Bank (ECB) via Frankfurter API
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:06.2568044Z - Central Bank of Russia (CBR)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:07.0806454Z Output directory: /home/runner/work/calculator/calculator/data/currency
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:07.0808341Z Date range: 2021-03-22 to 2026-03-21
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:07.0808790Z 
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:07.0809231Z Downloading Frankfurter rates from 2021-03-22 to 2026-03-21...
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:09.2707854Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=EUR: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:09.4715986Z   USD -> EUR... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:11.5863882Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=GBP: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:11.7870510Z   USD -> GBP... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:13.9075889Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=JPY: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:14.1084783Z   USD -> JPY... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:16.2305200Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=CHF: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:16.4311146Z   USD -> CHF... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:18.5413341Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=CNY: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:18.7423882Z   USD -> CNY... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:20.8661585Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=CAD: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:21.0669076Z   USD -> CAD... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:23.1859123Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=AUD: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:23.3868323Z   USD -> AUD... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:25.4965261Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=NZD: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:25.6973725Z   USD -> NZD... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:27.8087587Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=SEK: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:28.0096017Z   USD -> SEK... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:30.1222168Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=NOK: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:30.3229977Z   USD -> NOK... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:32.4296368Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=DKK: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:32.6306116Z   USD -> DKK... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:34.7465672Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=PLN: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:34.9471228Z   USD -> PLN... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:37.0548694Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=CZK: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:37.2557146Z   USD -> CZK... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:39.3663822Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=HUF: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:39.5671935Z   USD -> HUF... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:41.6788752Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=TRY: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:41.8795339Z   USD -> TRY... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:43.9881936Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=MXN: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:44.1889144Z   USD -> MXN... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:46.3024506Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=BRL: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:46.5031964Z   USD -> BRL... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:48.6126925Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=INR: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:48.8132057Z   USD -> INR... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:50.9200861Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=KRW: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:51.1207258Z   USD -> KRW... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:53.2291461Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=SGD: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:53.4299746Z   USD -> SGD... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:55.5392676Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=HKD: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:55.7401879Z   USD -> HKD... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:57.8506236Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=USD&to=ZAR: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:51:58.0513417Z   USD -> ZAR... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:00.1625717Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=EUR&to=USD: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:00.3633046Z   EUR -> USD... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:02.4732703Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=EUR&to=GBP: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:02.6743919Z   EUR -> GBP... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:04.7868638Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=EUR&to=JPY: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:04.9879233Z   EUR -> JPY... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:07.0985180Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=EUR&to=CHF: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:07.2994927Z   EUR -> CHF... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:09.4122993Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=GBP&to=USD: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:09.6131679Z   GBP -> USD... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:11.7311532Z   Error fetching https://api.frankfurter.app/2021-03-22..2026-03-21?from=GBP&to=EUR: HTTP Error 403: Forbidden
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:11.9505860Z   GBP -> EUR... no data
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:11.9507913Z 
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:11.9508579Z Downloading CBR rates from 2021-03-22 to 2026-03-21...
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:12.9948431Z   RUB <-> USD... 1236 rates each direction
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:14.5614132Z   RUB <-> EUR... 1236 rates each direction
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:16.0139260Z   RUB <-> GBP... 1236 rates each direction
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:17.6805911Z   RUB <-> JPY... 1236 rates each direction
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:18.6489199Z   RUB <-> CHF... 1236 rates each direction
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:20.1134479Z   RUB <-> CNY... 1236 rates each direction
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6515712Z   RUB <-> INR... 1236 rates each direction
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6516199Z   -> rub-usd.lino (1236 rates)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6516576Z   -> usd-rub.lino (1236 rates)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6516951Z   -> rub-eur.lino (1236 rates)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6518482Z   -> eur-rub.lino (1236 rates)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6518760Z   -> rub-gbp.lino (1236 rates)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6519066Z   -> gbp-rub.lino (1236 rates)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6519928Z   -> rub-jpy.lino (1236 rates)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6520327Z   -> jpy-rub.lino (1236 rates)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6521164Z   -> rub-chf.lino (1236 rates)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6521423Z   -> chf-rub.lino (1236 rates)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6521632Z   -> rub-cny.lino (1236 rates)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6521841Z   -> cny-rub.lino (1236 rates)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6522039Z   -> rub-inr.lino (1236 rates)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6522240Z   -> inr-rub.lino (1236 rates)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6522378Z 
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6522487Z Total consolidated .lino files: 44
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6663033Z ##[group]Run if git diff --quiet data/currency/; then
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6663428Z [36;1mif git diff --quiet data/currency/; then[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6663738Z [36;1m  echo "has_changes=false" >> $GITHUB_OUTPUT[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6664035Z [36;1m  echo "No changes in currency rates"[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6664274Z [36;1melse[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6664657Z [36;1m  echo "has_changes=true" >> $GITHUB_OUTPUT[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6664962Z [36;1m  echo "Currency rates have been updated"[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6665235Z [36;1m  git diff --stat data/currency/[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6665468Z [36;1mfi[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6717057Z shell: /usr/bin/bash -e {0}
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6717281Z env:
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6717525Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.15/x64
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6717934Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.15/x64/lib/pkgconfig
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6718345Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6718746Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6719097Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6719461Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.15/x64/lib
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6719767Z ##[endgroup]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6836937Z Currency rates have been updated
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6924991Z  data/currency/chf-rub.lino | 10 +++++-----
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6925558Z  data/currency/cny-rub.lino | 10 +++++-----
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6926016Z  data/currency/eur-rub.lino | 10 +++++-----
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6926471Z  data/currency/gbp-rub.lino | 10 +++++-----
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6926908Z  data/currency/inr-rub.lino | 10 +++++-----
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6927347Z  data/currency/jpy-rub.lino | 10 +++++-----
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6927764Z  data/currency/rub-chf.lino | 10 +++++-----
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6928224Z  data/currency/rub-cny.lino | 10 +++++-----
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6928587Z  data/currency/rub-eur.lino | 10 +++++-----
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6928849Z  data/currency/rub-gbp.lino | 10 +++++-----
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6929245Z  data/currency/rub-inr.lino | 10 +++++-----
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6929511Z  data/currency/rub-jpy.lino | 10 +++++-----
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6929770Z  data/currency/rub-usd.lino | 10 +++++-----
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6930041Z  data/currency/usd-rub.lino | 10 +++++-----
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6930533Z  14 files changed, 70 insertions(+), 70 deletions(-)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6984647Z ##[group]Run git add data/currency/
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6984954Z [36;1mgit add data/currency/[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6985319Z [36;1mgit commit -m "chore: update currency rates from Central Banks [skip ci][0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6985685Z [36;1m[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6985845Z [36;1mUpdated rates from:[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6986129Z [36;1m- European Central Bank (ECB) via frankfurter.dev[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6986448Z [36;1m- Central Bank of Russia (CBR) via cbr.ru[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6986709Z [36;1m[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6986897Z [36;1mThis is an automated weekly update."[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.6987154Z [36;1mgit push[0m
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.7038577Z shell: /usr/bin/bash -e {0}
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.7038808Z env:
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.7039053Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.15/x64
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.7039485Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.15/x64/lib/pkgconfig
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.7039955Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.7040323Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.7040985Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.15/x64
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.7041391Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.15/x64/lib
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.7041705Z ##[endgroup]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.7598987Z [main 427467ab] chore: update currency rates from Central Banks [skip ci]
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:21.7599867Z  14 files changed, 70 insertions(+), 70 deletions(-)
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.2567292Z To https://github.com/link-assistant/calculator
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.2568102Z    15b9f18e..427467ab  main -> main
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.2685247Z Post job cleanup.
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.4399089Z Post job cleanup.
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.5416133Z [command]/usr/bin/git version
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.5455313Z git version 2.53.0
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.5493755Z Copying '/home/runner/.gitconfig' to '/home/runner/work/_temp/f60de1ee-42f1-4852-b59f-630ca1858bcb/.gitconfig'
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.5506074Z Temporarily overriding HOME='/home/runner/work/_temp/f60de1ee-42f1-4852-b59f-630ca1858bcb' before making global git config changes
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.5507802Z Adding repository directory to the temporary git global config as a safe directory
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.5512395Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/calculator/calculator
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.5557015Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.5592708Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.5856940Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.5880547Z http.https://github.com/.extraheader
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.5894704Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.5928286Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.6175681Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.6210577Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.6577814Z Cleaning up orphan processes
+Update Currency Rates from Central Banks	UNKNOWN STEP	2026-03-21T08:52:22.6902509Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, actions/setup-python@v5. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

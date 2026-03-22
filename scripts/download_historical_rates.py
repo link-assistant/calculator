@@ -17,6 +17,7 @@ Output format (consolidated .lino - one file per currency pair):
         ...
 """
 
+import argparse
 import json
 import os
 import sys
@@ -27,6 +28,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional, Dict, List, Tuple
 from collections import defaultdict
+
+VERBOSE = os.environ.get("VERBOSE", "").lower() in ("1", "true", "yes")
 
 
 # Currency pairs to download - popular pairs that users commonly need
@@ -59,6 +62,7 @@ FRANKFURTER_PAIRS = [
     ("EUR", "GBP"),
     ("EUR", "JPY"),
     ("EUR", "CHF"),
+    ("EUR", "CNY"),
     # GBP base pairs
     ("GBP", "USD"),
     ("GBP", "EUR"),
@@ -76,13 +80,29 @@ CBR_CURRENCIES = {
 }
 
 
+def log_verbose(msg: str):
+    """Print message only when VERBOSE mode is enabled."""
+    if VERBOSE:
+        print(f"  [DEBUG] {msg}", file=sys.stderr)
+
+
 def fetch_json(url: str, max_retries: int = 3) -> Optional[dict]:
     """Fetch JSON from URL with retries."""
+    log_verbose(f"Fetching JSON: {url}")
     for attempt in range(max_retries):
         try:
-            with urllib.request.urlopen(url, timeout=30) as response:
-                return json.loads(response.read().decode('utf-8'))
+            req = urllib.request.Request(url, headers={
+                "User-Agent": "calculator-rates-updater/1.0",
+                "Accept": "application/json",
+            })
+            with urllib.request.urlopen(req, timeout=30) as response:
+                status = response.status
+                log_verbose(f"Response status: {status}")
+                data = json.loads(response.read().decode('utf-8'))
+                log_verbose(f"Response keys: {list(data.keys()) if isinstance(data, dict) else type(data)}")
+                return data
         except Exception as e:
+            log_verbose(f"Attempt {attempt + 1}/{max_retries} failed: {e}")
             if attempt < max_retries - 1:
                 time.sleep(1)
             else:
@@ -92,12 +112,15 @@ def fetch_json(url: str, max_retries: int = 3) -> Optional[dict]:
 
 def fetch_xml(url: str, max_retries: int = 3) -> Optional[ET.Element]:
     """Fetch XML from URL with retries."""
+    log_verbose(f"Fetching XML: {url}")
     for attempt in range(max_retries):
         try:
             with urllib.request.urlopen(url, timeout=30) as response:
+                log_verbose(f"Response status: {response.status}")
                 content = response.read().decode('windows-1251')
                 return ET.fromstring(content)
         except Exception as e:
+            log_verbose(f"Attempt {attempt + 1}/{max_retries} failed: {e}")
             if attempt < max_retries - 1:
                 time.sleep(1)
             else:
@@ -105,29 +128,130 @@ def fetch_xml(url: str, max_retries: int = 3) -> Optional[ET.Element]:
                 return None
 
 
+def parse_lino_file(file_path: Path) -> Tuple[List[str], Dict[str, str]]:
+    """Parse an existing .lino file, returning header lines and a dict of date->rate_line.
+
+    Handles both formats:
+    - conversion: / rates: (Frankfurter/ECB files)
+    - rates: / data: (CBR files)
+
+    Returns (header_lines, existing_rates) where header_lines are lines before
+    the rate data, and existing_rates maps date strings to the full indented line.
+    """
+    header_lines = []
+    existing_rates = {}
+
+    if not file_path.exists():
+        return header_lines, existing_rates
+
+    content = file_path.read_text()
+    lines = content.rstrip('\n').split('\n')
+
+    in_data = False
+    for line in lines:
+        stripped = line.strip()
+        # Detect the start of rate data lines (indented date entries)
+        if in_data:
+            # Rate data lines are indented and start with a date (YYYY-MM-DD)
+            if stripped and stripped[0].isdigit() and len(stripped) >= 10 and stripped[4] == '-':
+                date_str = stripped.split()[0]
+                existing_rates[date_str] = stripped
+            else:
+                # Non-data line after data started — shouldn't happen, but preserve
+                header_lines.append(line)
+        else:
+            header_lines.append(line)
+            # Check if this line is the data section header (rates: or data:)
+            if stripped in ("rates:", "data:"):
+                in_data = True
+
+    return header_lines, existing_rates
+
+
+def get_last_date_in_file(file_path: Path) -> Optional[str]:
+    """Get the last (most recent) date recorded in a .lino file.
+
+    Returns date string like '2026-01-25' or None if file doesn't exist or has no data.
+    """
+    _, existing_rates = parse_lino_file(file_path)
+    if not existing_rates:
+        return None
+    return max(existing_rates.keys())
+
+
+def get_last_date_for_pairs(output_dir: Path, pairs: List[Tuple[str, str]]) -> Optional[str]:
+    """Find the earliest 'last date' across all pair files for a given source.
+
+    This ensures we fetch from the oldest gap across all files for a source,
+    so no file is left behind.
+    """
+    last_dates = []
+    for from_curr, to_curr in pairs:
+        file_path = output_dir / f"{from_curr.lower()}-{to_curr.lower()}.lino"
+        last_date = get_last_date_in_file(file_path)
+        if last_date:
+            last_dates.append(last_date)
+
+    if not last_dates:
+        return None
+
+    # Use the minimum (earliest) last date across all files — so we fill
+    # gaps in files that are furthest behind
+    return min(last_dates)
+
+
 def write_consolidated_lino(output_dir: Path, from_curr: str, to_curr: str,
                             rates: List[Tuple[str, float]], source: str):
-    """Write all rates for a currency pair to a single consolidated .lino file."""
-    # Sort rates by date
-    rates_sorted = sorted(rates, key=lambda x: x[0])
+    """Merge new rates into an existing .lino file, preserving all existing data.
 
-    # File name: {from}-{to}.lino (e.g., usd-eur.lino)
+    If the file exists, reads existing rates and merges new ones (new dates are
+    added, existing dates are kept as-is). If the file doesn't exist, creates it.
+    """
     file_path = output_dir / f"{from_curr.lower()}-{to_curr.lower()}.lino"
 
-    # Build content
-    lines = [
-        "rates:",
-        f"  from {from_curr.upper()}",
-        f"  to {to_curr.upper()}",
-        f"  source '{source}'",
-        "  data:"
-    ]
+    # Parse existing file if it exists
+    header_lines, existing_rates = parse_lino_file(file_path)
 
-    for date, rate in rates_sorted:
-        lines.append(f"    {date} {rate}")
+    # Determine indentation for data lines from existing rates
+    data_indent = "    "  # default 4 spaces
+
+    if not header_lines:
+        # New file — determine format based on source
+        if "cbr" in source.lower():
+            header_lines = [
+                "rates:",
+                f"  from {from_curr.upper()}",
+                f"  to {to_curr.upper()}",
+                f"  source '{source}'",
+                "  data:"
+            ]
+        else:
+            header_lines = [
+                "conversion:",
+                f"  from {from_curr.upper()}",
+                f"  to {to_curr.upper()}",
+                f"  source '{source}'",
+                "  rates:"
+            ]
+
+    # Add new rates (only for dates not already present)
+    added = 0
+    for date_str, rate in rates:
+        if date_str not in existing_rates:
+            existing_rates[date_str] = f"{date_str} {rate}"
+            added += 1
+
+    # Sort all rates by date and write
+    sorted_dates = sorted(existing_rates.keys())
+
+    lines = list(header_lines)
+    for date_str in sorted_dates:
+        lines.append(f"{data_indent}{existing_rates[date_str]}")
 
     file_path.write_text('\n'.join(lines) + '\n')
-    return len(rates_sorted)
+    total = len(sorted_dates)
+    log_verbose(f"{file_path.name}: {total} total rates ({added} new, {total - added} existing)")
+    return total
 
 
 def download_frankfurter_rates(output_dir: Path, start_date: str, end_date: str) -> Dict[Tuple[str, str], List[Tuple[str, float]]]:
@@ -142,7 +266,7 @@ def download_frankfurter_rates(output_dir: Path, start_date: str, end_date: str)
     for from_curr, to_curr in FRANKFURTER_PAIRS:
         print(f"  {from_curr} -> {to_curr}...", end=" ", flush=True)
 
-        url = f"https://api.frankfurter.app/{start_date}..{end_date}?from={from_curr}&to={to_curr}"
+        url = f"https://api.frankfurter.dev/v1/{start_date}..{end_date}?from={from_curr}&to={to_curr}"
         data = fetch_json(url)
 
         if data and "rates" in data:
@@ -251,6 +375,18 @@ def download_cbr_rates(output_dir: Path, start_date: str, end_date: str) -> Dict
 
 
 def main():
+    global VERBOSE
+
+    parser = argparse.ArgumentParser(description="Download historical exchange rates")
+    parser.add_argument("start_date", nargs="?", help="Start date (YYYY-MM-DD)")
+    parser.add_argument("end_date", nargs="?", help="End date (YYYY-MM-DD)")
+    parser.add_argument("--verbose", "-v", action="store_true",
+                        help="Enable verbose/debug output")
+    args = parser.parse_args()
+
+    if args.verbose:
+        VERBOSE = True
+
     # Determine output directory
     script_dir = Path(__file__).parent
     repo_root = script_dir.parent
@@ -261,28 +397,81 @@ def main():
     # Ensure output directory exists
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Get date range from arguments or use defaults
-    # Default: last 5 years of data (a reasonable amount for a calculator)
+    # Get date range from arguments or auto-detect from existing data
     today = datetime.now()
-    default_end = today.strftime("%Y-%m-%d")
-    default_start = (today - timedelta(days=5*365)).strftime("%Y-%m-%d")
+    end_date = args.end_date or today.strftime("%Y-%m-%d")
 
-    if len(sys.argv) >= 3:
-        start_date = sys.argv[1]
-        end_date = sys.argv[2]
+    if args.start_date:
+        # Explicit start date — use same range for both sources
+        frank_start = args.start_date
+        cbr_start = args.start_date
+        print(f"Date range (explicit): {frank_start} to {end_date}")
     else:
-        start_date = default_start
-        end_date = default_end
+        # Auto-detect: find last recorded date for each source and fetch from there
+        # Build list of CBR pairs (both directions)
+        cbr_pairs = []
+        for currency in CBR_CURRENCIES.values():
+            cbr_pairs.append(("RUB", currency))
+            cbr_pairs.append((currency, "RUB"))
 
-    print(f"Date range: {start_date} to {end_date}")
+        frank_last = get_last_date_for_pairs(output_dir, FRANKFURTER_PAIRS)
+        cbr_last = get_last_date_for_pairs(output_dir, cbr_pairs)
 
-    # Download from both sources
-    download_frankfurter_rates(output_dir, start_date, end_date)
-    download_cbr_rates(output_dir, start_date, end_date)
+        # Start from the day after the last recorded date (to avoid re-fetching)
+        # If no data exists, default to 5 years ago
+        default_start = (today - timedelta(days=5*365)).strftime("%Y-%m-%d")
+
+        if frank_last:
+            # Start from the day after last recorded date
+            frank_start_dt = datetime.strptime(frank_last, "%Y-%m-%d") + timedelta(days=1)
+            frank_start = frank_start_dt.strftime("%Y-%m-%d")
+            print(f"Frankfurter: last recorded date is {frank_last}, fetching from {frank_start}")
+        else:
+            frank_start = default_start
+            print(f"Frankfurter: no existing data, fetching from {frank_start}")
+
+        if cbr_last:
+            cbr_start_dt = datetime.strptime(cbr_last, "%Y-%m-%d") + timedelta(days=1)
+            cbr_start = cbr_start_dt.strftime("%Y-%m-%d")
+            print(f"CBR: last recorded date is {cbr_last}, fetching from {cbr_start}")
+        else:
+            cbr_start = default_start
+            print(f"CBR: no existing data, fetching from {cbr_start}")
+
+    print(f"End date: {end_date}")
+
+    # Download from both sources with their respective start dates
+    # Skip a source if its start date is past the end date (already up to date)
+    if frank_start > end_date:
+        print(f"\nFrankfurter data is already up to date through {end_date}")
+        frankfurter_rates = {"_up_to_date": True}
+    else:
+        frankfurter_rates = download_frankfurter_rates(output_dir, frank_start, end_date)
+
+    if cbr_start > end_date:
+        print(f"\nCBR data is already up to date through {end_date}")
+        cbr_rates = {"_up_to_date": True}
+    else:
+        cbr_rates = download_cbr_rates(output_dir, cbr_start, end_date)
 
     # Count final files
     total_files = sum(1 for _ in output_dir.glob("*.lino"))
     print(f"\nTotal consolidated .lino files: {total_files}")
+
+    # Validate results - fail if a data source returned no data at all
+    errors = []
+    if not frankfurter_rates:
+        errors.append("Frankfurter API (ECB) returned no data for any currency pair")
+    if not cbr_rates:
+        errors.append("CBR API returned no data for any currency pair")
+
+    if errors:
+        print("\nERROR: Data source failures detected:", file=sys.stderr)
+        for err in errors:
+            print(f"  - {err}", file=sys.stderr)
+        sys.exit(1)
+
+    print("\nAll data sources returned data successfully.")
 
 
 if __name__ == "__main__":
