@@ -167,6 +167,38 @@ def parse_lino_file(file_path: Path) -> Tuple[List[str], Dict[str, str]]:
     return header_lines, existing_rates
 
 
+def get_last_date_in_file(file_path: Path) -> Optional[str]:
+    """Get the last (most recent) date recorded in a .lino file.
+
+    Returns date string like '2026-01-25' or None if file doesn't exist or has no data.
+    """
+    _, existing_rates = parse_lino_file(file_path)
+    if not existing_rates:
+        return None
+    return max(existing_rates.keys())
+
+
+def get_last_date_for_pairs(output_dir: Path, pairs: List[Tuple[str, str]]) -> Optional[str]:
+    """Find the earliest 'last date' across all pair files for a given source.
+
+    This ensures we fetch from the oldest gap across all files for a source,
+    so no file is left behind.
+    """
+    last_dates = []
+    for from_curr, to_curr in pairs:
+        file_path = output_dir / f"{from_curr.lower()}-{to_curr.lower()}.lino"
+        last_date = get_last_date_in_file(file_path)
+        if last_date:
+            last_dates.append(last_date)
+
+    if not last_dates:
+        return None
+
+    # Use the minimum (earliest) last date across all files — so we fill
+    # gaps in files that are furthest behind
+    return min(last_dates)
+
+
 def write_consolidated_lino(output_dir: Path, from_curr: str, to_curr: str,
                             rates: List[Tuple[str, float]], source: str):
     """Merge new rates into an existing .lino file, preserving all existing data.
@@ -364,20 +396,62 @@ def main():
     # Ensure output directory exists
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Get date range from arguments or use defaults
-    # Default: last 5 years of data (a reasonable amount for a calculator)
+    # Get date range from arguments or auto-detect from existing data
     today = datetime.now()
-    default_end = today.strftime("%Y-%m-%d")
-    default_start = (today - timedelta(days=5*365)).strftime("%Y-%m-%d")
+    end_date = args.end_date or today.strftime("%Y-%m-%d")
 
-    start_date = args.start_date or default_start
-    end_date = args.end_date or default_end
+    if args.start_date:
+        # Explicit start date — use same range for both sources
+        frank_start = args.start_date
+        cbr_start = args.start_date
+        print(f"Date range (explicit): {frank_start} to {end_date}")
+    else:
+        # Auto-detect: find last recorded date for each source and fetch from there
+        # Build list of CBR pairs (both directions)
+        cbr_pairs = []
+        for currency in CBR_CURRENCIES.values():
+            cbr_pairs.append(("RUB", currency))
+            cbr_pairs.append((currency, "RUB"))
 
-    print(f"Date range: {start_date} to {end_date}")
+        frank_last = get_last_date_for_pairs(output_dir, FRANKFURTER_PAIRS)
+        cbr_last = get_last_date_for_pairs(output_dir, cbr_pairs)
 
-    # Download from both sources and track success
-    frankfurter_rates = download_frankfurter_rates(output_dir, start_date, end_date)
-    cbr_rates = download_cbr_rates(output_dir, start_date, end_date)
+        # Start from the day after the last recorded date (to avoid re-fetching)
+        # If no data exists, default to 5 years ago
+        default_start = (today - timedelta(days=5*365)).strftime("%Y-%m-%d")
+
+        if frank_last:
+            # Start from the day after last recorded date
+            frank_start_dt = datetime.strptime(frank_last, "%Y-%m-%d") + timedelta(days=1)
+            frank_start = frank_start_dt.strftime("%Y-%m-%d")
+            print(f"Frankfurter: last recorded date is {frank_last}, fetching from {frank_start}")
+        else:
+            frank_start = default_start
+            print(f"Frankfurter: no existing data, fetching from {frank_start}")
+
+        if cbr_last:
+            cbr_start_dt = datetime.strptime(cbr_last, "%Y-%m-%d") + timedelta(days=1)
+            cbr_start = cbr_start_dt.strftime("%Y-%m-%d")
+            print(f"CBR: last recorded date is {cbr_last}, fetching from {cbr_start}")
+        else:
+            cbr_start = default_start
+            print(f"CBR: no existing data, fetching from {cbr_start}")
+
+    print(f"End date: {end_date}")
+
+    # Download from both sources with their respective start dates
+    # Skip a source if its start date is past the end date (already up to date)
+    if frank_start > end_date:
+        print(f"\nFrankfurter data is already up to date through {end_date}")
+        frankfurter_rates = {"_up_to_date": True}
+    else:
+        frankfurter_rates = download_frankfurter_rates(output_dir, frank_start, end_date)
+
+    if cbr_start > end_date:
+        print(f"\nCBR data is already up to date through {end_date}")
+        cbr_rates = {"_up_to_date": True}
+    else:
+        cbr_rates = download_cbr_rates(output_dir, cbr_start, end_date)
 
     # Count final files
     total_files = sum(1 for _ in output_dir.glob("*.lino"))
