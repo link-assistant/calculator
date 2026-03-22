@@ -192,10 +192,13 @@ function App() {
           setResult(prev => {
             // Only update interpretation fields — keep existing result/steps
             // if we're still loading (they'll be replaced by the full result).
+            // When there is no previous result (first load), create a base
+            // with success: true so the UI shows the interpretation section
+            // and the busy indicator — NOT the error message.
             const base = prev || {
               result: '',
               steps: [],
-              success: false,
+              success: true,
             };
             return {
               ...base,
@@ -618,7 +621,7 @@ function App() {
                 <div className="spinner" />
                 <span>{t('result.loading')}</span>
               </div>
-            ) : result ? (
+            ) : result && (result.success || !loading) ? (
               <>
                 {result.success ? (
                   <>
