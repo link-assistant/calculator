@@ -425,6 +425,22 @@ impl fmt::Display for DataSizeUnit {
 }
 
 impl DurationUnit {
+    /// Parses a string into a `DurationUnit`, returning `None` if not recognized.
+    #[must_use]
+    pub fn parse(s: &str) -> Option<Self> {
+        match s.to_lowercase().as_str() {
+            "ms" | "millisecond" | "milliseconds" => Some(Self::Milliseconds),
+            "s" | "sec" | "secs" | "second" | "seconds" => Some(Self::Seconds),
+            "min" | "mins" | "minute" | "minutes" => Some(Self::Minutes),
+            "h" | "hr" | "hrs" | "hour" | "hours" => Some(Self::Hours),
+            "d" | "day" | "days" => Some(Self::Days),
+            "w" | "week" | "weeks" => Some(Self::Weeks),
+            "mo" | "month" | "months" => Some(Self::Months),
+            "y" | "yr" | "yrs" | "year" | "years" => Some(Self::Years),
+            _ => None,
+        }
+    }
+
     /// Converts a duration to seconds.
     #[must_use]
     pub fn to_secs(self, value: f64) -> f64 {
