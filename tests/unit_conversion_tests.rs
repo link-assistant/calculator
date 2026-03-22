@@ -467,8 +467,7 @@ mod unit_ambiguity_tests {
         let alts = plan.alternative_lino.unwrap();
         assert!(
             alts.iter().any(|a| a.contains("TON")),
-            "Alternatives should include TON crypto: {:?}",
-            alts
+            "Alternatives should include TON crypto: {alts:?}"
         );
     }
 
@@ -489,8 +488,7 @@ mod unit_ambiguity_tests {
         let alts = plan.alternative_lino.unwrap();
         assert!(
             alts.iter().any(|a| a.contains("(19 t)")),
-            "Alternatives should include mass unit: {:?}",
-            alts
+            "Alternatives should include mass unit: {alts:?}"
         );
     }
 

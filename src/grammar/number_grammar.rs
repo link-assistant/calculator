@@ -1,7 +1,7 @@
 //! Grammar for parsing numbers with optional units.
 
-use crate::error::CalculatorError;
 use crate::crypto_api;
+use crate::error::CalculatorError;
 use crate::types::{CurrencyDatabase, DataSizeUnit, Decimal, MassUnit, Unit};
 
 /// Grammar for parsing numbers with optional units.

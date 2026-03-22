@@ -19,7 +19,10 @@ fn main() {
     println!("  Required sources: {:?}", plan.required_sources);
     println!("  Success: {}", plan.success);
     assert!(plan.success, "Plan should succeed");
-    assert_eq!(plan.lino_interpretation, "(19 t)", "Primary should be mass (19 t)");
+    assert_eq!(
+        plan.lino_interpretation, "(19 t)",
+        "Primary should be mass (19 t)"
+    );
     assert!(
         plan.alternative_lino.is_some(),
         "Should have alternative interpretations"
@@ -27,8 +30,7 @@ fn main() {
     let alts = plan.alternative_lino.unwrap();
     assert!(
         alts.iter().any(|a| a.contains("TON")),
-        "Alternatives should include TON crypto: {:?}",
-        alts
+        "Alternatives should include TON crypto: {alts:?}"
     );
     println!("  ✓ PASS: Both mass and crypto interpretations present\n");
 
