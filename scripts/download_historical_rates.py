@@ -127,29 +127,98 @@ def fetch_xml(url: str, max_retries: int = 3) -> Optional[ET.Element]:
                 return None
 
 
+def parse_lino_file(file_path: Path) -> Tuple[List[str], Dict[str, str]]:
+    """Parse an existing .lino file, returning header lines and a dict of date->rate_line.
+
+    Handles both formats:
+    - conversion: / rates: (Frankfurter/ECB files)
+    - rates: / data: (CBR files)
+
+    Returns (header_lines, existing_rates) where header_lines are lines before
+    the rate data, and existing_rates maps date strings to the full indented line.
+    """
+    header_lines = []
+    existing_rates = {}
+
+    if not file_path.exists():
+        return header_lines, existing_rates
+
+    content = file_path.read_text()
+    lines = content.rstrip('\n').split('\n')
+
+    in_data = False
+    for line in lines:
+        stripped = line.strip()
+        # Detect the start of rate data lines (indented date entries)
+        if in_data:
+            # Rate data lines are indented and start with a date (YYYY-MM-DD)
+            if stripped and stripped[0].isdigit() and len(stripped) >= 10 and stripped[4] == '-':
+                date_str = stripped.split()[0]
+                existing_rates[date_str] = stripped
+            else:
+                # Non-data line after data started — shouldn't happen, but preserve
+                header_lines.append(line)
+        else:
+            header_lines.append(line)
+            # Check if this line is the data section header (rates: or data:)
+            if stripped in ("rates:", "data:"):
+                in_data = True
+
+    return header_lines, existing_rates
+
+
 def write_consolidated_lino(output_dir: Path, from_curr: str, to_curr: str,
                             rates: List[Tuple[str, float]], source: str):
-    """Write all rates for a currency pair to a single consolidated .lino file."""
-    # Sort rates by date
-    rates_sorted = sorted(rates, key=lambda x: x[0])
+    """Merge new rates into an existing .lino file, preserving all existing data.
 
-    # File name: {from}-{to}.lino (e.g., usd-eur.lino)
+    If the file exists, reads existing rates and merges new ones (new dates are
+    added, existing dates are kept as-is). If the file doesn't exist, creates it.
+    """
     file_path = output_dir / f"{from_curr.lower()}-{to_curr.lower()}.lino"
 
-    # Build content
-    lines = [
-        "rates:",
-        f"  from {from_curr.upper()}",
-        f"  to {to_curr.upper()}",
-        f"  source '{source}'",
-        "  data:"
-    ]
+    # Parse existing file if it exists
+    header_lines, existing_rates = parse_lino_file(file_path)
 
-    for date, rate in rates_sorted:
-        lines.append(f"    {date} {rate}")
+    # Determine indentation for data lines from existing rates
+    data_indent = "    "  # default 4 spaces
+
+    if not header_lines:
+        # New file — determine format based on source
+        if "cbr" in source.lower():
+            header_lines = [
+                "rates:",
+                f"  from {from_curr.upper()}",
+                f"  to {to_curr.upper()}",
+                f"  source '{source}'",
+                "  data:"
+            ]
+        else:
+            header_lines = [
+                "conversion:",
+                f"  from {from_curr.upper()}",
+                f"  to {to_curr.upper()}",
+                f"  source '{source}'",
+                "  rates:"
+            ]
+
+    # Add new rates (only for dates not already present)
+    added = 0
+    for date_str, rate in rates:
+        if date_str not in existing_rates:
+            existing_rates[date_str] = f"{date_str} {rate}"
+            added += 1
+
+    # Sort all rates by date and write
+    sorted_dates = sorted(existing_rates.keys())
+
+    lines = list(header_lines)
+    for date_str in sorted_dates:
+        lines.append(f"{data_indent}{existing_rates[date_str]}")
 
     file_path.write_text('\n'.join(lines) + '\n')
-    return len(rates_sorted)
+    total = len(sorted_dates)
+    log_verbose(f"{file_path.name}: {total} total rates ({added} new, {total - added} existing)")
+    return total
 
 
 def download_frankfurter_rates(output_dir: Path, start_date: str, end_date: str) -> Dict[Tuple[str, str], List[Tuple[str, float]]]:
