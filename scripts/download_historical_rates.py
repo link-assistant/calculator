@@ -62,6 +62,7 @@ FRANKFURTER_PAIRS = [
     ("EUR", "GBP"),
     ("EUR", "JPY"),
     ("EUR", "CHF"),
+    ("EUR", "CNY"),
     # GBP base pairs
     ("GBP", "USD"),
     ("GBP", "EUR"),
