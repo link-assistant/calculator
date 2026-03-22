@@ -1,5 +1,6 @@
 //! Grammar for parsing numbers with optional units.
 
+use crate::crypto_api;
 use crate::error::CalculatorError;
 use crate::types::{CurrencyDatabase, DataSizeUnit, Decimal, MassUnit, Unit};
 
@@ -48,31 +49,122 @@ impl NumberGrammar {
 
     /// Parses a unit string.
     pub fn parse_unit(&self, s: &str) -> Result<Unit, CalculatorError> {
+        let (unit, _alternatives) = self.parse_unit_with_alternatives(s)?;
+        Ok(unit)
+    }
+
+    /// Parses a unit string, returning the primary unit and any alternative interpretations.
+    ///
+    /// Some identifiers are ambiguous — for example, "ton" can mean either a metric ton
+    /// (mass unit, 1000 kg) or Toncoin (TON cryptocurrency). This method returns all
+    /// valid interpretations so the caller can surface them as alternatives to the user.
+    pub fn parse_unit_with_alternatives(
+        &self,
+        s: &str,
+    ) -> Result<(Unit, Vec<Unit>), CalculatorError> {
         let s = s.trim();
+        let mut alternatives = Vec::new();
 
         // Try to parse as data size unit first (before currency, to avoid conflicts)
         if let Some(data_size) = DataSizeUnit::parse(s) {
-            return Ok(Unit::DataSize(data_size));
+            return Ok((Unit::DataSize(data_size), alternatives));
         }
 
         // Try to parse as mass unit (before currency, to avoid "t" being treated as currency)
         if let Some(mass) = MassUnit::parse(s) {
-            return Ok(Unit::Mass(mass));
+            let primary = Unit::Mass(mass);
+
+            // Check if this identifier also matches a well-known cryptocurrency or fiat code.
+            // Only flag ambiguity for known crypto tickers (e.g., "ton" → TON/Toncoin),
+            // not for the generic catch-all that accepts any 2-5 letter string.
+            if let Some(currency_code) = CurrencyDatabase::parse_currency(s) {
+                if Self::is_well_known_currency(&currency_code) {
+                    let currency_unit = Unit::currency(&currency_code);
+                    if currency_unit != primary {
+                        alternatives.push(currency_unit);
+                    }
+                }
+            }
+
+            return Ok((primary, alternatives));
         }
 
         // Try to parse as cryptocurrency or fiat currency alias
         if let Some(currency_code) = CurrencyDatabase::parse_currency(s) {
-            return Ok(Unit::currency(&currency_code));
+            let primary = Unit::currency(&currency_code);
+
+            // Check if a case-insensitive mass unit match exists (ambiguity detection)
+            if let Some(mass) = MassUnit::parse(&s.to_lowercase()) {
+                let mass_unit = Unit::Mass(mass);
+                if mass_unit != primary {
+                    alternatives.push(mass_unit);
+                }
+            }
+
+            return Ok((primary, alternatives));
         }
 
         // Could add more unit types here (duration, length, etc.)
 
         // If nothing matches, treat as custom unit
         if s.is_empty() {
-            Ok(Unit::None)
+            Ok((Unit::None, alternatives))
         } else {
-            Ok(Unit::Custom(s.to_string()))
+            Ok((Unit::Custom(s.to_string()), alternatives))
         }
+    }
+
+    /// Checks if a currency code is a well-known fiat or crypto currency.
+    ///
+    /// Returns `true` for explicitly listed currencies (ISO 4217 fiat codes
+    /// and known crypto tickers like TON, BTC, ETH). Returns `false` for codes
+    /// that only match the generic "any 2-5 letter string" catch-all pattern
+    /// in `CurrencyDatabase::parse_currency`.
+    fn is_well_known_currency(code: &str) -> bool {
+        let upper = code.to_uppercase();
+
+        // Check if it's a known crypto ticker
+        if crypto_api::coingecko_id(&upper).is_some() {
+            return true;
+        }
+
+        // Check well-known fiat codes (ISO 4217 major currencies)
+        matches!(
+            upper.as_str(),
+            "USD"
+                | "EUR"
+                | "GBP"
+                | "JPY"
+                | "CHF"
+                | "CNY"
+                | "RUB"
+                | "INR"
+                | "KRW"
+                | "CLF"
+                | "AUD"
+                | "CAD"
+                | "NZD"
+                | "SEK"
+                | "NOK"
+                | "DKK"
+                | "SGD"
+                | "HKD"
+                | "MXN"
+                | "BRL"
+                | "ZAR"
+                | "TRY"
+                | "PLN"
+                | "CZK"
+                | "HUF"
+                | "RON"
+                | "BGN"
+                | "ISK"
+                | "IDR"
+                | "MYR"
+                | "PHP"
+                | "THB"
+                | "KES"
+        )
     }
 
     /// Checks if a string looks like a number.

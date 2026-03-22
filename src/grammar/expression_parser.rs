@@ -102,7 +102,7 @@ impl ExpressionParser {
 
     fn evaluate_expr(&mut self, expr: &Expression) -> Result<Value, CalculatorError> {
         match expr {
-            Expression::Number { value, unit } => {
+            Expression::Number { value, unit, .. } => {
                 // Convert to Rational for exact arithmetic
                 let rational = Rational::from_decimal(*value);
                 Ok(Value::rational_with_unit(rational, unit.clone()))
@@ -237,7 +237,7 @@ impl ExpressionParser {
         steps: &mut Vec<String>,
     ) -> Result<Value, CalculatorError> {
         match expr {
-            Expression::Number { value, unit } => {
+            Expression::Number { value, unit, .. } => {
                 // Convert to Rational for exact arithmetic
                 let rational = Rational::from_decimal(*value);
                 let val = Value::rational_with_unit(rational, unit.clone());
@@ -594,7 +594,7 @@ impl ExpressionParser {
         var_value: Decimal,
     ) -> Result<Value, CalculatorError> {
         match expr {
-            Expression::Number { value, unit } => {
+            Expression::Number { value, unit, .. } => {
                 let rational = Rational::from_decimal(*value);
                 Ok(Value::rational_with_unit(rational, unit.clone()))
             }

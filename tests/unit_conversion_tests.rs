@@ -443,3 +443,145 @@ mod crypto_unit_tests {
         );
     }
 }
+
+/// Tests for unit ambiguity detection and resolution (issue #104).
+///
+/// When a unit identifier like "ton" has multiple valid interpretations
+/// (metric ton mass unit vs Toncoin cryptocurrency), the calculator should
+/// surface both as alternative interpretations and resolve contextually
+/// when a conversion target provides clarity.
+mod unit_ambiguity_tests {
+    use super::*;
+
+    /// `19 ton` should produce two interpretations: mass (primary) and crypto (alternative).
+    #[test]
+    fn test_ton_standalone_has_alternatives_issue_104() {
+        let calc = Calculator::new();
+        let plan = calc.plan_internal("19 ton");
+        assert!(plan.success, "Plan should succeed");
+        assert_eq!(plan.lino_interpretation, "(19 t)", "Primary should be mass");
+        assert!(
+            plan.alternative_lino.is_some(),
+            "Should have alternative interpretations"
+        );
+        let alts = plan.alternative_lino.unwrap();
+        assert!(
+            alts.iter().any(|a| a.contains("TON")),
+            "Alternatives should include TON crypto: {alts:?}"
+        );
+    }
+
+    /// `19 TON` (uppercase) should produce crypto as primary and mass as alternative.
+    #[test]
+    fn test_ton_uppercase_has_alternatives_issue_104() {
+        let calc = Calculator::new();
+        let plan = calc.plan_internal("19 TON");
+        assert!(plan.success, "Plan should succeed");
+        assert_eq!(
+            plan.lino_interpretation, "(19 TON)",
+            "Primary should be crypto for uppercase TON"
+        );
+        assert!(
+            plan.alternative_lino.is_some(),
+            "Should have alternative interpretations"
+        );
+        let alts = plan.alternative_lino.unwrap();
+        assert!(
+            alts.iter().any(|a| a.contains("(19 t)")),
+            "Alternatives should include mass unit: {alts:?}"
+        );
+    }
+
+    /// `19 ton in usd` should contextually resolve to crypto (TON).
+    #[test]
+    fn test_ton_in_usd_resolves_to_crypto_issue_104() {
+        let calc = Calculator::new();
+        let plan = calc.plan_internal("19 ton in usd");
+        assert!(plan.success, "Plan should succeed");
+        assert!(
+            plan.lino_interpretation.contains("TON"),
+            "Should resolve to TON crypto for currency conversion: {}",
+            plan.lino_interpretation
+        );
+    }
+
+    /// `19 ton in kg` should contextually resolve to mass (metric ton).
+    #[test]
+    fn test_ton_in_kg_resolves_to_mass_issue_104() {
+        let calc = Calculator::new();
+        let plan = calc.plan_internal("19 ton in kg");
+        assert!(plan.success, "Plan should succeed");
+        assert!(
+            plan.lino_interpretation.contains("(19 t)"),
+            "Should resolve to mass for mass conversion: {}",
+            plan.lino_interpretation
+        );
+    }
+
+    /// `19 ton in kg` should compute correct mass conversion.
+    #[test]
+    fn test_ton_in_kg_computes_correctly_issue_104() {
+        let mut calc = Calculator::new();
+        let result = calc.calculate_internal("19 ton in kg");
+        assert!(result.success, "Failed: {:?}", result.error);
+        assert_eq!(
+            result.result, "19000 kg",
+            "19 metric tons should equal 19000 kg"
+        );
+    }
+
+    /// `19 tons` (plural) should be unambiguous mass with no alternatives.
+    #[test]
+    fn test_tons_plural_no_ambiguity_issue_104() {
+        let calc = Calculator::new();
+        let plan = calc.plan_internal("19 tons");
+        assert!(plan.success, "Plan should succeed");
+        assert_eq!(plan.lino_interpretation, "(19 t)", "Should be mass");
+        assert!(
+            plan.alternative_lino.is_none(),
+            "Plural 'tons' should be unambiguous: {:?}",
+            plan.alternative_lino
+        );
+    }
+
+    /// `19 tonne` should be unambiguous mass with no alternatives.
+    #[test]
+    fn test_tonne_no_ambiguity_issue_104() {
+        let calc = Calculator::new();
+        let plan = calc.plan_internal("19 tonne");
+        assert!(plan.success, "Plan should succeed");
+        assert_eq!(plan.lino_interpretation, "(19 t)", "Should be mass");
+        assert!(
+            plan.alternative_lino.is_none(),
+            "'tonne' should be unambiguous: {:?}",
+            plan.alternative_lino
+        );
+    }
+
+    /// `19 tonnes` should be unambiguous mass with no alternatives.
+    #[test]
+    fn test_tonnes_no_ambiguity_issue_104() {
+        let calc = Calculator::new();
+        let plan = calc.plan_internal("19 tonnes");
+        assert!(plan.success, "Plan should succeed");
+        assert_eq!(plan.lino_interpretation, "(19 t)", "Should be mass");
+        assert!(
+            plan.alternative_lino.is_none(),
+            "'tonnes' should be unambiguous: {:?}",
+            plan.alternative_lino
+        );
+    }
+
+    /// `19 toncoin in usd` should remain unambiguous crypto (natural language name).
+    #[test]
+    fn test_toncoin_natural_language_no_ambiguity_issue_104() {
+        let calc = Calculator::new();
+        let plan = calc.plan_internal("19 toncoin in usd");
+        assert!(plan.success, "Plan should succeed");
+        assert!(
+            plan.lino_interpretation.contains("TON"),
+            "'toncoin' should be crypto: {}",
+            plan.lino_interpretation
+        );
+    }
+}

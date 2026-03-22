@@ -80,3 +80,7 @@ opt-level = "s"
 [[example]]
 name = "test_issue23"
 path = "experiments/test_issue23.rs"
+
+[[example]]
+name = "test_issue104_ton_ambiguity"
+path = "experiments/test_issue104_ton_ambiguity.rs"

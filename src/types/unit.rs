@@ -262,10 +262,11 @@ impl MassUnit {
             "mg" | "milligram" | "milligrams" => Some(Self::Milligram),
             "g" | "gram" | "grams" => Some(Self::Gram),
             "kg" | "kgs" | "kilogram" | "kilograms" => Some(Self::Kilogram),
-            // Metric ton: "tons" plural is unambiguous mass, "tonne/tonnes" for SI spelling.
-            // Note: "ton" (singular) is intentionally omitted here to avoid ambiguity with
-            // the TON cryptocurrency. Use "tons", "tonne", or "tonnes" for mass.
-            "t" | "tons" | "tonne" | "tonnes" | "metric_ton" | "metric_tons" => {
+            // Metric ton: includes "ton" (singular) which is ambiguous with TON cryptocurrency.
+            // The ambiguity is resolved at a higher level (NumberGrammar::parse_unit_with_alternatives)
+            // which detects when both mass and currency interpretations are valid and surfaces
+            // them as alternative interpretations to the user.
+            "t" | "ton" | "tons" | "tonne" | "tonnes" | "metric_ton" | "metric_tons" => {
                 Some(Self::MetricTon)
             }
             "lb" | "lbs" | "pound" | "pounds" => Some(Self::Pound),
@@ -321,6 +322,23 @@ impl Unit {
     #[must_use]
     pub fn is_mass(&self) -> bool {
         matches!(self, Self::Mass(_))
+    }
+
+    /// Checks if two units are in the same category (both currencies, both mass, etc.).
+    ///
+    /// `Unit::None` is treated as compatible with any category.
+    #[must_use]
+    pub fn is_same_category(&self, other: &Self) -> bool {
+        matches!(
+            (self, other),
+            (Self::None, _)
+                | (_, Self::None)
+                | (Self::Currency(_), Self::Currency(_))
+                | (Self::Duration(_), Self::Duration(_))
+                | (Self::DataSize(_), Self::DataSize(_))
+                | (Self::Mass(_), Self::Mass(_))
+                | (Self::Custom(_), Self::Custom(_))
+        )
     }
 
     /// Checks if two units are compatible for the given operation.
