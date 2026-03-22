@@ -17,6 +17,7 @@ Output format (consolidated .lino - one file per currency pair):
         ...
 """
 
+import argparse
 import json
 import os
 import sys
@@ -27,6 +28,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional, Dict, List, Tuple
 from collections import defaultdict
+
+VERBOSE = os.environ.get("VERBOSE", "").lower() in ("1", "true", "yes")
 
 
 # Currency pairs to download - popular pairs that users commonly need
@@ -76,13 +79,29 @@ CBR_CURRENCIES = {
 }
 
 
+def log_verbose(msg: str):
+    """Print message only when VERBOSE mode is enabled."""
+    if VERBOSE:
+        print(f"  [DEBUG] {msg}", file=sys.stderr)
+
+
 def fetch_json(url: str, max_retries: int = 3) -> Optional[dict]:
     """Fetch JSON from URL with retries."""
+    log_verbose(f"Fetching JSON: {url}")
     for attempt in range(max_retries):
         try:
-            with urllib.request.urlopen(url, timeout=30) as response:
-                return json.loads(response.read().decode('utf-8'))
+            req = urllib.request.Request(url, headers={
+                "User-Agent": "calculator-rates-updater/1.0",
+                "Accept": "application/json",
+            })
+            with urllib.request.urlopen(req, timeout=30) as response:
+                status = response.status
+                log_verbose(f"Response status: {status}")
+                data = json.loads(response.read().decode('utf-8'))
+                log_verbose(f"Response keys: {list(data.keys()) if isinstance(data, dict) else type(data)}")
+                return data
         except Exception as e:
+            log_verbose(f"Attempt {attempt + 1}/{max_retries} failed: {e}")
             if attempt < max_retries - 1:
                 time.sleep(1)
             else:
@@ -92,12 +111,15 @@ def fetch_json(url: str, max_retries: int = 3) -> Optional[dict]:
 
 def fetch_xml(url: str, max_retries: int = 3) -> Optional[ET.Element]:
     """Fetch XML from URL with retries."""
+    log_verbose(f"Fetching XML: {url}")
     for attempt in range(max_retries):
         try:
             with urllib.request.urlopen(url, timeout=30) as response:
+                log_verbose(f"Response status: {response.status}")
                 content = response.read().decode('windows-1251')
                 return ET.fromstring(content)
         except Exception as e:
+            log_verbose(f"Attempt {attempt + 1}/{max_retries} failed: {e}")
             if attempt < max_retries - 1:
                 time.sleep(1)
             else:
@@ -142,7 +164,7 @@ def download_frankfurter_rates(output_dir: Path, start_date: str, end_date: str)
     for from_curr, to_curr in FRANKFURTER_PAIRS:
         print(f"  {from_curr} -> {to_curr}...", end=" ", flush=True)
 
-        url = f"https://api.frankfurter.app/{start_date}..{end_date}?from={from_curr}&to={to_curr}"
+        url = f"https://api.frankfurter.dev/v1/{start_date}..{end_date}?from={from_curr}&to={to_curr}"
         data = fetch_json(url)
 
         if data and "rates" in data:
@@ -251,6 +273,18 @@ def download_cbr_rates(output_dir: Path, start_date: str, end_date: str) -> Dict
 
 
 def main():
+    global VERBOSE
+
+    parser = argparse.ArgumentParser(description="Download historical exchange rates")
+    parser.add_argument("start_date", nargs="?", help="Start date (YYYY-MM-DD)")
+    parser.add_argument("end_date", nargs="?", help="End date (YYYY-MM-DD)")
+    parser.add_argument("--verbose", "-v", action="store_true",
+                        help="Enable verbose/debug output")
+    args = parser.parse_args()
+
+    if args.verbose:
+        VERBOSE = True
+
     # Determine output directory
     script_dir = Path(__file__).parent
     repo_root = script_dir.parent
@@ -267,22 +301,33 @@ def main():
     default_end = today.strftime("%Y-%m-%d")
     default_start = (today - timedelta(days=5*365)).strftime("%Y-%m-%d")
 
-    if len(sys.argv) >= 3:
-        start_date = sys.argv[1]
-        end_date = sys.argv[2]
-    else:
-        start_date = default_start
-        end_date = default_end
+    start_date = args.start_date or default_start
+    end_date = args.end_date or default_end
 
     print(f"Date range: {start_date} to {end_date}")
 
-    # Download from both sources
-    download_frankfurter_rates(output_dir, start_date, end_date)
-    download_cbr_rates(output_dir, start_date, end_date)
+    # Download from both sources and track success
+    frankfurter_rates = download_frankfurter_rates(output_dir, start_date, end_date)
+    cbr_rates = download_cbr_rates(output_dir, start_date, end_date)
 
     # Count final files
     total_files = sum(1 for _ in output_dir.glob("*.lino"))
     print(f"\nTotal consolidated .lino files: {total_files}")
+
+    # Validate results - fail if a data source returned no data at all
+    errors = []
+    if not frankfurter_rates:
+        errors.append("Frankfurter API (ECB) returned no data for any currency pair")
+    if not cbr_rates:
+        errors.append("CBR API returned no data for any currency pair")
+
+    if errors:
+        print("\nERROR: Data source failures detected:", file=sys.stderr)
+        for err in errors:
+            print(f"  - {err}", file=sys.stderr)
+        sys.exit(1)
+
+    print("\nAll data sources returned data successfully.")
 
 
 if __name__ == "__main__":
