@@ -62,6 +62,13 @@ impl<'a> TokenParser<'a> {
         if self.check_as() || self.check_in() || self.check_to() {
             self.advance(); // consume "as"/"in"/"to"
             let target_unit = self.parse_unit_for_conversion()?;
+
+            // Resolve unit ambiguity using conversion context.
+            // If the source has an ambiguous unit (e.g., "ton" parsed as Mass with Currency
+            // alternative) and the target unit category doesn't match the primary but matches
+            // an alternative, swap to the alternative interpretation.
+            left = Self::resolve_unit_ambiguity_for_conversion(left, &target_unit);
+
             left = Expression::unit_conversion(left, target_unit);
         }
 
@@ -155,24 +162,32 @@ impl<'a> TokenParser<'a> {
             }
 
             // Check for unit (identifier following number that is not a function)
-            let unit = if let Some(TokenKind::Identifier(id)) = self.current_kind() {
-                // Don't treat function names as units
-                if !is_math_function(id) && !self.peek_is_left_paren() {
-                    let unit = self
-                        .number_grammar
-                        .parse_unit(id)
-                        .unwrap_or_else(|_| Unit::Custom(id.clone()));
-                    self.advance();
-                    unit
+            let (unit, alternative_units) =
+                if let Some(TokenKind::Identifier(id)) = self.current_kind() {
+                    // Don't treat function names as units
+                    if !is_math_function(id) && !self.peek_is_left_paren() {
+                        let (unit, alts) = self
+                            .number_grammar
+                            .parse_unit_with_alternatives(id)
+                            .unwrap_or_else(|_| (Unit::Custom(id.clone()), Vec::new()));
+                        self.advance();
+                        (unit, alts)
+                    } else {
+                        (Unit::None, Vec::new())
+                    }
                 } else {
-                    Unit::None
-                }
-            } else {
-                Unit::None
-            };
+                    (Unit::None, Vec::new())
+                };
 
             let value = self.number_grammar.parse_number(&num_str)?;
-            return Ok(Expression::number_with_unit(value, unit));
+            if alternative_units.is_empty() {
+                return Ok(Expression::number_with_unit(value, unit));
+            }
+            return Ok(Expression::number_with_unit_alternatives(
+                value,
+                unit,
+                alternative_units,
+            ));
         }
 
         // Standalone identifier (could be a function call, unit, variable, or datetime part)
@@ -732,6 +747,50 @@ impl<'a> TokenParser<'a> {
                 "Expected a unit name after 'as'/'in'/'to' (e.g., 'MB', 'kg', 'USD', 'dollars')",
             ))
         }
+    }
+
+    /// Resolves unit ambiguity when a conversion target provides context.
+    ///
+    /// For example, in "19 ton in usd": "ton" is initially parsed as Mass(MetricTon)
+    /// with Currency("TON") as an alternative. Since the target is Currency("USD"),
+    /// and Mass→Currency conversion is not valid but Currency→Currency is, this method
+    /// swaps the primary unit to the matching alternative.
+    fn resolve_unit_ambiguity_for_conversion(expr: Expression, target_unit: &Unit) -> Expression {
+        if let Expression::Number {
+            value,
+            ref unit,
+            ref alternative_units,
+        } = expr
+        {
+            if alternative_units.is_empty() {
+                return expr;
+            }
+
+            // Check if the primary unit is already compatible with the target
+            if unit.is_same_category(target_unit) {
+                return expr;
+            }
+
+            // Look for an alternative that is compatible with the target
+            for alt in alternative_units {
+                if alt.is_same_category(target_unit) {
+                    // Swap: make the compatible alternative the primary,
+                    // and move the original primary to alternatives
+                    let mut new_alternatives: Vec<Unit> = alternative_units
+                        .iter()
+                        .filter(|u| *u != alt)
+                        .cloned()
+                        .collect();
+                    new_alternatives.push(unit.clone());
+                    return Expression::number_with_unit_alternatives(
+                        value,
+                        alt.clone(),
+                        new_alternatives,
+                    );
+                }
+            }
+        }
+        expr
     }
 
     fn current(&self) -> Option<&Token> {

@@ -21,7 +21,7 @@ fn test_parse_addition() {
 fn test_parse_currency() {
     let parser = ExpressionParser::new();
     let expr = parser.parse("100 USD").unwrap();
-    if let Expression::Number { value, unit } = expr {
+    if let Expression::Number { value, unit, .. } = expr {
         assert_eq!(value, Decimal::new(100));
         assert_eq!(unit, Unit::currency("USD"));
     } else {

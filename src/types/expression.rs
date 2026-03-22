@@ -46,7 +46,14 @@ impl fmt::Display for BinaryOp {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum Expression {
     /// A literal number.
-    Number { value: Decimal, unit: Unit },
+    Number {
+        value: Decimal,
+        unit: Unit,
+        /// Alternative unit interpretations for ambiguous identifiers
+        /// (e.g., "ton" → Mass(MetricTon) primary, Currency("TON") alternative).
+        #[serde(default, skip_serializing_if = "Vec::is_empty")]
+        alternative_units: Vec<Unit>,
+    },
     /// A literal datetime.
     DateTime(DateTime),
     /// The current time ("now").
@@ -107,13 +114,32 @@ impl Expression {
         Self::Number {
             value,
             unit: Unit::None,
+            alternative_units: Vec::new(),
         }
     }
 
     /// Creates a number expression with a unit.
     #[must_use]
     pub fn number_with_unit(value: Decimal, unit: Unit) -> Self {
-        Self::Number { value, unit }
+        Self::Number {
+            value,
+            unit,
+            alternative_units: Vec::new(),
+        }
+    }
+
+    /// Creates a number expression with a unit and alternative unit interpretations.
+    #[must_use]
+    pub fn number_with_unit_alternatives(
+        value: Decimal,
+        unit: Unit,
+        alternative_units: Vec<Unit>,
+    ) -> Self {
+        Self::Number {
+            value,
+            unit,
+            alternative_units,
+        }
     }
 
     /// Creates a currency expression.
@@ -122,6 +148,7 @@ impl Expression {
         Self::Number {
             value: amount,
             unit: Unit::currency(code),
+            alternative_units: Vec::new(),
         }
     }
 
@@ -224,7 +251,7 @@ impl Expression {
     /// if we need parentheses for this subexpression.
     fn to_lino_internal(&self, _parent_op: Option<&BinaryOp>) -> String {
         match self {
-            Self::Number { value, unit } => {
+            Self::Number { value, unit, .. } => {
                 let num_str = value.to_string();
                 if *unit == Unit::None {
                     num_str
@@ -341,6 +368,22 @@ impl Expression {
     /// Collects alternative lino representations based on expression structure.
     fn collect_alternatives(&self, alternatives: &mut Vec<String>) {
         match self {
+            // For numbers with ambiguous units, generate alternatives for each interpretation
+            Self::Number {
+                value,
+                alternative_units,
+                ..
+            } if !alternative_units.is_empty() => {
+                for alt_unit in alternative_units {
+                    let num_str = value.to_string();
+                    let alt = if *alt_unit == Unit::None {
+                        num_str
+                    } else {
+                        format!("({num_str} {alt_unit})")
+                    };
+                    alternatives.push(alt);
+                }
+            }
             // For expressions with mixed precedence, show the explicit grouping
             Self::Binary { left, op, right } => {
                 // Check if either child has a different-precedence binary operation
@@ -355,6 +398,10 @@ impl Expression {
                     let alt = self.to_lino_left_to_right();
                     alternatives.push(alt);
                 }
+
+                // Also collect alternatives from children (e.g., ambiguous units in operands)
+                left.collect_alternatives(alternatives);
+                right.collect_alternatives(alternatives);
             }
             // For function calls with multiple args, show the mathematical notation alternative
             Self::FunctionCall { name, args } if !args.is_empty() => {
@@ -550,7 +597,7 @@ impl Expression {
     #[must_use]
     pub fn to_latex(&self) -> String {
         match self {
-            Self::Number { value, unit } => {
+            Self::Number { value, unit, .. } => {
                 let num_str = value.to_string();
                 if *unit == Unit::None {
                     num_str
@@ -680,7 +727,7 @@ impl Expression {
 impl fmt::Display for Expression {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Number { value, unit } => {
+            Self::Number { value, unit, .. } => {
                 if *unit == Unit::None {
                     write!(f, "{value}")
                 } else {
