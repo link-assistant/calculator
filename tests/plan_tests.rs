@@ -91,10 +91,25 @@ fn plan_crypto_to_usd_needs_only_crypto() {
 }
 
 #[test]
-fn plan_rub_to_eur_needs_cbr_and_ecb() {
+fn plan_rub_to_eur_needs_only_cbr() {
     let calc = Calculator::new();
-    // EUR is an ECB-provided currency, so ECB is genuinely needed here.
+    // CBR provides EUR↔RUB rates directly, so ECB is not needed for a
+    // simple RUB↔EUR conversion. This is the general optimization: when
+    // there's only one non-RUB fiat currency and CBR covers it, ECB is
+    // redundant.
     let plan = calc.plan_internal("1000 RUB in EUR");
+    assert!(plan.success);
+    assert!(!plan.required_sources.contains(&RateSource::Ecb));
+    assert!(plan.required_sources.contains(&RateSource::Cbr));
+}
+
+#[test]
+fn plan_rub_gbp_eur_needs_cbr_and_ecb() {
+    let calc = Calculator::new();
+    // When multiple non-RUB fiat currencies are present (GBP and EUR),
+    // CBR cannot convert between them (converter triangulates via USD,
+    // not RUB), so ECB is genuinely needed.
+    let plan = calc.plan_internal("100 GBP + 1000 RUB in EUR");
     assert!(plan.success);
     assert!(plan.required_sources.contains(&RateSource::Ecb));
     assert!(plan.required_sources.contains(&RateSource::Cbr));
@@ -118,6 +133,33 @@ fn plan_crypto_to_rub_needs_crypto_and_cbr() {
     assert!(!plan.required_sources.contains(&RateSource::Ecb));
     assert!(plan.required_sources.contains(&RateSource::Crypto));
     assert!(plan.required_sources.contains(&RateSource::Cbr));
+}
+
+#[test]
+fn plan_rub_to_gbp_needs_only_cbr() {
+    let calc = Calculator::new();
+    // CBR provides GBP↔RUB rates directly, just like EUR.
+    let plan = calc.plan_internal("5000 RUB in GBP");
+    assert!(plan.success);
+    assert!(!plan.required_sources.contains(&RateSource::Ecb));
+    assert!(plan.required_sources.contains(&RateSource::Cbr));
+}
+
+#[test]
+fn plan_crypto_rub_to_eur_needs_all_three() {
+    let calc = Calculator::new();
+    // TON needs Crypto, RUB needs CBR, and EUR is a second non-RUB fiat
+    // currency. The converter can't bridge GBP↔EUR via CBR alone, so ECB
+    // is needed for the EUR↔USD conversion path.
+    // However, EUR is the only non-RUB/non-USD ECB fiat, and the converter
+    // could handle TON→USD (crypto) + USD→RUB (CBR) + RUB→EUR (CBR).
+    // With only one ECB fiat currency (EUR), CBR can handle it directly.
+    let plan = calc.plan_internal("10 TON + 1000 RUB in EUR");
+    assert!(plan.success);
+    // CBR covers EUR↔RUB, Crypto covers TON↔USD, CBR covers USD↔RUB
+    assert!(!plan.required_sources.contains(&RateSource::Ecb));
+    assert!(plan.required_sources.contains(&RateSource::Cbr));
+    assert!(plan.required_sources.contains(&RateSource::Crypto));
 }
 
 #[test]

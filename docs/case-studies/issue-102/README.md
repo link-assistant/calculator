@@ -95,19 +95,30 @@ them unnecessarily.
 
 ## Solution
 
-1. **Remove the unconditional ECB injection** (plan.rs:97–100). The
-   per-currency mapping in `currency_to_sources()` is already sufficient.
+A **general redundancy elimination** algorithm that works for any target
+currency, not just USD:
 
-2. **Make USD source context-aware**: When CBR is already required (RUB is
-   in the expression), USD doesn't need ECB because CBR provides USD↔RUB
-   rates. Similarly, when only Crypto sources are needed alongside USD,
-   the crypto rates (denominated in USD) already cover the conversion path.
+1. **Map each currency to its primary source** via `primary_source()`.
+2. **Define secondary coverage** via `can_also_serve(source, currency, all_currencies)`:
+   - CBR can serve USD (via USD↔RUB rate) and any single non-RUB fiat
+     currency when it's the only ECB-primary fiat in the expression
+     (direct RUB↔fiat conversion).
+   - Crypto can serve USD (rates are denominated in USD).
+   - ECB can serve any non-RUB fiat currency.
+3. **Remove redundant sources**: A source is removed if every currency that
+   triggered its inclusion is also covered by another source in the set.
+
+This generalizes the optimization for any final conversion currency:
+- `1000 RUB in USD` → CBR only (CBR has USD↔RUB)
+- `1000 RUB in EUR` → CBR only (CBR has EUR↔RUB directly)
+- `10 TON in USD` → Crypto only (CoinGecko rates are in USD)
+- `10 TON + 1000 RUB in EUR` → CBR + Crypto (CBR has EUR↔RUB, Crypto has TON↔USD)
+- `100 GBP + 1000 RUB in EUR` → ECB + CBR (multiple non-RUB fiat currencies)
 
 ### Impact
 
-- Fewer unnecessary network requests (1 fewer API call for RUB+crypto+USD
-  expressions)
-- Faster plan execution for expressions that don't need ECB
+- Fewer unnecessary network requests for many expression patterns
+- Optimization works for any target currency, not just USD
 - No change to calculation results — only the plan's rate source list changes
 
 ## Related Components
