@@ -20,6 +20,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.8.1] - 2026-03-22
+
+### Fixed
+- Fixed currency rates CI/CD pipeline: migrated Frankfurter API to `api.frankfurter.dev/v1`, set proper User-Agent header to avoid CDN 403 blocks, added error detection for silent failures
+- Upgraded GitHub Actions from Node.js 20 to Node.js 24 (`actions/checkout@v6`, `actions/setup-python@v6`)
+
+### Changed
+- Currency rates update schedule changed from weekly to daily (weekdays at 17:00 UTC)
+
+### Added
+- Unit ambiguity detection: expressions like `19 ton` now show both metric ton (mass) and Toncoin (TON cryptocurrency) as alternative interpretations
+- Contextual unit resolution: `19 ton in usd` automatically selects crypto, `19 ton in kg` selects mass
+- `Unit::is_same_category()` method for checking unit type compatibility
+
+### Fixed
+- `19 ton` no longer produces only the cryptocurrency interpretation; both mass and crypto alternatives are surfaced (#104)
+
 ## [0.8.0] - 2026-03-21
 
 ### Changed
