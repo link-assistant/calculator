@@ -285,22 +285,41 @@ impl MassUnit {
 
             // ── Russian (ru) ─────────────────────────────────────────────────
             // Milligram: миллиграмм (all grammatical cases)
-            "мг" | "миллиграмм" | "миллиграмма" | "миллиграммов" | "миллиграмме"
-            | "миллиграмму" | "миллиграммом" | "миллиграммы" | "миллиграммам"
-            | "миллиграммами" | "миллиграммах" => Some(Self::Milligram),
+            "мг"
+            | "миллиграмм"
+            | "миллиграмма"
+            | "миллиграммов"
+            | "миллиграмме"
+            | "миллиграмму"
+            | "миллиграммом"
+            | "миллиграммы"
+            | "миллиграммам"
+            | "миллиграммами"
+            | "миллиграммах" => Some(Self::Milligram),
             // Gram: грамм (all grammatical cases)
             "г" | "гр" | "грамм" | "грамма" | "граммов" | "грамме" | "грамму" | "граммом"
-            | "граммы" | "граммам" | "граммами" | "граммах" => Some(Self::Gram),
+            | "граммы" | "граммам" | "граммами" | "граммах" => {
+                Some(Self::Gram)
+            }
             // Kilogram: килограмм (all grammatical cases)
-            "кг" | "килограмм" | "килограмма" | "килограммов" | "килограмме" | "килограмму"
-            | "килограммом" | "килограммы" | "килограммам" | "килограммами"
+            "кг"
+            | "килограмм"
+            | "килограмма"
+            | "килограммов"
+            | "килограмме"
+            | "килограмму"
+            | "килограммом"
+            | "килограммы"
+            | "килограммам"
+            | "килограммами"
             | "килограммах" => Some(Self::Kilogram),
             // Metric ton: тонна (all grammatical cases)
-            "тонна" | "тонны" | "тонн" | "тонне" | "тонну" | "тонной" | "тоннам"
-            | "тоннами" | "тоннах" => Some(Self::MetricTon),
+            "тонна" | "тонны" | "тонн" | "тонне" | "тонну" | "тонной" | "тоннам" | "тоннами"
+            | "тоннах" => Some(Self::MetricTon),
             // Ounce: унция (all grammatical cases)
-            "унция" | "унции" | "унций" | "унцию" | "унцией" | "унциям" | "унциями"
-            | "унциях" => Some(Self::Ounce),
+            "унция" | "унции" | "унций" | "унцию" | "унцией" | "унциям" | "унциями" | "унциях" => {
+                Some(Self::Ounce)
+            }
 
             // ── Chinese Simplified (zh) ──────────────────────────────────────
             // Milligram: 毫克 (háo kè)
@@ -344,14 +363,14 @@ impl MassUnit {
 
             // ── German (de) ──────────────────────────────────────────────────
             // German uses Latin-script abbreviations (mg, g, kg, t, lb, oz) already handled above.
-            // Full German words for mass units:
+            // Full German words for mass units (nouns are capitalized in German):
             // "Gramm" is both singular and plural in German.
-            "milligramm" => Some(Self::Milligram),
-            "gramm" => Some(Self::Gram),
-            "kilogramm" | "kilo" => Some(Self::Kilogram),
-            // "tonne" already covered by English section; "tonnen" is German plural
-            "tonnen" => Some(Self::MetricTon),
-            "unze" | "unzen" => Some(Self::Ounce),
+            "Milligramm" | "milligramm" => Some(Self::Milligram),
+            "Gramm" | "gramm" => Some(Self::Gram),
+            "Kilogramm" | "kilogramm" | "Kilo" | "kilo" => Some(Self::Kilogram),
+            // "tonne"/"Tonne" already covered by English section; "tonnen"/"Tonnen" is German plural
+            "Tonnen" | "tonnen" => Some(Self::MetricTon),
+            "Unze" | "unze" | "Unzen" | "unzen" => Some(Self::Ounce),
 
             // ── French (fr) ──────────────────────────────────────────────────
             // French uses Latin-script abbreviations already handled above.
