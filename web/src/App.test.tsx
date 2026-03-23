@@ -546,6 +546,121 @@ describe('App Component - Interpretation Switching', () => {
     expect(screen.queryByText('errors.calculationFailed')).not.toBeInTheDocument();
   });
 
+  it('should preserve all alternatives after switching interpretation (issue #113)', async () => {
+    render(<App />);
+    await simulateWorkerReady();
+
+    // Initial result with two interpretations
+    await simulateWorkerResult({
+      result: '14',
+      lino_interpretation: '(2 + (3 * 4))',
+      alternative_lino: ['(2 + (3 * 4))', '((2 + 3) * 4)'],
+      steps: [],
+      success: true,
+    });
+
+    // Both buttons should be visible
+    let altButtons = document.querySelectorAll('.lino-alt-button');
+    expect(altButtons).toHaveLength(2);
+
+    // Click the second interpretation
+    await userEvent.click(altButtons[1]);
+
+    // Simulate the plan arriving for the alternative expression.
+    // The plan for "((2 + 3) * 4)" only has itself as an alternative.
+    await act(async () => {
+      const worker = getActiveWorker();
+      worker?.onmessage?.(
+        new MessageEvent('message', {
+          data: {
+            type: 'plan',
+            data: {
+              expression: '((2 + 3) * 4)',
+              lino_interpretation: '((2 + 3) * 4)',
+              alternative_lino: ['((2 + 3) * 4)'],
+              required_sources: [],
+              currencies: [],
+              is_live_time: false,
+              success: true,
+            },
+          },
+        })
+      );
+    });
+
+    // Both alternative buttons should STILL be visible (not collapsed to one)
+    altButtons = document.querySelectorAll('.lino-alt-button');
+    expect(altButtons).toHaveLength(2);
+
+    // Simulate the result arriving for the alternative
+    await simulateWorkerResult({
+      result: '20',
+      lino_interpretation: '((2 + 3) * 4)',
+      alternative_lino: ['((2 + 3) * 4)'],
+      steps: [],
+      success: true,
+    });
+
+    // Both alternative buttons should STILL be visible after the result arrives
+    altButtons = document.querySelectorAll('.lino-alt-button');
+    expect(altButtons).toHaveLength(2);
+
+    // The second button should be selected
+    expect(altButtons[1]).toHaveClass('selected');
+    expect(altButtons[0]).not.toHaveClass('selected');
+  });
+
+  it('should allow switching back to first interpretation after switching (issue #113)', async () => {
+    render(<App />);
+    await simulateWorkerReady();
+
+    // Initial result with two interpretations
+    await simulateWorkerResult({
+      result: '14',
+      lino_interpretation: '(2 + (3 * 4))',
+      alternative_lino: ['(2 + (3 * 4))', '((2 + 3) * 4)'],
+      steps: [],
+      success: true,
+    });
+
+    // Click second interpretation
+    let altButtons = document.querySelectorAll('.lino-alt-button');
+    await userEvent.click(altButtons[1]);
+
+    // Simulate result for second interpretation
+    await simulateWorkerResult({
+      result: '20',
+      lino_interpretation: '((2 + 3) * 4)',
+      alternative_lino: ['((2 + 3) * 4)'],
+      steps: [],
+      success: true,
+    });
+
+    // Both buttons should still be present
+    altButtons = document.querySelectorAll('.lino-alt-button');
+    expect(altButtons).toHaveLength(2);
+
+    // Now switch back to first interpretation
+    await userEvent.click(altButtons[0]);
+
+    // Simulate result for first interpretation
+    await simulateWorkerResult({
+      result: '14',
+      lino_interpretation: '(2 + (3 * 4))',
+      alternative_lino: ['(2 + (3 * 4))'],
+      steps: [],
+      success: true,
+    });
+
+    // Both buttons should still be present
+    altButtons = document.querySelectorAll('.lino-alt-button');
+    expect(altButtons).toHaveLength(2);
+
+    // First button should be selected again
+    expect(altButtons[0]).toHaveClass('selected');
+    expect(altButtons[1]).not.toHaveClass('selected');
+  });
+
   it('should show single lino-value for result with single interpretation', async () => {
     render(<App />);
     await simulateWorkerReady();
