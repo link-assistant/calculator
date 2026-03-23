@@ -510,6 +510,42 @@ describe('App Component - Interpretation Switching', () => {
     expect(updatedButtons[0]).not.toHaveClass('selected');
   });
 
+  it('should NOT show "Calculation failed" when plan arrives before result (issue #111)', async () => {
+    render(<App />);
+    await simulateWorkerReady();
+
+    // Simulate a plan message arriving (before rates are fetched / result is ready).
+    // This is the exact scenario from issue #111: URL-loaded expression triggers
+    // calculation, plan arrives instantly, but result hasn't arrived yet.
+    await act(async () => {
+      const worker = getActiveWorker();
+      worker?.onmessage?.(
+        new MessageEvent('message', {
+          data: {
+            type: 'plan',
+            data: {
+              expression: '(1000 рублей + 500 рублей) в USD',
+              lino_interpretation: '((1000 RUB) + (500 RUB)) to USD',
+              alternative_lino: ['((1000 RUB) + (500 RUB)) to USD'],
+              required_sources: ['ecb', 'cbr'],
+              currencies: ['RUB', 'USD'],
+              is_live_time: false,
+              success: true,
+            },
+          },
+        })
+      );
+    });
+
+    // The error message should NOT be visible — the calculation is still in progress
+    const errorElements = document.querySelectorAll('.result-value.error');
+    expect(errorElements).toHaveLength(0);
+
+    // The "Calculation failed" text should not appear
+    expect(screen.queryByText(/calculation failed/i)).not.toBeInTheDocument();
+    expect(screen.queryByText('errors.calculationFailed')).not.toBeInTheDocument();
+  });
+
   it('should show single lino-value for result with single interpretation', async () => {
     render(<App />);
     await simulateWorkerReady();
