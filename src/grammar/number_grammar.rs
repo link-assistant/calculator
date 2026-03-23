@@ -91,7 +91,7 @@ impl NumberGrammar {
 
         // Try to parse as duration unit (before currency, to avoid e.g. "h" being treated as a currency)
         if let Some(dur) = DurationUnit::parse(s) {
-            return Ok(Unit::Duration(dur));
+            return Ok((Unit::Duration(dur), alternatives));
         }
 
         // Try to parse as cryptocurrency or fiat currency alias
