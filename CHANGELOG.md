@@ -23,6 +23,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.8.4] - 2026-03-23
+
+### Fixed
+- Fixed "Calculation failed" message flashing briefly when opening URL-loaded expressions that require exchange rate fetching (issue #111)
+
 ## [0.8.3] - 2026-03-23
 
 ### Fixed
