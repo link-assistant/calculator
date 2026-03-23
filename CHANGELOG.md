@@ -22,6 +22,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.8.3] - 2026-03-23
+
+### Fixed
+- Fixed datetime arithmetic with duration-unit expressions (e.g., `now - 10 days`, `now + 2 hours`) that previously resulted in "Cannot subtract number from datetime" errors
+
+### Fixed
+- Fixed compilation error (E0308: mismatched types) in duration unit parsing that was breaking all CI/CD workflows
+
 ## [0.8.2] - 2026-03-22
 
 ### Fixed
