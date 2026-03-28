@@ -28,6 +28,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.10.0] - 2026-03-28
+
+### Added
+- Standalone DateTime expressions now auto-refresh to show dynamically updated "Time since" or "Time until" countdown display (#45)
+
 ## [0.9.2] - 2026-03-28
 
 ### Added
