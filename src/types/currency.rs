@@ -203,6 +203,9 @@ impl CurrencyDatabase {
         // CLF (Chilean Unidad de Fomento, also known as UF): 1 USD ≈ 0.022 CLF (1 CLF ≈ 45 USD)
         self.set_rate_with_info("USD", "CLF", ExchangeRateInfo::default_rate(0.022));
 
+        // VND (Vietnamese Dong): CBR rate ~32.33 RUB per 10,000 VND → 1 USD ≈ 25,810 VND
+        self.set_rate_with_info("USD", "VND", ExchangeRateInfo::default_rate(25_810.0));
+
         // EUR base rates
         self.set_rate_with_info("EUR", "USD", ExchangeRateInfo::default_rate(1.087));
         self.set_rate_with_info("EUR", "GBP", ExchangeRateInfo::default_rate(0.86));
@@ -477,6 +480,7 @@ impl CurrencyDatabase {
             "CHF" | "FR" => return Some("CHF".to_string()),
             "CNY" | "RMB" => return Some("CNY".to_string()),
             "RUB" | "₽" => return Some("RUB".to_string()),
+            "VND" | "₫" => return Some("VND".to_string()),
             "INR" | "₹" => return Some("INR".to_string()),
             "KRW" | "₩" => return Some("KRW".to_string()),
             // CLF is the ISO 4217 code; UF is the widely used Chilean abbreviation
@@ -505,6 +509,14 @@ impl CurrencyDatabase {
             // Prepositional: рубле, рублях
             "рубль" | "рубля" | "рубле" | "рубли" | "рублей" | "рублям" | "рублю" | "рублём"
             | "рублем" | "рублями" | "рублях" => return Some("RUB".to_string()),
+            // Russian language names for VND (Vietnamese Dong, all grammatical cases/forms)
+            // Nominative: донг, донги; Genitive: донга, донгов;
+            // Dative: донгу, донгам; Instrumental: донгом, донгами;
+            // Prepositional: донге, донгах
+            "донг" | "донга" | "донге" | "донги" | "донгов" | "донгам" | "донгу" | "донгом"
+            | "донгами" | "донгах" => return Some("VND".to_string()),
+            // English and Vietnamese names for VND
+            "dong" | "dongs" | "đồng" => return Some("VND".to_string()),
             // Russian language names for USD (all grammatical cases/forms)
             // Nominative: доллар, доллары; Genitive: доллара, долларов;
             // Dative: доллару, долларам; Accusative: доллар, доллары;

@@ -182,7 +182,7 @@ impl Lexer {
             // Currency symbols used as prefix notation (e.g., $10, €5, £3)
             // These are recognized as single-character identifiers and mapped to ISO codes
             // by CurrencyDatabase::parse_currency().
-            '$' | '€' | '£' | '¥' | '₽' | '₹' | '₩' | '₿' => {
+            '$' | '€' | '£' | '¥' | '₽' | '₹' | '₩' | '₿' | '₫' => {
                 self.advance();
                 let symbol = ch.to_string();
                 Token::new(
