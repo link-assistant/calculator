@@ -101,22 +101,16 @@ impl DateTimeGrammar {
         // Check for common timezone abbreviations
         let tz_abbrevs = [
             // US & Canada
-            "est", "edt", "cst", "cdt", "mst", "mdt", "pst", "pdt",
-            "akst", "akdt", "hst", "ast", "adt", "nst", "ndt",
-            // European
-            "cet", "cest", "eet", "eest", "wet", "west", "bst", "msk", "msd",
-            // Asian
-            "ist", "jst", "kst", "sgt", "hkt", "pht", "ict", "myt", "twt",
-            "wib", "wita", "wit", "pkt", "bdt",
-            // Russian regional
+            "est", "edt", "cst", "cdt", "mst", "mdt", "pst", "pdt", "akst", "akdt", "hst", "ast",
+            "adt", "nst", "ndt", // European
+            "cet", "cest", "eet", "eest", "wet", "west", "bst", "msk", "msd", // Asian
+            "ist", "jst", "kst", "sgt", "hkt", "pht", "ict", "myt", "twt", "wib", "wita", "wit",
+            "pkt", "bdt", // Russian regional
             "samt", "yekt", "omst", "krat", "irkt", "yakt", "vlat", "magt", "pett",
             // Middle East
-            "gst", "trt", "irst", "irdt", "aft",
-            // Australian & Pacific
-            "aest", "aedt", "acst", "acdt", "awst", "nzst", "nzdt",
-            // South American
-            "art", "brt", "brst", "clt", "clst",
-            // African
+            "gst", "trt", "irst", "irdt", "aft", // Australian & Pacific
+            "aest", "aedt", "acst", "acdt", "awst", "nzst", "nzdt", // South American
+            "art", "brt", "brst", "clt", "clst", // African
             "wat", "cat", "eat", "sast",
         ];
         for tz in &tz_abbrevs {

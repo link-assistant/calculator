@@ -144,6 +144,7 @@ impl DateTime {
     /// Returns a new `DateTime` displaying the same instant in a different timezone.
     ///
     /// The internal UTC time does not change — only the display offset and abbreviation.
+    #[must_use]
     pub fn with_timezone_offset(&self, offset: FixedOffset, tz_abbrev: &str) -> Self {
         Self {
             inner: self.inner,
@@ -394,8 +395,8 @@ impl DateTime {
     pub(crate) fn parse_tz_abbreviation(tz: &str) -> Option<FixedOffset> {
         // Handle half-hour and non-standard offsets first (return early)
         match tz.to_uppercase().as_str() {
-            "IST" => return FixedOffset::east_opt(5 * 3600 + 30 * 60),   // India +5:30
-            "ACST" => return FixedOffset::east_opt(9 * 3600 + 30 * 60),  // Australia Central +9:30
+            "IST" => return FixedOffset::east_opt(5 * 3600 + 30 * 60), // India +5:30
+            "ACST" => return FixedOffset::east_opt(9 * 3600 + 30 * 60), // Australia Central +9:30
             "ACDT" => return FixedOffset::east_opt(10 * 3600 + 30 * 60), // Australia Central DT +10:30
             "NPT" => return FixedOffset::east_opt(5 * 3600 + 45 * 60),   // Nepal +5:45
             "CHAST" => return FixedOffset::east_opt(12 * 3600 + 45 * 60), // Chatham Standard +12:45
@@ -423,8 +424,8 @@ impl DateTime {
             "AKST" => -9,
             "AKDT" => -8,
             "HST" | "HAST" => -10,
-            "AST" => -4,  // Atlantic Standard Time
-            "ADT" => -3,  // Atlantic Daylight Time
+            "AST" => -4, // Atlantic Standard Time
+            "ADT" => -3, // Atlantic Daylight Time
             // European timezones
             "CET" => 1,
             "CEST" => 2,
@@ -458,15 +459,15 @@ impl DateTime {
             "ALMT" => 6, // Almaty Time (Kazakhstan)
             "QYZT" => 6, // Qyzylorda Time (Kazakhstan)
             // Southeast & East Asian timezones
-            "BDT" => 6,  // Bangladesh Time
+            "BDT" => 6,                                   // Bangladesh Time
             "ICT" => 7,  // Indochina Time (Thailand, Vietnam, Laos, Cambodia)
             "WIB" => 7,  // Western Indonesia Time
             "WITA" => 8, // Central Indonesia Time
             "WIT" => 9,  // Eastern Indonesia Time
             "CST+8" | "SGT" | "HKT" | "PHT" | "MYT" => 8, // Singapore, Hong Kong, Philippines, Malaysia
-            "JST" => 9,  // Japan Standard Time
-            "KST" => 9,  // Korea Standard Time
-            "TWT" => 8,  // Taiwan Time
+            "JST" => 9,                                   // Japan Standard Time
+            "KST" => 9,                                   // Korea Standard Time
+            "TWT" => 8,                                   // Taiwan Time
             // Australian timezones
             "AEST" => 10,
             "AEDT" => 11,
@@ -475,28 +476,18 @@ impl DateTime {
             "NZST" => 12,
             "NZDT" => 13,
             // South America
-            "ART" => -3,   // Argentina Time
-            "BRT" => -3,   // Brasilia Time
-            "BRST" => -2,  // Brasilia Summer Time
-            "CLT" => -4,   // Chile Standard Time
-            "CLST" => -3,  // Chile Summer Time
-            "COT" => -5,   // Colombia Time
-            "PET" => -5,   // Peru Time
-            "VET" => -4,   // Venezuela Time
-            "BOT" => -4,   // Bolivia Time
-            "PYT" => -4,   // Paraguay Time
-            "UYT" => -3,   // Uruguay Time
-            "GFT" => -3,   // French Guiana Time
-            "SRT" => -3,   // Suriname Time
-            "ECT" => -5,   // Ecuador Time
+            "ART" | "BRT" | "CLST" | "UYT" | "GFT" | "SRT" => -3,
+            "BRST" => -2,
+            "CLT" | "VET" | "BOT" | "PYT" => -4,
+            "COT" | "PET" | "ECT" => -5,
             // Africa
-            "WAT" => 1,    // West Africa Time
-            "CAT" => 2,    // Central Africa Time
-            "EAT" => 3,    // East Africa Time
-            "SAST" => 2,   // South Africa Standard Time
+            "WAT" => 1,  // West Africa Time
+            "CAT" => 2,  // Central Africa Time
+            "EAT" => 3,  // East Africa Time
+            "SAST" => 2, // South Africa Standard Time
             // Atlantic & misc
-            "AZOT" => -1,  // Azores Time
-            "CVT" => -1,   // Cape Verde Time
+            "AZOT" => -1, // Azores Time
+            "CVT" => -1,  // Cape Verde Time
             _ => return None,
         };
         FixedOffset::east_opt(offset_hours * 3600)
@@ -549,7 +540,7 @@ impl DateTime {
             let mut dt = Self::from_time(time);
             if let Some(offset) = tz_offset {
                 dt.set_offset(Some(offset));
-                dt.tz_abbrev = tz_abbrev.clone();
+                dt.tz_abbrev.clone_from(&tz_abbrev);
                 // Adjust internal time to UTC
                 let local = dt.inner.naive_utc();
                 let adjusted = offset.from_local_datetime(&local).single();
@@ -564,7 +555,7 @@ impl DateTime {
         if let Ok(time) = NaiveTime::parse_from_str(time_part, "%H:%M") {
             let mut dt = Self::from_time(time);
             dt.set_offset(tz_offset);
-            dt.tz_abbrev = tz_abbrev.clone();
+            dt.tz_abbrev.clone_from(&tz_abbrev);
             return Some(dt);
         }
         if let Ok(time) = NaiveTime::parse_from_str(time_part, "%H:%M:%S") {
@@ -640,11 +631,7 @@ impl DateTime {
             let potential_tz = &input[last_space + 1..];
             if let Some(offset) = Self::parse_tz_abbreviation(potential_tz) {
                 let time_part = input[..last_space].trim();
-                return (
-                    time_part,
-                    Some(offset),
-                    Some(potential_tz.to_uppercase()),
-                );
+                return (time_part, Some(offset), Some(potential_tz.to_uppercase()));
             }
         }
 
