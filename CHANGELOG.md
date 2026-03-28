@@ -26,6 +26,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.9.1] - 2026-03-28
+
+### Fixed
+- Fixed switching between alternative interpretations hiding all other interpretations (issue #113). When clicking an alternative interpretation (e.g., switching from `(2 + (3 * 4))` to `((2 + 3) * 4)`), all interpretation options now remain visible so users can switch back and forth to compare results.
+
 ## [0.9.0] - 2026-03-28
 
 ### Added
