@@ -69,6 +69,40 @@ fn primary_source(code: &str) -> RateSource {
         return RateSource::Cbr;
     }
 
+    // Currencies available from CBR but not from ECB/Frankfurter
+    if matches!(
+        upper.as_str(),
+        "VND"
+            | "AZN"
+            | "DZD"
+            | "AMD"
+            | "BHD"
+            | "BYN"
+            | "BOB"
+            | "GEL"
+            | "AED"
+            | "EGP"
+            | "IRR"
+            | "KGS"
+            | "CUP"
+            | "MDL"
+            | "MNT"
+            | "NGN"
+            | "OMR"
+            | "QAR"
+            | "SAR"
+            | "TJS"
+            | "BDT"
+            | "TMT"
+            | "UZS"
+            | "UAH"
+            | "ETB"
+            | "RSD"
+            | "MMK"
+    ) {
+        return RateSource::Cbr;
+    }
+
     // All other fiat currencies are provided by ECB/Frankfurter
     RateSource::Ecb
 }
@@ -141,6 +175,33 @@ fn can_also_serve(source: RateSource, code: &str, all_currencies: &[String]) -> 
                     | "MYR"
                     | "PHP"
                     | "THB"
+                    | "VND"
+                    | "AZN"
+                    | "DZD"
+                    | "AMD"
+                    | "BHD"
+                    | "BYN"
+                    | "BOB"
+                    | "GEL"
+                    | "AED"
+                    | "EGP"
+                    | "IRR"
+                    | "KGS"
+                    | "CUP"
+                    | "MDL"
+                    | "MNT"
+                    | "NGN"
+                    | "OMR"
+                    | "QAR"
+                    | "SAR"
+                    | "TJS"
+                    | "BDT"
+                    | "TMT"
+                    | "UZS"
+                    | "UAH"
+                    | "ETB"
+                    | "RSD"
+                    | "MMK"
             );
             if !cbr_fiat {
                 return false;
