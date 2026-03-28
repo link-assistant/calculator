@@ -661,6 +661,23 @@ impl Value {
                 })?;
                 Ok(Value::number_with_unit(value_f64, target_unit.clone()))
             }
+            // DateTime timezone conversion (e.g., "6 PM GMT as MSK")
+            (_, Unit::Timezone(tz_abbrev)) => {
+                if let ValueKind::DateTime(dt) = &self.kind {
+                    let target_offset =
+                        DateTime::parse_tz_abbreviation(tz_abbrev).ok_or_else(|| {
+                            CalculatorError::parse(format!("Unknown timezone: {tz_abbrev}"))
+                        })?;
+                    let converted = dt.with_timezone_offset(target_offset, tz_abbrev);
+                    Ok(Value::datetime(converted))
+                } else {
+                    Err(CalculatorError::InvalidOperation(format!(
+                        "Cannot convert {} to timezone {}; only DateTime values can be converted to a timezone",
+                        self.to_display_string(),
+                        tz_abbrev
+                    )))
+                }
+            }
             (from_unit, to_unit) => Err(CalculatorError::InvalidOperation(format!(
                 "Cannot convert {} to {}",
                 from_unit.display_name(),

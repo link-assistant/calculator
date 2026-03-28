@@ -161,6 +161,20 @@ impl<'a> TokenParser<'a> {
                 self.advance(); // re-consume the number token
             }
 
+            // If followed by AM/PM, this is a time like "6 PM", "6 PM GMT", "6 PM MSK"
+            // Try to parse as datetime (with optional timezone) before treating as unit.
+            if let Some(TokenKind::Identifier(id)) = self.current_kind() {
+                let id_lower = id.to_lowercase();
+                if id_lower == "am" || id_lower == "pm" {
+                    let save_before_ampm = self.pos;
+                    if let Ok(dt) = self.try_parse_time_with_ampm(&num_str) {
+                        return Ok(dt);
+                    }
+                    // Datetime parse failed — restore to before AM/PM
+                    self.pos = save_before_ampm;
+                }
+            }
+
             // Check for unit (identifier following number that is not a function)
             let (unit, alternative_units) =
                 if let Some(TokenKind::Identifier(id)) = self.current_kind() {
@@ -394,6 +408,36 @@ impl<'a> TokenParser<'a> {
         }
 
         let datetime_str = parts.join(" ").replace(" , ", ", ").replace(" : ", ":");
+        match crate::types::DateTime::parse(&datetime_str) {
+            Ok(dt) => Ok(Expression::DateTime(dt)),
+            Err(e) => Err(e),
+        }
+    }
+
+    /// Tries to parse "N AM/PM [TZ]" as a time expression.
+    ///
+    /// Called when the parser has consumed a number token and sees AM/PM next.
+    /// Handles patterns like "6 PM", "6 PM GMT", "6 PM MSK".
+    /// The timezone identifier is only consumed if it is a recognized timezone abbreviation.
+    fn try_parse_time_with_ampm(&mut self, hour_str: &str) -> Result<Expression, CalculatorError> {
+        // Consume the AM/PM identifier
+        let ampm = if let Some(TokenKind::Identifier(id)) = self.current_kind() {
+            let id_str = id.clone();
+            self.advance();
+            id_str
+        } else {
+            return Err(CalculatorError::parse("Expected AM/PM"));
+        };
+
+        // Check if the next identifier is a recognized timezone abbreviation
+        let mut datetime_str = format!("{hour_str}:00 {ampm}");
+        if let Some(TokenKind::Identifier(tz_id)) = self.current_kind() {
+            if crate::types::DateTime::parse_tz_abbreviation(tz_id).is_some() {
+                datetime_str = format!("{hour_str}:00 {} {}", ampm, tz_id);
+                self.advance(); // consume timezone token
+            }
+        }
+
         match crate::types::DateTime::parse(&datetime_str) {
             Ok(dt) => Ok(Expression::DateTime(dt)),
             Err(e) => Err(e),
@@ -728,6 +772,11 @@ impl<'a> TokenParser<'a> {
                 return Ok(Unit::Mass(mass));
             }
 
+            // Try timezone abbreviation (before currency, since currency catch-all matches any 2-5 letter code)
+            if crate::types::DateTime::parse_tz_abbreviation(&unit_str).is_some() {
+                return Ok(Unit::Timezone(unit_str.to_uppercase()));
+            }
+
             // Try treating it as a currency code or natural language alias
             // (e.g., "USD", "EUR", "dollars", "euros", "BTC", "toncoin")
             if let Some(currency_code) = crate::types::CurrencyDatabase::parse_currency(&unit_str) {
@@ -740,7 +789,8 @@ impl<'a> TokenParser<'a> {
                  data sizes (B, KB, MB, GB, KiB, MiB, GiB, ...), \
                  mass (g, kg, tons, lb, oz), \
                  currencies (USD, EUR, GBP, TON, BTC, ETH, ...) and natural language \
-                 aliases (dollars, euros, bitcoin, toncoin, ...)."
+                 aliases (dollars, euros, bitcoin, toncoin, ...), \
+                 timezones (UTC, GMT, EST, MSK, JST, ...)."
             )))
         } else {
             Err(CalculatorError::parse(
