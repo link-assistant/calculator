@@ -751,7 +751,7 @@ impl Value {
         }
     }
 
-    /// Returns the decimal value if this is a number (alias for as_number).
+    /// Alias for `as_number`.
     #[must_use]
     pub fn as_decimal(&self) -> Option<Decimal> {
         self.as_number()
@@ -762,6 +762,16 @@ impl Value {
     pub fn as_rational(&self) -> Option<&Rational> {
         match &self.kind {
             ValueKind::Rational(r) => Some(r),
+            _ => None,
+        }
+    }
+
+    /// Converts this value to a Rational if numeric (clones Rational, converts Decimal).
+    #[must_use]
+    pub fn to_rational(&self) -> Option<Rational> {
+        match &self.kind {
+            ValueKind::Rational(r) => Some(r.clone()),
+            ValueKind::Number(d) => Some(Rational::from_decimal(*d)),
             _ => None,
         }
     }
@@ -963,8 +973,7 @@ mod tests {
 
     #[test]
     fn test_duration_plus_datetime() {
-        // This is the case from issue #8: duration + datetime
-        let dur = Value::duration(86400); // 1 day in seconds
+        let dur = Value::duration(86400); // 1 day in seconds (issue #8: duration + datetime)
         let dt = Value::datetime(DateTime::parse("2026-01-25").unwrap());
         let mut db = CurrencyDatabase::new();
         let result = dur.add(&dt, &mut db).unwrap();
@@ -983,7 +992,6 @@ mod tests {
         // First: dt1 - dt2 = duration
         let duration = dt1.subtract(&dt2, &mut db).unwrap();
         assert!(matches!(duration.kind, ValueKind::Duration { .. }));
-
         // Second: duration + dt3 = datetime (this was failing before the fix)
         let result = duration.add(&dt3, &mut db).unwrap();
         assert!(matches!(result.kind, ValueKind::DateTime(_)));

@@ -9,6 +9,54 @@ use crate::types::{
     BinaryOp, CurrencyDatabase, DateTime, Decimal, Expression, Rational, Value, ValueKind,
 };
 
+/// Evaluates a power expression, using exact rational arithmetic when possible.
+///
+/// When both base and exponent are rational and the exponent is an integer
+/// that fits in i32, the computation is exact (arbitrary precision).
+/// Otherwise, falls back to f64 computation.
+fn evaluate_power(base_val: &Value, exp_val: &Value) -> Result<Value, CalculatorError> {
+    // Try exact rational exponentiation first
+    if let (Some(base_rat), Some(exp_rat)) = (base_val.to_rational(), exp_val.to_rational()) {
+        if exp_rat.is_integer() {
+            // Check exponent fits in i32 (reasonable range for exact computation)
+            let exp_i128 = exp_rat.numer();
+            if let Ok(exp_i32) = i32::try_from(exp_i128) {
+                // Guard against absurdly large exponents that would consume too much memory
+                if exp_i32.abs() <= 1_000_000 {
+                    if exp_i32 < 0 && base_rat.is_zero() {
+                        return Err(CalculatorError::domain(
+                            "division by zero (negative exponent with zero base)",
+                        ));
+                    }
+                    let result = base_rat.pow_i32(exp_i32);
+                    return Ok(Value::rational(result));
+                }
+            }
+        }
+    }
+
+    // Fallback to f64 for non-integer exponents or very large exponents
+    let base_dec = base_val
+        .as_decimal()
+        .ok_or_else(|| CalculatorError::InvalidOperation("power base must be numeric".into()))?;
+    let exp_dec = exp_val.as_decimal().ok_or_else(|| {
+        CalculatorError::InvalidOperation("power exponent must be numeric".into())
+    })?;
+
+    let base_f64 = base_dec.to_f64();
+    let exp_f64 = exp_dec.to_f64();
+    let result = base_f64.powf(exp_f64);
+
+    if result.is_nan() {
+        return Err(CalculatorError::domain("power result is undefined"));
+    }
+    if result.is_infinite() {
+        return Err(CalculatorError::Overflow);
+    }
+
+    Ok(Value::number(Decimal::from_f64(result)))
+}
+
 /// Parser for calculator expressions.
 #[derive(Debug, Default)]
 pub struct ExpressionParser {
@@ -189,26 +237,7 @@ impl ExpressionParser {
             Expression::Power { base, exponent } => {
                 let base_val = self.evaluate_expr(base)?;
                 let exp_val = self.evaluate_expr(exponent)?;
-
-                let base_dec = base_val.as_decimal().ok_or_else(|| {
-                    CalculatorError::InvalidOperation("power base must be numeric".into())
-                })?;
-                let exp_dec = exp_val.as_decimal().ok_or_else(|| {
-                    CalculatorError::InvalidOperation("power exponent must be numeric".into())
-                })?;
-
-                let base_f64 = base_dec.to_f64();
-                let exp_f64 = exp_dec.to_f64();
-                let result = base_f64.powf(exp_f64);
-
-                if result.is_nan() {
-                    return Err(CalculatorError::domain("power result is undefined"));
-                }
-                if result.is_infinite() {
-                    return Err(CalculatorError::Overflow);
-                }
-
-                Ok(Value::number(Decimal::from_f64(result)))
+                evaluate_power(&base_val, &exp_val)
             }
             Expression::IndefiniteIntegral {
                 integrand,
@@ -402,25 +431,7 @@ impl ExpressionParser {
                     exp_val.to_display_string()
                 ));
 
-                let base_dec = base_val.as_decimal().ok_or_else(|| {
-                    CalculatorError::InvalidOperation("power base must be numeric".into())
-                })?;
-                let exp_dec = exp_val.as_decimal().ok_or_else(|| {
-                    CalculatorError::InvalidOperation("power exponent must be numeric".into())
-                })?;
-
-                let base_f64 = base_dec.to_f64();
-                let exp_f64 = exp_dec.to_f64();
-                let result = base_f64.powf(exp_f64);
-
-                if result.is_nan() {
-                    return Err(CalculatorError::domain("power result is undefined"));
-                }
-                if result.is_infinite() {
-                    return Err(CalculatorError::Overflow);
-                }
-
-                let val = Value::number(Decimal::from_f64(result));
+                let val = evaluate_power(&base_val, &exp_val)?;
                 steps.push(format!("= {}", val.to_display_string()));
                 Ok(val)
             }
@@ -666,26 +677,7 @@ impl ExpressionParser {
             Expression::Power { base, exponent } => {
                 let base_val = self.evaluate_expr_with_var(base, var_name, var_value)?;
                 let exp_val = self.evaluate_expr_with_var(exponent, var_name, var_value)?;
-
-                let base_dec = base_val.as_decimal().ok_or_else(|| {
-                    CalculatorError::InvalidOperation("power base must be numeric".into())
-                })?;
-                let exp_dec = exp_val.as_decimal().ok_or_else(|| {
-                    CalculatorError::InvalidOperation("power exponent must be numeric".into())
-                })?;
-
-                let base_f64 = base_dec.to_f64();
-                let exp_f64 = exp_dec.to_f64();
-                let result = base_f64.powf(exp_f64);
-
-                if result.is_nan() {
-                    return Err(CalculatorError::domain("power result is undefined"));
-                }
-                if result.is_infinite() {
-                    return Err(CalculatorError::Overflow);
-                }
-
-                Ok(Value::number(Decimal::from_f64(result)))
+                evaluate_power(&base_val, &exp_val)
             }
             Expression::IndefiniteIntegral { .. } => Err(CalculatorError::invalid_args(
                 "nested integration",
