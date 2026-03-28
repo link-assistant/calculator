@@ -492,6 +492,17 @@ impl Expression {
         )
     }
 
+    /// Returns true if this expression will evaluate to a DateTime value.
+    /// Used to determine if the result should auto-refresh (for countdown/elapsed display).
+    #[must_use]
+    pub fn evaluates_to_datetime(&self) -> bool {
+        match self {
+            Self::DateTime(_) | Self::Now => true,
+            Self::Group(inner) => inner.evaluates_to_datetime(),
+            _ => false,
+        }
+    }
+
     /// Returns true if this expression contains a live time reference
     /// (e.g., "now", "current UTC time", "UTC time").
     /// Used to determine if the result should auto-refresh.
