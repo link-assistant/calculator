@@ -24,6 +24,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.8.5] - 2026-03-28
+
+### Added
+- Vietnamese Dong (VND) currency support: Russian names (донг/донгов/...), English (dong/dongs), Vietnamese (đồng), ₫ symbol, and ISO code
+- VND routed to Central Bank of Russia (CBR) rate source for accurate VND↔RUB conversions
+- Default USD↔VND fallback rate for offline usage
+- CBR-only currencies (VND and 26 others) now properly routed to CBR instead of ECB
+
+### Fixed
+- Expression "2340000 донгов СРВ в рублях" now correctly converts Vietnamese Dong to Russian Rubles (#116)
+
 ## [0.8.4] - 2026-03-23
 
 ### Fixed
