@@ -151,6 +151,11 @@ function App() {
   const [ratesInfo, setRatesInfo] = useState<{ date?: string; base?: string } | null>(null);
   const [computationTime, setComputationTime] = useState<number | null>(null);
   const [selectedLinoIndex, setSelectedLinoIndex] = useState(0);
+  // When switching between alternative interpretations, we preserve the full
+  // alternatives list so all options remain visible. This ref holds the
+  // alternatives that should be kept across re-calculations triggered by
+  // interpretation switching.
+  const preservedAlternativesRef = useRef<string[] | null>(null);
   const [preferredCurrency, setPreferredCurrency] = useState<string>(() => {
     const prefs = loadPreferences();
     return prefs.currency || detectUserCurrency();
@@ -200,18 +205,35 @@ function App() {
               steps: [],
               success: true,
             };
+            // When switching between interpretations, the re-calculated
+            // expression's plan will only contain itself as an alternative.
+            // Preserve the original full list so all options stay visible.
+            const alternatives = preservedAlternativesRef.current || plan.alternative_lino;
             return {
               ...base,
               lino_interpretation: plan.lino_interpretation,
-              alternative_lino: plan.alternative_lino,
+              alternative_lino: alternatives,
               is_live_time: plan.is_live_time || undefined,
             };
           });
-          setSelectedLinoIndex(0);
+          // Only reset the selected index for fresh calculations,
+          // not when switching between existing alternatives.
+          if (!preservedAlternativesRef.current) {
+            setSelectedLinoIndex(0);
+          }
         }
       } else if (type === 'result') {
+        // When switching interpretations, the result for the alternative
+        // expression won't include the full alternatives list. Restore it
+        // so the user can switch back and forth.
+        if (preservedAlternativesRef.current) {
+          data.alternative_lino = preservedAlternativesRef.current;
+          // Clear the preserved ref — the switch is complete.
+          preservedAlternativesRef.current = null;
+        } else {
+          setSelectedLinoIndex(0); // Reset to default interpretation only for fresh calculations
+        }
         setResult(data);
-        setSelectedLinoIndex(0); // Reset to default interpretation
         // Capture computation time from worker if provided
         if (data.computation_time_ms !== undefined) {
           setComputationTime(data.computation_time_ms);
@@ -581,6 +603,11 @@ function App() {
                       key={idx}
                       className={`lino-alt-button${idx === selectedLinoIndex ? ' selected' : ''}`}
                       onClick={() => {
+                        // Preserve the full alternatives list before
+                        // re-calculating so all options remain visible.
+                        if (result.alternative_lino) {
+                          preservedAlternativesRef.current = result.alternative_lino;
+                        }
                         setSelectedLinoIndex(idx);
                         calculate(alt);
                       }}
