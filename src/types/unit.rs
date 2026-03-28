@@ -17,6 +17,8 @@ pub enum Unit {
     DataSize(DataSizeUnit),
     /// Mass/weight unit (e.g., kg, ton, lb).
     Mass(MassUnit),
+    /// Timezone for datetime conversion (e.g., MSK, EST, GMT).
+    Timezone(String),
     /// Custom unit.
     Custom(String),
 }
@@ -434,6 +436,12 @@ impl Unit {
         matches!(self, Self::Mass(_))
     }
 
+    /// Checks if the unit is a timezone.
+    #[must_use]
+    pub fn is_timezone(&self) -> bool {
+        matches!(self, Self::Timezone(_))
+    }
+
     /// Checks if two units are in the same category (both currencies, both mass, etc.).
     ///
     /// `Unit::None` is treated as compatible with any category.
@@ -447,6 +455,7 @@ impl Unit {
                 | (Self::Duration(_), Self::Duration(_))
                 | (Self::DataSize(_), Self::DataSize(_))
                 | (Self::Mass(_), Self::Mass(_))
+                | (Self::Timezone(_), Self::Timezone(_))
                 | (Self::Custom(_), Self::Custom(_))
         )
     }
@@ -494,6 +503,7 @@ impl Unit {
             Self::Duration(d) => d.to_string(),
             Self::DataSize(d) => d.abbreviation().to_string(),
             Self::Mass(m) => m.abbreviation().to_string(),
+            Self::Timezone(tz) => tz.clone(),
             Self::Custom(name) => name.clone(),
         }
     }
@@ -507,6 +517,7 @@ impl fmt::Display for Unit {
             Self::Duration(d) => write!(f, "{d}"),
             Self::DataSize(d) => write!(f, "{d}"),
             Self::Mass(m) => write!(f, "{m}"),
+            Self::Timezone(tz) => write!(f, "{tz}"),
             Self::Custom(name) => write!(f, "{name}"),
         }
     }

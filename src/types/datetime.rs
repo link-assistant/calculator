@@ -141,6 +141,21 @@ impl DateTime {
         self.offset_seconds = offset.map(|o| o.local_minus_utc());
     }
 
+    /// Returns a new `DateTime` displaying the same instant in a different timezone.
+    ///
+    /// The internal UTC time does not change — only the display offset and abbreviation.
+    #[must_use]
+    pub fn with_timezone_offset(&self, offset: FixedOffset, tz_abbrev: &str) -> Self {
+        Self {
+            inner: self.inner,
+            offset_seconds: Some(offset.local_minus_utc()),
+            has_time: self.has_time,
+            has_date: self.has_date,
+            label: None,
+            tz_abbrev: Some(tz_abbrev.to_uppercase()),
+        }
+    }
+
     /// Parses a datetime from a string, trying multiple formats.
     pub fn parse(input: &str) -> Result<Self, CalculatorError> {
         let input = input.trim();
@@ -374,10 +389,30 @@ impl DateTime {
     }
 
     /// Parses common timezone abbreviations to `FixedOffset`.
-    fn parse_tz_abbreviation(tz: &str) -> Option<FixedOffset> {
+    ///
+    /// Returns `None` if the abbreviation is not recognized.
+    /// Supports half-hour and 45-minute offsets (e.g., IST +5:30, NPT +5:45).
+    pub(crate) fn parse_tz_abbreviation(tz: &str) -> Option<FixedOffset> {
+        // Handle half-hour and non-standard offsets first (return early)
+        match tz.to_uppercase().as_str() {
+            "IST" => return FixedOffset::east_opt(5 * 3600 + 30 * 60), // India +5:30
+            "ACST" => return FixedOffset::east_opt(9 * 3600 + 30 * 60), // Australia Central +9:30
+            "ACDT" => return FixedOffset::east_opt(10 * 3600 + 30 * 60), // Australia Central DT +10:30
+            "NPT" => return FixedOffset::east_opt(5 * 3600 + 45 * 60),   // Nepal +5:45
+            "CHAST" => return FixedOffset::east_opt(12 * 3600 + 45 * 60), // Chatham Standard +12:45
+            "CHADT" => return FixedOffset::east_opt(13 * 3600 + 45 * 60), // Chatham DT +13:45
+            "MMT" => return FixedOffset::east_opt(6 * 3600 + 30 * 60),   // Myanmar +6:30
+            "AFT" => return FixedOffset::east_opt(4 * 3600 + 30 * 60),   // Afghanistan +4:30
+            "IRDT" => return FixedOffset::east_opt(4 * 3600 + 30 * 60),  // Iran DT +4:30
+            "IRST" => return FixedOffset::east_opt(3 * 3600 + 30 * 60),  // Iran Standard +3:30
+            "NST" => return FixedOffset::east_opt(-(3 * 3600 + 30 * 60)), // Newfoundland Standard -3:30
+            "NDT" => return FixedOffset::east_opt(-(2 * 3600 + 30 * 60)), // Newfoundland DT -2:30
+            _ => {}
+        }
+
         let offset_hours = match tz.to_uppercase().as_str() {
-            "UTC" | "GMT" | "Z" => 0,
-            // US timezones
+            "UTC" | "GMT" | "GTM" | "Z" => 0, // GTM: common typo for GMT
+            // US & Canada timezones
             "EST" => -5,
             "EDT" => -4,
             "CST" => -6,
@@ -389,6 +424,8 @@ impl DateTime {
             "AKST" => -9,
             "AKDT" => -8,
             "HST" | "HAST" => -10,
+            "AST" => -4, // Atlantic Standard Time
+            "ADT" => -3, // Atlantic Daylight Time
             // European timezones
             "CET" => 1,
             "CEST" => 2,
@@ -396,17 +433,61 @@ impl DateTime {
             "EEST" => 3,
             "WET" => 0,
             "WEST" => 1,
-            "GMT+1" | "BST" => 1,
-            // Asian timezones
-            "IST" => 5, // India Standard Time (5:30 handled separately)
-            "JST" => 9,
-            "KST" => 9,
-            "CST+8" | "SGT" | "HKT" | "PHT" => 8,
+            "GMT+1" | "BST" => 1, // British Summer Time
+            "MSK" => 3,           // Moscow Standard Time
+            "MSD" => 4,           // Moscow Summer Time (historical)
+            "SAMT" => 4,          // Samara Time
+            "YEKT" => 5,          // Yekaterinburg Time
+            "OMST" => 6,          // Omsk Time
+            "KRAT" => 7,          // Krasnoyarsk Time
+            "IRKT" => 8,          // Irkutsk Time
+            "YAKT" => 9,          // Yakutsk Time
+            "VLAT" => 10,         // Vladivostok Time
+            "MAGT" => 11,         // Magadan Time
+            "PETT" => 12,         // Kamchatka Time
+            "TRT" => 3,           // Turkey Time
+            // Middle East & Central Asia
+            "GST" => 4,  // Gulf Standard Time
+            "AZT" => 4,  // Azerbaijan Time
+            "GET" => 4,  // Georgia Time
+            "AMT" => 4,  // Armenia Time
+            "PKT" => 5,  // Pakistan Standard Time
+            "UZT" => 5,  // Uzbekistan Time
+            "TMT" => 5,  // Turkmenistan Time
+            "TJT" => 5,  // Tajikistan Time
+            "KGT" => 6,  // Kyrgyzstan Time
+            "ALMT" => 6, // Almaty Time (Kazakhstan)
+            "QYZT" => 6, // Qyzylorda Time (Kazakhstan)
+            // Southeast & East Asian timezones
+            "BDT" => 6,                                   // Bangladesh Time
+            "ICT" => 7,  // Indochina Time (Thailand, Vietnam, Laos, Cambodia)
+            "WIB" => 7,  // Western Indonesia Time
+            "WITA" => 8, // Central Indonesia Time
+            "WIT" => 9,  // Eastern Indonesia Time
+            "CST+8" | "SGT" | "HKT" | "PHT" | "MYT" => 8, // Singapore, Hong Kong, Philippines, Malaysia
+            "JST" => 9,                                   // Japan Standard Time
+            "KST" => 9,                                   // Korea Standard Time
+            "TWT" => 8,                                   // Taiwan Time
             // Australian timezones
             "AEST" => 10,
             "AEDT" => 11,
-            "ACST" => 9, // Actually +9:30
             "AWST" => 8,
+            // New Zealand
+            "NZST" => 12,
+            "NZDT" => 13,
+            // South America
+            "ART" | "BRT" | "CLST" | "UYT" | "GFT" | "SRT" => -3,
+            "BRST" => -2,
+            "CLT" | "VET" | "BOT" | "PYT" => -4,
+            "COT" | "PET" | "ECT" => -5,
+            // Africa
+            "WAT" => 1,  // West Africa Time
+            "CAT" => 2,  // Central Africa Time
+            "EAT" => 3,  // East Africa Time
+            "SAST" => 2, // South Africa Standard Time
+            // Atlantic & misc
+            "AZOT" => -1, // Azores Time
+            "CVT" => -1,  // Cape Verde Time
             _ => return None,
         };
         FixedOffset::east_opt(offset_hours * 3600)
@@ -452,13 +533,14 @@ impl DateTime {
         let input = input.trim();
 
         // Parse time with optional timezone
-        let (time_part, tz_offset) = Self::extract_timezone(input);
+        let (time_part, tz_offset, tz_abbrev) = Self::extract_timezone(input);
 
         // 12-hour format: 8:59am, 12:51pm, 8:59 am, 8:59AM
         if let Some(time) = Self::parse_12h_time(time_part) {
             let mut dt = Self::from_time(time);
             if let Some(offset) = tz_offset {
                 dt.set_offset(Some(offset));
+                dt.tz_abbrev.clone_from(&tz_abbrev);
                 // Adjust internal time to UTC
                 let local = dt.inner.naive_utc();
                 let adjusted = offset.from_local_datetime(&local).single();
@@ -473,11 +555,13 @@ impl DateTime {
         if let Ok(time) = NaiveTime::parse_from_str(time_part, "%H:%M") {
             let mut dt = Self::from_time(time);
             dt.set_offset(tz_offset);
+            dt.tz_abbrev.clone_from(&tz_abbrev);
             return Some(dt);
         }
         if let Ok(time) = NaiveTime::parse_from_str(time_part, "%H:%M:%S") {
             let mut dt = Self::from_time(time);
             dt.set_offset(tz_offset);
+            dt.tz_abbrev = tz_abbrev;
             return Some(dt);
         }
 
@@ -516,13 +600,29 @@ impl DateTime {
         NaiveTime::from_hms_opt(hour, minute, second)
     }
 
-    fn extract_timezone(input: &str) -> (&str, Option<FixedOffset>) {
+    /// Extracts timezone information from the end of a time string.
+    ///
+    /// Returns (time_part, offset, optional_tz_abbreviation).
+    fn extract_timezone(input: &str) -> (&str, Option<FixedOffset>, Option<String>) {
         let input = input.trim();
 
         // Check for UTC/GMT suffix
-        if input.to_uppercase().ends_with("UTC") || input.to_uppercase().ends_with("GMT") {
-            let time_part = input[..input.len() - 3].trim();
-            return (time_part, Some(FixedOffset::east_opt(0).unwrap()));
+        let upper = input.to_uppercase();
+        if upper.ends_with("UTC") || upper.ends_with("GMT") || upper.ends_with("GTM") {
+            let suffix_len = 3;
+            let time_part = input[..input.len() - suffix_len].trim();
+            let tz_str = input[input.len() - suffix_len..].to_uppercase();
+            // Normalize GTM to GMT
+            let tz_abbrev = if tz_str == "GTM" {
+                "GMT".to_string()
+            } else {
+                tz_str
+            };
+            return (
+                time_part,
+                Some(FixedOffset::east_opt(0).unwrap()),
+                Some(tz_abbrev),
+            );
         }
 
         // Check for common timezone abbreviations as suffix
@@ -531,7 +631,7 @@ impl DateTime {
             let potential_tz = &input[last_space + 1..];
             if let Some(offset) = Self::parse_tz_abbreviation(potential_tz) {
                 let time_part = input[..last_space].trim();
-                return (time_part, Some(offset));
+                return (time_part, Some(offset), Some(potential_tz.to_uppercase()));
             }
         }
 
@@ -547,11 +647,11 @@ impl DateTime {
         }) {
             let offset_str = &input[idx..];
             if let Some(offset) = Self::parse_offset(offset_str) {
-                return (&input[..idx], Some(offset));
+                return (&input[..idx], Some(offset), None);
             }
         }
 
-        (input, None)
+        (input, None, None)
     }
 
     fn parse_offset(offset_str: &str) -> Option<FixedOffset> {
@@ -798,7 +898,11 @@ impl fmt::Display for DateTime {
         if self.has_date && self.has_time {
             if let Some(offset) = self.get_offset() {
                 let local = self.inner.with_timezone(&offset);
-                write!(f, "{}", local.format("%Y-%m-%d %H:%M:%S %:z"))
+                if let Some(ref tz) = self.tz_abbrev {
+                    write!(f, "{} {tz}", local.format("%Y-%m-%d %H:%M:%S"))
+                } else {
+                    write!(f, "{}", local.format("%Y-%m-%d %H:%M:%S %:z"))
+                }
             } else {
                 write!(f, "{}", self.inner.format("%Y-%m-%d %H:%M:%S UTC"))
             }
@@ -807,7 +911,11 @@ impl fmt::Display for DateTime {
         } else if self.has_time {
             if let Some(offset) = self.get_offset() {
                 let local = self.inner.with_timezone(&offset);
-                write!(f, "{}", local.format("%H:%M:%S %:z"))
+                if let Some(ref tz) = self.tz_abbrev {
+                    write!(f, "{} {tz}", local.format("%H:%M:%S"))
+                } else {
+                    write!(f, "{}", local.format("%H:%M:%S %:z"))
+                }
             } else {
                 write!(f, "{}", self.inner.format("%H:%M:%S UTC"))
             }
