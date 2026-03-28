@@ -403,16 +403,11 @@ impl Expression {
                 left.collect_alternatives(alternatives);
                 right.collect_alternatives(alternatives);
             }
-            // For function calls with multiple args, show the mathematical notation alternative
-            Self::FunctionCall { name, args } if !args.is_empty() => {
-                // Alternative: traditional mathematical notation
-                let args_str = args
-                    .iter()
-                    .map(|a| a.to_lino_internal(None))
-                    .collect::<Vec<_>>()
-                    .join(", ");
-                let alt = format!("(expression \"{name}({args_str})\")");
-                alternatives.push(alt);
+            // For function calls, collect alternatives from arguments (e.g., ambiguous units in args)
+            Self::FunctionCall { args, .. } if !args.is_empty() => {
+                for arg in args {
+                    arg.collect_alternatives(alternatives);
+                }
             }
             _ => {}
         }
