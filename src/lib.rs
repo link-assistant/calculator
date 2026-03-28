@@ -598,10 +598,10 @@ impl Calculator {
         let mut result = match self.parser.parse_and_evaluate(input) {
             Ok((value, steps, lino)) => {
                 let mut r = CalculationResult::success_with_value(&value, lino, steps);
-                // Also check if the value itself is a live time datetime
-                let value_is_live =
-                    matches!(&value.kind, ValueKind::DateTime(dt) if dt.is_live_time());
-                if is_live_time || value_is_live {
+                // Set is_live_time for any datetime result so the frontend
+                // auto-refreshes the "Time since/until" countdown display.
+                let value_is_datetime = matches!(&value.kind, ValueKind::DateTime(_));
+                if is_live_time || value_is_datetime {
                     r.is_live_time = Some(true);
                 }
                 r

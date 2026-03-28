@@ -90,13 +90,17 @@ mod issue_91_format {
     }
 
     #[test]
-    fn test_static_datetime_not_live() {
+    fn test_static_datetime_is_live_for_countdown() {
+        // Static datetime expressions should have is_live_time=true
+        // so the frontend auto-refreshes the "Time since/until" countdown display.
+        // See issue #45.
         let mut calc = Calculator::new();
         let result = calc.calculate_internal("Jan 1, 12:00am UTC");
         assert!(result.success);
-        assert!(
-            result.is_live_time.is_none() || result.is_live_time == Some(false),
-            "Static datetime should NOT have is_live_time=true, got: {:?}",
+        assert_eq!(
+            result.is_live_time,
+            Some(true),
+            "Static datetime should have is_live_time=true for countdown, got: {:?}",
             result.is_live_time
         );
     }

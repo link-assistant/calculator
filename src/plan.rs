@@ -236,7 +236,7 @@ fn can_also_serve(source: RateSource, code: &str, all_currencies: &[String]) -> 
 pub fn create_plan(input: &str, expr: &Expression) -> CalculationPlan {
     let lino = expr.to_lino();
     let alternatives = expr.alternative_lino();
-    let is_live_time = expr.contains_live_time();
+    let is_live_time = expr.contains_live_time() || expr.evaluates_to_datetime();
 
     // Collect currencies from the AST and map to rate sources
     let currencies_set = expr.collect_currencies();
