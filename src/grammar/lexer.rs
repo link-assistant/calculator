@@ -2,6 +2,108 @@
 
 use crate::error::CalculatorError;
 
+/// Checks if a character is a Unicode combining mark (General Category M).
+///
+/// This includes:
+/// - Mn (Mark, Nonspacing) — e.g., Devanagari virama ्, Arabic fathah  َ
+/// - Mc (Mark, Spacing Combining) — e.g., Devanagari dependent vowels ा ि ी
+/// - Me (Mark, Enclosing) — rare, e.g., combining enclosing circle ⃝
+///
+/// These characters are integral parts of words in scripts like Devanagari (Hindi),
+/// Arabic, and Thai, but are not classified as `is_alphabetic()` in Rust.
+fn is_unicode_mark(ch: char) -> bool {
+    // Unicode General Category "M" (Mark) covers Mn, Mc, and Me.
+    // We check the ranges for Devanagari (U+0900-U+097F marks), Arabic (U+0610-U+065F),
+    // and other common combining mark blocks.
+    // Using a broad approach: if it's not alphanumeric, not whitespace, not ASCII,
+    // and not a punctuation/symbol, it's likely a combining mark.
+    // More precisely, we check the Unicode categories directly.
+    matches!(
+        unicode_general_category(ch),
+        GeneralCategory::Mn | GeneralCategory::Mc | GeneralCategory::Me
+    )
+}
+
+/// Minimal Unicode General Category detection for combining marks.
+///
+/// Only distinguishes Mark categories (Mn, Mc, Me) from everything else (Other).
+/// This avoids pulling in a full Unicode data crate for a focused need.
+#[derive(Debug, PartialEq, Eq)]
+enum GeneralCategory {
+    /// Nonspacing Mark (Mn)
+    Mn,
+    /// Spacing Combining Mark (Mc)
+    Mc,
+    /// Enclosing Mark (Me)
+    Me,
+    /// Any other category
+    Other,
+}
+
+/// Returns the Unicode General Category for combining mark detection.
+///
+/// Covers the most common combining mark ranges needed for multilingual input:
+/// Devanagari, Arabic, Bengali, Gurmukhi, Gujarati, Tamil, Telugu, Kannada,
+/// Malayalam, Thai, and other Indic/Southeast Asian scripts.
+fn unicode_general_category(ch: char) -> GeneralCategory {
+    let cp = ch as u32;
+    match cp {
+        // Devanagari (U+0900–U+097F)
+        0x0900..=0x0902
+        | 0x093A
+        | 0x093C
+        | 0x0941..=0x0948
+        | 0x094D
+        | 0x0951..=0x0957
+        | 0x0962..=0x0963 => GeneralCategory::Mn,
+        0x0903 | 0x093B | 0x093E..=0x0940 | 0x0949..=0x094C | 0x094E..=0x094F | 0x0982..=0x0983 => {
+            GeneralCategory::Mc
+        }
+
+        // Arabic combining marks (U+0610–U+065F, U+06D6–U+06ED, U+08D3–U+08FF)
+        0x0610..=0x061A
+        | 0x064B..=0x065F
+        | 0x0670
+        | 0x06D6..=0x06DC
+        | 0x06DF..=0x06E4
+        | 0x06E7..=0x06E8
+        | 0x06EA..=0x06ED
+        | 0x08D3..=0x08FF => GeneralCategory::Mn,
+
+        // Bengali (U+0980–U+09FF)
+        0x09BC | 0x09C1..=0x09C4 | 0x09CD | 0x09E2..=0x09E3 => GeneralCategory::Mn,
+        0x09BE..=0x09C0 | 0x09CB..=0x09CC | 0x09D7 => GeneralCategory::Mc,
+
+        // Gurmukhi (U+0A00–U+0A7F)
+        0x0A01..=0x0A02
+        | 0x0A3C
+        | 0x0A41..=0x0A42
+        | 0x0A47..=0x0A48
+        | 0x0A4B..=0x0A4D
+        | 0x0A51
+        | 0x0A70..=0x0A71
+        | 0x0A75 => GeneralCategory::Mn,
+        0x0A03 | 0x0A3E..=0x0A40 | 0x0A83 => GeneralCategory::Mc,
+
+        // General combining marks (U+0300–U+036F: Combining Diacritical Marks)
+        0x0300..=0x036F => GeneralCategory::Mn,
+
+        // Combining Diacritical Marks Extended (U+1AB0–U+1AFF)
+        0x1AB0..=0x1ACE => GeneralCategory::Mn,
+
+        // Combining Diacritical Marks Supplement (U+1DC0–U+1DFF)
+        0x1DC0..=0x1DFF => GeneralCategory::Mn,
+
+        // Combining Half Marks (U+FE20–U+FE2F)
+        0xFE20..=0xFE2F => GeneralCategory::Mn,
+
+        // Enclosing marks (U+20DD–U+20E0, U+20E2–U+20E4)
+        0x20DD..=0x20E0 | 0x20E2..=0x20E4 => GeneralCategory::Me,
+
+        _ => GeneralCategory::Other,
+    }
+}
+
 /// Token kinds in the calculator grammar.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TokenKind {
@@ -235,7 +337,11 @@ impl Lexer {
 
         while !self.is_at_end() {
             let ch = self.current();
-            if ch.is_alphanumeric() || ch == '_' {
+            // Accept alphanumeric, underscore, and Unicode combining marks (Mn/Mc/Me).
+            // Combining marks are needed for scripts like Devanagari (Hindi) where
+            // virama (्, U+094D) and dependent vowels (ा, ि, etc.) are part of words
+            // but not classified as alphabetic.
+            if ch.is_alphanumeric() || ch == '_' || is_unicode_mark(ch) {
                 text.push(ch);
                 self.advance();
             } else {

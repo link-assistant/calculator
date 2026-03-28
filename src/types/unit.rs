@@ -256,9 +256,20 @@ impl MassUnit {
     }
 
     /// Parses a string into a `MassUnit`, returning `None` if not recognized.
+    ///
+    /// Supports English and multilingual aliases for all 7 app languages:
+    /// English (en), Russian (ru), Chinese (zh), Hindi (hi), Arabic (ar),
+    /// German (de), and French (fr).
+    ///
+    /// Note: Some words like Russian "фунт" (pound) are intentionally NOT included
+    /// here because they map to currencies (GBP) in `CurrencyDatabase::parse_currency`.
+    /// The ambiguity between mass-pound and currency-pound is resolved at a higher
+    /// level via `parse_unit_with_alternatives`.
     #[must_use]
+    #[allow(clippy::too_many_lines)]
     pub fn parse(s: &str) -> Option<Self> {
         match s {
+            // ── English ──────────────────────────────────────────────────────
             "mg" | "milligram" | "milligrams" => Some(Self::Milligram),
             "g" | "gram" | "grams" => Some(Self::Gram),
             "kg" | "kgs" | "kilogram" | "kilograms" => Some(Self::Kilogram),
@@ -271,6 +282,105 @@ impl MassUnit {
             }
             "lb" | "lbs" | "pound" | "pounds" => Some(Self::Pound),
             "oz" | "ounce" | "ounces" => Some(Self::Ounce),
+
+            // ── Russian (ru) ─────────────────────────────────────────────────
+            // Milligram: миллиграмм (all grammatical cases)
+            "мг"
+            | "миллиграмм"
+            | "миллиграмма"
+            | "миллиграммов"
+            | "миллиграмме"
+            | "миллиграмму"
+            | "миллиграммом"
+            | "миллиграммы"
+            | "миллиграммам"
+            | "миллиграммами"
+            | "миллиграммах" => Some(Self::Milligram),
+            // Gram: грамм (all grammatical cases)
+            "г" | "гр" | "грамм" | "грамма" | "граммов" | "грамме" | "грамму" | "граммом"
+            | "граммы" | "граммам" | "граммами" | "граммах" => {
+                Some(Self::Gram)
+            }
+            // Kilogram: килограмм (all grammatical cases)
+            "кг"
+            | "килограмм"
+            | "килограмма"
+            | "килограммов"
+            | "килограмме"
+            | "килограмму"
+            | "килограммом"
+            | "килограммы"
+            | "килограммам"
+            | "килограммами"
+            | "килограммах" => Some(Self::Kilogram),
+            // Metric ton: тонна (all grammatical cases)
+            "тонна" | "тонны" | "тонн" | "тонне" | "тонну" | "тонной" | "тоннам" | "тоннами"
+            | "тоннах" => Some(Self::MetricTon),
+            // Ounce: унция (all grammatical cases)
+            "унция" | "унции" | "унций" | "унцию" | "унцией" | "унциям" | "унциями" | "унциях" => {
+                Some(Self::Ounce)
+            }
+
+            // ── Chinese Simplified (zh) ──────────────────────────────────────
+            // Milligram: 毫克 (háo kè)
+            "毫克" => Some(Self::Milligram),
+            // Gram: 克 (kè)
+            "克" => Some(Self::Gram),
+            // Kilogram: 千克 (qiān kè) formal; 公斤 (gōng jīn) common
+            "千克" | "公斤" => Some(Self::Kilogram),
+            // Metric ton: 吨 (dūn)
+            "吨" => Some(Self::MetricTon),
+            // Pound: 磅 (bàng)
+            "磅" => Some(Self::Pound),
+            // Ounce: 盎司 (àng sī)
+            "盎司" => Some(Self::Ounce),
+
+            // ── Hindi (hi) ───────────────────────────────────────────────────
+            // Milligram: मिलीग्राम (milīgrām)
+            "मिलीग्राम" => Some(Self::Milligram),
+            // Gram: ग्राम (grām)
+            "ग्राम" => Some(Self::Gram),
+            // Kilogram: किलोग्राम (kilōgrām); किलो (kilo) short form
+            "किलोग्राम" | "किलो" => Some(Self::Kilogram),
+            // Metric ton: टन (ṭan)
+            "टन" => Some(Self::MetricTon),
+            // Ounce: औंस (auṃs)
+            "औंस" => Some(Self::Ounce),
+
+            // ── Arabic (ar) ──────────────────────────────────────────────────
+            // Milligram: ميليغرام (mīlīġrām) / ملغ abbreviation
+            "ملغ" | "ميليغرام" | "ملغم" => Some(Self::Milligram),
+            // Gram: غرام (ġrām) / جرام (jarām) Egyptian variant
+            "غرام" | "جرام" => Some(Self::Gram),
+            // Kilogram: كيلوغرام (kīlūġrām) / كيلوجرام Egyptian / كغ / كيلو short
+            "كغ" | "كيلوغرام" | "كيلوجرام" | "كيلو" => Some(Self::Kilogram),
+            // Metric ton: طن (ṭun) / أطنان (aṭnān) plural
+            "طن" | "أطنان" => Some(Self::MetricTon),
+            // Pound: رطل (raṭl) / أرطال (arṭāl) plural — distinct from جنيه (GBP currency)
+            "رطل" | "أرطال" => Some(Self::Pound),
+            // Ounce: أونصة (ūnṣa) / أوقية (ūqiyya) traditional
+            "أونصة" | "أوقية" => Some(Self::Ounce),
+
+            // ── German (de) ──────────────────────────────────────────────────
+            // German uses Latin-script abbreviations (mg, g, kg, t, lb, oz) already handled above.
+            // Full German words for mass units (nouns are capitalized in German):
+            // "Gramm" is both singular and plural in German.
+            "Milligramm" | "milligramm" => Some(Self::Milligram),
+            "Gramm" | "gramm" => Some(Self::Gram),
+            "Kilogramm" | "kilogramm" | "Kilo" | "kilo" => Some(Self::Kilogram),
+            // "tonne"/"Tonne" already covered by English section; "tonnen"/"Tonnen" is German plural
+            "Tonnen" | "tonnen" => Some(Self::MetricTon),
+            "Unze" | "unze" | "Unzen" | "unzen" => Some(Self::Ounce),
+
+            // ── French (fr) ──────────────────────────────────────────────────
+            // French uses Latin-script abbreviations already handled above.
+            // Full French words:
+            "milligramme" | "milligrammes" => Some(Self::Milligram),
+            "gramme" | "grammes" => Some(Self::Gram),
+            "kilogramme" | "kilogrammes" => Some(Self::Kilogram),
+            // "tonne"/"tonnes" already covered by English
+            "once" | "onces" => Some(Self::Ounce),
+
             _ => None,
         }
     }
