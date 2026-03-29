@@ -142,6 +142,19 @@ export function generateIssueReport(
         sections.push('```');
         sections.push(state.result.lino_interpretation);
         sections.push('```');
+
+        if (
+          state.result.alternative_lino &&
+          state.result.alternative_lino.length > 1
+        ) {
+          sections.push('');
+          sections.push(`**Alternative interpretations**:`);
+          for (const alt of state.result.alternative_lino) {
+            sections.push('```');
+            sections.push(alt);
+            sections.push('```');
+          }
+        }
       }
 
       if (state.result.steps && state.result.steps.length > 0) {

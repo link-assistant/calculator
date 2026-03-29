@@ -84,6 +84,61 @@ describe('reportIssue utilities', () => {
       expect(report).toContain('**Error**: Parse error');
     });
 
+    it('should include alternative interpretations when present', () => {
+      const state: PageState = {
+        ...basePageState,
+        expression: '2 + 3 * 4',
+        result: {
+          success: true,
+          result: '14',
+          lino_interpretation: '(2 + (3 * 4))',
+          steps: [],
+          alternative_lino: ['(2 + (3 * 4))', '((2 + 3) * 4)'],
+        },
+      };
+
+      const report = generateIssueReport(state);
+
+      expect(report).toContain('**Alternative interpretations**');
+      expect(report).toContain('(2 + (3 * 4))');
+      expect(report).toContain('((2 + 3) * 4)');
+    });
+
+    it('should not include alternative interpretations section when only one exists', () => {
+      const state: PageState = {
+        ...basePageState,
+        expression: 'cos(0)',
+        result: {
+          success: true,
+          result: '1',
+          lino_interpretation: '(cos (0))',
+          steps: [],
+          alternative_lino: ['(cos (0))'],
+        },
+      };
+
+      const report = generateIssueReport(state);
+
+      expect(report).not.toContain('**Alternative interpretations**');
+    });
+
+    it('should not include alternative interpretations section when absent', () => {
+      const state: PageState = {
+        ...basePageState,
+        expression: 'cos(0)',
+        result: {
+          success: true,
+          result: '1',
+          lino_interpretation: '(cos (0))',
+          steps: [],
+        },
+      };
+
+      const report = generateIssueReport(state);
+
+      expect(report).not.toContain('**Alternative interpretations**');
+    });
+
     it('should include description placeholder', () => {
       const report = generateIssueReport(basePageState);
 

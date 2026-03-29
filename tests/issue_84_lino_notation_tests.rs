@@ -209,29 +209,31 @@ mod alternative_interpretation_tests {
     }
 
     #[test]
-    fn test_function_call_has_alternatives() {
+    fn test_function_call_no_alternatives() {
+        // Simple function calls with unambiguous arguments should not produce
+        // spurious "expression" alternatives (see issue #121).
         let mut calc = Calculator::new();
         let result = calc.calculate_internal("sin(0)");
         assert!(result.success);
-
-        let alts = result.alternative_lino.expect("should have alternatives");
-        assert!(alts.len() >= 2);
-        // First is default links notation
-        assert_eq!(alts[0], "(sin (0))");
-        // Second is the mathematical expression notation
-        assert!(alts[1].contains("expression"));
+        assert_eq!(result.lino_interpretation, "(sin (0))");
+        // No alternatives — the only interpretation is the default LINO form
+        assert!(
+            result.alternative_lino.is_none(),
+            "sin(0) should not have alternative interpretations"
+        );
     }
 
     #[test]
-    fn test_integrate_function_has_alternatives() {
+    fn test_integrate_function_no_alternatives() {
+        // Integration with unambiguous arguments should not produce alternatives.
         let mut calc = Calculator::new();
         let result = calc.calculate_internal("integrate(x^2, x, 0, 3)");
         assert!(result.success);
-
-        let alts = result.alternative_lino.expect("should have alternatives");
-        assert!(alts.len() >= 2);
-        // First is default links notation
-        assert_eq!(alts[0], "(integrate ((x ^ 2) x 0 3))");
+        assert_eq!(result.lino_interpretation, "(integrate ((x ^ 2) x 0 3))");
+        assert!(
+            result.alternative_lino.is_none(),
+            "integrate(x^2, x, 0, 3) should not have alternative interpretations"
+        );
     }
 
     #[test]
