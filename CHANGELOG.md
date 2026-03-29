@@ -30,6 +30,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.11.1] - 2026-03-29
+
+### Fixed
+- Remove spurious `(expression "...")` alternative interpretations for function calls that caused parse errors when selected (#121)
+- Include all alternative interpretations in bug report for better issue reporting
+
 ## [0.11.0] - 2026-03-28
 
 ### Added
