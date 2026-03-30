@@ -1,0 +1,6 @@
+rates:
+  from VND
+  to RUB
+  source 'cbr.ru (Central Bank of Russia)'
+  data:
+    2026-03-28 0.0032328400000000003
