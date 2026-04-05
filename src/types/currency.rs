@@ -133,6 +133,11 @@ impl Currency {
     pub fn clf() -> Self {
         Self::new("CLF", "Chilean Unidad de Fomento", "UF", 4)
     }
+
+    #[must_use]
+    pub fn kzt() -> Self {
+        Self::new("KZT", "Kazakhstani Tenge", "₸", 2)
+    }
 }
 
 /// A database of exchange rates, supporting historical data.
@@ -180,6 +185,7 @@ impl CurrencyDatabase {
             Currency::rub(),
             Currency::inr(),
             Currency::clf(),
+            Currency::kzt(),
         ];
 
         for currency in currencies {
@@ -205,6 +211,9 @@ impl CurrencyDatabase {
 
         // VND (Vietnamese Dong): CBR rate ~32.33 RUB per 10,000 VND → 1 USD ≈ 25,810 VND
         self.set_rate_with_info("USD", "VND", ExchangeRateInfo::default_rate(25_810.0));
+
+        // KZT (Kazakhstani Tenge): ~470 KZT per USD (approximate, from CBR data)
+        self.set_rate_with_info("USD", "KZT", ExchangeRateInfo::default_rate(470.0));
 
         // EUR base rates
         self.set_rate_with_info("EUR", "USD", ExchangeRateInfo::default_rate(1.087));
@@ -483,6 +492,7 @@ impl CurrencyDatabase {
             "VND" | "₫" => return Some("VND".to_string()),
             "INR" | "₹" => return Some("INR".to_string()),
             "KRW" | "₩" => return Some("KRW".to_string()),
+            "KZT" | "₸" => return Some("KZT".to_string()),
             // CLF is the ISO 4217 code; UF is the widely used Chilean abbreviation
             "CLF" | "UF" => return Some("CLF".to_string()),
             "BTC" | "₿" => return Some("BTC".to_string()),
@@ -663,6 +673,12 @@ impl CurrencyDatabase {
             "روبية هندية" | "روبيات هندية" | "روبية" | "روبيات" => {
                 return Some("INR".to_string())
             }
+            // Russian and Kazakh language names for KZT (Kazakhstani Tenge)
+            // "тенге" is invariable in Russian (same form for all grammatical cases).
+            // "теңге" is the Kazakh spelling (with ң, a Kazakh letter).
+            "тенге" | "теңге" => return Some("KZT".to_string()),
+            // English names for KZT
+            "tenge" | "tenges" | "kazakhstani tenge" => return Some("KZT".to_string()),
             // Cryptocurrency natural language names and common aliases
             "toncoin" | "the open network" => return Some("TON".to_string()),
             "bitcoin" => return Some("BTC".to_string()),
