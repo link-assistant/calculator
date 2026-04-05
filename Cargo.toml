@@ -1,6 +1,6 @@
 [package]
 name = "link-calculator"
-version = "0.11.1"
+version = "0.12.0"
 edition = "2021"
 description = "A Rust WebAssembly calculator with grammar-based expression parsing using links-notation"
 readme = "README.md"
