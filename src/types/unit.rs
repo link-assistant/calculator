@@ -547,9 +547,12 @@ impl fmt::Display for DataSizeUnit {
 
 impl DurationUnit {
     /// Parses a string into a `DurationUnit`, returning `None` if not recognized.
+    ///
+    /// Supports English and Russian duration unit names (all grammatical cases).
     #[must_use]
     pub fn parse(s: &str) -> Option<Self> {
         match s.to_lowercase().as_str() {
+            // ── English ──────────────────────────────────────────────────────
             "ms" | "millisecond" | "milliseconds" => Some(Self::Milliseconds),
             "s" | "sec" | "secs" | "second" | "seconds" => Some(Self::Seconds),
             "min" | "mins" | "minute" | "minutes" => Some(Self::Minutes),
@@ -558,6 +561,33 @@ impl DurationUnit {
             "w" | "week" | "weeks" => Some(Self::Weeks),
             "mo" | "month" | "months" => Some(Self::Months),
             "y" | "yr" | "yrs" | "year" | "years" => Some(Self::Years),
+            // ── Russian (ru) ─────────────────────────────────────────────────
+            // Millisecond: миллисекунда (all grammatical cases)
+            "мс" | "миллисекунда" | "миллисекунды" | "миллисекунд" | "миллисекунде"
+            | "миллисекунду" | "миллисекундой" | "миллисекундам" | "миллисекундами"
+            | "миллисекундах" => Some(Self::Milliseconds),
+            // Second: секунда (all grammatical cases)
+            "с" | "сек" | "секунда" | "секунды" | "секунд" | "секунде" | "секунду"
+            | "секундой" | "секундам" | "секундами" | "секундах" => Some(Self::Seconds),
+            // Minute: минута (all grammatical cases)
+            "мин" | "минута" | "минуты" | "минут" | "минуте" | "минуту" | "минутой"
+            | "минутам" | "минутами" | "минутах" => Some(Self::Minutes),
+            // Hour: час (all grammatical cases)
+            "ч" | "час" | "часа" | "часов" | "часе" | "часу" | "часом" | "часам" | "часами"
+            | "часах" => Some(Self::Hours),
+            // Day: день (all grammatical cases)
+            "д" | "день" | "дня" | "дней" | "дне" | "дню" | "днём" | "дням" | "днями"
+            | "днях" => Some(Self::Days),
+            // Week: неделя (all grammatical cases)
+            "нед" | "неделя" | "недели" | "недель" | "неделе" | "неделю" | "неделей"
+            | "неделям" | "неделями" | "неделях" => Some(Self::Weeks),
+            // Month: месяц (all grammatical cases)
+            "мес" | "месяц" | "месяца" | "месяцев" | "месяце" | "месяцу" | "месяцем"
+            | "месяцам" | "месяцами" | "месяцах" => Some(Self::Months),
+            // Year: год (all grammatical cases)
+            "г" | "год" | "года" | "лет" | "году" | "годом" | "годам" | "годами" | "годах" => {
+                Some(Self::Years)
+            }
             _ => None,
         }
     }

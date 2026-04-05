@@ -170,6 +170,14 @@ impl DateTime {
             return Ok(dt);
         }
 
+        // Pre-process: translate Russian month names to English
+        let russian_translated = Self::translate_russian_months(input);
+        let input = if russian_translated != input {
+            russian_translated.as_str()
+        } else {
+            input
+        };
+
         // Pre-process: strip day names and ordinal suffixes
         let cleaned = Self::preprocess_natural_date(input);
         let input_to_parse = if cleaned != input { &cleaned } else { input };
@@ -330,6 +338,67 @@ impl DateTime {
         }
 
         None
+    }
+
+    /// Translates Russian month names (in any grammatical case) to their English equivalents.
+    ///
+    /// Russian month names decline in all 6 grammatical cases. This function handles
+    /// the most common forms used in date expressions:
+    /// - Nominative: январь, февраль, март, апрель, май, июнь, июль, август, сентябрь, октябрь, ноябрь, декабрь
+    /// - Genitive (most common in dates like "17 февраля 2027"): января, февраля, марта, апреля, мая, июня, июля, августа, сентября, октября, ноября, декабря
+    ///
+    /// Returns the input unchanged if no Russian month names are found.
+    fn translate_russian_months(input: &str) -> String {
+        let lower = input.to_lowercase();
+
+        // Russian month name → English month name mapping.
+        // Ordered from longest to shortest to prevent partial matches.
+        let translations: &[(&str, &str)] = &[
+            // Genitive/prepositional forms (most common in dates like "17 февраля")
+            ("января", "January"),
+            ("февраля", "February"),
+            ("марта", "March"),
+            ("апреля", "April"),
+            ("июня", "June"),
+            ("июля", "July"),
+            ("августа", "August"),
+            ("сентября", "September"),
+            ("октября", "October"),
+            ("ноября", "November"),
+            ("декабря", "December"),
+            // Nominative forms
+            ("январь", "January"),
+            ("февраль", "February"),
+            ("март", "March"),
+            ("апрель", "April"),
+            ("май", "May"),
+            ("июнь", "June"),
+            ("июль", "July"),
+            ("август", "August"),
+            ("сентябрь", "September"),
+            ("октябрь", "October"),
+            ("ноябрь", "November"),
+            ("декабрь", "December"),
+            // Abbreviated forms (common in informal usage)
+            ("янв", "Jan"),
+            ("фев", "Feb"),
+            ("мар", "Mar"),
+            ("апр", "Apr"),
+            ("авг", "Aug"),
+            ("сен", "Sep"),
+            ("окт", "Oct"),
+            ("ноя", "Nov"),
+            ("дек", "Dec"),
+        ];
+
+        let mut result = input.to_string();
+        for (russian, english) in translations {
+            if let Some(pos) = lower.find(russian) {
+                result = format!("{}{}{}", &result[..pos], english, &result[pos + russian.len()..]);
+                return result; // Only translate the first found month name
+            }
+        }
+        result
     }
 
     /// Pre-processes natural date strings by removing day names, ordinal suffixes,
@@ -518,11 +587,19 @@ impl DateTime {
             return Some(Self::from_date(date));
         }
 
-        // 22 Jan 2026 format
+        // 22 Jan 2026 format (without comma)
         if let Ok(date) = NaiveDate::parse_from_str(&normalized, "%d %b %Y") {
             return Some(Self::from_date(date));
         }
         if let Ok(date) = NaiveDate::parse_from_str(&normalized, "%d %B %Y") {
+            return Some(Self::from_date(date));
+        }
+
+        // Jan 22 2026 format (without comma) — e.g., "Feb 17 2027"
+        if let Ok(date) = NaiveDate::parse_from_str(&normalized, "%b %d %Y") {
+            return Some(Self::from_date(date));
+        }
+        if let Ok(date) = NaiveDate::parse_from_str(&normalized, "%B %d %Y") {
             return Some(Self::from_date(date));
         }
 

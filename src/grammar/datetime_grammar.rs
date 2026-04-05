@@ -41,6 +41,7 @@ impl DateTimeGrammar {
 
         // Check for month names
         let month_names = [
+            // English abbreviated
             "jan",
             "feb",
             "mar",
@@ -53,6 +54,7 @@ impl DateTimeGrammar {
             "oct",
             "nov",
             "dec",
+            // English full
             "january",
             "february",
             "march",
@@ -64,6 +66,31 @@ impl DateTimeGrammar {
             "october",
             "november",
             "december",
+            // Russian nominative forms
+            "январь",
+            "февраль",
+            "март",
+            "апрель",
+            "май",
+            "июнь",
+            "июль",
+            "август",
+            "сентябрь",
+            "октябрь",
+            "ноябрь",
+            "декабрь",
+            // Russian genitive forms (most common in dates like "17 февраля 2027")
+            "января",
+            "февраля",
+            "марта",
+            "апреля",
+            "июня",
+            "июля",
+            "августа",
+            "сентября",
+            "октября",
+            "ноября",
+            "декабря",
         ];
 
         for month in &month_names {
