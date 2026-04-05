@@ -1,14 +1,21 @@
 //! `DateTime` type for date and time calculations.
 
 use chrono::{
-    DateTime as ChronoDateTime, Datelike, Duration, FixedOffset, NaiveDate, NaiveDateTime,
-    NaiveTime, TimeZone, Utc,
+    DateTime as ChronoDateTime, Duration, FixedOffset, NaiveDate, NaiveDateTime, NaiveTime,
+    TimeZone, Utc,
 };
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::str::FromStr;
 
 use crate::error::CalculatorError;
+
+#[path = "datetime_parse.rs"]
+mod parse;
+use parse::{
+    extract_timezone, normalize_month_name, parse_12h_time, parse_partial_date,
+    parse_tz_abbreviation, preprocess_natural_date, translate_month_names,
+};
 
 /// A `DateTime` value that can represent dates, times, or both.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -170,8 +177,16 @@ impl DateTime {
             return Ok(dt);
         }
 
+        // Pre-process: translate non-English month names to English (all supported UI languages)
+        let translated = translate_month_names(input);
+        let input = if translated != input {
+            translated.as_str()
+        } else {
+            input
+        };
+
         // Pre-process: strip day names and ordinal suffixes
-        let cleaned = Self::preprocess_natural_date(input);
+        let cleaned = preprocess_natural_date(input);
         let input_to_parse = if cleaned != input { &cleaned } else { input };
 
         // Try various date formats
@@ -234,7 +249,7 @@ impl DateTime {
         // "now <timezone>" pattern
         if let Some(rest) = trimmed.strip_prefix("now ") {
             let rest = rest.trim();
-            if let Some(offset) = Self::parse_tz_abbreviation(rest) {
+            if let Some(offset) = parse_tz_abbreviation(rest) {
                 let tz_upper = rest.to_uppercase();
                 let label = format!("current {tz_upper} time");
                 let offset_secs = offset.local_minus_utc();
@@ -249,7 +264,7 @@ impl DateTime {
         // "<timezone> now" pattern
         if let Some(rest) = trimmed.strip_suffix(" now") {
             let rest = rest.trim();
-            if let Some(offset) = Self::parse_tz_abbreviation(rest) {
+            if let Some(offset) = parse_tz_abbreviation(rest) {
                 let tz_upper = rest.to_uppercase();
                 let label = format!("current {tz_upper} time");
                 let offset_secs = offset.local_minus_utc();
@@ -289,208 +304,54 @@ impl DateTime {
             ("utc time", "current UTC time", Some(0), "UTC"),
             ("time utc", "current UTC time", Some(0), "UTC"),
             ("current time", "current UTC time", Some(0), "UTC"),
-            ("current time utc", "current UTC time", Some(0), "UTC"),
-            ("utc current time", "current UTC time", Some(0), "UTC"),
             ("current utc time", "current UTC time", Some(0), "UTC"),
             ("gmt time", "current GMT time", Some(0), "GMT"),
             ("time gmt", "current GMT time", Some(0), "GMT"),
         ];
 
-        for (phrase, label, offset, tz_abbrev) in current_time_phrases {
-            if trimmed == *phrase {
+        for &(phrase, label, offset_secs, tz_abbrev) in current_time_phrases {
+            if trimmed == phrase {
                 return Some(Self::now_with_label(
-                    *label,
-                    *offset,
-                    Some((*tz_abbrev).to_string()),
+                    label,
+                    offset_secs,
+                    Some(tz_abbrev.to_string()),
                 ));
             }
         }
 
-        // "<timezone> time" and "time <timezone>" patterns for known timezones
-        // e.g., "EST time", "time PST"
-        let (tz_part, prefix) = if let Some(rest) = trimmed.strip_suffix(" time") {
-            (rest.trim(), true)
-        } else if let Some(rest) = trimmed.strip_prefix("time ") {
-            (rest.trim(), true)
-        } else {
-            ("", false)
-        };
-
-        if prefix && !tz_part.is_empty() {
-            if let Some(offset) = Self::parse_tz_abbreviation(tz_part) {
-                let tz_upper = tz_part.to_uppercase();
-                let label = format!("current {tz_upper} time");
-                let offset_secs = offset.local_minus_utc();
-                return Some(Self::now_with_label(
-                    label,
-                    Some(offset_secs),
-                    Some(tz_upper),
-                ));
+        // "current <TZ> time" or "<TZ> time" patterns
+        for prefix in &["current ", ""] {
+            if let Some(rest) = trimmed.strip_prefix(prefix) {
+                if let Some(tz_part) = rest.strip_suffix(" time") {
+                    let tz_part = tz_part.trim();
+                    if let Some(offset) = parse_tz_abbreviation(tz_part) {
+                        let tz_upper = tz_part.to_uppercase();
+                        let label = format!("current {tz_upper} time");
+                        let offset_secs = offset.local_minus_utc();
+                        return Some(Self::now_with_label(
+                            label,
+                            Some(offset_secs),
+                            Some(tz_upper),
+                        ));
+                    }
+                }
+                if let Some(tz_part) = rest.strip_prefix("time ") {
+                    let tz_part = tz_part.trim();
+                    if let Some(offset) = parse_tz_abbreviation(tz_part) {
+                        let tz_upper = tz_part.to_uppercase();
+                        let label = format!("current {tz_upper} time");
+                        let offset_secs = offset.local_minus_utc();
+                        return Some(Self::now_with_label(
+                            label,
+                            Some(offset_secs),
+                            Some(tz_upper),
+                        ));
+                    }
+                }
             }
         }
 
         None
-    }
-
-    /// Pre-processes natural date strings by removing day names, ordinal suffixes,
-    /// and the "on" preposition.
-    fn preprocess_natural_date(input: &str) -> String {
-        let mut result = input.to_string();
-
-        // Remove day names (case-insensitive)
-        let day_names = [
-            "monday",
-            "tuesday",
-            "wednesday",
-            "thursday",
-            "friday",
-            "saturday",
-            "sunday",
-            "mon",
-            "tue",
-            "wed",
-            "thu",
-            "fri",
-            "sat",
-            "sun",
-        ];
-        let lower = result.to_lowercase();
-        for day in &day_names {
-            if let Some(pos) = lower.find(day) {
-                let end = pos + day.len();
-                // Remove the day name and any trailing comma/space
-                let prefix = result[..pos].trim_end().to_string();
-                let suffix_raw = result[end..].trim_start().to_string();
-                let suffix = suffix_raw
-                    .strip_prefix(',')
-                    .unwrap_or(&suffix_raw)
-                    .trim_start()
-                    .to_string();
-                result = if prefix.is_empty() {
-                    suffix
-                } else {
-                    format!("{prefix} {suffix}")
-                };
-                result = result.trim().to_string();
-                break;
-            }
-        }
-
-        // Remove "on " preposition (often between time and date)
-        result = result.replace(" on ", " ");
-
-        // Remove ordinal suffixes from day numbers (1st, 2nd, 3rd, 4th-31st)
-        let re_result = regex::Regex::new(r"(\d{1,2})(st|nd|rd|th)\b");
-        if let Ok(re) = re_result {
-            result = re.replace_all(&result, "$1").to_string();
-        }
-
-        result
-    }
-
-    /// Parses common timezone abbreviations to `FixedOffset`.
-    ///
-    /// Returns `None` if the abbreviation is not recognized.
-    /// Supports half-hour and 45-minute offsets (e.g., IST +5:30, NPT +5:45).
-    pub(crate) fn parse_tz_abbreviation(tz: &str) -> Option<FixedOffset> {
-        // Handle half-hour and non-standard offsets first (return early)
-        match tz.to_uppercase().as_str() {
-            "IST" => return FixedOffset::east_opt(5 * 3600 + 30 * 60), // India +5:30
-            "ACST" => return FixedOffset::east_opt(9 * 3600 + 30 * 60), // Australia Central +9:30
-            "ACDT" => return FixedOffset::east_opt(10 * 3600 + 30 * 60), // Australia Central DT +10:30
-            "NPT" => return FixedOffset::east_opt(5 * 3600 + 45 * 60),   // Nepal +5:45
-            "CHAST" => return FixedOffset::east_opt(12 * 3600 + 45 * 60), // Chatham Standard +12:45
-            "CHADT" => return FixedOffset::east_opt(13 * 3600 + 45 * 60), // Chatham DT +13:45
-            "MMT" => return FixedOffset::east_opt(6 * 3600 + 30 * 60),   // Myanmar +6:30
-            "AFT" => return FixedOffset::east_opt(4 * 3600 + 30 * 60),   // Afghanistan +4:30
-            "IRDT" => return FixedOffset::east_opt(4 * 3600 + 30 * 60),  // Iran DT +4:30
-            "IRST" => return FixedOffset::east_opt(3 * 3600 + 30 * 60),  // Iran Standard +3:30
-            "NST" => return FixedOffset::east_opt(-(3 * 3600 + 30 * 60)), // Newfoundland Standard -3:30
-            "NDT" => return FixedOffset::east_opt(-(2 * 3600 + 30 * 60)), // Newfoundland DT -2:30
-            _ => {}
-        }
-
-        let offset_hours = match tz.to_uppercase().as_str() {
-            "UTC" | "GMT" | "GTM" | "Z" => 0, // GTM: common typo for GMT
-            // US & Canada timezones
-            "EST" => -5,
-            "EDT" => -4,
-            "CST" => -6,
-            "CDT" => -5,
-            "MST" => -7,
-            "MDT" => -6,
-            "PST" => -8,
-            "PDT" => -7,
-            "AKST" => -9,
-            "AKDT" => -8,
-            "HST" | "HAST" => -10,
-            "AST" => -4, // Atlantic Standard Time
-            "ADT" => -3, // Atlantic Daylight Time
-            // European timezones
-            "CET" => 1,
-            "CEST" => 2,
-            "EET" => 2,
-            "EEST" => 3,
-            "WET" => 0,
-            "WEST" => 1,
-            "GMT+1" | "BST" => 1, // British Summer Time
-            "MSK" => 3,           // Moscow Standard Time
-            "MSD" => 4,           // Moscow Summer Time (historical)
-            "SAMT" => 4,          // Samara Time
-            "YEKT" => 5,          // Yekaterinburg Time
-            "OMST" => 6,          // Omsk Time
-            "KRAT" => 7,          // Krasnoyarsk Time
-            "IRKT" => 8,          // Irkutsk Time
-            "YAKT" => 9,          // Yakutsk Time
-            "VLAT" => 10,         // Vladivostok Time
-            "MAGT" => 11,         // Magadan Time
-            "PETT" => 12,         // Kamchatka Time
-            "TRT" => 3,           // Turkey Time
-            // Middle East & Central Asia
-            "GST" => 4,  // Gulf Standard Time
-            "AZT" => 4,  // Azerbaijan Time
-            "GET" => 4,  // Georgia Time
-            "AMT" => 4,  // Armenia Time
-            "PKT" => 5,  // Pakistan Standard Time
-            "UZT" => 5,  // Uzbekistan Time
-            "TMT" => 5,  // Turkmenistan Time
-            "TJT" => 5,  // Tajikistan Time
-            "KGT" => 6,  // Kyrgyzstan Time
-            "ALMT" => 6, // Almaty Time (Kazakhstan)
-            "QYZT" => 6, // Qyzylorda Time (Kazakhstan)
-            // Southeast & East Asian timezones
-            "BDT" => 6,                                   // Bangladesh Time
-            "ICT" => 7,  // Indochina Time (Thailand, Vietnam, Laos, Cambodia)
-            "WIB" => 7,  // Western Indonesia Time
-            "WITA" => 8, // Central Indonesia Time
-            "WIT" => 9,  // Eastern Indonesia Time
-            "CST+8" | "SGT" | "HKT" | "PHT" | "MYT" => 8, // Singapore, Hong Kong, Philippines, Malaysia
-            "JST" => 9,                                   // Japan Standard Time
-            "KST" => 9,                                   // Korea Standard Time
-            "TWT" => 8,                                   // Taiwan Time
-            // Australian timezones
-            "AEST" => 10,
-            "AEDT" => 11,
-            "AWST" => 8,
-            // New Zealand
-            "NZST" => 12,
-            "NZDT" => 13,
-            // South America
-            "ART" | "BRT" | "CLST" | "UYT" | "GFT" | "SRT" => -3,
-            "BRST" => -2,
-            "CLT" | "VET" | "BOT" | "PYT" => -4,
-            "COT" | "PET" | "ECT" => -5,
-            // Africa
-            "WAT" => 1,  // West Africa Time
-            "CAT" => 2,  // Central Africa Time
-            "EAT" => 3,  // East Africa Time
-            "SAST" => 2, // South Africa Standard Time
-            // Atlantic & misc
-            "AZOT" => -1, // Azores Time
-            "CVT" => -1,  // Cape Verde Time
-            _ => return None,
-        };
-        FixedOffset::east_opt(offset_hours * 3600)
     }
 
     fn try_parse_date_formats(input: &str) -> Option<Self> {
@@ -510,7 +371,7 @@ impl DateTime {
         }
 
         // Month name formats: Jan 22, 2026 or January 22, 2026
-        let normalized = Self::normalize_month_name(input);
+        let normalized = normalize_month_name(input);
         if let Ok(date) = NaiveDate::parse_from_str(&normalized, "%b %d, %Y") {
             return Some(Self::from_date(date));
         }
@@ -518,11 +379,19 @@ impl DateTime {
             return Some(Self::from_date(date));
         }
 
-        // 22 Jan 2026 format
+        // 22 Jan 2026 format (without comma)
         if let Ok(date) = NaiveDate::parse_from_str(&normalized, "%d %b %Y") {
             return Some(Self::from_date(date));
         }
         if let Ok(date) = NaiveDate::parse_from_str(&normalized, "%d %B %Y") {
+            return Some(Self::from_date(date));
+        }
+
+        // Jan 22 2026 format (without comma) — e.g., "Feb 17 2027"
+        if let Ok(date) = NaiveDate::parse_from_str(&normalized, "%b %d %Y") {
+            return Some(Self::from_date(date));
+        }
+        if let Ok(date) = NaiveDate::parse_from_str(&normalized, "%B %d %Y") {
             return Some(Self::from_date(date));
         }
 
@@ -533,10 +402,10 @@ impl DateTime {
         let input = input.trim();
 
         // Parse time with optional timezone
-        let (time_part, tz_offset, tz_abbrev) = Self::extract_timezone(input);
+        let (time_part, tz_offset, tz_abbrev) = extract_timezone(input);
 
         // 12-hour format: 8:59am, 12:51pm, 8:59 am, 8:59AM
-        if let Some(time) = Self::parse_12h_time(time_part) {
+        if let Some(time) = parse_12h_time(time_part) {
             let mut dt = Self::from_time(time);
             if let Some(offset) = tz_offset {
                 dt.set_offset(Some(offset));
@@ -568,116 +437,14 @@ impl DateTime {
         None
     }
 
-    fn parse_12h_time(input: &str) -> Option<NaiveTime> {
-        let input = input.trim().to_lowercase();
-
-        // Patterns: 8:59am, 8:59 am, 12:51pm
-        let (time_str, is_pm) = if input.ends_with("am") {
-            (input.trim_end_matches("am").trim(), false)
-        } else if input.ends_with("pm") {
-            (input.trim_end_matches("pm").trim(), true)
-        } else {
-            return None;
-        };
-
-        let parts: Vec<&str> = time_str.split(':').collect();
-        if parts.len() < 2 {
-            return None;
-        }
-
-        let hour: u32 = parts[0].parse().ok()?;
-        let minute: u32 = parts[1].parse().ok()?;
-        let second: u32 = parts.get(2).and_then(|s| s.parse().ok()).unwrap_or(0);
-
-        let hour = if is_pm && hour != 12 {
-            hour + 12
-        } else if !is_pm && hour == 12 {
-            0
-        } else {
-            hour
-        };
-
-        NaiveTime::from_hms_opt(hour, minute, second)
-    }
-
-    /// Extracts timezone information from the end of a time string.
-    ///
-    /// Returns (time_part, offset, optional_tz_abbreviation).
-    fn extract_timezone(input: &str) -> (&str, Option<FixedOffset>, Option<String>) {
-        let input = input.trim();
-
-        // Check for UTC/GMT suffix
-        let upper = input.to_uppercase();
-        if upper.ends_with("UTC") || upper.ends_with("GMT") || upper.ends_with("GTM") {
-            let suffix_len = 3;
-            let time_part = input[..input.len() - suffix_len].trim();
-            let tz_str = input[input.len() - suffix_len..].to_uppercase();
-            // Normalize GTM to GMT
-            let tz_abbrev = if tz_str == "GTM" {
-                "GMT".to_string()
-            } else {
-                tz_str
-            };
-            return (
-                time_part,
-                Some(FixedOffset::east_opt(0).unwrap()),
-                Some(tz_abbrev),
-            );
-        }
-
-        // Check for common timezone abbreviations as suffix
-        // Try to match the last word as a timezone abbreviation
-        if let Some(last_space) = input.rfind(' ') {
-            let potential_tz = &input[last_space + 1..];
-            if let Some(offset) = Self::parse_tz_abbreviation(potential_tz) {
-                let time_part = input[..last_space].trim();
-                return (time_part, Some(offset), Some(potential_tz.to_uppercase()));
-            }
-        }
-
-        // Check for explicit offset like +05:00 or -08:00
-        if let Some(idx) = input.rfind('+').or_else(|| {
-            // Find the last minus that's not at the start
-            let last_minus = input.rfind('-')?;
-            if last_minus > 0 {
-                Some(last_minus)
-            } else {
-                None
-            }
-        }) {
-            let offset_str = &input[idx..];
-            if let Some(offset) = Self::parse_offset(offset_str) {
-                return (&input[..idx], Some(offset), None);
-            }
-        }
-
-        (input, None, None)
-    }
-
-    fn parse_offset(offset_str: &str) -> Option<FixedOffset> {
-        let sign = if offset_str.starts_with('-') { -1 } else { 1 };
-        let offset_str = offset_str.trim_start_matches(['+', '-']);
-
-        let parts: Vec<&str> = offset_str.split(':').collect();
-        let hours: i32 = parts.first()?.parse().ok()?;
-        let minutes: i32 = parts.get(1).and_then(|s| s.parse().ok()).unwrap_or(0);
-
-        let total_seconds = sign * (hours * 3600 + minutes * 60);
-        FixedOffset::east_opt(total_seconds)
-    }
-
     fn try_parse_datetime_formats(input: &str) -> Option<Self> {
-        // Extract date and time parts
-        // Format: "Jan 27, 8:59am UTC" -> date="Jan 27", time="8:59am UTC"
-        // We need to handle various separators
-
         // Try comma separation: "Jan 27, 8:59am UTC"
         if let Some((date_part, time_part)) = input.split_once(',') {
             let date_part = date_part.trim();
             let time_part = time_part.trim();
 
             // Try to parse partial date (no year - assume current year)
-            if let Some(date) = Self::parse_partial_date(date_part) {
+            if let Some(date) = parse_partial_date(date_part) {
                 if let Some(time_dt) = Self::try_parse_time_formats(time_part) {
                     let datetime = date.and_time(time_dt.inner.time()).and_utc();
                     return Some(Self {
@@ -693,7 +460,6 @@ impl DateTime {
         }
 
         // Try "time <date>" pattern: "11:59pm EST January 26"
-        // Look for a time-like pattern at the start followed by a date
         if let Some(dt) = Self::try_parse_time_then_date(input) {
             return Some(dt);
         }
@@ -742,7 +508,7 @@ impl DateTime {
 
             if let Some(time_dt) = Self::try_parse_time_formats(&time_candidate) {
                 // Try the remaining as a date (partial or full)
-                if let Some(date) = Self::parse_partial_date(&date_candidate) {
+                if let Some(date) = parse_partial_date(&date_candidate) {
                     let datetime = date.and_time(time_dt.inner.time()).and_utc();
                     let mut result = Self {
                         inner: datetime,
@@ -784,47 +550,6 @@ impl DateTime {
         }
 
         None
-    }
-
-    fn parse_partial_date(input: &str) -> Option<NaiveDate> {
-        let normalized = Self::normalize_month_name(input);
-        let current_year = Utc::now().year();
-
-        // "Jan 27" or "January 27"
-        if let Ok(md) =
-            NaiveDate::parse_from_str(&format!("{normalized} {current_year}"), "%b %d %Y")
-        {
-            return Some(md);
-        }
-        if let Ok(md) =
-            NaiveDate::parse_from_str(&format!("{normalized} {current_year}"), "%B %d %Y")
-        {
-            return Some(md);
-        }
-
-        // "27 Jan" format
-        if let Ok(md) =
-            NaiveDate::parse_from_str(&format!("{normalized} {current_year}"), "%d %b %Y")
-        {
-            return Some(md);
-        }
-
-        None
-    }
-
-    fn normalize_month_name(input: &str) -> String {
-        // Capitalize first letter of each word for month parsing
-        input
-            .split_whitespace()
-            .map(|word| {
-                let mut chars = word.chars();
-                match chars.next() {
-                    None => String::new(),
-                    Some(c) => c.to_uppercase().to_string() + &chars.as_str().to_lowercase(),
-                }
-            })
-            .collect::<Vec<_>>()
-            .join(" ")
     }
 
     /// Returns the underlying chrono DateTime.
@@ -870,6 +595,13 @@ impl DateTime {
     pub fn year(&self) -> i32 {
         use chrono::Datelike;
         self.inner.year()
+    }
+
+    /// Parses common timezone abbreviations to `FixedOffset`.
+    ///
+    /// Returns `None` if the abbreviation is not recognized.
+    pub(crate) fn parse_tz_abbreviation(tz: &str) -> Option<FixedOffset> {
+        parse_tz_abbreviation(tz)
     }
 }
 

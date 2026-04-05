@@ -175,6 +175,19 @@ impl<'a> TokenParser<'a> {
                 }
             }
 
+            // If followed by an identifier that looks like a month name (e.g., "17 February 2027"
+            // or "17 февраля 2027"), try to parse the whole as a datetime expression.
+            if let Some(TokenKind::Identifier(id)) = self.current_kind() {
+                if DateTimeGrammar::looks_like_datetime(id) {
+                    let save_before_dt = self.pos;
+                    if let Ok(dt) = self.try_parse_datetime_from_tokens(&num_str) {
+                        return Ok(dt);
+                    }
+                    // Datetime parse failed — restore position and fall through to plain number
+                    self.pos = save_before_dt;
+                }
+            }
+
             // Check for unit (identifier following number that is not a function)
             let (unit, alternative_units) =
                 if let Some(TokenKind::Identifier(id)) = self.current_kind() {
@@ -450,6 +463,8 @@ impl<'a> TokenParser<'a> {
     ) -> Result<Expression, CalculatorError> {
         // Collect tokens that might be part of a datetime
         let mut parts = vec![first.to_string()];
+        // Track token positions so we can backtrack to any prefix
+        let mut token_positions = vec![self.pos]; // position before each token was consumed
 
         // Look for patterns like: Jan 22, 2026 or Jan 27, 8:59am UTC
         // Also handles: Monday, January 26th, 2026
@@ -457,6 +472,7 @@ impl<'a> TokenParser<'a> {
         while !self.is_at_end() {
             match self.current_kind() {
                 Some(TokenKind::Number(n)) => {
+                    token_positions.push(self.pos);
                     parts.push(n.clone());
                     self.advance();
                 }
@@ -468,20 +484,24 @@ impl<'a> TokenParser<'a> {
                         // Append to previous number part (ordinal suffix)
                         if let Some(last) = parts.last_mut() {
                             if last.chars().all(|c| c.is_ascii_digit()) {
+                                token_positions.push(self.pos);
                                 last.push_str(id);
                                 self.advance();
                                 continue;
                             }
                         }
                     }
+                    token_positions.push(self.pos);
                     parts.push(id.clone());
                     self.advance();
                 }
                 Some(TokenKind::Comma) => {
+                    token_positions.push(self.pos);
                     parts.push(",".to_string());
                     self.advance();
                 }
                 Some(TokenKind::Colon) => {
+                    token_positions.push(self.pos);
                     parts.push(":".to_string());
                     self.advance();
                 }
@@ -489,12 +509,40 @@ impl<'a> TokenParser<'a> {
             }
         }
 
-        let datetime_str = parts.join(" ").replace(" , ", ", ").replace(" : ", ":");
-
-        match crate::types::DateTime::parse(&datetime_str) {
-            Ok(dt) => Ok(Expression::DateTime(dt)),
-            Err(e) => Err(e),
+        // Try the full collected string first, then progressively shorter prefixes.
+        // This handles cases like "17 февраля 2027 - 6 months" where the datetime
+        // is "17 февраля 2027" but greedily collecting too many tokens would fail.
+        let end_pos = self.pos;
+        for len in (1..=parts.len()).rev() {
+            let candidate_parts = &parts[..len];
+            let datetime_str = candidate_parts
+                .join(" ")
+                .replace(" , ", ", ")
+                .replace(" : ", ":");
+            if let Ok(dt) = crate::types::DateTime::parse(&datetime_str) {
+                // Restore position to just after the tokens we actually consumed
+                // token_positions[len - 1] is the position *before* consuming parts[len-1]
+                // so the position after consuming parts[len-1] is:
+                // - for the last element: end_pos (we already advanced past all)
+                // - for shorter prefix: token_positions[len] (position before parts[len])
+                if len < parts.len() {
+                    self.pos = token_positions[len];
+                } else {
+                    self.pos = end_pos;
+                }
+                return Ok(Expression::DateTime(dt));
+            }
         }
+
+        // No prefix worked — restore original position and report error
+        if parts.is_empty() {
+            return Err(crate::error::CalculatorError::parse("empty datetime"));
+        }
+        // Return error with the full string for better error messages
+        let datetime_str = parts.join(" ").replace(" , ", ", ").replace(" : ", ":");
+        Err(crate::error::CalculatorError::InvalidDateTime(format!(
+            "Could not parse '{datetime_str}' as a date or time"
+        )))
     }
 
     /// Parses natural integral notation: "integrate <expr> d<var>"
