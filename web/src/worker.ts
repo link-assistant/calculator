@@ -171,6 +171,7 @@ const LINO_RUB_PAIRS = [
   'chf-rub',
   'cny-rub',
   'inr-rub',
+  'kzt-rub',
 ];
 
 /// Load CBR rates from local .lino files served via GitHub Pages.

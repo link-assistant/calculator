@@ -73,6 +73,7 @@ fn primary_source(code: &str) -> RateSource {
     if matches!(
         upper.as_str(),
         "VND"
+            | "KZT"
             | "AZN"
             | "DZD"
             | "AMD"
@@ -176,6 +177,7 @@ fn can_also_serve(source: RateSource, code: &str, all_currencies: &[String]) -> 
                     | "PHP"
                     | "THB"
                     | "VND"
+                    | "KZT"
                     | "AZN"
                     | "DZD"
                     | "AMD"

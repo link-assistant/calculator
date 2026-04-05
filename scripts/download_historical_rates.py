@@ -78,6 +78,7 @@ CBR_CURRENCIES = {
     "R01375": "CNY",  # Chinese Yuan
     "R01270": "INR",  # Indian Rupee (100 INR = X RUB nominal)
     "R01150": "VND",  # Vietnamese Dong (10000 VND = X RUB nominal)
+    "R01335": "KZT",  # Kazakhstani Tenge (100 KZT = X RUB nominal)
 }
 
 
