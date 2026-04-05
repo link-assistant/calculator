@@ -596,6 +596,55 @@ impl DurationUnit {
             "г" | "год" | "года" | "лет" | "году" | "годом" | "годам" | "годами" | "годах" => {
                 Some(Self::Years)
             }
+            // ── German (de) ──────────────────────────────────────────────────
+            "millisekunde" | "millisekunden" => Some(Self::Milliseconds),
+            "sekunde" | "sekunden" | "sek" => Some(Self::Seconds),
+            "minuten" => Some(Self::Minutes), // "minute"/"min" already covered by English
+            "stunde" | "stunden" | "std" => Some(Self::Hours),
+            "tag" | "tage" | "tagen" => Some(Self::Days),
+            "woche" | "wochen" => Some(Self::Weeks),
+            "monat" | "monate" | "monaten" | "monats" => Some(Self::Months),
+            "jahr" | "jahre" | "jahren" | "jahres" => Some(Self::Years),
+            // ── French (fr) ──────────────────────────────────────────────────
+            "milliseconde" | "millisecondes" => Some(Self::Milliseconds),
+            "seconde" | "secondes" => Some(Self::Seconds),
+            // "minute"/"minutes" already covered by English
+            "heure" | "heures" => Some(Self::Hours),
+            "jour" | "jours" => Some(Self::Days),
+            "semaine" | "semaines" => Some(Self::Weeks),
+            "mois" => Some(Self::Months),
+            "an" | "ans" | "année" | "années" | "annee" | "annees" => Some(Self::Years),
+            // ── Chinese Simplified (zh) ───────────────────────────────────────
+            "毫秒" => Some(Self::Milliseconds),
+            "秒" => Some(Self::Seconds),
+            "分钟" | "分" => Some(Self::Minutes),
+            "小时" | "时" | "钟" => Some(Self::Hours),
+            "天" | "日" => Some(Self::Days),
+            "周" | "星期" | "礼拜" => Some(Self::Weeks),
+            "月" | "个月" => Some(Self::Months),
+            "年" => Some(Self::Years),
+            // ── Hindi (hi) ───────────────────────────────────────────────────
+            "मिलीसेकंड" => Some(Self::Milliseconds),
+            "सेकंड" | "सेकेंड" => Some(Self::Seconds),
+            "मिनट" | "मिनटों" => Some(Self::Minutes),
+            "घंटा" | "घंटे" | "घंटों" => Some(Self::Hours),
+            "दिन" | "दिनों" => Some(Self::Days),
+            "सप्ताह" | "हफ्ता" | "हफ्ते" | "हफ्तों" => {
+                Some(Self::Weeks)
+            }
+            "महीना" | "महीने" | "महीनों" | "माह" | "मास" => {
+                Some(Self::Months)
+            }
+            "साल" | "वर्ष" | "वर्षों" => Some(Self::Years),
+            // ── Arabic (ar) ──────────────────────────────────────────────────
+            "مللي" | "ميلي" => Some(Self::Milliseconds), // millisecond abbreviations
+            "ثانية" | "ثواني" | "ثوان" => Some(Self::Seconds),
+            "دقيقة" | "دقائق" => Some(Self::Minutes),
+            "ساعة" | "ساعات" => Some(Self::Hours),
+            "يوم" | "أيام" | "ايام" => Some(Self::Days),
+            "أسبوع" | "اسبوع" | "أسابيع" | "اسابيع" => Some(Self::Weeks),
+            "شهر" | "أشهر" | "اشهر" | "شهور" => Some(Self::Months),
+            "سنة" | "سنوات" | "عام" | "أعوام" | "اعوام" => Some(Self::Years),
             _ => None,
         }
     }

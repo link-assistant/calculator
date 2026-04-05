@@ -39,7 +39,7 @@ impl DateTimeGrammar {
             return true;
         }
 
-        // Check for month names
+        // Check for month names (all supported UI languages)
         let month_names = [
             // English abbreviated
             "jan",
@@ -66,7 +66,7 @@ impl DateTimeGrammar {
             "october",
             "november",
             "december",
-            // Russian nominative forms
+            // Russian (ru) nominative forms
             "январь",
             "февраль",
             "март",
@@ -79,7 +79,7 @@ impl DateTimeGrammar {
             "октябрь",
             "ноябрь",
             "декабрь",
-            // Russian genitive forms (most common in dates like "17 февраля 2027")
+            // Russian (ru) genitive forms (most common in dates like "17 февраля 2027")
             "января",
             "февраля",
             "марта",
@@ -91,6 +91,74 @@ impl DateTimeGrammar {
             "октября",
             "ноября",
             "декабря",
+            // German (de)
+            "januar",
+            "februar",
+            "märz",
+            "juni",
+            "juli",
+            "oktober",
+            "dezember",
+            // French (fr)
+            "janvier",
+            "février",
+            "fevrier",
+            "mars",
+            "avril",
+            "juin",
+            "juillet",
+            "août",
+            "aout",
+            "septembre",
+            "octobre",
+            "novembre",
+            "décembre",
+            "decembre",
+            // Chinese Simplified (zh) — numeric month names like 一月, 十二月
+            "一月",
+            "二月",
+            "三月",
+            "四月",
+            "五月",
+            "六月",
+            "七月",
+            "八月",
+            "九月",
+            "十月",
+            "十一月",
+            "十二月",
+            // Hindi (hi)
+            "जनवरी",
+            "फरवरी",
+            "मार्च",
+            "अप्रैल",
+            "मई",
+            "जून",
+            "जुलाई",
+            "अगस्त",
+            "सितंबर",
+            "सितम्बर",
+            "अक्टूबर",
+            "नवंबर",
+            "नवम्बर",
+            "दिसंबर",
+            "दिसम्बर",
+            // Arabic (ar)
+            "يناير",
+            "فبراير",
+            "مارس",
+            "أبريل",
+            "ابريل",
+            "مايو",
+            "يونيو",
+            "يوليو",
+            "أغسطس",
+            "اغسطس",
+            "سبتمبر",
+            "أكتوبر",
+            "اكتوبر",
+            "نوفمبر",
+            "ديسمبر",
         ];
 
         for month in &month_names {

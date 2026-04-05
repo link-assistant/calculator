@@ -7,20 +7,20 @@ use chrono::Datelike;
 use chrono::{FixedOffset, NaiveDate, NaiveTime, Utc};
 use regex;
 
-/// Translates Russian month names (in any grammatical case) to their English equivalents.
+/// Translates month names from any supported UI language to English.
 ///
-/// Russian month names decline in all 6 grammatical cases. This function handles
-/// the most common forms used in date expressions:
-/// - Nominative: январь, февраль, март, апрель, май, июнь, июль, август, сентябрь, октябрь, ноябрь, декабрь
-/// - Genitive (most common in dates like "17 февраля 2027"): января, февраля, марта, апреля, мая, июня, июля, августа, сентября, октября, ноября, декабря
+/// Supported languages: Russian (ru), German (de), French (fr),
+/// Chinese Simplified (zh), Hindi (hi), Arabic (ar).
+/// English is already understood by the date parser, so no translation needed.
 ///
-/// Returns the input unchanged if no Russian month names are found.
-pub(super) fn translate_russian_months(input: &str) -> String {
+/// Returns the input unchanged if no translatable month name is found.
+pub(super) fn translate_month_names(input: &str) -> String {
     let lower = input.to_lowercase();
 
-    // Russian month name → English month name mapping.
-    // Ordered from longest to shortest to prevent partial matches.
+    // All month name → English month name mappings.
+    // Ordered from longest to shortest within each language to prevent partial matches.
     let translations: &[(&str, &str)] = &[
+        // ── Russian (ru) ─────────────────────────────────────────────────────
         // Genitive/prepositional forms (most common in dates like "17 февраля")
         ("января", "January"),
         ("февраля", "February"),
@@ -46,7 +46,7 @@ pub(super) fn translate_russian_months(input: &str) -> String {
         ("октябрь", "October"),
         ("ноябрь", "November"),
         ("декабрь", "December"),
-        // Abbreviated forms (common in informal usage)
+        // Russian abbreviated forms
         ("янв", "Jan"),
         ("фев", "Feb"),
         ("мар", "Mar"),
@@ -56,18 +56,107 @@ pub(super) fn translate_russian_months(input: &str) -> String {
         ("окт", "Oct"),
         ("ноя", "Nov"),
         ("дек", "Dec"),
+        // ── German (de) ──────────────────────────────────────────────────────
+        // German month names (same spelling in nominative/genitive)
+        ("januar", "January"),
+        ("februar", "February"),
+        ("märz", "March"),
+        ("april", "April"),
+        ("juni", "June"),
+        ("juli", "July"),
+        ("august", "August"),
+        ("september", "September"),
+        ("oktober", "October"),
+        ("november", "November"),
+        ("dezember", "December"),
+        // German: "Mai" collides with English "May" (already handled); skip
+        // ── French (fr) ──────────────────────────────────────────────────────
+        // French month names (lowercase; French capitalizes only at sentence start)
+        ("janvier", "January"),
+        ("février", "February"),
+        ("fevrier", "February"), // without accent, common input variant
+        ("mars", "March"),
+        // "avril" handled below after longer strings
+        ("mai", "May"),
+        ("juin", "June"),
+        ("juillet", "July"),
+        ("août", "August"),
+        ("aout", "August"), // without accent
+        ("septembre", "September"),
+        ("octobre", "October"),
+        ("novembre", "November"),
+        ("décembre", "December"),
+        ("decembre", "December"), // without accent
+        ("avril", "April"),
+        // ── Chinese Simplified (zh) ───────────────────────────────────────────
+        // Chinese uses numeric months but also有 full-word forms like "一月" (January)
+        ("一月", "January"),
+        ("二月", "February"),
+        ("三月", "March"),
+        ("四月", "April"),
+        ("五月", "May"),
+        ("六月", "June"),
+        ("七月", "July"),
+        ("八月", "August"),
+        ("九月", "September"),
+        ("十月", "October"),
+        ("十一月", "November"),
+        ("十二月", "December"),
+        // ── Hindi (hi) ───────────────────────────────────────────────────────
+        // Hindi month names (Devanagari script)
+        ("जनवरी", "January"),
+        ("फरवरी", "February"),
+        ("मार्च", "March"),
+        ("अप्रैल", "April"),
+        ("मई", "May"),
+        ("जून", "June"),
+        ("जुलाई", "July"),
+        ("अगस्त", "August"),
+        ("सितंबर", "September"),
+        ("सितम्बर", "September"), // alternate spelling
+        ("अक्टूबर", "October"),
+        ("नवंबर", "November"),
+        ("नवम्बर", "November"), // alternate spelling
+        ("दिसंबर", "December"),
+        ("दिसम्बर", "December"), // alternate spelling
+        // ── Arabic (ar) ──────────────────────────────────────────────────────
+        // Arabic month names (used in modern Arab countries; MSA/Levantine)
+        ("يناير", "January"),
+        ("فبراير", "February"),
+        ("مارس", "March"),
+        ("أبريل", "April"),
+        ("ابريل", "April"), // without hamza
+        ("مايو", "May"),
+        ("يونيو", "June"),
+        ("يوليو", "July"),
+        ("أغسطس", "August"),
+        ("اغسطس", "August"), // without hamza
+        ("سبتمبر", "September"),
+        ("أكتوبر", "October"),
+        ("اكتوبر", "October"), // without hamza
+        ("نوفمبر", "November"),
+        ("ديسمبر", "December"),
     ];
 
     let mut result = input.to_string();
-    for (russian, english) in translations {
-        if let Some(pos) = lower.find(russian) {
-            result = format!(
-                "{}{}{}",
-                &result[..pos],
-                english,
-                &result[pos + russian.len()..]
-            );
-            return result; // Only translate the first found month name
+    for (native, english) in translations {
+        // All patterns must match as whole words to avoid partial matches.
+        // For example, German "januar" must not match inside English "january".
+        if let Some(pos) = lower.find(native) {
+            let end = pos + native.len();
+            // Check word boundaries: the character before and after must not be alphabetic.
+            let before_ok = pos == 0 || {
+                let ch = lower[..pos].chars().next_back();
+                ch.map_or(true, |c| !c.is_alphabetic())
+            };
+            let after_ok = end >= lower.len() || {
+                let ch = lower[end..].chars().next();
+                ch.map_or(true, |c| !c.is_alphabetic())
+            };
+            if before_ok && after_ok {
+                result = format!("{}{}{}", &result[..pos], english, &result[end..]);
+                return result; // Only translate the first found month name
+            }
         }
     }
     result

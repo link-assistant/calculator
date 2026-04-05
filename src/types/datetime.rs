@@ -14,7 +14,7 @@ use crate::error::CalculatorError;
 mod parse;
 use parse::{
     extract_timezone, normalize_month_name, parse_12h_time, parse_partial_date,
-    parse_tz_abbreviation, preprocess_natural_date, translate_russian_months,
+    parse_tz_abbreviation, preprocess_natural_date, translate_month_names,
 };
 
 /// A `DateTime` value that can represent dates, times, or both.
@@ -177,10 +177,10 @@ impl DateTime {
             return Ok(dt);
         }
 
-        // Pre-process: translate Russian month names to English
-        let russian_translated = translate_russian_months(input);
-        let input = if russian_translated != input {
-            russian_translated.as_str()
+        // Pre-process: translate non-English month names to English (all supported UI languages)
+        let translated = translate_month_names(input);
+        let input = if translated != input {
+            translated.as_str()
         } else {
             input
         };
