@@ -53,7 +53,7 @@ fn test_issue_123_tenge_to_usd_value_is_reasonable() {
     let result_value: f64 = result
         .result
         .replace("USD", "")
-        .replace(",", "")
+        .replace(',', "")
         .trim()
         .parse()
         .unwrap_or(0.0);
