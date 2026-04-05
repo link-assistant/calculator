@@ -394,7 +394,12 @@ impl DateTime {
         let mut result = input.to_string();
         for (russian, english) in translations {
             if let Some(pos) = lower.find(russian) {
-                result = format!("{}{}{}", &result[..pos], english, &result[pos + russian.len()..]);
+                result = format!(
+                    "{}{}{}",
+                    &result[..pos],
+                    english,
+                    &result[pos + russian.len()..]
+                );
                 return result; // Only translate the first found month name
             }
         }
