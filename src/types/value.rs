@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::fmt;
 
 use crate::error::CalculatorError;
-use crate::types::{CurrencyDatabase, DateTime, Decimal, Rational, Unit};
+use crate::types::{CurrencyDatabase, DateTime, Decimal, DurationUnit, Rational, Unit};
 
 /// A typed value with an optional unit.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -173,8 +173,9 @@ impl Value {
                 if matches!(other.unit, Unit::Duration(_)) =>
             {
                 if let Unit::Duration(dur_unit) = &other.unit {
-                    let seconds = dur_unit.to_secs(r.to_f64()) as i64;
-                    Ok(Value::datetime(dt.add_duration(seconds)))
+                    Ok(Value::datetime(
+                        add_calendar_months_or_duration(dt, dur_unit, r.to_f64()),
+                    ))
                 } else {
                     unreachable!()
                 }
@@ -183,8 +184,9 @@ impl Value {
                 if matches!(other.unit, Unit::Duration(_)) =>
             {
                 if let Unit::Duration(dur_unit) = &other.unit {
-                    let seconds = dur_unit.to_secs(n.to_f64()) as i64;
-                    Ok(Value::datetime(dt.add_duration(seconds)))
+                    Ok(Value::datetime(
+                        add_calendar_months_or_duration(dt, dur_unit, n.to_f64()),
+                    ))
                 } else {
                     unreachable!()
                 }
@@ -194,8 +196,9 @@ impl Value {
                 if matches!(self.unit, Unit::Duration(_)) =>
             {
                 if let Unit::Duration(dur_unit) = &self.unit {
-                    let seconds = dur_unit.to_secs(r.to_f64()) as i64;
-                    Ok(Value::datetime(dt.add_duration(seconds)))
+                    Ok(Value::datetime(
+                        add_calendar_months_or_duration(dt, dur_unit, r.to_f64()),
+                    ))
                 } else {
                     unreachable!()
                 }
@@ -204,8 +207,9 @@ impl Value {
                 if matches!(self.unit, Unit::Duration(_)) =>
             {
                 if let Unit::Duration(dur_unit) = &self.unit {
-                    let seconds = dur_unit.to_secs(n.to_f64()) as i64;
-                    Ok(Value::datetime(dt.add_duration(seconds)))
+                    Ok(Value::datetime(
+                        add_calendar_months_or_duration(dt, dur_unit, n.to_f64()),
+                    ))
                 } else {
                     unreachable!()
                 }
@@ -347,8 +351,9 @@ impl Value {
                 if matches!(other.unit, Unit::Duration(_)) =>
             {
                 if let Unit::Duration(dur_unit) = &other.unit {
-                    let seconds = dur_unit.to_secs(r.to_f64()) as i64;
-                    Ok(Value::datetime(dt.add_duration(-seconds)))
+                    Ok(Value::datetime(
+                        add_calendar_months_or_duration(dt, dur_unit, -r.to_f64()),
+                    ))
                 } else {
                     unreachable!()
                 }
@@ -357,8 +362,9 @@ impl Value {
                 if matches!(other.unit, Unit::Duration(_)) =>
             {
                 if let Unit::Duration(dur_unit) = &other.unit {
-                    let seconds = dur_unit.to_secs(n.to_f64()) as i64;
-                    Ok(Value::datetime(dt.add_duration(-seconds)))
+                    Ok(Value::datetime(
+                        add_calendar_months_or_duration(dt, dur_unit, -n.to_f64()),
+                    ))
                 } else {
                     unreachable!()
                 }
@@ -808,6 +814,25 @@ impl PartialEq for Value {
             (ValueKind::Duration { seconds: a }, ValueKind::Duration { seconds: b }) => a == b,
             (ValueKind::Boolean(a), ValueKind::Boolean(b)) => a == b,
             _ => false,
+        }
+    }
+}
+
+/// Applies a signed duration to a `DateTime`, using calendar arithmetic for
+/// months and years and second-based arithmetic for all other units.
+///
+/// `amount` is positive for addition and negative for subtraction.
+fn add_calendar_months_or_duration(dt: &DateTime, unit: &DurationUnit, amount: f64) -> DateTime {
+    match unit {
+        DurationUnit::Months => dt.add_calendar_months(amount as i32),
+        DurationUnit::Years => dt.add_calendar_months((amount * 12.0) as i32),
+        other => {
+            let seconds = other.to_secs(amount.abs()) as i64;
+            if amount >= 0.0 {
+                dt.add_duration(seconds)
+            } else {
+                dt.add_duration(-seconds)
+            }
         }
     }
 }

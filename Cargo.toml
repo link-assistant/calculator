@@ -85,3 +85,7 @@ path = "experiments/test_issue23.rs"
 [[example]]
 name = "test_issue104_ton_ambiguity"
 path = "experiments/test_issue104_ton_ambiguity.rs"
+
+[[example]]
+name = "test_issue128_year"
+path = "experiments/test_issue128_year.rs"
