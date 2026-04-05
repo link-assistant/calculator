@@ -598,16 +598,13 @@ impl DateTime {
     #[must_use]
     pub fn add_calendar_months(&self, months: i32) -> Self {
         let naive = self.inner.naive_utc();
+        #[allow(clippy::cast_sign_loss)] // sign is checked by the if/else branches
         let new_naive = if months >= 0 {
             let m = Months::new(months as u32);
-            naive
-                .checked_add_months(m)
-                .unwrap_or(naive)
+            naive.checked_add_months(m).unwrap_or(naive)
         } else {
             let m = Months::new((-months) as u32);
-            naive
-                .checked_sub_months(m)
-                .unwrap_or(naive)
+            naive.checked_sub_months(m).unwrap_or(naive)
         };
         let new_inner = new_naive.and_utc();
         Self {

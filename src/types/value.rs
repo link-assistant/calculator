@@ -172,10 +172,12 @@ impl Value {
             (ValueKind::DateTime(dt), ValueKind::Rational(r))
                 if matches!(other.unit, Unit::Duration(_)) =>
             {
-                if let Unit::Duration(dur_unit) = &other.unit {
-                    Ok(Value::datetime(
-                        add_calendar_months_or_duration(dt, dur_unit, r.to_f64()),
-                    ))
+                if let Unit::Duration(dur_unit) = other.unit {
+                    Ok(Value::datetime(add_calendar_months_or_duration(
+                        dt,
+                        dur_unit,
+                        r.to_f64(),
+                    )))
                 } else {
                     unreachable!()
                 }
@@ -183,10 +185,12 @@ impl Value {
             (ValueKind::DateTime(dt), ValueKind::Number(n))
                 if matches!(other.unit, Unit::Duration(_)) =>
             {
-                if let Unit::Duration(dur_unit) = &other.unit {
-                    Ok(Value::datetime(
-                        add_calendar_months_or_duration(dt, dur_unit, n.to_f64()),
-                    ))
+                if let Unit::Duration(dur_unit) = other.unit {
+                    Ok(Value::datetime(add_calendar_months_or_duration(
+                        dt,
+                        dur_unit,
+                        n.to_f64(),
+                    )))
                 } else {
                     unreachable!()
                 }
@@ -195,10 +199,12 @@ impl Value {
             (ValueKind::Rational(r), ValueKind::DateTime(dt))
                 if matches!(self.unit, Unit::Duration(_)) =>
             {
-                if let Unit::Duration(dur_unit) = &self.unit {
-                    Ok(Value::datetime(
-                        add_calendar_months_or_duration(dt, dur_unit, r.to_f64()),
-                    ))
+                if let Unit::Duration(dur_unit) = self.unit {
+                    Ok(Value::datetime(add_calendar_months_or_duration(
+                        dt,
+                        dur_unit,
+                        r.to_f64(),
+                    )))
                 } else {
                     unreachable!()
                 }
@@ -206,10 +212,12 @@ impl Value {
             (ValueKind::Number(n), ValueKind::DateTime(dt))
                 if matches!(self.unit, Unit::Duration(_)) =>
             {
-                if let Unit::Duration(dur_unit) = &self.unit {
-                    Ok(Value::datetime(
-                        add_calendar_months_or_duration(dt, dur_unit, n.to_f64()),
-                    ))
+                if let Unit::Duration(dur_unit) = self.unit {
+                    Ok(Value::datetime(add_calendar_months_or_duration(
+                        dt,
+                        dur_unit,
+                        n.to_f64(),
+                    )))
                 } else {
                     unreachable!()
                 }
@@ -350,10 +358,12 @@ impl Value {
             (ValueKind::DateTime(dt), ValueKind::Rational(r))
                 if matches!(other.unit, Unit::Duration(_)) =>
             {
-                if let Unit::Duration(dur_unit) = &other.unit {
-                    Ok(Value::datetime(
-                        add_calendar_months_or_duration(dt, dur_unit, -r.to_f64()),
-                    ))
+                if let Unit::Duration(dur_unit) = other.unit {
+                    Ok(Value::datetime(add_calendar_months_or_duration(
+                        dt,
+                        dur_unit,
+                        -r.to_f64(),
+                    )))
                 } else {
                     unreachable!()
                 }
@@ -361,10 +371,12 @@ impl Value {
             (ValueKind::DateTime(dt), ValueKind::Number(n))
                 if matches!(other.unit, Unit::Duration(_)) =>
             {
-                if let Unit::Duration(dur_unit) = &other.unit {
-                    Ok(Value::datetime(
-                        add_calendar_months_or_duration(dt, dur_unit, -n.to_f64()),
-                    ))
+                if let Unit::Duration(dur_unit) = other.unit {
+                    Ok(Value::datetime(add_calendar_months_or_duration(
+                        dt,
+                        dur_unit,
+                        -n.to_f64(),
+                    )))
                 } else {
                     unreachable!()
                 }
@@ -822,7 +834,7 @@ impl PartialEq for Value {
 /// months and years and second-based arithmetic for all other units.
 ///
 /// `amount` is positive for addition and negative for subtraction.
-fn add_calendar_months_or_duration(dt: &DateTime, unit: &DurationUnit, amount: f64) -> DateTime {
+fn add_calendar_months_or_duration(dt: &DateTime, unit: DurationUnit, amount: f64) -> DateTime {
     match unit {
         DurationUnit::Months => dt.add_calendar_months(amount as i32),
         DurationUnit::Years => dt.add_calendar_months((amount * 12.0) as i32),
