@@ -54,7 +54,7 @@ jobs:
 
       - name: Install Playwright browsers
         working-directory: web
-        run: npx playwright install chromium
+        run: npx playwright install chromium --with-deps
 
       - name: Copy currency data files to web public directory
         run: |
@@ -66,20 +66,19 @@ jobs:
         working-directory: web
         run: npm run build
 
-      - name: Take screenshots
+      - name: Start preview server and take screenshots
         working-directory: web
         run: |
-          npx playwright test e2e/screenshots.spec.ts --reporter=list || true
-
-      - name: Copy screenshots to docs/screenshots
-        run: |
-          mkdir -p docs/screenshots
-          # Copy relevant screenshots for README
-          cp docs/use-cases/01-initial-state.png docs/screenshots/calculator-main.png 2>/dev/null || true
-          cp docs/use-cases/02-simple-arithmetic.png docs/screenshots/calculator-arithmetic.png 2>/dev/null || true
-          cp docs/use-cases/03-currency-conversion.png docs/screenshots/calculator-currency.png 2>/dev/null || true
-          cp docs/use-cases/08-datetime.png docs/screenshots/calculator-datetime.png 2>/dev/null || true
-          cp docs/use-cases/09-parentheses.png docs/screenshots/calculator-parentheses.png 2>/dev/null || true
+          npm run preview &
+          PREVIEW_PID=$!
+          # Wait for server to be ready (up to 30 seconds)
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:4173 > /dev/null 2>&1 && break
+            sleep 1
+          done
+          # Take screenshots using browser-commander
+          node scripts/take-screenshots.mjs
+          kill $PREVIEW_PID || true
 
       - name: Check for changes
         id: changes
