@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 /**
  * Screenshot generation tests for USE-CASES.md documentation.
- * These tests generate screenshots of various calculator use cases.
+ * These tests generate full page screenshots of various calculator use cases.
  */
 
 const SCREENSHOT_DIR = '../docs/use-cases';
@@ -19,7 +19,7 @@ test.describe('Screenshot Generation', () => {
   test('01-initial-state', async ({ page }) => {
     await page.screenshot({
       path: `${SCREENSHOT_DIR}/01-initial-state.png`,
-      fullPage: false,
+      fullPage: true,
     });
   });
 
@@ -31,7 +31,7 @@ test.describe('Screenshot Generation', () => {
 
     await page.screenshot({
       path: `${SCREENSHOT_DIR}/02-simple-arithmetic.png`,
-      fullPage: false,
+      fullPage: true,
     });
   });
 
@@ -43,7 +43,7 @@ test.describe('Screenshot Generation', () => {
 
     await page.screenshot({
       path: `${SCREENSHOT_DIR}/03-currency-conversion.png`,
-      fullPage: false,
+      fullPage: true,
     });
   });
 
@@ -100,7 +100,7 @@ test.describe('Screenshot Generation', () => {
 
     await page.screenshot({
       path: `${SCREENSHOT_DIR}/06-definite-integral.png`,
-      fullPage: false,
+      fullPage: true,
     });
   });
 
@@ -120,7 +120,7 @@ test.describe('Screenshot Generation', () => {
 
     await page.screenshot({
       path: `${SCREENSHOT_DIR}/07-math-functions.png`,
-      fullPage: false,
+      fullPage: true,
     });
   });
 
@@ -132,7 +132,7 @@ test.describe('Screenshot Generation', () => {
 
     await page.screenshot({
       path: `${SCREENSHOT_DIR}/08-datetime.png`,
-      fullPage: false,
+      fullPage: true,
     });
   });
 
@@ -144,7 +144,7 @@ test.describe('Screenshot Generation', () => {
 
     await page.screenshot({
       path: `${SCREENSHOT_DIR}/09-parentheses.png`,
-      fullPage: false,
+      fullPage: true,
     });
   });
 });
