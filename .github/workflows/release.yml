@@ -515,6 +515,25 @@ jobs:
         with:
           artifact_name: github-pages-after-release
 
+  # === UPDATE SCREENSHOTS AFTER RELEASE ===
+  # After a new version is released and deployed, regenerate all documentation
+  # screenshots so they reflect the latest version of the app.
+  update-screenshots-after-release:
+    name: Update Screenshots After Release
+    needs: [auto-release, deploy-after-release]
+    # Only run when auto-release actually committed a new version bump and
+    # the updated web app has been deployed to GitHub Pages.
+    if: |
+      always() && !cancelled() &&
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      needs.auto-release.result == 'success' &&
+      needs.auto-release.outputs.version_committed == 'true' &&
+      needs.deploy-after-release.result == 'success'
+    uses: ./.github/workflows/update-screenshots.yml
+    permissions:
+      contents: write
+
   # === MANUAL INSTANT RELEASE ===
   # Manual release via workflow_dispatch - only after CI passes
   manual-release:
