@@ -34,6 +34,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.13.2] - 2026-04-06
+
+### Added
+- Automatically update all documentation screenshots after each release via CI/CD
+- All screenshots are now taken as full page captures for complete visibility
+- Use `browser-commander` for all browser control in the screenshot pipeline
+
 ## [0.13.1] - 2026-04-06
 
 ### Fixed
