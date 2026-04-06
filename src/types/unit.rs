@@ -526,14 +526,14 @@ impl fmt::Display for Unit {
 impl fmt::Display for DurationUnit {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let s = match self {
-            Self::Milliseconds => "ms",
-            Self::Seconds => "s",
-            Self::Minutes => "min",
-            Self::Hours => "h",
-            Self::Days => "d",
-            Self::Weeks => "w",
-            Self::Months => "mo",
-            Self::Years => "y",
+            Self::Milliseconds => "milliseconds",
+            Self::Seconds => "seconds",
+            Self::Minutes => "minutes",
+            Self::Hours => "hours",
+            Self::Days => "days",
+            Self::Weeks => "weeks",
+            Self::Months => "months",
+            Self::Years => "years",
         };
         write!(f, "{s}")
     }
@@ -688,7 +688,7 @@ mod tests {
     fn test_unit_display() {
         assert_eq!(Unit::None.to_string(), "");
         assert_eq!(Unit::currency("USD").to_string(), "USD");
-        assert_eq!(Unit::Duration(DurationUnit::Hours).to_string(), "h");
+        assert_eq!(Unit::Duration(DurationUnit::Hours).to_string(), "hours");
     }
 
     #[test]

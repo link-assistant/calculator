@@ -1,7 +1,7 @@
 //! `DateTime` type for date and time calculations.
 
 use chrono::{
-    DateTime as ChronoDateTime, Duration, FixedOffset, NaiveDate, NaiveDateTime, NaiveTime,
+    DateTime as ChronoDateTime, Duration, FixedOffset, Months, NaiveDate, NaiveDateTime, NaiveTime,
     TimeZone, Utc,
 };
 use serde::{Deserialize, Serialize};
@@ -582,6 +582,33 @@ impl DateTime {
         let duration = Duration::seconds(seconds);
         Self {
             inner: self.inner + duration,
+            offset_seconds: self.offset_seconds,
+            has_time: self.has_time,
+            has_date: self.has_date,
+            label: None,
+            tz_abbrev: None,
+        }
+    }
+
+    /// Adds (or subtracts when negative) a number of calendar months to this DateTime.
+    ///
+    /// Unlike `add_duration`, this performs true calendar arithmetic: the day-of-month
+    /// is preserved whenever possible, and clamped to the last day of the target month
+    /// when the original day does not exist (e.g. 31 Jan + 1 month → 28/29 Feb).
+    #[must_use]
+    pub fn add_calendar_months(&self, months: i32) -> Self {
+        let naive = self.inner.naive_utc();
+        #[allow(clippy::cast_sign_loss)] // sign is checked by the if/else branches
+        let new_naive = if months >= 0 {
+            let m = Months::new(months as u32);
+            naive.checked_add_months(m).unwrap_or(naive)
+        } else {
+            let m = Months::new((-months) as u32);
+            naive.checked_sub_months(m).unwrap_or(naive)
+        };
+        let new_inner = new_naive.and_utc();
+        Self {
+            inner: new_inner,
             offset_seconds: self.offset_seconds,
             has_time: self.has_time,
             has_date: self.has_date,
