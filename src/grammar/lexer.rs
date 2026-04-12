@@ -143,6 +143,8 @@ pub enum TokenKind {
     Until,
     /// The equals sign for equality checks (e.g., `1 + 1 = 2`).
     Equals,
+    /// The exclamation mark for factorial postfix notation (e.g., `5!`).
+    Bang,
     /// End of input.
     Eof,
 }
@@ -278,6 +280,10 @@ impl Lexer {
             '=' => {
                 self.advance();
                 Token::new(TokenKind::Equals, start, self.pos, "=".to_string())
+            }
+            '!' => {
+                self.advance();
+                Token::new(TokenKind::Bang, start, self.pos, "!".to_string())
             }
             _ if ch.is_ascii_digit() || ch == '.' => self.scan_number(),
             _ if ch.is_alphabetic() => self.scan_identifier(),
