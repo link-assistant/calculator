@@ -355,6 +355,9 @@ pub(super) fn parse_partial_date(input: &str) -> Option<NaiveDate> {
     if let Ok(md) = NaiveDate::parse_from_str(&format!("{normalized} {current_year}"), "%d %b %Y") {
         return Some(md);
     }
+    if let Ok(md) = NaiveDate::parse_from_str(&format!("{normalized} {current_year}"), "%d %B %Y") {
+        return Some(md);
+    }
 
     None
 }
