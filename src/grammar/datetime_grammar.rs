@@ -353,7 +353,7 @@ impl DateTimeGrammar {
         second_dt_str: &str,
     ) -> (Value, Vec<String>, String) {
         // Calculate the difference
-        let diff = dt1.subtract(&dt2);
+        let diff = dt1.subtract(dt2);
         #[allow(clippy::cast_possible_wrap)]
         let seconds = diff.as_secs() as i64;
 
