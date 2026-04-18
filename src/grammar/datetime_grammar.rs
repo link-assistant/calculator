@@ -272,8 +272,23 @@ impl DateTimeGrammar {
         // Look for pattern: (datetime) - (datetime)
         let input = input.trim();
 
-        // Check if it starts with '(' and contains '-'
-        if !input.starts_with('(') || !input.contains('-') {
+        if !input.contains('-') {
+            return None;
+        }
+
+        if let Some((left, right)) = input.split_once(" - ") {
+            if let (Ok(dt1), Ok(dt2)) = (self.parse(left.trim()), self.parse(right.trim())) {
+                return Some(Self::datetime_difference_result(
+                    &dt1,
+                    &dt2,
+                    left.trim(),
+                    right.trim(),
+                ));
+            }
+        }
+
+        // Check if it starts with '(' for the explicit "(datetime) - (datetime)" form.
+        if !input.starts_with('(') {
             return None;
         }
 
@@ -323,8 +338,22 @@ impl DateTimeGrammar {
             return None;
         };
 
+        Some(Self::datetime_difference_result(
+            &dt1,
+            &dt2,
+            first_dt_str.trim(),
+            second_dt_str.trim(),
+        ))
+    }
+
+    fn datetime_difference_result(
+        dt1: &DateTime,
+        dt2: &DateTime,
+        first_dt_str: &str,
+        second_dt_str: &str,
+    ) -> (Value, Vec<String>, String) {
         // Calculate the difference
-        let diff = dt1.subtract(&dt2);
+        let diff = dt1.subtract(dt2);
         #[allow(clippy::cast_possible_wrap)]
         let seconds = diff.as_secs() as i64;
 
@@ -339,9 +368,9 @@ impl DateTimeGrammar {
 
         // Issue #30 fix: Use exactly 2 outer parentheses for Links notation
         // Format: ((datetime1) - (datetime2))
-        let lino = format!("(({}) - ({}))", first_dt_str.trim(), second_dt_str.trim());
+        let lino = format!("(({first_dt_str}) - ({second_dt_str}))");
 
-        Some((value, steps, lino))
+        (value, steps, lino)
     }
 }
 

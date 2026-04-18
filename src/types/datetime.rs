@@ -193,6 +193,9 @@ impl DateTime {
         if let Some(dt) = Self::try_parse_date_formats(input_to_parse) {
             return Ok(dt);
         }
+        if let Some(date) = parse_partial_date(input_to_parse) {
+            return Ok(Self::from_date(date));
+        }
 
         // Try various time formats
         if let Some(dt) = Self::try_parse_time_formats(input_to_parse) {
@@ -208,6 +211,9 @@ impl DateTime {
         if cleaned != input {
             if let Some(dt) = Self::try_parse_date_formats(input) {
                 return Ok(dt);
+            }
+            if let Some(date) = parse_partial_date(input) {
+                return Ok(Self::from_date(date));
             }
             if let Some(dt) = Self::try_parse_time_formats(input) {
                 return Ok(dt);
