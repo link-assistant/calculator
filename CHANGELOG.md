@@ -35,6 +35,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.13.3] - 2026-04-18
+
+### Fixed
+- Parse Russian partial date subtraction such as `18 апреля - 28 марта` as a date interval.
+
 ## [0.13.2] - 2026-04-06
 
 ### Added
