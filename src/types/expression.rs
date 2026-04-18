@@ -672,6 +672,15 @@ impl Expression {
                             format!("\\left| {args_str} \\right|")
                         }
                     }
+                    "factorial" if args.len() == 1 => {
+                        // Render as n! in LaTeX — wrap in braces if compound expression
+                        match args[0] {
+                            Self::Number { .. } | Self::Variable(_) => {
+                                format!("{}!", args[0].to_latex())
+                            }
+                            _ => format!("\\left({}\\right)!", args[0].to_latex()),
+                        }
+                    }
                     "pi" => "\\pi".to_string(),
                     "e" => "e".to_string(),
                     "integrate" => {

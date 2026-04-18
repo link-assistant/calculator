@@ -118,6 +118,12 @@ impl<'a> TokenParser<'a> {
             ));
         }
 
+        // Handle postfix factorial operator: expr! → factorial(expr)
+        if matches!(self.current_kind(), Some(TokenKind::Bang)) {
+            self.advance();
+            return Ok(Expression::function_call("factorial", vec![expr]));
+        }
+
         Ok(expr)
     }
 
