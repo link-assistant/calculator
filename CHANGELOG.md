@@ -36,6 +36,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.14.0] - 2026-04-18
+
+### Added
+- Support postfix `!` factorial notation (e.g., `63!`, `5!`, `(3+2)!`). Fixes #132.
+
 ## [0.13.3] - 2026-04-18
 
 ### Fixed
