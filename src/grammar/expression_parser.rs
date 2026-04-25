@@ -250,7 +250,11 @@ impl ExpressionParser {
             }
             Expression::UnitConversion { value, target_unit } => {
                 let val = self.evaluate_expr(value)?;
-                val.convert_to_unit(target_unit, &mut self.currency_db)
+                val.convert_to_unit_at_date(
+                    target_unit,
+                    &mut self.currency_db,
+                    self.current_date_context.as_ref(),
+                )
             }
             Expression::Equality { left, right } => {
                 let left_val = self.evaluate_expr(left)?;
@@ -458,7 +462,11 @@ impl ExpressionParser {
                 // Clear any previous rate tracking before the conversion
                 self.currency_db.clear_last_used_rate();
 
-                let result = val.convert_to_unit(target_unit, &mut self.currency_db)?;
+                let result = val.convert_to_unit_at_date(
+                    target_unit,
+                    &mut self.currency_db,
+                    self.current_date_context.as_ref(),
+                )?;
 
                 // If a currency conversion was used, add rate info to steps.
                 // For cross-rate (triangulated) conversions there may be multiple entries.
@@ -685,7 +693,11 @@ impl ExpressionParser {
             )),
             Expression::UnitConversion { value, target_unit } => {
                 let val = self.evaluate_expr_with_var(value, var_name, var_value)?;
-                val.convert_to_unit(target_unit, &mut self.currency_db)
+                val.convert_to_unit_at_date(
+                    target_unit,
+                    &mut self.currency_db,
+                    self.current_date_context.as_ref(),
+                )
             }
             Expression::Equality { left, right } => {
                 let left_val = self.evaluate_expr_with_var(left, var_name, var_value)?;

@@ -70,6 +70,13 @@ impl<'a> TokenParser<'a> {
             left = Self::resolve_unit_ambiguity_for_conversion(left, &target_unit);
 
             left = Expression::unit_conversion(left, target_unit);
+
+            // Check for "at" keyword after unit conversion (e.g. "22822 RUB in INR at Apr 11, 2026")
+            if self.check_at() {
+                self.advance(); // consume "at"
+                let time = self.parse_primary()?;
+                left = Expression::at_time(left, time);
+            }
         }
 
         Ok(left)
