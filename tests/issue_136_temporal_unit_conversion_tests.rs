@@ -64,11 +64,7 @@ fn test_unit_conversion_at_date_lino_format() {
     load_rub_inr_rates(&mut calc);
 
     let result = calc.calculate_internal("1 RUB as INR at Apr 11, 2026");
-    assert!(
-        result.success,
-        "Should succeed: {:?}",
-        result.error
-    );
+    assert!(result.success, "Should succeed: {:?}", result.error);
     // The lino must wrap the conversion inside an AtTime expression
     assert!(
         result.lino_interpretation.contains("as INR") && result.lino_interpretation.contains("at"),
@@ -87,11 +83,7 @@ fn test_unit_conversion_at_date_uses_historical_rate() {
     load_rub_inr_rates(&mut calc);
 
     let result = calc.calculate_internal("1 RUB as INR at Apr 11, 2026");
-    assert!(
-        result.success,
-        "Should succeed: {:?}",
-        result.error
-    );
+    assert!(result.success, "Should succeed: {:?}", result.error);
     assert!(
         result.result.contains("INR"),
         "Result should be in INR: {}",
@@ -114,8 +106,16 @@ fn test_unit_conversion_different_dates_give_different_rates() {
     let result_apr11 = calc.calculate_internal("1 RUB as INR at Apr 11, 2026");
     let result_apr17 = calc.calculate_internal("1 RUB as INR at Apr 17, 2026");
 
-    assert!(result_apr11.success, "Apr 11 should succeed: {:?}", result_apr11.error);
-    assert!(result_apr17.success, "Apr 17 should succeed: {:?}", result_apr17.error);
+    assert!(
+        result_apr11.success,
+        "Apr 11 should succeed: {:?}",
+        result_apr11.error
+    );
+    assert!(
+        result_apr17.success,
+        "Apr 17 should succeed: {:?}",
+        result_apr17.error
+    );
 
     // Rates differ: 1.5 vs 1.2, so results must differ
     assert_ne!(
