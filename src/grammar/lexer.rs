@@ -364,6 +364,8 @@ impl Lexer {
             "until" => TokenKind::Until,
             // Russian: "в" means "in/into" (e.g. "1000 рублей в долларах")
             "в" => TokenKind::In,
+            // Russian: "на" means "at/on" for temporal context (e.g. "1000 рублей на 11 апреля 2026")
+            "на" => TokenKind::At,
             // French: "en" means "in/into" (e.g. "1000 dollars en euros")
             // Note: German "in" is identical to English "in", no extra entry needed.
             "en" => TokenKind::In,

@@ -624,6 +624,16 @@ impl Value {
         target_unit: &Unit,
         currency_db: &mut CurrencyDatabase,
     ) -> Result<Self, CalculatorError> {
+        self.convert_to_unit_at_date(target_unit, currency_db, None)
+    }
+
+    /// Converts this value to the given unit, using a historical exchange rate if `date` is provided.
+    pub fn convert_to_unit_at_date(
+        &self,
+        target_unit: &Unit,
+        currency_db: &mut CurrencyDatabase,
+        date: Option<&DateTime>,
+    ) -> Result<Self, CalculatorError> {
         match (&self.unit, target_unit) {
             // Data size to data size conversion
             (Unit::DataSize(from), Unit::DataSize(to)) => {
@@ -645,7 +655,11 @@ impl Value {
                         "currency conversion requires a numeric value".into(),
                     )
                 })?;
-                let converted = currency_db.convert(amount.to_f64(), from, to)?;
+                let converted = if let Some(dt) = date {
+                    currency_db.convert_at_date(amount.to_f64(), from, to, dt)?
+                } else {
+                    currency_db.convert(amount.to_f64(), from, to)?
+                };
                 Ok(Value::currency(Decimal::from_f64(converted), to))
             }
             // Mass to mass conversion
