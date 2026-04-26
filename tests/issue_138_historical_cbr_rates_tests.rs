@@ -86,3 +86,61 @@ fn original_issue_expression_uses_april_11_cbr_lino_rate() {
         "Expected {expected} INR from the 2026-04-11 rate, got {actual}. Steps:\n{steps_text}"
     );
 }
+
+#[test]
+fn missing_weekend_rate_uses_previous_available_business_day_rate() {
+    let mut calc = Calculator::new();
+    calc.load_rates_from_consolidated_lino(
+        "conversion:
+  from RUB
+  to INR
+  source 'test'
+  rates:
+    2026-04-10 1.2
+    2026-04-13 1.4",
+    )
+    .expect("test RUB/INR rates should load");
+
+    let result = calc.calculate_internal("10 RUB as INR at Apr 11, 2026");
+
+    assert!(
+        result.success,
+        "A missing weekend date should use the latest prior rate: {:?}",
+        result.error
+    );
+    assert_eq!(result.result, "12 INR");
+    let steps_text = result.steps.join("\n");
+    assert!(
+        steps_text.contains("date: 2026-04-10"),
+        "Steps should show the previous available rate date. Steps:\n{steps_text}"
+    );
+    assert!(
+        !steps_text.contains("date: 2026-04-13"),
+        "Steps should not use a future rate. Steps:\n{steps_text}"
+    );
+}
+
+#[test]
+fn missing_historical_rate_before_first_known_date_still_fails() {
+    let mut calc = Calculator::new();
+    calc.load_rates_from_consolidated_lino(
+        "conversion:
+  from RUB
+  to INR
+  source 'test'
+  rates:
+    2026-04-10 1.2",
+    )
+    .expect("test RUB/INR rates should load");
+
+    let result = calc.calculate_internal("10 RUB as INR at Apr 9, 2026");
+
+    assert!(
+        !result.success,
+        "A request before the first known rate should not use a future rate"
+    );
+    assert!(result
+        .error
+        .unwrap_or_default()
+        .contains("No exchange rate available for RUB/INR on 2026-04-09"));
+}
