@@ -39,6 +39,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.14.3] - 2026-04-26
+
+### Fixed
+- Historical currency conversions now use the latest available prior rate when the requested date has no exact rate row.
+
 ## [0.14.2] - 2026-04-26
 
 ### Fixed
