@@ -40,6 +40,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.15.0] - 2026-04-26
+
+### Added
+- Added a reusable issue-report URL builder that accepts caller-supplied repositories, diagnostics, labels, environment details, and reproduction steps.
+
+### Fixed
+- Export `load_rates_from_consolidated_lino` via WASM bindings so the web worker can load historical CBR rates from local `.lino` files. Previously this method was missing from the WASM binary, causing all dated RUB currency conversions (e.g., `22822 рублей в рупиях на 11 апреля 2026`) to silently fail with "No exchange rate available" even though the rate data existed locally.
+
 ## [0.14.3] - 2026-04-26
 
 ### Fixed
