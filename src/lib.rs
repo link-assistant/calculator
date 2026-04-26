@@ -480,9 +480,9 @@ impl Calculator {
             let info = types::ExchangeRateInfo::new(rate, currency_api::API_SOURCE, date)
                 .with_fetched_at(&timestamp);
 
-            self.parser
-                .currency_db_mut()
-                .set_rate_with_info(&base_upper, &target_upper, info);
+            let currency_db = self.parser.currency_db_mut();
+            currency_db.set_rate_with_info(&base_upper, &target_upper, info.clone());
+            currency_db.set_historical_rate_with_info(&base_upper, &target_upper, date, info);
 
             count += 1;
         }
@@ -523,9 +523,9 @@ impl Calculator {
                 types::ExchangeRateInfo::new(rub_per_unit, currency_api::CBR_API_SOURCE, date)
                     .with_fetched_at(&timestamp);
 
-            self.parser
-                .currency_db_mut()
-                .set_rate_with_info(&currency_upper, "RUB", info);
+            let currency_db = self.parser.currency_db_mut();
+            currency_db.set_rate_with_info(&currency_upper, "RUB", info.clone());
+            currency_db.set_historical_rate_with_info(&currency_upper, "RUB", date, info);
 
             count += 1;
         }
@@ -560,9 +560,9 @@ impl Calculator {
             let info = types::ExchangeRateInfo::new(price, crypto_api::COINGECKO_SOURCE, date)
                 .with_fetched_at(&timestamp);
 
-            self.parser
-                .currency_db_mut()
-                .set_rate_with_info(&ticker_upper, &base_upper, info);
+            let currency_db = self.parser.currency_db_mut();
+            currency_db.set_rate_with_info(&ticker_upper, &base_upper, info.clone());
+            currency_db.set_historical_rate_with_info(&ticker_upper, &base_upper, date, info);
 
             count += 1;
         }

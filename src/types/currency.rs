@@ -360,8 +360,7 @@ impl CurrencyDatabase {
             return Some(info.rate);
         }
 
-        // Fall back to current rate if no historical data
-        self.get_rate(from, to)
+        None
     }
 
     /// Converts an amount from one currency to another, tracking the rate used.
@@ -430,16 +429,6 @@ impl CurrencyDatabase {
         if let Some(info) = self
             .historical_rates
             .get(&(from_upper.clone(), to_upper.clone(), date_str))
-            .cloned()
-        {
-            self.last_used_rates = vec![(from_upper, to_upper, info.clone())];
-            return Ok(amount * info.rate);
-        }
-
-        // Fall back to current rates
-        if let Some(info) = self
-            .rates
-            .get(&(from_upper.clone(), to_upper.clone()))
             .cloned()
         {
             self.last_used_rates = vec![(from_upper, to_upper, info.clone())];
