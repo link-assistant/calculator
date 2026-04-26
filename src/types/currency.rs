@@ -350,17 +350,38 @@ impl CurrencyDatabase {
             return Some(1.0);
         }
 
+        self.get_historical_rate_info(from, to, date)
+            .map(|info| info.rate)
+    }
+
+    fn get_historical_rate_info(
+        &self,
+        from: &str,
+        to: &str,
+        date: &DateTime,
+    ) -> Option<&ExchangeRateInfo> {
+        let from_upper = from.to_uppercase();
+        let to_upper = to.to_uppercase();
         let date_str = format!("{}", date.as_chrono().format("%Y-%m-%d"));
 
-        // First try exact date match
         if let Some(info) =
             self.historical_rates
-                .get(&(from.to_uppercase(), to.to_uppercase(), date_str))
+                .get(&(from_upper.clone(), to_upper.clone(), date_str.clone()))
         {
-            return Some(info.rate);
+            return Some(info);
         }
 
-        None
+        self.historical_rates
+            .iter()
+            .filter_map(|((rate_from, rate_to, rate_date), info)| {
+                if rate_from == &from_upper && rate_to == &to_upper && rate_date <= &date_str {
+                    Some((rate_date, info))
+                } else {
+                    None
+                }
+            })
+            .max_by_key(|(rate_date, _)| *rate_date)
+            .map(|(_, info)| info)
     }
 
     /// Converts an amount from one currency to another, tracking the rate used.
@@ -418,17 +439,14 @@ impl CurrencyDatabase {
     ) -> Result<f64, CalculatorError> {
         let from_upper = from.to_uppercase();
         let to_upper = to.to_uppercase();
-        let date_str = format!("{}", date.as_chrono().format("%Y-%m-%d"));
 
         if from_upper == to_upper {
             self.last_used_rates.clear();
             return Ok(amount);
         }
 
-        // First try historical rates
         if let Some(info) = self
-            .historical_rates
-            .get(&(from_upper.clone(), to_upper.clone(), date_str))
+            .get_historical_rate_info(&from_upper, &to_upper, date)
             .cloned()
         {
             self.last_used_rates = vec![(from_upper, to_upper, info.clone())];
