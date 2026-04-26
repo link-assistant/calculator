@@ -569,6 +569,19 @@ impl Calculator {
 
         count
     }
+
+    /// Loads historical exchange rates from a consolidated .lino format.
+    /// Returns the number of rates loaded (0 if parsing failed).
+    ///
+    /// Supports both the new format (conversion/rates) and legacy format (rates/data).
+    /// Used by the web worker to populate historical CBR rate data from local .lino files.
+    #[wasm_bindgen]
+    pub fn load_rates_from_consolidated_lino(&mut self, content: &str) -> usize {
+        match self.load_rates_from_consolidated_lino_impl(content) {
+            Ok(n) => n,
+            Err(_) => 0,
+        }
+    }
 }
 
 impl Calculator {
@@ -841,34 +854,7 @@ impl Calculator {
         Ok(loaded)
     }
 
-    /// Loads historical exchange rates from a consolidated .lino format.
-    ///
-    /// Supports both the new format (conversion/rates) and legacy format (rates/data):
-    ///
-    /// New format:
-    /// ```text
-    /// conversion:
-    ///   from USD
-    ///   to EUR
-    ///   source 'frankfurter.dev (ECB)'
-    ///   rates:
-    ///     2021-01-25 0.8234
-    ///     2021-02-01 0.8315
-    ///     ...
-    /// ```
-    ///
-    /// Legacy format:
-    /// ```text
-    /// rates:
-    ///   from USD
-    ///   to EUR
-    ///   source 'frankfurter.dev (ECB)'
-    ///   data:
-    ///     2021-01-25 0.8234
-    ///     2021-02-01 0.8315
-    ///     ...
-    /// ```
-    pub fn load_rates_from_consolidated_lino(&mut self, content: &str) -> Result<usize, String> {
+    pub fn load_rates_from_consolidated_lino_impl(&mut self, content: &str) -> Result<usize, String> {
         let mut from_currency: Option<String> = None;
         let mut to_currency: Option<String> = None;
         let mut source: Option<String> = None;
@@ -963,8 +949,8 @@ mod tests {
     2021-02-08 74.2602
     2021-02-09 74.1192";
 
-        let result = calc.load_rates_from_consolidated_lino(content);
-        assert!(result.is_ok());
+        let loaded = calc.load_rates_from_consolidated_lino(content);
+        assert!(loaded > 0);
 
         let date = types::DateTime::from_date(chrono::NaiveDate::from_ymd_opt(2021, 2, 8).unwrap());
         let rate = calc

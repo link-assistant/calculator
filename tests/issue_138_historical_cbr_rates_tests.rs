@@ -58,8 +58,8 @@ fn current_cbr_rate_is_available_for_its_own_effective_date() {
 fn original_issue_expression_uses_april_11_cbr_lino_rate() {
     let mut calc = Calculator::new();
     calc.update_cbr_rates_from_api("2026-04-24", r#"{"inr": 0.7954370000000001}"#);
-    calc.load_rates_from_consolidated_lino(include_str!("../data/currency/inr-rub.lino"))
-        .expect("CBR INR/RUB .lino data should load");
+    let loaded = calc.load_rates_from_consolidated_lino(include_str!("../data/currency/inr-rub.lino"));
+    assert!(loaded > 0, "CBR INR/RUB .lino data should load");
 
     let result = calc.calculate_internal("22822 рублей в рупиях на 11 апреля 2026");
 
@@ -90,7 +90,7 @@ fn original_issue_expression_uses_april_11_cbr_lino_rate() {
 #[test]
 fn missing_weekend_rate_uses_previous_available_business_day_rate() {
     let mut calc = Calculator::new();
-    calc.load_rates_from_consolidated_lino(
+    let loaded = calc.load_rates_from_consolidated_lino(
         "conversion:
   from RUB
   to INR
@@ -98,8 +98,8 @@ fn missing_weekend_rate_uses_previous_available_business_day_rate() {
   rates:
     2026-04-10 1.2
     2026-04-13 1.4",
-    )
-    .expect("test RUB/INR rates should load");
+    );
+    assert!(loaded > 0, "test RUB/INR rates should load");
 
     let result = calc.calculate_internal("10 RUB as INR at Apr 11, 2026");
 
@@ -123,15 +123,15 @@ fn missing_weekend_rate_uses_previous_available_business_day_rate() {
 #[test]
 fn missing_historical_rate_before_first_known_date_still_fails() {
     let mut calc = Calculator::new();
-    calc.load_rates_from_consolidated_lino(
+    let loaded = calc.load_rates_from_consolidated_lino(
         "conversion:
   from RUB
   to INR
   source 'test'
   rates:
     2026-04-10 1.2",
-    )
-    .expect("test RUB/INR rates should load");
+    );
+    assert!(loaded > 0, "test RUB/INR rates should load");
 
     let result = calc.calculate_internal("10 RUB as INR at Apr 9, 2026");
 
