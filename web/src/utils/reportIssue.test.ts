@@ -151,6 +151,85 @@ describe('reportIssue utilities', () => {
     // Helper to decode URL with + signs converted to spaces (URLSearchParams encoding)
     const decodeUrl = (url: string) => decodeURIComponent(url.replace(/\+/g, ' '));
 
+    it('should generate issue URL for a caller-supplied repository and report payload', () => {
+      const url = generateIssueUrl({
+        repository: 'link-assistant/meta-expression',
+        input: 'moon orbits the Sun',
+        result: {
+          success: true,
+          result: 'unknown',
+          linksNotation: '(statement-1: statement self (moon orbits the Sun))',
+          alternativeLinksNotations: [
+            '(interpretation-1: interpretation statement-1 factual-claim)',
+            '(interpretation-2: interpretation statement-1 needs-specific-relation)',
+          ],
+          steps: [
+            'Interpreted moon as a noun candidate',
+            'Interpreted orbits as a relation candidate',
+          ],
+        },
+        reproductionSteps: [
+          'Open the expression page',
+          'Enter moon orbits the Sun',
+          'Click Report Issue',
+        ],
+        environment: {
+          version: '0.1.0',
+          url: 'https://link-assistant.github.io/meta-expression/web/',
+          userAgent: 'Mozilla/5.0 Test Browser',
+          wasmReady: true,
+        },
+        issueLabels: ['bug', 'diagnostics'],
+      });
+
+      const parsed = new URL(url);
+      const body = parsed.searchParams.get('body') || '';
+
+      expect(`${parsed.origin}${parsed.pathname}`).toBe(
+        'https://github.com/link-assistant/meta-expression/issues/new'
+      );
+      expect(parsed.searchParams.get('labels')).toBe('bug,diagnostics');
+      expect(parsed.searchParams.get('title')).toBe(
+        'Issue with expression: moon orbits the Sun'
+      );
+      expect(body).toContain('## Environment');
+      expect(body).toContain('## Input');
+      expect(body).toContain('## Result');
+      expect(body).toContain('**Links Notation**');
+      expect(body).toContain('**Alternative interpretations**');
+      expect(body).toContain('**Steps**');
+      expect(body).toContain('## Reproduction Steps');
+      expect(body).toContain('moon orbits the Sun');
+    });
+
+    it('should include failed result diagnostics in generated issue URLs', () => {
+      const url = generateIssueUrl({
+        repository: 'link-assistant/meta-expression',
+        input: 'moon orbits the Sun',
+        result: {
+          success: false,
+          error: 'No Wikidata entity found for moon',
+          linksNotation: '(statement-1: statement self (moon orbits the Sun))',
+          steps: ['Parsed the statement before entity resolution failed'],
+        },
+        environment: {
+          version: '0.1.0',
+          url: 'https://link-assistant.github.io/meta-expression/web/',
+          wasmReady: false,
+        },
+      });
+
+      const parsed = new URL(url);
+      const body = parsed.searchParams.get('body') || '';
+
+      expect(parsed.searchParams.get('title')).toBe(
+        'Issue with expression: moon orbits the Sun'
+      );
+      expect(body).toContain('**Error**: No Wikidata entity found for moon');
+      expect(body).toContain('**Links Notation**');
+      expect(body).toContain('Parsed the statement before entity resolution failed');
+    });
+
     it('should generate valid GitHub issue URL', () => {
       const url = generateIssueUrl(basePageState);
 
