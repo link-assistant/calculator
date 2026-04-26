@@ -577,10 +577,8 @@ impl Calculator {
     /// Used by the web worker to populate historical CBR rate data from local .lino files.
     #[wasm_bindgen]
     pub fn load_rates_from_consolidated_lino(&mut self, content: &str) -> usize {
-        match self.load_rates_from_consolidated_lino_impl(content) {
-            Ok(n) => n,
-            Err(_) => 0,
-        }
+        self.load_rates_from_consolidated_lino_impl(content)
+            .unwrap_or_default()
     }
 }
 

@@ -13,7 +13,7 @@
 
 use link_calculator::Calculator;
 
-/// Verify that load_rates_from_consolidated_lino works end-to-end as called from
+/// Verify that `load_rates_from_consolidated_lino` works end-to-end as called from
 /// the web worker (returns usize, not Result).
 #[test]
 fn load_rates_returns_count_not_result() {
