@@ -38,6 +38,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.14.2] - 2026-04-26
+
+### Fixed
+
+- Use historical CBR `.lino` rates for dated RUB conversions instead of falling back to the latest current rate.
+
 ## [0.14.1] - 2026-04-25
 
 ### Fixed
