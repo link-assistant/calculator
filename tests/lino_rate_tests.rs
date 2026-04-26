@@ -22,9 +22,8 @@ fn test_load_lino_rates_and_use_in_conversion() {
     2021-02-08 74.2602
     2021-02-09 74.1192";
 
-    let result = calculator.load_rates_from_consolidated_lino(lino_content);
-    assert!(result.is_ok(), "Should load rates successfully");
-    assert_eq!(result.unwrap(), 2, "Should load 2 rates");
+    let loaded = calculator.load_rates_from_consolidated_lino(lino_content);
+    assert_eq!(loaded, 2, "Should load 2 rates");
 
     // Use month name format since ISO date format (YYYY-MM-DD) is tokenized
     // as number-minus-number-minus-number instead of a date
@@ -73,9 +72,8 @@ fn test_different_dates_use_different_rates() {
     2021-02-01 0.8315
     2021-02-08 0.8402";
 
-    calculator
-        .load_rates_from_consolidated_lino(lino_content)
-        .expect("Should load rates");
+    let loaded = calculator.load_rates_from_consolidated_lino(lino_content);
+    assert!(loaded > 0, "Should load rates");
 
     // Test first date - using month name format
     let result1 = calculator.calculate_internal("(0 EUR + 1 USD) at Jan 25, 2021");
@@ -125,12 +123,10 @@ fn test_multiple_currency_pairs() {
   rates:
     2021-02-08 105.25";
 
-    calculator
-        .load_rates_from_consolidated_lino(eur_gbp_content)
-        .expect("Should load EUR/GBP");
-    calculator
-        .load_rates_from_consolidated_lino(usd_jpy_content)
-        .expect("Should load USD/JPY");
+    let loaded1 = calculator.load_rates_from_consolidated_lino(eur_gbp_content);
+    assert!(loaded1 > 0, "Should load EUR/GBP");
+    let loaded2 = calculator.load_rates_from_consolidated_lino(usd_jpy_content);
+    assert!(loaded2 > 0, "Should load USD/JPY");
 
     // Test EUR to GBP conversion - using month name format
     let result1 = calculator.calculate_internal("(0 GBP + 1 EUR) at Feb 8, 2021");
@@ -166,9 +162,8 @@ fn test_inverse_rate_available() {
   rates:
     2021-02-08 74.2602";
 
-    calculator
-        .load_rates_from_consolidated_lino(lino_content)
-        .expect("Should load rates");
+    let loaded = calculator.load_rates_from_consolidated_lino(lino_content);
+    assert!(loaded > 0, "Should load rates");
 
     // Test forward conversion: USD -> RUB (using month name format)
     let result1 = calculator.calculate_internal("(0 RUB + 1 USD) at Feb 8, 2021");
@@ -200,9 +195,8 @@ fn test_rate_info_shown_in_steps() {
   rates:
     2021-02-08 74.2602";
 
-    calculator
-        .load_rates_from_consolidated_lino(lino_content)
-        .expect("Should load rates");
+    let loaded = calculator.load_rates_from_consolidated_lino(lino_content);
+    assert!(loaded > 0, "Should load rates");
 
     // Use month name format for the date
     let result = calculator.calculate_internal("(0 RUB + 1 USD) at Feb 8, 2021");
@@ -237,9 +231,8 @@ fn test_legacy_lino_format() {
     2021-01-25 0.8234
     2021-02-01 0.8315";
 
-    let result = calculator.load_rates_from_consolidated_lino(lino_content);
-    assert!(result.is_ok(), "Should load legacy format");
-    assert_eq!(result.unwrap(), 2, "Should load 2 rates");
+    let loaded = calculator.load_rates_from_consolidated_lino(lino_content);
+    assert_eq!(loaded, 2, "Should load 2 rates");
 
     // Verify the rate is used - using month name format for the date
     let calc_result = calculator.calculate_internal("(0 EUR + 1 USD) at Jan 25, 2021");
@@ -264,9 +257,8 @@ fn test_currency_arithmetic_with_loaded_rates() {
   rates:
     2021-02-08 0.85";
 
-    calculator
-        .load_rates_from_consolidated_lino(lino_content)
-        .expect("Should load rates");
+    let loaded = calculator.load_rates_from_consolidated_lino(lino_content);
+    assert!(loaded > 0, "Should load rates");
 
     // Test: 100 USD + 50 EUR at Feb 8, 2021
     // First, 50 EUR needs to be converted to USD
@@ -296,9 +288,8 @@ fn test_currency_subtraction_with_loaded_rates() {
   rates:
     2021-02-08 0.85";
 
-    calculator
-        .load_rates_from_consolidated_lino(lino_content)
-        .expect("Should load rates");
+    let loaded = calculator.load_rates_from_consolidated_lino(lino_content);
+    assert!(loaded > 0, "Should load rates");
 
     // Test: 100 USD - 34 EUR at Feb 8, 2021
     // 34 EUR = 34 / 0.85 USD ≈ 40 USD

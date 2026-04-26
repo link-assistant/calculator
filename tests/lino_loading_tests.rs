@@ -67,9 +67,8 @@ fn test_load_rates_from_consolidated_lino_legacy_format() {
     2021-02-01 0.8315
     2021-02-08 0.8402";
 
-    let result = calc.load_rates_from_consolidated_lino(content);
-    assert!(result.is_ok());
-    assert_eq!(result.unwrap(), 3);
+    let loaded = calc.load_rates_from_consolidated_lino(content);
+    assert_eq!(loaded, 3);
 }
 
 #[test]
@@ -85,9 +84,8 @@ fn test_load_rates_from_consolidated_lino_new_format() {
     2021-02-09 74.1192
     2026-01-25 76.03";
 
-    let result = calc.load_rates_from_consolidated_lino(content);
-    assert!(result.is_ok());
-    assert_eq!(result.unwrap(), 3);
+    let loaded = calc.load_rates_from_consolidated_lino(content);
+    assert_eq!(loaded, 3);
 }
 
 #[test]
@@ -99,6 +97,6 @@ fn test_load_rates_from_consolidated_lino_empty() {
   source 'test'
   rates:";
 
-    let result = calc.load_rates_from_consolidated_lino(content);
-    assert!(result.is_err());
+    let loaded = calc.load_rates_from_consolidated_lino(content);
+    assert_eq!(loaded, 0);
 }

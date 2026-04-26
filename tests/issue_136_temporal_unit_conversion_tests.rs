@@ -30,8 +30,8 @@ fn load_rub_inr_rates(calc: &mut Calculator) {
   rates:
     2026-04-11 1.5
     2026-04-17 1.2";
-    calc.load_rates_from_consolidated_lino(lino_content)
-        .expect("Should load RUB/INR rates");
+    let loaded = calc.load_rates_from_consolidated_lino(lino_content);
+    assert!(loaded > 0, "Should load RUB/INR rates");
 }
 
 // ── Root cause 1: parser must handle "X as Y at date" ────────────────────────
