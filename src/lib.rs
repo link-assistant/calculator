@@ -854,7 +854,10 @@ impl Calculator {
         Ok(loaded)
     }
 
-    pub fn load_rates_from_consolidated_lino_impl(&mut self, content: &str) -> Result<usize, String> {
+    pub fn load_rates_from_consolidated_lino_impl(
+        &mut self,
+        content: &str,
+    ) -> Result<usize, String> {
         let mut from_currency: Option<String> = None;
         let mut to_currency: Option<String> = None;
         let mut source: Option<String> = None;

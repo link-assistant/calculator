@@ -58,7 +58,8 @@ fn current_cbr_rate_is_available_for_its_own_effective_date() {
 fn original_issue_expression_uses_april_11_cbr_lino_rate() {
     let mut calc = Calculator::new();
     calc.update_cbr_rates_from_api("2026-04-24", r#"{"inr": 0.7954370000000001}"#);
-    let loaded = calc.load_rates_from_consolidated_lino(include_str!("../data/currency/inr-rub.lino"));
+    let loaded =
+        calc.load_rates_from_consolidated_lino(include_str!("../data/currency/inr-rub.lino"));
     assert!(loaded > 0, "CBR INR/RUB .lino data should load");
 
     let result = calc.calculate_internal("22822 рублей в рупиях на 11 апреля 2026");
