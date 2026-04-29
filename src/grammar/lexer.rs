@@ -141,6 +141,8 @@ pub enum TokenKind {
     To,
     /// The "until" keyword for duration until a datetime.
     Until,
+    /// The "of" keyword for percent-of expressions (e.g., `8% of $50`).
+    Of,
     /// The equals sign for equality checks (e.g., `1 + 1 = 2`).
     Equals,
     /// The exclamation mark for factorial postfix notation (e.g., `5!`).
@@ -362,6 +364,7 @@ impl Lexer {
             "in" => TokenKind::In,
             "to" => TokenKind::To,
             "until" => TokenKind::Until,
+            "of" => TokenKind::Of,
             // Russian: "в" means "in/into" (e.g. "1000 рублей в долларах")
             "в" => TokenKind::In,
             // Russian: "на" means "at/on" for temporal context (e.g. "1000 рублей на 11 апреля 2026")
