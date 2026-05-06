@@ -41,6 +41,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.15.1] - 2026-05-06
+
+### Fixed
+- Support `N% of X` syntax, interpreting it as `(N/100) * X` (e.g. `8% of $50` now correctly returns `$4`)
+
 ## [0.15.0] - 2026-04-26
 
 ### Added
