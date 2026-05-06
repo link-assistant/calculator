@@ -116,13 +116,20 @@ impl<'a> TokenParser<'a> {
         let expr = self.parse_primary()?;
 
         // Handle postfix percent operator: expr% → expr / 100
+        // With optional "of <rhs>": expr% of rhs → (expr / 100) * rhs
         if matches!(self.current_kind(), Some(TokenKind::Percent)) {
             self.advance();
-            return Ok(Expression::binary(
+            let percent_expr = Expression::binary(
                 expr,
                 BinaryOp::Divide,
                 Expression::number(Decimal::new(100)),
-            ));
+            );
+            if matches!(self.current_kind(), Some(TokenKind::Of)) {
+                self.advance(); // consume "of"
+                let rhs = self.parse_primary()?;
+                return Ok(Expression::binary(percent_expr, BinaryOp::Multiply, rhs));
+            }
+            return Ok(percent_expr);
         }
 
         // Handle postfix factorial operator: expr! → factorial(expr)
