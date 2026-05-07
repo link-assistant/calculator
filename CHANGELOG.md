@@ -42,6 +42,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.15.2] - 2026-05-07
+
+### Fixed
+- Fixed milliseconds (ms) to seconds conversion not being recognized (e.g., `300000 ms in seconds`)
+
 ## [0.15.1] - 2026-05-06
 
 ### Fixed
