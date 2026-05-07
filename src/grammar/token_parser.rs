@@ -840,6 +840,11 @@ impl<'a> TokenParser<'a> {
                 return Ok(Unit::Mass(mass));
             }
 
+            // Try duration/time unit (e.g., "seconds", "ms", "minutes", "hours")
+            if let Some(duration) = crate::types::DurationUnit::parse(&unit_str) {
+                return Ok(Unit::Duration(duration));
+            }
+
             // Try timezone abbreviation (before currency, since currency catch-all matches any 2-5 letter code)
             if crate::types::DateTime::parse_tz_abbreviation(&unit_str).is_some() {
                 return Ok(Unit::Timezone(unit_str.to_uppercase()));
@@ -858,7 +863,8 @@ impl<'a> TokenParser<'a> {
                  mass (g, kg, tons, lb, oz), \
                  currencies (USD, EUR, GBP, TON, BTC, ETH, ...) and natural language \
                  aliases (dollars, euros, bitcoin, toncoin, ...), \
-                 timezones (UTC, GMT, EST, MSK, JST, ...)."
+                 timezones (UTC, GMT, EST, MSK, JST, ...), \
+                 time durations (ms, seconds, minutes, hours, days, weeks, months, years)."
             )))
         } else {
             Err(CalculatorError::parse(

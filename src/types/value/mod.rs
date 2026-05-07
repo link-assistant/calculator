@@ -675,6 +675,20 @@ impl Value {
                     Unit::Mass(*to),
                 ))
             }
+            // Duration to duration conversion (e.g., "300000 ms in seconds")
+            (Unit::Duration(from), Unit::Duration(to)) => {
+                let value_f64 = self.as_decimal().ok_or_else(|| {
+                    CalculatorError::InvalidOperation(
+                        "duration conversion requires a numeric value".into(),
+                    )
+                })?;
+                let secs = from.to_secs(value_f64.to_f64());
+                let result = to.secs_to_unit(secs);
+                Ok(Value::number_with_unit(
+                    Decimal::from_f64(result),
+                    Unit::Duration(*to),
+                ))
+            }
             // Dimensionless value: just apply the target unit (e.g. "5 as MB")
             (Unit::None, Unit::DataSize(_)) => {
                 let value_f64 = self.as_decimal().ok_or_else(|| {
