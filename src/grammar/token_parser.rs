@@ -195,6 +195,15 @@ impl<'a> TokenParser<'a> {
                 }
             }
 
+            // Russian shorthand: "11 по мск" means "11:00 by MSK".
+            if matches!(self.current_kind(), Some(TokenKind::At)) {
+                let save_before_po = self.pos;
+                if let Ok(dt) = self.try_parse_russian_time_by_timezone(&num_str) {
+                    return Ok(dt);
+                }
+                self.pos = save_before_po;
+            }
+
             // If followed by an identifier that looks like a month name (e.g., "17 February 2027"
             // or "17 февраля 2027"), try to parse the whole as a datetime expression.
             if let Some(TokenKind::Identifier(id)) = self.current_kind() {
@@ -475,6 +484,26 @@ impl<'a> TokenParser<'a> {
             Ok(dt) => Ok(Expression::DateTime(dt)),
             Err(e) => Err(e),
         }
+    }
+
+    /// Tries to parse Russian "N по <TZ>" as "N:00 <TZ>".
+    fn try_parse_russian_time_by_timezone(
+        &mut self,
+        hour_str: &str,
+    ) -> Result<Expression, CalculatorError> {
+        self.advance(); // consume "по"
+
+        let Some(TokenKind::Identifier(tz_id)) = self.current_kind() else {
+            return Err(CalculatorError::parse("Expected timezone after по"));
+        };
+        let tz = tz_id.clone();
+        if crate::types::DateTime::parse_tz_abbreviation(&tz).is_none() {
+            return Err(CalculatorError::parse(format!("Unknown timezone: {tz}")));
+        }
+        self.advance();
+
+        let datetime_str = format!("{hour_str}:00 {tz}");
+        crate::types::DateTime::parse(&datetime_str).map(Expression::DateTime)
     }
 
     fn try_parse_datetime_from_tokens(

@@ -431,12 +431,24 @@ impl DateTime {
             let mut dt = Self::from_time(time);
             dt.set_offset(tz_offset);
             dt.tz_abbrev.clone_from(&tz_abbrev);
+            if let Some(offset) = tz_offset {
+                let local = dt.inner.naive_utc();
+                if let Some(adj) = offset.from_local_datetime(&local).single() {
+                    dt.inner = adj.with_timezone(&Utc);
+                }
+            }
             return Some(dt);
         }
         if let Ok(time) = NaiveTime::parse_from_str(time_part, "%H:%M:%S") {
             let mut dt = Self::from_time(time);
             dt.set_offset(tz_offset);
             dt.tz_abbrev = tz_abbrev;
+            if let Some(offset) = tz_offset {
+                let local = dt.inner.naive_utc();
+                if let Some(adj) = offset.from_local_datetime(&local).single() {
+                    dt.inner = adj.with_timezone(&Utc);
+                }
+            }
             return Some(dt);
         }
 
