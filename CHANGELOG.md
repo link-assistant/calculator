@@ -44,6 +44,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.15.4] - 2026-05-09
+
+### Fixed
+- Parse Russian colon-time MSK expressions like `11:00 по МСК`.
+
 ## [0.15.3] - 2026-05-09
 
 ### Fixed
