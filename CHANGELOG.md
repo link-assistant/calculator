@@ -45,6 +45,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.15.5] - 2026-05-09
+
+### Fixed
+- Show UTC and browser-local equivalents for timezone-aware datetime results such as `12:30 по МСК`.
+
 ## [0.15.4] - 2026-05-09
 
 ### Fixed
