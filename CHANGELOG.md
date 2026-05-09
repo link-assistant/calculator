@@ -43,6 +43,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.15.3] - 2026-05-09
+
+### Fixed
+- Parse Russian `N по мск` time expressions as Moscow time instead of a custom unit.
+
 ## [0.15.2] - 2026-05-07
 
 ### Fixed
