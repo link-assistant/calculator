@@ -45,7 +45,7 @@ pub use plan::{CalculationPlan, RateSource};
 
 use error::{CalculatorError, ErrorInfo};
 use grammar::ExpressionParser;
-use types::{Expression, Value, ValueKind};
+use types::{DateTimeResult, Expression, Value, ValueKind};
 use wasm_bindgen::prelude::*;
 
 /// Package version (matches Cargo.toml version).
@@ -167,6 +167,9 @@ pub struct CalculationResult {
     /// When `true`, the frontend should periodically re-calculate the expression.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub is_live_time: Option<bool>,
+    /// Structured datetime metadata for browser-local and UTC conversion display.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub datetime_result: Option<DateTimeResult>,
 }
 
 impl CalculationResult {
@@ -190,6 +193,7 @@ impl CalculationResult {
             repeating_decimal: None,
             fraction: None,
             is_live_time: None,
+            datetime_result: None,
         }
     }
 
@@ -221,6 +225,11 @@ impl CalculationResult {
         } else {
             (None, None)
         };
+        let datetime_result = if let ValueKind::DateTime(dt) = &value.kind {
+            DateTimeResult::from_datetime(dt)
+        } else {
+            None
+        };
 
         Self {
             result,
@@ -239,6 +248,7 @@ impl CalculationResult {
             repeating_decimal,
             fraction,
             is_live_time: None,
+            datetime_result,
         }
     }
 
@@ -267,6 +277,7 @@ impl CalculationResult {
             repeating_decimal: None,
             fraction: None,
             is_live_time: None,
+            datetime_result: None,
         }
     }
 
@@ -296,6 +307,7 @@ impl CalculationResult {
             repeating_decimal: None,
             fraction: None,
             is_live_time: None,
+            datetime_result: None,
         }
     }
 
@@ -328,6 +340,7 @@ impl CalculationResult {
             repeating_decimal: None,
             fraction: None,
             is_live_time: None,
+            datetime_result: None,
         }
     }
 
@@ -352,6 +365,7 @@ impl CalculationResult {
             repeating_decimal: None,
             fraction: None,
             is_live_time: None,
+            datetime_result: None,
         }
     }
 
@@ -377,6 +391,7 @@ impl CalculationResult {
             repeating_decimal: None,
             fraction: None,
             is_live_time: None,
+            datetime_result: None,
         }
     }
 }

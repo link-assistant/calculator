@@ -12,6 +12,9 @@ result:
   placeholder 'Введите выражение выше'
   linksNotation 'Links Notation'
   steps Шаги
+  timezoneConversions 'Преобразования часовых поясов'
+  localTime 'Местное время'
+  utcTime 'Время UTC'
 examples:
   title 'Попробуйте эти примеры:'
 errors:

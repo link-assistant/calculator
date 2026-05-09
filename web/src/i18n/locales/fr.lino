@@ -12,6 +12,9 @@ result:
   placeholder 'Entrez une expression ci-dessus'
   linksNotation 'Notation Links'
   steps Étapes
+  timezoneConversions 'Conversions de fuseau horaire'
+  localTime 'Heure locale'
+  utcTime 'Heure UTC'
 examples:
   title 'Essayez ces exemples :'
 errors:

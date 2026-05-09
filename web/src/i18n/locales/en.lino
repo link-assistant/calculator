@@ -12,6 +12,9 @@ result:
   placeholder 'Enter an expression above'
   linksNotation 'Links Notation'
   steps Steps
+  timezoneConversions 'Timezone conversions'
+  localTime 'Local time'
+  utcTime 'UTC time'
 examples:
   title 'Try these examples:'
 errors:

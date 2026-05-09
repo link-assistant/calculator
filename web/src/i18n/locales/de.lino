@@ -12,6 +12,9 @@ result:
   placeholder 'Geben Sie oben einen Ausdruck ein'
   linksNotation Links-Notation
   steps Schritte
+  timezoneConversions 'Zeitzonen-Umrechnungen'
+  localTime 'Lokale Zeit'
+  utcTime 'UTC-Zeit'
 examples:
   title 'Probieren Sie diese Beispiele:'
 errors:

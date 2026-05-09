@@ -38,6 +38,43 @@ pub struct DateTime {
     tz_abbrev: Option<String>,
 }
 
+/// Browser-friendly metadata for displaying timezone conversions.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DateTimeResult {
+    /// The calculated value in its source timezone.
+    pub source: String,
+    /// The same instant formatted in UTC.
+    pub utc: String,
+    /// UTC timestamp in milliseconds since the Unix epoch.
+    pub epoch_milliseconds: i64,
+    /// Whether the original expression includes a date component.
+    pub has_date: bool,
+    /// Whether the original expression includes a time component.
+    pub has_time: bool,
+    /// Source timezone abbreviation, when known.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub timezone: Option<String>,
+    /// Source timezone offset in seconds, when known.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub offset_seconds: Option<i32>,
+}
+
+impl DateTimeResult {
+    /// Creates conversion display metadata for a timezone-aware datetime value.
+    #[must_use]
+    pub fn from_datetime(dt: &DateTime) -> Option<Self> {
+        Some(Self {
+            source: dt.to_string(),
+            utc: dt.utc_equivalent_display()?,
+            epoch_milliseconds: dt.timestamp_millis(),
+            has_date: dt.has_date(),
+            has_time: dt.has_time(),
+            timezone: dt.timezone_abbreviation().map(ToString::to_string),
+            offset_seconds: dt.offset_seconds(),
+        })
+    }
+}
+
 impl PartialEq for DateTime {
     fn eq(&self, other: &Self) -> bool {
         self.inner == other.inner
@@ -592,6 +629,62 @@ impl DateTime {
     #[must_use]
     pub fn inner_utc(&self) -> ChronoDateTime<Utc> {
         self.inner
+    }
+
+    /// Returns the UTC timestamp in milliseconds since the Unix epoch.
+    #[must_use]
+    pub fn timestamp_millis(&self) -> i64 {
+        self.inner.timestamp_millis()
+    }
+
+    /// Returns whether this value has a date component.
+    #[must_use]
+    pub fn has_date(&self) -> bool {
+        self.has_date
+    }
+
+    /// Returns whether this value has a time component.
+    #[must_use]
+    pub fn has_time(&self) -> bool {
+        self.has_time
+    }
+
+    /// Returns the source timezone offset in seconds, if known.
+    #[must_use]
+    pub fn offset_seconds(&self) -> Option<i32> {
+        self.offset_seconds
+    }
+
+    /// Returns the source timezone abbreviation, if available.
+    #[must_use]
+    pub fn timezone_abbreviation(&self) -> Option<&str> {
+        self.tz_abbrev.as_deref()
+    }
+
+    /// Returns true when this value has enough timezone context to show conversions.
+    #[must_use]
+    pub fn should_show_timezone_conversions(&self) -> bool {
+        self.has_time && self.offset_seconds.is_some()
+    }
+
+    /// Formats the same instant in UTC for conversion summaries.
+    #[must_use]
+    pub fn utc_equivalent_display(&self) -> Option<String> {
+        if !self.should_show_timezone_conversions() {
+            return None;
+        }
+
+        let formatted = if self.has_date && self.has_time {
+            self.inner.format("%Y-%m-%d %H:%M:%S UTC").to_string()
+        } else if self.has_date {
+            self.inner.format("%Y-%m-%d").to_string()
+        } else if self.has_time {
+            self.inner.format("%H:%M:%S UTC").to_string()
+        } else {
+            self.inner.to_rfc3339()
+        };
+
+        Some(formatted)
     }
 
     /// Adds a duration to this DateTime.

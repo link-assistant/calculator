@@ -12,6 +12,9 @@ result:
   placeholder 'ऊपर अभिव्यक्ति दर्ज करें'
   linksNotation 'लिंक्स नोटेशन'
   steps चरण
+  timezoneConversions 'समय क्षेत्र रूपांतरण'
+  localTime 'स्थानीय समय'
+  utcTime 'UTC समय'
 examples:
   title 'इन उदाहरणों को आज़माएं:'
 errors:
