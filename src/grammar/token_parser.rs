@@ -1,5 +1,4 @@
 //! Token-based expression parser.
-
 use crate::error::CalculatorError;
 use crate::grammar::{is_math_function, DateTimeGrammar, NumberGrammar, Token, TokenKind};
 use crate::types::{BinaryOp, DataSizeUnit, Decimal, Expression, MassUnit, Unit};
@@ -444,6 +443,19 @@ impl<'a> TokenParser<'a> {
                 Some(TokenKind::Colon) => {
                     parts.push(":".to_string());
                     self.advance();
+                }
+                Some(TokenKind::At) => {
+                    let save_pos = self.pos;
+                    self.advance();
+                    if let Some(TokenKind::Identifier(tz_id)) = self.current_kind() {
+                        if crate::types::DateTime::parse_tz_abbreviation(tz_id).is_some() {
+                            parts.push(tz_id.clone());
+                            self.advance();
+                            continue;
+                        }
+                    }
+                    self.pos = save_pos;
+                    break;
                 }
                 _ => break,
             }
