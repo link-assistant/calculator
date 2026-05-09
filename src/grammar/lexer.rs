@@ -367,6 +367,8 @@ impl Lexer {
             "of" => TokenKind::Of,
             // Russian: "в" means "in/into" (e.g. "1000 рублей в долларах")
             "в" => TokenKind::In,
+            // Russian: "по" means "by/according to" for timezone context (e.g. "11 по мск").
+            "по" => TokenKind::At,
             // Russian: "на" means "at/on" for temporal context (e.g. "1000 рублей на 11 апреля 2026")
             "на" => TokenKind::At,
             // French: "en" means "in/into" (e.g. "1000 dollars en euros")

@@ -7,6 +7,13 @@ use chrono::Datelike;
 use chrono::{FixedOffset, NaiveDate, NaiveTime, Utc};
 use regex;
 
+fn normalize_tz_abbreviation(tz: &str) -> String {
+    match tz.trim().to_lowercase().as_str() {
+        "мск" => "MSK".to_string(),
+        other => other.to_uppercase(),
+    }
+}
+
 /// Translates month names from any supported UI language to English.
 ///
 /// Supported languages: Russian (ru), German (de), French (fr),
@@ -223,8 +230,10 @@ pub(super) fn preprocess_natural_date(input: &str) -> String {
 /// Returns `None` if the abbreviation is not recognized.
 /// Supports half-hour and 45-minute offsets (e.g., IST +5:30, NPT +5:45).
 pub(super) fn parse_tz_abbreviation(tz: &str) -> Option<FixedOffset> {
+    let normalized_tz = normalize_tz_abbreviation(tz);
+
     // Handle half-hour and non-standard offsets first (return early)
-    match tz.to_uppercase().as_str() {
+    match normalized_tz.as_str() {
         "IST" => return FixedOffset::east_opt(5 * 3600 + 30 * 60), // India +5:30
         "ACST" => return FixedOffset::east_opt(9 * 3600 + 30 * 60), // Australia Central +9:30
         "ACDT" => return FixedOffset::east_opt(10 * 3600 + 30 * 60), // Australia Central DT +10:30
@@ -240,7 +249,7 @@ pub(super) fn parse_tz_abbreviation(tz: &str) -> Option<FixedOffset> {
         _ => {}
     }
 
-    let offset_hours = match tz.to_uppercase().as_str() {
+    let offset_hours = match normalized_tz.as_str() {
         "UTC" | "GMT" | "GTM" | "Z" => 0, // GTM: common typo for GMT
         // US & Canada timezones
         "EST" => -5,
@@ -426,7 +435,11 @@ pub(super) fn extract_timezone(input: &str) -> (&str, Option<FixedOffset>, Optio
         let potential_tz = &input[last_space + 1..];
         if let Some(offset) = parse_tz_abbreviation(potential_tz) {
             let time_part = input[..last_space].trim();
-            return (time_part, Some(offset), Some(potential_tz.to_uppercase()));
+            return (
+                time_part,
+                Some(offset),
+                Some(normalize_tz_abbreviation(potential_tz)),
+            );
         }
     }
 
