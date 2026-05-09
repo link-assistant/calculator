@@ -12,6 +12,9 @@ result:
   placeholder 'أدخل تعبيرًا أعلاه'
   linksNotation 'تدوين الروابط'
   steps الخطوات
+  timezoneConversions 'تحويلات المنطقة الزمنية'
+  localTime 'الوقت المحلي'
+  utcTime 'وقت UTC'
 examples:
   title 'جرب هذه الأمثلة:'
 errors:

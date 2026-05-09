@@ -70,6 +70,23 @@ export interface CalculationPlan {
   error?: string;
 }
 
+export interface DateTimeResult {
+  /** Calculated value in the source timezone. */
+  source: string;
+  /** The same instant formatted in UTC by the Rust engine. */
+  utc: string;
+  /** UTC timestamp in milliseconds since the Unix epoch. */
+  epoch_milliseconds: number;
+  /** Whether the original expression includes a date component. */
+  has_date: boolean;
+  /** Whether the original expression includes a time component. */
+  has_time: boolean;
+  /** Source timezone abbreviation, when known. */
+  timezone?: string;
+  /** Source timezone offset in seconds, when known. */
+  offset_seconds?: number;
+}
+
 export interface CalculationResult {
   result: string;
   lino_interpretation: string;
@@ -96,4 +113,6 @@ export interface CalculationResult {
   /** Whether the result represents a live (auto-updating) time expression.
    * When true, the frontend should periodically re-calculate to keep the time current. */
   is_live_time?: boolean;
+  /** Structured datetime metadata for local and UTC conversion display. */
+  datetime_result?: DateTimeResult;
 }

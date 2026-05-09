@@ -16,6 +16,9 @@ vi.mock('react-i18next', () => ({
         'result.calculating': 'Calculating...',
         'result.loading': 'Loading calculator engine...',
         'result.placeholder': 'Enter an expression above',
+        'result.timezoneConversions': 'Timezone conversions',
+        'result.localTime': 'Local time',
+        'result.utcTime': 'UTC time',
         'examples.title': 'Try these examples:',
         'settings.theme': 'Theme',
         'settings.themeLight': 'Light',
@@ -445,6 +448,34 @@ describe('App Component - Interpretation Switching', () => {
     // Both interpretation buttons should be rendered
     const altButtons = document.querySelectorAll('.lino-alt-button');
     expect(altButtons).toHaveLength(2);
+  });
+
+  it('should render local and UTC conversions for timezone datetime results', async () => {
+    render(<App />);
+    await simulateWorkerReady();
+
+    await simulateWorkerResult({
+      result: '12:30:00 MSK',
+      lino_interpretation: '(12:30:00 MSK)',
+      steps: ['UTC equivalent: 09:30:00 UTC'],
+      success: true,
+      datetime_result: {
+        source: '12:30:00 MSK',
+        utc: '09:30:00 UTC',
+        epoch_milliseconds: Date.UTC(2026, 0, 1, 9, 30, 0),
+        has_date: false,
+        has_time: true,
+        timezone: 'MSK',
+        offset_seconds: 10_800,
+      },
+    });
+
+    expect(screen.getByText('Local time')).toBeInTheDocument();
+    expect(screen.getByText('UTC time')).toBeInTheDocument();
+    const conversionValues = Array.from(
+      document.querySelectorAll('.datetime-conversion-value')
+    ).map(element => element.textContent);
+    expect(conversionValues).toContain('09:30:00 UTC');
   });
 
   it('should highlight first interpretation as selected by default', async () => {

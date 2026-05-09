@@ -840,6 +840,43 @@ footer a:hover {
   gap: 0.25rem;
 }
 
+.datetime-conversions {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.datetime-conversion-row {
+  display: grid;
+  grid-template-columns: minmax(5rem, max-content) minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: baseline;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+.datetime-conversion-label {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.datetime-conversion-value {
+  color: var(--text);
+  font-size: 0.875rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+@media (max-width: 480px) {
+  .datetime-conversion-row {
+    grid-template-columns: 1fr;
+    gap: 0.125rem;
+  }
+}
+
 .fraction-hint {
   font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
   font-size: 0.875rem;

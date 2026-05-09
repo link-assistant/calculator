@@ -9,7 +9,7 @@ mod unit;
 mod value;
 
 pub use currency::{Currency, CurrencyDatabase, ExchangeRateInfo};
-pub use datetime::DateTime;
+pub use datetime::{DateTime, DateTimeResult};
 pub use decimal::Decimal;
 pub use expression::{BinaryOp, Expression};
 pub use rational::{Rational, RepeatingDecimal};

@@ -12,6 +12,9 @@ result:
   placeholder 请在上方输入表达式
   linksNotation 链接表示法
   steps 步骤
+  timezoneConversions 时区转换
+  localTime 本地时间
+  utcTime 'UTC 时间'
 examples:
   title 试试这些示例：
 errors:

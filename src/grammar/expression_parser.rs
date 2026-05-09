@@ -279,6 +279,9 @@ impl ExpressionParser {
             }
             Expression::DateTime(dt) => {
                 steps.push(format!("DateTime value: {dt}"));
+                if let Some(utc_equivalent) = dt.utc_equivalent_display() {
+                    steps.push(format!("UTC equivalent: {utc_equivalent}"));
+                }
                 let dt_val = Value::datetime(dt.clone());
                 // For standalone datetime, show time from now
                 let now = DateTime::now();

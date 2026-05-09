@@ -4,6 +4,7 @@ import type { TFunction } from 'i18next';
 import { useTheme, useUrlExpression, useDelayedLoading, useExpressionCache } from './hooks';
 import { SUPPORTED_LANGUAGES, loadPreferences, savePreferences } from './i18n';
 import { generateIssueUrl, type PageState } from './utils/reportIssue';
+import { formatLocalDateTime, formatUtcDateTime } from './utils/datetimeDisplay';
 import { AutoResizeTextarea, ColorCodedLino, RepeatingDecimalNotations, UniversalKeyboard, type AutoResizeTextareaRef } from './components';
 import { getExamplesForDisplay } from './examples';
 import type { CalculationPlan, CalculationResult, ErrorInfo } from './types';
@@ -667,6 +668,29 @@ function App() {
                     ) : (
                       <div className="result-value-section">
                         <div className="result-value">{result.result}</div>
+                        {result.datetime_result && (
+                          <div
+                            className="datetime-conversions"
+                            aria-label={t('result.timezoneConversions', 'Timezone conversions')}
+                          >
+                            <div className="datetime-conversion-row">
+                              <span className="datetime-conversion-label">
+                                {t('result.localTime', 'Local time')}
+                              </span>
+                              <span className="datetime-conversion-value">
+                                {formatLocalDateTime(result.datetime_result)}
+                              </span>
+                            </div>
+                            <div className="datetime-conversion-row">
+                              <span className="datetime-conversion-label">
+                                {t('result.utcTime', 'UTC time')}
+                              </span>
+                              <span className="datetime-conversion-value">
+                                {formatUtcDateTime(result.datetime_result)}
+                              </span>
+                            </div>
+                          </div>
+                        )}
                         {/* Show fraction representation if available */}
                         {result.fraction && (
                           <div className="fraction-hint">
