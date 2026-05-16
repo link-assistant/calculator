@@ -1,4 +1,8 @@
-//! Internal utility functions.
+//! Utility helpers exposed for downstream consumers.
+//!
+//! These helpers were originally crate-private; they are made public so that
+//! Rust consumers of `link-calculator` can render the same issue-report links
+//! and apply the same input truncation rules the calculator itself uses.
 
 /// Generates a GitHub issue link for unrecognized input.
 pub fn generate_issue_link(input: &str, error: &str) -> String {

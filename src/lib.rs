@@ -38,10 +38,11 @@ pub mod grammar;
 pub mod lino;
 pub mod plan;
 pub mod types;
-mod utils;
+pub mod utils;
 pub mod wasm;
 
 pub use plan::{CalculationPlan, RateSource};
+pub use utils::{generate_issue_link, truncate};
 
 use error::{CalculatorError, ErrorInfo};
 use grammar::ExpressionParser;
@@ -395,8 +396,6 @@ impl CalculationResult {
         }
     }
 }
-
-use utils::generate_issue_link;
 
 /// The main calculator struct.
 #[wasm_bindgen]
@@ -795,6 +794,53 @@ impl Calculator {
     /// Evaluates a parsed expression.
     pub fn evaluate(&mut self, expr: &types::Expression) -> Result<Value, CalculatorError> {
         self.parser.evaluate(expr)
+    }
+
+    /// Returns a borrow of the underlying [`grammar::ExpressionParser`].
+    ///
+    /// Lets downstream consumers reach the parser's lower-level methods —
+    /// [`grammar::ExpressionParser::evaluate_with_steps`],
+    /// [`grammar::ExpressionParser::evaluate_expr`],
+    /// [`grammar::ExpressionParser::apply_binary_op`], and friends — without
+    /// rebuilding the parser state (currency database, current date
+    /// context, …).
+    #[must_use]
+    pub fn parser(&self) -> &ExpressionParser {
+        &self.parser
+    }
+
+    /// Returns a mutable borrow of the underlying [`grammar::ExpressionParser`].
+    pub fn parser_mut(&mut self) -> &mut ExpressionParser {
+        &mut self.parser
+    }
+
+    /// Calculates an expression and returns every intermediate artefact.
+    ///
+    /// Unlike [`Self::calculate_internal`], which returns a UI-shaped
+    /// [`CalculationResult`] with display strings only, this method gives a
+    /// downstream consumer everything it needs to either render the result
+    /// itself or replay the calculation:
+    ///
+    /// - `expression` — the parsed AST.
+    /// - `value` — the structured result, including unit and kind.
+    /// - `steps` — the raw step list captured during evaluation.
+    /// - `lino` — the Links Notation interpretation of the input.
+    ///
+    /// No information is lost between the calculator's internal state and the
+    /// returned tuple, so consumers (e.g. `formal-ai`) can re-encode the
+    /// result as Links Notation, LaTeX, JSON, or any other format.
+    pub fn calculate_with_value(
+        &mut self,
+        input: &str,
+    ) -> Result<(types::Expression, Value, Vec<String>, String), CalculatorError> {
+        let input = input.trim();
+        if input.is_empty() {
+            return Err(CalculatorError::EmptyInput);
+        }
+        let expr = self.parser.parse(input)?;
+        let lino = expr.to_lino();
+        let (value, steps) = self.parser.evaluate_with_steps(&expr)?;
+        Ok((expr, value, steps, lino))
     }
 
     /// Loads a historical exchange rate from .lino format content.
