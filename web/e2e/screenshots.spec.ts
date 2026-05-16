@@ -66,7 +66,7 @@ test.describe('Screenshot Generation', () => {
 
     await commander.clickButton({ selector: '.settings-button' });
     await expect(page.locator('.settings-dropdown')).toBeVisible();
-    await commander.clickButton({ selector: '.settings-buttons button:has-text("Dark")' });
+    await commander.clickButton({ selector: '[data-testid="theme-dark"]' });
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 
     await screenshot(commander, '05-dark-theme.png');
@@ -75,7 +75,7 @@ test.describe('Screenshot Generation', () => {
   test('06-definite-integral', async ({ page, commander }) => {
     await commander.clickButton({ selector: '.settings-button' });
     await expect(page.locator('.settings-dropdown')).toBeVisible();
-    await commander.clickButton({ selector: '.settings-buttons button:has-text("Dark")' });
+    await commander.clickButton({ selector: '[data-testid="theme-dark"]' });
     await commander.pressKey({ key: 'Escape' });
 
     await calculate(commander, 'integrate(x^2, x, 0, 3)');
@@ -86,7 +86,7 @@ test.describe('Screenshot Generation', () => {
   test('07-math-functions', async ({ page, commander }) => {
     await commander.clickButton({ selector: '.settings-button' });
     await expect(page.locator('.settings-dropdown')).toBeVisible();
-    await commander.clickButton({ selector: '.settings-buttons button:has-text("Dark")' });
+    await commander.clickButton({ selector: '[data-testid="theme-dark"]' });
     await commander.pressKey({ key: 'Escape' });
 
     await calculate(commander, 'sqrt(16) + pow(2, 3)');
