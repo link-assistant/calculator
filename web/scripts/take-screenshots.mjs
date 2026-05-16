@@ -141,7 +141,7 @@ async function main() {
     await page.waitForTimeout(500);
     await commander.clickButton({ selector: '.settings-button' });
     await waitFor(page, async () => !!(await page.$('.settings-dropdown')), 3000);
-    await commander.clickButton({ selector: '.settings-buttons button:has-text("Dark")' });
+    await commander.clickButton({ selector: '[data-testid="theme-dark"]' });
     await waitFor(page, async () => {
       const attr = await page.$eval('html', (el) => el.getAttribute('data-theme'));
       return attr === 'dark';
@@ -153,7 +153,7 @@ async function main() {
     await loadPage();
     await commander.clickButton({ selector: '.settings-button' });
     await waitFor(page, async () => !!(await page.$('.settings-dropdown')), 3000);
-    await commander.clickButton({ selector: '.settings-buttons button:has-text("Dark")' });
+    await commander.clickButton({ selector: '[data-testid="theme-dark"]' });
     await commander.keyboard.press('Escape');
     await commander.fillTextArea({ selector: 'textarea', text: 'integrate(x^2, x, 0, 3)' });
     await commander.keyboard.press('Enter');
@@ -169,7 +169,7 @@ async function main() {
     await loadPage();
     await commander.clickButton({ selector: '.settings-button' });
     await waitFor(page, async () => !!(await page.$('.settings-dropdown')), 3000);
-    await commander.clickButton({ selector: '.settings-buttons button:has-text("Dark")' });
+    await commander.clickButton({ selector: '[data-testid="theme-dark"]' });
     await commander.keyboard.press('Escape');
     await commander.fillTextArea({ selector: 'textarea', text: 'sqrt(16) + pow(2, 3)' });
     await commander.keyboard.press('Enter');

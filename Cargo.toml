@@ -21,6 +21,10 @@ name = "link-calculator"
 path = "src/main.rs"
 
 [[example]]
+name = "library_consumer"
+path = "examples/library_consumer.rs"
+
+[[example]]
 name = "test_advanced_math"
 path = "experiments/test_advanced_math.rs"
 

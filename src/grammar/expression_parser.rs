@@ -14,7 +14,10 @@ use crate::types::{
 /// When both base and exponent are rational and the exponent is an integer
 /// that fits in i32, the computation is exact (arbitrary precision).
 /// Otherwise, falls back to f64 computation.
-fn evaluate_power(base_val: &Value, exp_val: &Value) -> Result<Value, CalculatorError> {
+///
+/// This function is exposed so downstream consumers can reproduce the
+/// exact-versus-floating-point fallback used inside the evaluator.
+pub fn evaluate_power(base_val: &Value, exp_val: &Value) -> Result<Value, CalculatorError> {
     // Try exact rational exponentiation first
     if let (Some(base_rat), Some(exp_rat)) = (base_val.to_rational(), exp_val.to_rational()) {
         if exp_rat.is_integer() {
@@ -133,7 +136,12 @@ impl ExpressionParser {
     }
 
     /// Evaluates an expression with step-by-step tracking.
-    fn evaluate_with_steps(
+    ///
+    /// Returns the final [`Value`] alongside the human-readable list of steps
+    /// the evaluator took. Downstream consumers can drive this directly after
+    /// they have an [`Expression`] in hand (for example from [`Self::parse`])
+    /// without having to round-trip through [`Self::parse_and_evaluate`].
+    pub fn evaluate_with_steps(
         &mut self,
         expr: &Expression,
     ) -> Result<(Value, Vec<String>), CalculatorError> {
@@ -148,7 +156,12 @@ impl ExpressionParser {
         Ok((result, steps))
     }
 
-    fn evaluate_expr(&mut self, expr: &Expression) -> Result<Value, CalculatorError> {
+    /// Evaluates an expression without step tracking.
+    ///
+    /// This is the silent counterpart of [`Self::evaluate_with_steps`]. It is
+    /// exposed so downstream consumers can reuse the calculator's evaluator
+    /// when reconstructing computations from a pre-parsed AST.
+    pub fn evaluate_expr(&mut self, expr: &Expression) -> Result<Value, CalculatorError> {
         match expr {
             Expression::Number { value, unit, .. } => {
                 // Convert to Rational for exact arithmetic
@@ -264,7 +277,12 @@ impl ExpressionParser {
         }
     }
 
-    fn evaluate_expr_with_steps(
+    /// Evaluates an expression, pushing human-readable steps into `steps`.
+    ///
+    /// The same evaluator [`Self::evaluate_with_steps`] uses internally, but
+    /// the caller owns the step buffer. Useful when interleaving step output
+    /// from several sub-evaluations.
+    pub fn evaluate_expr_with_steps(
         &mut self,
         expr: &Expression,
         steps: &mut Vec<String>,
@@ -499,7 +517,12 @@ impl ExpressionParser {
         }
     }
 
-    fn apply_binary_op(
+    /// Applies a binary operator to two already-evaluated values.
+    ///
+    /// Exposes the same routing the evaluator uses internally so callers can
+    /// reuse currency-aware add/subtract or unit-aware multiply/divide
+    /// outside of a full expression.
+    pub fn apply_binary_op(
         &mut self,
         left: &Value,
         op: BinaryOp,
@@ -524,8 +547,10 @@ impl ExpressionParser {
     /// Evaluates an integrate function call: integrate(expr, var, lower, upper).
     ///
     /// Uses numerical integration (Simpson's rule) to compute the definite integral.
+    /// Exposed so downstream consumers can reuse the same integrator when
+    /// reconstructing or composing their own evaluators.
     #[allow(clippy::many_single_char_names)]
-    fn evaluate_integrate(&mut self, args: &[Expression]) -> Result<Value, CalculatorError> {
+    pub fn evaluate_integrate(&mut self, args: &[Expression]) -> Result<Value, CalculatorError> {
         if args.len() != 4 {
             return Err(CalculatorError::invalid_args(
                 "integrate",
@@ -595,8 +620,12 @@ impl ExpressionParser {
         Ok(Value::number(Decimal::from_f64(result)))
     }
 
-    /// Evaluates an expression with a variable substitution.
-    fn evaluate_at(
+    /// Evaluates an expression at a specific numeric value of `var_name`.
+    ///
+    /// Convenience wrapper around [`Self::evaluate_expr_with_var`] that
+    /// coerces the result to a [`Decimal`]. Exposed for downstream consumers
+    /// (e.g. custom integrators or plotters).
+    pub fn evaluate_at(
         &mut self,
         expr: &Expression,
         var_name: &str,
@@ -609,7 +638,11 @@ impl ExpressionParser {
     }
 
     /// Evaluates an expression with a variable substitution.
-    fn evaluate_expr_with_var(
+    ///
+    /// Replaces every occurrence of `var_name` in `expr` with `var_value`
+    /// while evaluating. Exposed so callers can implement their own numeric
+    /// integration, plotting, or symbolic substitution.
+    pub fn evaluate_expr_with_var(
         &mut self,
         expr: &Expression,
         var_name: &str,

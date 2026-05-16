@@ -462,18 +462,21 @@ function App() {
                     <label>{t('settings.theme')}</label>
                     <div className="settings-buttons">
                       <button
+                        data-testid="theme-light"
                         className={theme === 'light' ? 'active' : ''}
                         onClick={() => setTheme('light')}
                       >
                         {t('settings.themeLight')}
                       </button>
                       <button
+                        data-testid="theme-dark"
                         className={theme === 'dark' ? 'active' : ''}
                         onClick={() => setTheme('dark')}
                       >
                         {t('settings.themeDark')}
                       </button>
                       <button
+                        data-testid="theme-system"
                         className={theme === 'system' ? 'active' : ''}
                         onClick={() => setTheme('system')}
                       >

@@ -24,10 +24,11 @@ jobs:
   update-screenshots:
     name: Update Screenshots
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           # Always checkout latest main so we have the version-bumped Cargo.toml
           ref: main
@@ -42,7 +43,7 @@ jobs:
         run: wasm-pack build --target web --out-dir web/public/pkg
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '20'
           cache: 'npm'
@@ -50,7 +51,7 @@ jobs:
 
       - name: Install web dependencies
         working-directory: web
-        run: npm ci || npm install
+        run: npm ci
 
       - name: Install Playwright browsers
         working-directory: web
@@ -79,6 +80,19 @@ jobs:
           # Take screenshots using browser-commander
           node scripts/take-screenshots.mjs
           kill $PREVIEW_PID || true
+
+      - name: Upload screenshot failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: screenshot-failure-${{ github.run_id }}
+          path: |
+            docs/use-cases/
+            docs/screenshots/
+            web/test-results/
+            web/playwright-report/
+          retention-days: 7
+          if-no-files-found: ignore
 
       - name: Check for changes
         id: changes
