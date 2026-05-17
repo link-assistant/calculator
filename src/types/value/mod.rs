@@ -16,7 +16,7 @@ pub struct Value {
 }
 
 /// Different kinds of values the calculator can work with.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ValueKind {
     /// A decimal number (for compatibility and complex operations).
     Number(Decimal),
@@ -31,6 +31,13 @@ pub enum ValueKind {
     },
     /// A boolean value.
     Boolean(bool),
+    /// A solved single-variable equation.
+    EquationSolution {
+        /// The solved variable name.
+        variable: String,
+        /// The value assigned to the variable.
+        value: Rational,
+    },
 }
 
 impl Value {
@@ -120,6 +127,18 @@ impl Value {
     pub fn boolean(b: bool) -> Self {
         Self {
             kind: ValueKind::Boolean(b),
+            unit: Unit::None,
+        }
+    }
+
+    /// Creates a solved equation value.
+    #[must_use]
+    pub fn equation_solution(variable: impl Into<String>, value: Rational) -> Self {
+        Self {
+            kind: ValueKind::EquationSolution {
+                variable: variable.into(),
+                value,
+            },
             unit: Unit::None,
         }
     }
@@ -804,6 +823,7 @@ impl Value {
             ValueKind::DateTime(_) => "datetime",
             ValueKind::Duration { .. } => "duration",
             ValueKind::Boolean(_) => "boolean",
+            ValueKind::EquationSolution { .. } => "equation solution",
         }
     }
 
@@ -830,6 +850,9 @@ impl Value {
             ValueKind::DateTime(dt) => dt.to_string(),
             ValueKind::Duration { seconds } => format_duration(*seconds),
             ValueKind::Boolean(b) => b.to_string(),
+            ValueKind::EquationSolution { variable, value } => {
+                format!("{variable} = {}", value.to_display_string())
+            }
         }
     }
 
@@ -902,10 +925,7 @@ impl PartialEq for Value {
             (ValueKind::Rational(a), ValueKind::Number(b)) => {
                 (a.to_f64() - b.to_f64()).abs() < 1e-10 && self.unit == other.unit
             }
-            (ValueKind::DateTime(a), ValueKind::DateTime(b)) => a == b,
-            (ValueKind::Duration { seconds: a }, ValueKind::Duration { seconds: b }) => a == b,
-            (ValueKind::Boolean(a), ValueKind::Boolean(b)) => a == b,
-            _ => false,
+            _ => self.kind == other.kind && self.unit == other.unit,
         }
     }
 }
