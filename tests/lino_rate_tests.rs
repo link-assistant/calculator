@@ -310,32 +310,27 @@ fn test_currency_subtraction_with_loaded_rates() {
     );
 }
 
-/// Test that ISO date format (YYYY-MM-DD) in "at" clause is currently parsed
-/// as arithmetic (subtraction), not as a date. This is a known limitation.
-/// Users should use month name format (e.g., "Feb 8, 2021") for historical
-/// date queries.
+/// Test that ISO date format (YYYY-MM-DD) in "at" clause is rejected instead
+/// of silently accepting a partial parse. Users should use month name format
+/// (e.g., "Feb 8, 2021") for historical date queries.
 #[test]
 fn test_iso_date_format_limitation() {
     let mut calculator = Calculator::new();
 
-    // Note: "2021-02-08" after "at" is tokenized as 2021 - 02 - 08 = 2011
-    // This is a known limitation of the current lexer.
+    // Note: "2021-02-08" after "at" is tokenized as 2021 - 02 - 08. The
+    // parser now rejects the unconsumed suffix instead of silently accepting
+    // only the leading "2021".
     let result = calculator.calculate_internal("(0 RUB + 1 USD) at 2021-02-08");
-    assert!(result.success);
-
-    // The expression is evaluated as: (0 RUB + 1 USD) at 2011
-    // which fails because 2011 (a number) is not a valid DateTime
-    // Actually it seems to succeed, let's check what happens
-
-    // The current implementation might handle this differently
-    // This test documents the current behavior
-    let steps_text = result.steps.join("\n");
-
-    // The "at" clause evaluates to a number (2021 - 02 - 08 = 2011)
-    // which is likely treated as year-only or causes fallback to default rates
-    // Document the actual behavior here:
     assert!(
-        steps_text.contains("default") || steps_text.contains("89.5"),
-        "ISO dates are not properly parsed in at clause - falls back to default rate. Steps: {steps_text}"
+        !result.success,
+        "ISO date arithmetic in an at clause must not silently succeed: {result:?}"
+    );
+    assert!(
+        result
+            .error
+            .as_deref()
+            .is_some_and(|error| error.contains("Unexpected trailing input")),
+        "expected trailing-input parse error, got: {:?}",
+        result.error
     );
 }

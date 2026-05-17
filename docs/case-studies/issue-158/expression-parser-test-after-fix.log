@@ -1,0 +1,35 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   Compiling link-calculator v0.16.0 (/tmp/gh-issue-solver-1779010437201)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.46s
+     Running tests/expression_parser_tests.rs (target/debug/deps/expression_parser_tests-8387ae5aa537cf77)
+
+running 24 tests
+test test_evaluate_function_with_expression ... ok
+test test_evaluate_negation ... ok
+test test_evaluate_complex_expression ... ok
+test test_evaluate_multiplication ... ok
+test test_evaluate_nested_functions ... ok
+test test_evaluate_parentheses ... ok
+test test_evaluate_percent_addition ... ok
+test test_evaluate_percent_standalone ... ok
+test test_evaluate_power ... ok
+test test_evaluate_percent_times_number ... ok
+test test_evaluate_percent_of_expression ... ok
+test test_evaluate_precedence ... ok
+test test_evaluate_pi ... ok
+test test_evaluate_sin ... ok
+test test_evaluate_simple ... ok
+test test_parse_addition ... ok
+test test_evaluate_sqrt ... ok
+test test_parse_currency ... ok
+test test_parse_currency_subtraction ... ok
+test test_parse_function_call ... ok
+test test_parse_simple_number ... ok
+test test_parse_percent_expression ... ok
+test test_lino_representation ... ok
+test test_datetime_subtraction ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+

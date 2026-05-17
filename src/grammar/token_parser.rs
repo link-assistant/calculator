@@ -1,7 +1,9 @@
 //! Token-based expression parser.
+mod units;
+
 use crate::error::CalculatorError;
 use crate::grammar::{is_math_function, DateTimeGrammar, NumberGrammar, Token, TokenKind};
-use crate::types::{BinaryOp, DataSizeUnit, Decimal, Expression, MassUnit, Unit};
+use crate::types::{BinaryOp, Decimal, Expression, Unit};
 
 /// Internal token-based parser.
 pub struct TokenParser<'a> {
@@ -28,6 +30,20 @@ impl<'a> TokenParser<'a> {
 
     pub fn parse_expression(&mut self) -> Result<Expression, CalculatorError> {
         self.parse_equality()
+    }
+
+    pub fn parse_complete_expression(&mut self) -> Result<Expression, CalculatorError> {
+        let expr = self.parse_expression()?;
+
+        if self.is_at_end() {
+            return Ok(expr);
+        }
+
+        let token = self.current().expect("non-EOF token should exist");
+        Err(CalculatorError::parse(format!(
+            "Unexpected trailing input '{}' at position {}",
+            token.text, token.start
+        )))
     }
 
     fn parse_equality(&mut self) -> Result<Expression, CalculatorError> {
@@ -116,7 +132,9 @@ impl<'a> TokenParser<'a> {
 
         // Handle postfix percent operator: expr% → expr / 100
         // With optional "of <rhs>": expr% of rhs → (expr / 100) * rhs
-        if matches!(self.current_kind(), Some(TokenKind::Percent)) {
+        if matches!(self.current_kind(), Some(TokenKind::Percent))
+            && !self.percent_starts_binary_expression()
+        {
             self.advance();
             let percent_expr = Expression::binary(
                 expr,
@@ -138,6 +156,13 @@ impl<'a> TokenParser<'a> {
         }
 
         Ok(expr)
+    }
+
+    fn percent_starts_binary_expression(&self) -> bool {
+        matches!(
+            self.peek_kind(),
+            Some(TokenKind::Number(_) | TokenKind::Identifier(_) | TokenKind::LeftParen)
+        )
     }
 
     fn parse_primary(&mut self) -> Result<Expression, CalculatorError> {
@@ -818,6 +843,9 @@ impl<'a> TokenParser<'a> {
         } else if self.check(&TokenKind::Slash) {
             self.advance();
             Some(BinaryOp::Divide)
+        } else if self.check(&TokenKind::Percent) && self.percent_starts_binary_expression() {
+            self.advance();
+            Some(BinaryOp::Modulo)
         } else {
             None
         }
@@ -846,116 +874,6 @@ impl<'a> TokenParser<'a> {
 
     fn check_until(&self) -> bool {
         matches!(self.current_kind(), Some(TokenKind::Until))
-    }
-
-    /// Parses a unit name after the `as`, `in`, or `to` keyword.
-    ///
-    /// Handles:
-    /// - Data size units (e.g., `MB`, `KiB`, `mebibytes`)
-    /// - Mass units (e.g., `kg`, `tons`, `pounds`)
-    /// - Currency codes and natural language names (e.g., `USD`, `dollars`, `BTC`, `toncoin`)
-    fn parse_unit_for_conversion(&mut self) -> Result<Unit, CalculatorError> {
-        // The next token should be an identifier (the unit name)
-        if let Some(TokenKind::Identifier(id)) = self.current_kind() {
-            let unit_str = id.clone();
-            self.advance();
-
-            // Try to parse the unit string (exact match)
-            if let Some(data_size) = DataSizeUnit::parse(&unit_str) {
-                return Ok(Unit::DataSize(data_size));
-            }
-
-            // Try mass unit (e.g., "kg", "tons", "pounds")
-            if let Some(mass) = MassUnit::parse(&unit_str) {
-                return Ok(Unit::Mass(mass));
-            }
-
-            // Try case-insensitive matching for data size
-            let lower = unit_str.to_lowercase();
-            if let Some(data_size) = DataSizeUnit::parse(&lower) {
-                return Ok(Unit::DataSize(data_size));
-            }
-
-            // Try case-insensitive mass unit
-            if let Some(mass) = MassUnit::parse(&lower) {
-                return Ok(Unit::Mass(mass));
-            }
-
-            // Try duration/time unit (e.g., "seconds", "ms", "minutes", "hours")
-            if let Some(duration) = crate::types::DurationUnit::parse(&unit_str) {
-                return Ok(Unit::Duration(duration));
-            }
-
-            // Try timezone abbreviation (before currency, since currency catch-all matches any 2-5 letter code)
-            if crate::types::DateTime::parse_tz_abbreviation(&unit_str).is_some() {
-                return Ok(Unit::Timezone(unit_str.to_uppercase()));
-            }
-
-            // Try treating it as a currency code or natural language alias
-            // (e.g., "USD", "EUR", "dollars", "euros", "BTC", "toncoin")
-            if let Some(currency_code) = crate::types::CurrencyDatabase::parse_currency(&unit_str) {
-                return Ok(Unit::currency(&currency_code));
-            }
-
-            // Return error with helpful message
-            Err(CalculatorError::parse(format!(
-                "Unknown unit '{unit_str}'. Supported conversions: \
-                 data sizes (B, KB, MB, GB, KiB, MiB, GiB, ...), \
-                 mass (g, kg, tons, lb, oz), \
-                 currencies (USD, EUR, GBP, TON, BTC, ETH, ...) and natural language \
-                 aliases (dollars, euros, bitcoin, toncoin, ...), \
-                 timezones (UTC, GMT, EST, MSK, JST, ...), \
-                 time durations (ms, seconds, minutes, hours, days, weeks, months, years)."
-            )))
-        } else {
-            Err(CalculatorError::parse(
-                "Expected a unit name after 'as'/'in'/'to' (e.g., 'MB', 'kg', 'USD', 'dollars')",
-            ))
-        }
-    }
-
-    /// Resolves unit ambiguity when a conversion target provides context.
-    ///
-    /// For example, in "19 ton in usd": "ton" is initially parsed as Mass(MetricTon)
-    /// with Currency("TON") as an alternative. Since the target is Currency("USD"),
-    /// and Mass→Currency conversion is not valid but Currency→Currency is, this method
-    /// swaps the primary unit to the matching alternative.
-    fn resolve_unit_ambiguity_for_conversion(expr: Expression, target_unit: &Unit) -> Expression {
-        if let Expression::Number {
-            value,
-            ref unit,
-            ref alternative_units,
-        } = expr
-        {
-            if alternative_units.is_empty() {
-                return expr;
-            }
-
-            // Check if the primary unit is already compatible with the target
-            if unit.is_same_category(target_unit) {
-                return expr;
-            }
-
-            // Look for an alternative that is compatible with the target
-            for alt in alternative_units {
-                if alt.is_same_category(target_unit) {
-                    // Swap: make the compatible alternative the primary,
-                    // and move the original primary to alternatives
-                    let mut new_alternatives: Vec<Unit> = alternative_units
-                        .iter()
-                        .filter(|u| *u != alt)
-                        .cloned()
-                        .collect();
-                    new_alternatives.push(unit.clone());
-                    return Expression::number_with_unit_alternatives(
-                        value,
-                        alt.clone(),
-                        new_alternatives,
-                    );
-                }
-            }
-        }
-        expr
     }
 
     fn current(&self) -> Option<&Token> {

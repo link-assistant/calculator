@@ -1,0 +1,19 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on artifact directory
+   Compiling link-calculator v0.16.0 (/tmp/gh-issue-solver-1779010437201)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.10s
+     Running tests/issue_145_percent_of_tests.rs (target/debug/deps/issue_145_percent_of_tests-ea73235ddf399081)
+
+running 7 tests
+test test_issue_145_100_percent_of_42 ... ok
+test test_issue_145_10_percent_of_200 ... ok
+test test_issue_145_8_percent_times_50_usd ... ok
+test test_issue_145_50_percent_of_80 ... ok
+test test_issue_145_8_percent_of_50_usd ... ok
+test test_issue_145_percent_standalone_unchanged ... ok
+test test_issue_145_percent_times_number_unchanged ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
