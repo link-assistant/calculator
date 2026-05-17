@@ -1,0 +1,20 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   Compiling link-calculator v0.16.0 (/tmp/gh-issue-solver-1779010437201)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.44s
+     Running tests/lino_rate_tests.rs (target/debug/deps/lino_rate_tests-6bbd675c0457d725)
+
+running 9 tests
+test test_iso_date_format_limitation ... ok
+test test_legacy_lino_format ... ok
+test test_currency_subtraction_with_loaded_rates ... ok
+test test_currency_arithmetic_with_loaded_rates ... ok
+test test_different_dates_use_different_rates ... ok
+test test_load_lino_rates_and_use_in_conversion ... ok
+test test_inverse_rate_available ... ok
+test test_rate_info_shown_in_steps ... ok
+test test_multiple_currency_pairs ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+

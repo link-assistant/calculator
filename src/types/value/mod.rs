@@ -240,6 +240,13 @@ impl Value {
     ) -> Result<Self, CalculatorError> {
         match (&self.unit, &other.unit) {
             (Unit::None, Unit::None) => Ok(Value::rational(a + b)),
+            (Unit::None, Unit::Custom(_)) | (Unit::Custom(_), Unit::None) => {
+                Err(CalculatorError::unit_mismatch(
+                    "add",
+                    &self.unit.display_name(),
+                    &other.unit.display_name(),
+                ))
+            }
             (Unit::None, unit) | (unit, Unit::None) => {
                 Ok(Value::rational_with_unit(a + b, unit.clone()))
             }
@@ -287,6 +294,13 @@ impl Value {
     ) -> Result<Self, CalculatorError> {
         match (&self.unit, &other.unit) {
             (Unit::None, Unit::None) => Ok(Value::number(a + b)),
+            (Unit::None, Unit::Custom(_)) | (Unit::Custom(_), Unit::None) => {
+                Err(CalculatorError::unit_mismatch(
+                    "add",
+                    &self.unit.display_name(),
+                    &other.unit.display_name(),
+                ))
+            }
             (Unit::None, unit) | (unit, Unit::None) => {
                 Ok(Value::number_with_unit(a + b, unit.clone()))
             }
@@ -399,6 +413,13 @@ impl Value {
     ) -> Result<Self, CalculatorError> {
         match (&self.unit, &other.unit) {
             (Unit::None, Unit::None) => Ok(Value::rational(a - b)),
+            (Unit::None, Unit::Custom(_)) | (Unit::Custom(_), Unit::None) => {
+                Err(CalculatorError::unit_mismatch(
+                    "subtract",
+                    &self.unit.display_name(),
+                    &other.unit.display_name(),
+                ))
+            }
             (unit, Unit::None) => Ok(Value::rational_with_unit(a - b, unit.clone())),
             (Unit::None, unit) => Ok(Value::rational_with_unit(a - b, unit.clone())),
             // Same currency
@@ -445,6 +466,13 @@ impl Value {
     ) -> Result<Self, CalculatorError> {
         match (&self.unit, &other.unit) {
             (Unit::None, Unit::None) => Ok(Value::number(a - b)),
+            (Unit::None, Unit::Custom(_)) | (Unit::Custom(_), Unit::None) => {
+                Err(CalculatorError::unit_mismatch(
+                    "subtract",
+                    &self.unit.display_name(),
+                    &other.unit.display_name(),
+                ))
+            }
             (unit, Unit::None) => Ok(Value::number_with_unit(a - b, unit.clone())),
             (Unit::None, unit) => Ok(Value::number_with_unit(a - b, unit.clone())),
             (Unit::Currency(c1), Unit::Currency(c2)) if c1 == c2 => Ok(Value::currency(a - b, c1)),
@@ -613,6 +641,30 @@ impl Value {
                 other.type_name()
             ))),
         }
+    }
+
+    /// Computes the signed remainder of two unitless numbers.
+    pub fn modulo(&self, other: &Self) -> Result<Self, CalculatorError> {
+        if self.unit != Unit::None || other.unit != Unit::None {
+            return Err(CalculatorError::InvalidOperation(format!(
+                "Cannot apply modulo to {} and {}; modulo requires unitless numbers",
+                self.to_display_string(),
+                other.to_display_string()
+            )));
+        }
+
+        let left = self.to_rational().ok_or_else(|| {
+            CalculatorError::InvalidOperation("modulo operands must be numeric".into())
+        })?;
+        let right = other.to_rational().ok_or_else(|| {
+            CalculatorError::InvalidOperation("modulo operands must be numeric".into())
+        })?;
+
+        let result = left
+            .remainder(&right)
+            .ok_or(CalculatorError::DivisionByZero)?;
+
+        Ok(Value::rational(result))
     }
 
     /// Converts this value to the given unit.

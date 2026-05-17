@@ -127,7 +127,7 @@ impl ExpressionParser {
         let mut lexer = Lexer::new(input);
         let tokens = lexer.tokenize()?;
         let mut parser = TokenParser::new(&tokens, &self.number_grammar, input);
-        parser.parse_expression()
+        parser.parse_complete_expression()
     }
 
     /// Evaluates an expression.
@@ -541,6 +541,7 @@ impl ExpressionParser {
             ),
             BinaryOp::Multiply => left.multiply(right),
             BinaryOp::Divide => left.divide(right),
+            BinaryOp::Modulo => left.modulo(right),
         }
     }
 

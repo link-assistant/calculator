@@ -12,6 +12,7 @@ pub enum BinaryOp {
     Subtract,
     Multiply,
     Divide,
+    Modulo,
 }
 
 impl BinaryOp {
@@ -23,6 +24,7 @@ impl BinaryOp {
             Self::Subtract => "-",
             Self::Multiply => "*",
             Self::Divide => "/",
+            Self::Modulo => "%",
         }
     }
 
@@ -31,7 +33,7 @@ impl BinaryOp {
     pub fn precedence(&self) -> u8 {
         match self {
             Self::Add | Self::Subtract => 1,
-            Self::Multiply | Self::Divide => 2,
+            Self::Multiply | Self::Divide | Self::Modulo => 2,
         }
     }
 }
@@ -624,6 +626,7 @@ impl Expression {
                     BinaryOp::Subtract => format!("{left_str} - {right_str}"),
                     BinaryOp::Multiply => format!("{left_str} \\cdot {right_str}"),
                     BinaryOp::Divide => format!("\\frac{{{left_str}}}{{{right_str}}}"),
+                    BinaryOp::Modulo => format!("{left_str} \\bmod {right_str}"),
                 }
             }
             Self::Negate(inner) => format!("-{}", inner.to_latex()),
@@ -820,6 +823,10 @@ mod tests {
     #[test]
     fn test_binary_op_precedence() {
         assert!(BinaryOp::Multiply.precedence() > BinaryOp::Add.precedence());
+        assert_eq!(
+            BinaryOp::Modulo.precedence(),
+            BinaryOp::Multiply.precedence()
+        );
         assert_eq!(BinaryOp::Add.precedence(), BinaryOp::Subtract.precedence());
     }
 

@@ -1,0 +1,32 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on artifact directory
+   Compiling link-calculator v0.16.0 (/tmp/gh-issue-solver-1779010437201)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.80s
+     Running tests/issue_156_library_surface_tests.rs (target/debug/deps/issue_156_library_surface_tests-aaa3c0d58db4aeb7)
+
+running 19 tests
+test calculate_with_value_propagates_parse_error ... ok
+test calculate_with_value_propagates_empty_input_error ... ok
+test calculator_plan_returns_typed_calculation_plan ... ok
+test calculate_internal_returns_calculation_result_with_steps_and_lino ... ok
+test calculator_calculate_with_value_returns_every_artefact ... ok
+test expression_parser_apply_binary_op_is_callable_directly ... ok
+test expression_parser_evaluate_expr_with_steps_uses_caller_buffer ... ok
+test expression_parser_evaluate_expr_with_var_keeps_value_kind ... ok
+test expression_parser_evaluate_expr_works_without_steps ... ok
+test expression_parser_evaluate_at_substitutes_variable ... ok
+test evaluate_power_helper_is_reachable ... ok
+test expression_parser_evaluate_with_steps_is_callable_directly ... ok
+test lexer_is_reachable_through_grammar_module ... ok
+test utils_generate_issue_link_is_reachable ... ok
+test utils_truncate_is_reachable ... ok
+test version_constant_is_reachable ... ok
+test parser_accessors_expose_underlying_expression_parser ... ok
+test high_level_and_low_level_paths_produce_the_same_value ... ok
+test structured_value_kind_is_reachable_through_public_value_kind ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,0 +1,19 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on artifact directory
+   Compiling link-calculator v0.16.0 (/tmp/gh-issue-solver-1779010437201)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.71s
+     Running tests/issue_158_modulo_and_strict_parse_tests.rs (target/debug/deps/issue_158_modulo_and_strict_parse_tests-137acb3ea8d20b06)
+
+running 7 tests
+test issue_158_binary_percent_supports_negative_left_operand ... ok
+test issue_158_percent_of_still_works ... ok
+test issue_158_rejects_custom_unit_text_after_arithmetic ... ok
+test issue_158_postfix_percent_still_works ... ok
+test issue_158_rejects_trailing_tokens_after_postfix_percent ... ok
+test issue_158_binary_percent_has_multiplicative_precedence ... ok
+test issue_158_binary_percent_remainder_matches_reported_expression ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

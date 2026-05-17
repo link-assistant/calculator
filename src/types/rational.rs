@@ -342,6 +342,20 @@ impl Rational {
         }
     }
 
+    /// Returns the signed remainder after division, truncated toward zero.
+    #[must_use]
+    pub fn remainder(&self, other: &Self) -> Option<Self> {
+        if other.is_zero() {
+            return None;
+        }
+
+        let quotient_ratio = &self.inner / &other.inner;
+        let quotient = quotient_ratio.numer().clone() / quotient_ratio.denom().clone();
+        let remainder = self.inner.clone() - other.inner.clone() * Ratio::from_integer(quotient);
+
+        Some(Self { inner: remainder })
+    }
+
     /// Converts the rational to a display string.
     ///
     /// If the rational is an integer, returns the exact integer string

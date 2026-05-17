@@ -1,0 +1,122 @@
+ Downloading crates ...
+  Downloaded tokio-stream v0.1.17
+  Downloaded wasm-bindgen-test-shared v0.2.108
+  Downloaded tokio-test v0.4.4
+  Downloaded wasm-bindgen-test-macro v0.3.58
+  Downloaded oorandom v11.1.5
+  Downloaded nu-ansi-term v0.50.3
+  Downloaded wasm-bindgen-test v0.3.58
+  Downloaded async-stream-impl v0.3.6
+  Downloaded async-stream v0.3.6
+  Downloaded tokio-macros v2.6.0
+  Downloaded cast v0.3.0
+  Downloaded async-trait v0.1.89
+  Downloaded tokio v1.48.0
+   Compiling proc-macro2 v1.0.103
+   Compiling unicode-ident v1.0.22
+   Compiling quote v1.0.42
+   Compiling wasm-bindgen-shared v0.2.108
+   Compiling rustversion v1.0.22
+   Compiling serde_core v1.0.228
+   Compiling libm v0.2.16
+   Compiling bumpalo v3.19.1
+   Compiling autocfg v1.5.0
+   Compiling serde v1.0.228
+   Compiling num-traits v0.2.19
+   Compiling cfg-if v1.0.4
+   Compiling once_cell v1.21.3
+   Compiling pin-project-lite v0.2.16
+   Compiling wasm-bindgen v0.2.108
+   Compiling futures-core v0.3.31
+   Compiling syn v2.0.111
+   Compiling memchr v2.7.6
+   Compiling zmij v1.0.16
+   Compiling slab v0.4.11
+   Compiling serde_json v1.0.149
+   Compiling pin-utils v0.1.0
+   Compiling futures-task v0.3.31
+   Compiling futures-util v0.3.31
+   Compiling aho-corasick v1.1.4
+   Compiling num-integer v0.1.46
+   Compiling itoa v1.0.17
+   Compiling regex-syntax v0.8.8
+   Compiling thiserror v1.0.69
+   Compiling rust_decimal v1.40.0
+   Compiling arrayvec v0.7.6
+   Compiling iana-time-zone v0.1.64
+   Compiling wasm-bindgen-macro-support v0.2.108
+   Compiling lazy_static v1.5.0
+   Compiling wasm-bindgen-test-shared v0.2.108
+   Compiling bytes v1.11.0
+   Compiling regex-automata v0.4.13
+   Compiling oorandom v11.1.5
+   Compiling cast v0.3.0
+   Compiling nu-ansi-term v0.50.3
+   Compiling serde_derive v1.0.228
+   Compiling thiserror-impl v1.0.69
+   Compiling tokio-macros v2.6.0
+   Compiling tokio v1.48.0
+   Compiling async-stream-impl v0.3.6
+   Compiling async-trait v0.1.89
+   Compiling wasm-bindgen-macro v0.2.108
+   Compiling async-stream v0.3.6
+   Compiling wasm-bindgen-test-macro v0.3.58
+   Compiling regex v1.12.2
+   Compiling js-sys v0.3.85
+   Compiling console_error_panic_hook v0.1.7
+   Compiling tokio-stream v0.1.17
+   Compiling tokio-test v0.4.4
+   Compiling num-bigint v0.4.6
+   Compiling chrono v0.4.43
+   Compiling num-rational v0.4.2
+   Compiling wasm-bindgen-futures v0.4.58
+   Compiling web-sys v0.3.85
+   Compiling serde-wasm-bindgen v0.6.5
+   Compiling wasm-bindgen-test v0.3.58
+   Compiling link-calculator v0.16.0 (/tmp/gh-issue-solver-1779010437201)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.86s
+     Running tests/issue_158_modulo_and_strict_parse_tests.rs (target/debug/deps/issue_158_modulo_and_strict_parse_tests-137acb3ea8d20b06)
+
+running 7 tests
+
+thread 'issue_158_binary_percent_supports_negative_left_operand' (2212825) panicked at tests/issue_158_modulo_and_strict_parse_tests.rs:53:5:
+assertion `left == right` failed
+  left: "-0.05"
+ right: "-1"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'issue_158_rejects_custom_unit_text_after_arithmetic' (2212828) panicked at tests/issue_158_modulo_and_strict_parse_tests.rs:111:5:
+2 + 2 please must not silently return "4 please"
+test issue_158_percent_of_still_works ... ok
+test issue_158_binary_percent_supports_negative_left_operand ... FAILED
+test issue_158_postfix_percent_still_works ... ok
+test issue_158_rejects_custom_unit_text_after_arithmetic ... FAILED
+
+thread 'issue_158_rejects_trailing_tokens_after_postfix_percent' (2212829) panicked at tests/issue_158_modulo_and_strict_parse_tests.rs:92:5:
+50% please must not silently return "0.5"
+test issue_158_rejects_trailing_tokens_after_postfix_percent ... FAILED
+
+thread 'issue_158_binary_percent_remainder_matches_reported_expression' (2212824) panicked at tests/issue_158_modulo_and_strict_parse_tests.rs:22:5:
+assertion `left == right` failed
+  left: "99.75"
+ right: "96"
+test issue_158_binary_percent_remainder_matches_reported_expression ... FAILED
+
+thread 'issue_158_binary_percent_has_multiplicative_precedence' (2212823) panicked at tests/issue_158_modulo_and_strict_parse_tests.rs:40:5:
+assertion `left == right` failed
+  left: "99.75"
+ right: "92"
+test issue_158_binary_percent_has_multiplicative_precedence ... FAILED
+
+failures:
+
+failures:
+    issue_158_binary_percent_has_multiplicative_precedence
+    issue_158_binary_percent_remainder_matches_reported_expression
+    issue_158_binary_percent_supports_negative_left_operand
+    issue_158_rejects_custom_unit_text_after_arithmetic
+    issue_158_rejects_trailing_tokens_after_postfix_percent
+
+test result: FAILED. 2 passed; 5 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--test issue_158_modulo_and_strict_parse_tests`
