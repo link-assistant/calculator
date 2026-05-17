@@ -47,6 +47,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.17.0] - 2026-05-17
+
+### Added
+- Added binary `%` remainder parsing for math-like infix expressions.
+
+### Fixed
+- Rejected trailing tokens after a complete parsed expression instead of silently accepting only a valid prefix.
+- Rejected accidental unitless arithmetic with arbitrary custom-unit text such as `2 + 2 please`.
+
 ## [0.16.0] - 2026-05-16
 
 ### Added
