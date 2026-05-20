@@ -49,6 +49,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.17.2] - 2026-05-20
+
+### Fixed
+- Treat adjacent SI number suffixes such as `19k` and `19к` as numeric multipliers before parsing following units.
+
 ## [0.17.1] - 2026-05-17
 
 ### Added
