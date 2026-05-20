@@ -31,6 +31,46 @@ impl NumberGrammar {
         Ok(if is_negative { -decimal } else { decimal })
     }
 
+    /// Returns the decimal multiplier for an SI-style numeric suffix.
+    ///
+    /// This is used for compact number notation such as `19k RUB` and
+    /// `19к рублей`, where the suffix is attached to the number and the unit
+    /// follows as the next token. SI suffixes are case-sensitive where case
+    /// distinguishes multipliers, so `m` is milli and `M` is mega. `K`/`К`
+    /// are accepted as common user spellings of kilo.
+    #[must_use]
+    pub(crate) fn si_suffix_multiplier(s: &str) -> Option<Decimal> {
+        let multiplier = match s {
+            // Submultiples
+            "r" => "0.000000000000000000000000001",
+            "y" => "0.000000000000000000000001",
+            "z" => "0.000000000000000000001",
+            "a" => "0.000000000000000001",
+            "f" => "0.000000000000001",
+            "p" => "0.000000000001",
+            "n" => "0.000000001",
+            "µ" | "μ" | "u" => "0.000001",
+            "m" => "0.001",
+            "c" => "0.01",
+            "d" => "0.1",
+            // Multiples
+            "da" => "10",
+            "h" => "100",
+            "k" | "K" | "к" | "К" => "1000",
+            "M" | "М" => "1000000",
+            "G" => "1000000000",
+            "T" => "1000000000000",
+            "P" => "1000000000000000",
+            "E" => "1000000000000000000",
+            "Z" => "1000000000000000000000",
+            "Y" => "1000000000000000000000000",
+            "R" => "1000000000000000000000000000",
+            _ => return None,
+        };
+
+        multiplier.parse().ok()
+    }
+
     /// Parses a number with an optional unit.
     pub fn parse_number_with_unit(
         &self,

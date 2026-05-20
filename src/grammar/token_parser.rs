@@ -191,6 +191,7 @@ impl<'a> TokenParser<'a> {
         // Number with optional unit
         if let Some(TokenKind::Number(n)) = self.current_kind() {
             let num_str = n.clone();
+            let number_end = self.current().map_or(0, |token| token.end);
             let save_pos = self.pos;
             self.advance();
 
@@ -241,6 +242,11 @@ impl<'a> TokenParser<'a> {
                 }
             }
 
+            let mut value = self.number_grammar.parse_number(&num_str)?;
+            if let Some(multiplier) = self.consume_adjacent_si_suffix(number_end) {
+                value = value * multiplier;
+            }
+
             // Check for unit (identifier following number that is not a function)
             let (unit, alternative_units) =
                 if let Some(TokenKind::Identifier(id)) = self.current_kind() {
@@ -259,7 +265,6 @@ impl<'a> TokenParser<'a> {
                     (Unit::None, Vec::new())
                 };
 
-            let value = self.number_grammar.parse_number(&num_str)?;
             if alternative_units.is_empty() {
                 return Ok(Expression::number_with_unit(value, unit));
             }
@@ -355,6 +360,46 @@ impl<'a> TokenParser<'a> {
             "Unexpected token: {:?}",
             self.current()
         )))
+    }
+
+    fn consume_adjacent_si_suffix(&mut self, number_end: usize) -> Option<Decimal> {
+        let suffix = self.current().and_then(|token| {
+            if token.start != number_end {
+                return None;
+            }
+
+            let TokenKind::Identifier(id) = &token.kind else {
+                return None;
+            };
+
+            Some(id.clone())
+        })?;
+        let multiplier = NumberGrammar::si_suffix_multiplier(&suffix)?;
+
+        // Preserve established adjacent unit abbreviations like `2h in minutes`.
+        // They become SI suffixes only in suffix-before-unit forms like `5h USD`.
+        if self.identifier_is_known_unit(&suffix) && !self.peek_identifier_is_known_unit() {
+            return None;
+        }
+
+        self.advance();
+        Some(multiplier)
+    }
+
+    fn identifier_is_known_unit(&self, id: &str) -> bool {
+        matches!(
+            self.number_grammar.parse_unit_with_alternatives(id),
+            Ok((unit, _)) if !matches!(unit, Unit::Custom(_) | Unit::None)
+        )
+    }
+
+    fn peek_identifier_is_known_unit(&self) -> bool {
+        match self.peek_kind() {
+            Some(TokenKind::Identifier(id)) if !is_math_function(id) => {
+                self.identifier_is_known_unit(id)
+            }
+            _ => false,
+        }
     }
 
     fn parse_function_call(&mut self, name: &str) -> Result<Expression, CalculatorError> {
