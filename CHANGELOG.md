@@ -50,6 +50,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.17.3] - 2026-05-27
+
+### Fixed
+- Recognize Russian abbreviated month names such as `июл` in full date expressions.
+
 ## [0.17.2] - 2026-05-20
 
 ### Fixed
