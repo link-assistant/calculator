@@ -1,0 +1,27 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.06s
+     Running tests/issue_166_numeric_date_parsing_tests.rs (target/debug/deps/issue_166_numeric_date_parsing_tests-fb052010f949e512)
+
+running 20 tests
+test test_decimal_addition_preserved ... ok
+test test_european_slash_date ... ok
+test test_european_dot_date ... ok
+test test_european_dash_date ... ok
+test test_fraction_division_preserved ... ok
+test test_dash_date_plus_duration ... ok
+test test_dot_date_minus_duration ... ok
+test test_date_difference_yields_duration ... ok
+test test_invalid_numeric_date_falls_back_to_arithmetic ... ok
+test test_iso_dash_date ... ok
+test test_iso_date_plus_duration ... ok
+test test_issue_166_slash_separated_date_plus_duration ... ok
+test test_iso_dot_date ... ok
+test test_two_component_slash_is_division ... ok
+test test_issue_166_dot_separated_date_plus_duration ... ok
+test test_spaced_arithmetic_still_subtracts ... ok
+test test_iso_date_minus_duration ... ok
+test test_us_slash_date ... ok
+test test_us_dash_date ... ok
+test test_us_dot_date ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+

@@ -388,9 +388,9 @@ where
     for i in 1..n {
         let x = (i as f64).mul_add(h, a);
         if i % 2 == 0 {
-            sum += 2.0 * f(x);
+            sum = 2.0_f64.mul_add(f(x), sum);
         } else {
-            sum += 4.0 * f(x);
+            sum = 4.0_f64.mul_add(f(x), sum);
         }
     }
 

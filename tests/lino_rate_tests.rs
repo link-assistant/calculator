@@ -310,27 +310,31 @@ fn test_currency_subtraction_with_loaded_rates() {
     );
 }
 
-/// Test that ISO date format (YYYY-MM-DD) in "at" clause is rejected instead
-/// of silently accepting a partial parse. Users should use month name format
-/// (e.g., "Feb 8, 2021") for historical date queries.
+/// Test that ISO date format (YYYY-MM-DD) in an "at" clause is recognized as a
+/// real date (issue #166). Previously "2021-02-08" was tokenized as the
+/// arithmetic expression 2021 - 02 - 08; now the lexer recognizes it as a date
+/// literal, so the temporal context is honored.
 #[test]
-fn test_iso_date_format_limitation() {
+fn test_iso_date_format_in_at_clause() {
     let mut calculator = Calculator::new();
 
-    // Note: "2021-02-08" after "at" is tokenized as 2021 - 02 - 08. The
-    // parser now rejects the unconsumed suffix instead of silently accepting
-    // only the leading "2021".
+    // With no rate loaded for that date the calculation fails, but the error now
+    // proves the date was parsed (it references the date), rather than the old
+    // "Unexpected trailing input" parse error from arithmetic tokenization.
     let result = calculator.calculate_internal("(0 RUB + 1 USD) at 2021-02-08");
     assert!(
         !result.success,
-        "ISO date arithmetic in an at clause must not silently succeed: {result:?}"
+        "Without a loaded rate the query should fail: {result:?}"
+    );
+    let error = result.error.as_deref().unwrap_or_default();
+    assert!(
+        error.contains("2021-02-08"),
+        "error should reference the parsed date, got: {:?}",
+        result.error
     );
     assert!(
-        result
-            .error
-            .as_deref()
-            .is_some_and(|error| error.contains("Unexpected trailing input")),
-        "expected trailing-input parse error, got: {:?}",
+        !error.contains("Unexpected trailing input"),
+        "ISO date in an at clause must no longer be rejected as arithmetic: {:?}",
         result.error
     );
 }

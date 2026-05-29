@@ -109,6 +109,11 @@ fn unicode_general_category(ch: char) -> GeneralCategory {
 pub enum TokenKind {
     /// A number (integer or decimal).
     Number(String),
+    /// A numeric date literal (e.g. `2026-01-22`, `15/10/2025`, `15.10.2025`).
+    ///
+    /// Recognized as a single token so dates do not get split into separate
+    /// numbers and `-`/`/` operators by the arithmetic grammar.
+    DateLiteral(String),
     /// An identifier (variable name, currency code, etc.).
     Identifier(String),
     /// The plus operator.
@@ -287,7 +292,18 @@ impl Lexer {
                 self.advance();
                 Token::new(TokenKind::Bang, start, self.pos, "!".to_string())
             }
-            _ if ch.is_ascii_digit() || ch == '.' => self.scan_number(),
+            _ if ch.is_ascii_digit() => {
+                // Prefer a full numeric date literal (e.g. 2026-01-22, 15.10.2025)
+                // over splitting it into separate numbers and operators.
+                if let Some((text, end)) = self.try_scan_date() {
+                    let token = Token::new(TokenKind::DateLiteral(text.clone()), start, end, text);
+                    self.pos = end;
+                    token
+                } else {
+                    self.scan_number()
+                }
+            }
+            _ if ch == '.' => self.scan_number(),
             _ if ch.is_alphabetic() => self.scan_identifier(),
             // Currency symbols used as prefix notation (e.g., $10, €5, £3)
             // These are recognized as single-character identifiers and mapped to ISO codes
@@ -337,6 +353,83 @@ impl Lexer {
         }
 
         Token::new(TokenKind::Number(text.clone()), start, self.pos, text)
+    }
+
+    /// Attempts to scan a full numeric date literal starting at the current
+    /// position, returning the matched text and the end index on success.
+    ///
+    /// A date literal is three digit groups joined by a single, consistent
+    /// separator (`-`, `/`, or `.`), where exactly one of the outer groups is a
+    /// 4-digit year. The candidate is only accepted when it parses as a real
+    /// calendar date, so ordinary arithmetic such as `2026 - 1 - 22` (written
+    /// with spaces) or `1/3` is never swallowed.
+    fn try_scan_date(&self) -> Option<(String, usize)> {
+        let len = self.input.len();
+
+        // Scans a run of ASCII digits from `j`, returning the end index.
+        let scan_digits = |j: usize| {
+            let mut end = j;
+            while end < len && self.input[end].is_ascii_digit() {
+                end += 1;
+            }
+            end
+        };
+
+        // First digit group.
+        let start = self.pos;
+        let e1 = scan_digits(start);
+        let l1 = e1 - start;
+        if l1 == 0 {
+            return None;
+        }
+
+        // First separator.
+        if e1 >= len {
+            return None;
+        }
+        let sep = self.input[e1];
+        if sep != '-' && sep != '/' && sep != '.' {
+            return None;
+        }
+
+        // Second digit group.
+        let e2 = scan_digits(e1 + 1);
+        let l2 = e2 - (e1 + 1);
+        if l2 == 0 {
+            return None;
+        }
+
+        // Second separator must match the first.
+        if e2 >= len || self.input[e2] != sep {
+            return None;
+        }
+
+        // Third digit group.
+        let e3 = scan_digits(e2 + 1);
+        let l3 = e3 - (e2 + 1);
+        if l3 == 0 {
+            return None;
+        }
+
+        // Reject anything that continues into a 4th component or more digits
+        // (e.g. version strings like `1.2.3.4` or `12.3456`).
+        if e3 < len && (self.input[e3] == sep || self.input[e3].is_ascii_digit()) {
+            return None;
+        }
+
+        // Require exactly one 4-digit year in an outer position.
+        let year_first = l1 == 4 && (1..=2).contains(&l2) && (1..=2).contains(&l3);
+        let year_last = l3 == 4 && (1..=2).contains(&l1) && (1..=2).contains(&l2);
+        if !year_first && !year_last {
+            return None;
+        }
+
+        let candidate: String = self.input[start..e3].iter().collect();
+        if crate::types::DateTime::parse(&candidate).is_ok() {
+            Some((candidate, e3))
+        } else {
+            None
+        }
     }
 
     fn scan_identifier(&mut self) -> Token {
@@ -473,6 +566,57 @@ mod tests {
         assert_eq!(tokens.len(), 3); // 3 % eof
         assert!(matches!(tokens[0].kind, TokenKind::Number(ref s) if s == "3"));
         assert!(matches!(tokens[1].kind, TokenKind::Percent));
+    }
+
+    #[test]
+    fn test_tokenize_numeric_date_literals() {
+        for input in [
+            "2026-01-22",
+            "15/10/2025",
+            "01/22/2026",
+            "15.10.2025",
+            "2025.10.15",
+        ] {
+            let mut lexer = Lexer::new(input);
+            let tokens = lexer.tokenize().unwrap();
+            assert_eq!(tokens.len(), 2, "{input} should be one date token + eof");
+            assert!(
+                matches!(tokens[0].kind, TokenKind::DateLiteral(ref s) if s == input),
+                "{input} should tokenize as a single DateLiteral, got {:?}",
+                tokens[0].kind
+            );
+        }
+    }
+
+    #[test]
+    fn test_tokenize_date_in_expression() {
+        let mut lexer = Lexer::new("15.10.2025 + 180 days");
+        let tokens = lexer.tokenize().unwrap();
+        assert!(matches!(tokens[0].kind, TokenKind::DateLiteral(ref s) if s == "15.10.2025"));
+        assert!(matches!(tokens[1].kind, TokenKind::Plus));
+        assert!(matches!(tokens[2].kind, TokenKind::Number(ref s) if s == "180"));
+    }
+
+    #[test]
+    fn test_arithmetic_not_treated_as_date() {
+        // Decimals, fractions and spaced subtraction must stay numeric tokens.
+        let mut lexer = Lexer::new("3.14");
+        assert!(matches!(
+            lexer.tokenize().unwrap()[0].kind,
+            TokenKind::Number(_)
+        ));
+
+        let mut lexer = Lexer::new("10/2");
+        let tokens = lexer.tokenize().unwrap();
+        assert!(matches!(tokens[0].kind, TokenKind::Number(_)));
+        assert!(matches!(tokens[1].kind, TokenKind::Slash));
+
+        // Invalid calendar date (month 20) falls back to plain numbers.
+        let mut lexer = Lexer::new("2026-20-5");
+        assert!(matches!(
+            lexer.tokenize().unwrap()[0].kind,
+            TokenKind::Number(_)
+        ));
     }
 
     #[test]

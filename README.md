@@ -37,12 +37,14 @@ A grammar-based expression calculator with DateTime and Currency support, built 
 
 ### DateTime Support
 Supports multiple date and time formats:
-- ISO format: `2026-01-22`
-- US format: `01/22/2026`
-- European format: `22/01/2026`
+- ISO format: `2026-01-22`, `2025.10.15`
+- US format: `01/22/2026`, `01-22-2026`, `10.15.2025`
+- European format: `22/01/2026`, `15.10.2025`, `15-10-2025`
 - Month names: `Jan 22, 2026`, `22 Jan 2026`
 - Time formats: `8:59am`, `14:30`, with timezone support (`8:59am UTC`)
 - DateTime arithmetic: `(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)`
+- Numeric dates work directly in expressions: `15.10.2025 + 180 days`,
+  `15/10/2025 + 180 days`
 
 ### Currency Support
 - Currency amounts: `84 USD`, `34 EUR`
