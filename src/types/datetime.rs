@@ -413,6 +413,34 @@ impl DateTime {
             return Some(Self::from_date(date));
         }
 
+        // Dot-separated European/German format: 15.10.2025 (DD.MM.YYYY)
+        // Dots are the conventional date separator in German, Russian and many
+        // other locales, so day-first is tried before month-first.
+        if let Ok(date) = NaiveDate::parse_from_str(input, "%d.%m.%Y") {
+            return Some(Self::from_date(date));
+        }
+
+        // Dot-separated US-style fallback: 10.15.2025 (MM.DD.YYYY)
+        if let Ok(date) = NaiveDate::parse_from_str(input, "%m.%d.%Y") {
+            return Some(Self::from_date(date));
+        }
+
+        // Dot-separated ISO-like format: 2025.10.15 (YYYY.MM.DD)
+        if let Ok(date) = NaiveDate::parse_from_str(input, "%Y.%m.%d") {
+            return Some(Self::from_date(date));
+        }
+
+        // Dash-separated, non-ISO orderings: 15-10-2025 (DD-MM-YYYY) and the
+        // US-style 10-15-2025 (MM-DD-YYYY). ISO `%Y-%m-%d` is tried first above,
+        // so these only match when the year is in the trailing position. Day-first
+        // is preferred, mirroring the dot-separated convention.
+        if let Ok(date) = NaiveDate::parse_from_str(input, "%d-%m-%Y") {
+            return Some(Self::from_date(date));
+        }
+        if let Ok(date) = NaiveDate::parse_from_str(input, "%m-%d-%Y") {
+            return Some(Self::from_date(date));
+        }
+
         // Month name formats: Jan 22, 2026 or January 22, 2026
         let normalized = normalize_month_name(input);
         if let Ok(date) = NaiveDate::parse_from_str(&normalized, "%b %d, %Y") {
@@ -818,6 +846,22 @@ mod tests {
     fn test_parse_us_date() {
         let dt = DateTime::parse("01/22/2026").unwrap();
         assert!(dt.has_date);
+    }
+
+    #[test]
+    fn test_parse_dot_date_european() {
+        // DD.MM.YYYY (German/Russian convention) — issue #166.
+        let dt = DateTime::parse("15.10.2025").unwrap();
+        assert!(dt.has_date);
+        assert_eq!(dt.year(), 2025);
+        assert_eq!(dt.to_string(), "2025-10-15");
+    }
+
+    #[test]
+    fn test_parse_dot_date_iso() {
+        // YYYY.MM.DD
+        let dt = DateTime::parse("2025.10.15").unwrap();
+        assert_eq!(dt.to_string(), "2025-10-15");
     }
 
     #[test]

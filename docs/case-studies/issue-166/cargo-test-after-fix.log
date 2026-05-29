@@ -1,0 +1,1144 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.08s
+     Running unittests src/lib.rs (target/debug/deps/link_calculator-29536e7281ee8624)
+
+running 156 tests
+test crypto_api::tests::test_coingecko_id_ton ... ok
+test crypto_api::tests::test_coingecko_id_ethereum ... ok
+test crypto_api::tests::test_coingecko_id_bitcoin ... ok
+test crypto_api::tests::test_coingecko_id_unknown ... ok
+test crypto_api::tests::test_crypto_api_error_display ... ok
+test currency_api::tests::test_api_source_constant ... ok
+test currency_api::tests::test_cbr_api_source_constant ... ok
+test currency_api::tests::test_currency_api_error_display ... ok
+test currency_api::tests::test_extract_xml_text ... ok
+test currency_api::tests::test_parse_cbr_xml_empty ... ok
+test currency_api::tests::test_parse_cbr_xml_date_conversion ... ok
+test currency_api::tests::test_parse_cbr_xml_missing_date ... ok
+test currency_api::tests::test_parse_cbr_xml_basic ... ok
+test currency_api::tests::test_parse_cbr_xml_nominal_division ... ok
+test error::tests::test_invalid_datetime ... ok
+test error::tests::test_unexpected_token ... ok
+test error::tests::test_parse_error ... ok
+test error::tests::test_unit_mismatch ... ok
+test error::tests::test_division_by_zero ... ok
+test currency_api::tests::test_rates_to_exchange_info ... ok
+test grammar::datetime_grammar::tests::test_looks_like_datetime_month_name ... ok
+test grammar::datetime_grammar::tests::test_looks_like_datetime_iso ... ok
+test grammar::datetime_grammar::tests::test_looks_like_datetime_time ... ok
+test grammar::datetime_grammar::tests::test_looks_like_datetime_negative ... ok
+test grammar::integral::tests::test_constant ... ok
+test grammar::integral::tests::test_cos_x ... ok
+test grammar::integral::tests::test_cos_x_over_x ... ok
+test grammar::integral::tests::test_sin_x ... ok
+test grammar::integral::tests::test_just_x ... ok
+test grammar::integral::tests::test_sin_x_over_x ... ok
+test grammar::integral::tests::test_x_squared ... ok
+test grammar::integral::tests::test_symbolic_result_to_latex ... ok
+test grammar::lexer::tests::test_tokenize_at_keyword ... ok
+test grammar::lexer::tests::test_tokenize_decimal ... ok
+test grammar::lexer::tests::test_tokenize_expression ... ok
+test grammar::lexer::tests::test_tokenize_identifier ... ok
+test grammar::lexer::tests::test_tokenize_number ... ok
+test grammar::lexer::tests::test_tokenize_currency_expression ... ok
+test grammar::lexer::tests::test_tokenize_parentheses ... ok
+test grammar::lexer::tests::test_tokenize_percent_expression ... ok
+test grammar::lexer::tests::test_tokenize_percent ... ok
+test grammar::math_functions::tests::test_abs ... ok
+test grammar::math_functions::tests::test_cos ... ok
+test grammar::math_functions::tests::test_e ... ok
+test grammar::math_functions::tests::test_exp ... ok
+test grammar::math_functions::tests::test_factorial ... ok
+test grammar::math_functions::tests::test_integrate_constant ... ok
+test grammar::math_functions::tests::test_integrate_linear ... ok
+test grammar::math_functions::tests::test_integrate_sin ... ok
+test grammar::math_functions::tests::test_is_math_function ... ok
+test grammar::math_functions::tests::test_ln ... ok
+test grammar::math_functions::tests::test_min_max ... ok
+test grammar::math_functions::tests::test_pi ... ok
+test grammar::math_functions::tests::test_pow ... ok
+test grammar::math_functions::tests::test_sin ... ok
+test grammar::math_functions::tests::test_sqrt ... ok
+test grammar::math_functions::tests::test_sqrt_negative ... ok
+test grammar::number_grammar::tests::test_looks_like_number ... ok
+test grammar::number_grammar::tests::test_parse_currency_unit ... ok
+test grammar::number_grammar::tests::test_parse_decimal ... ok
+test grammar::number_grammar::tests::test_parse_integer ... ok
+test grammar::number_grammar::tests::test_parse_negative ... ok
+test grammar::lexer::tests::test_tokenize_date_in_expression ... ok
+test grammar::number_grammar::tests::test_parse_number_with_currency ... ok
+test grammar::math_functions::tests::test_integrate_quadratic ... ok
+test lino::tests::test_link_to_lino ... ok
+test lino::tests::test_link_with_id ... ok
+test lino::tests::test_parse_nested ... ok
+test lino::tests::test_parse_parenthesized ... ok
+test lino::tests::test_parse_simple ... ok
+test types::currency::tests::test_currency_creation ... ok
+test types::currency::tests::test_convert ... ok
+test types::currency::tests::test_convert_tracks_rate_used ... ok
+test types::currency::tests::test_database_creation ... ok
+test types::currency::tests::test_exchange_rate_info ... ok
+test types::currency::tests::test_get_rate ... ok
+test types::currency::tests::test_parse_currency ... ok
+test types::currency::tests::test_inverse_rate ... ok
+test types::currency::tests::test_rate_info_display ... ok
+test types::currency::tests::test_same_currency_no_rate_tracking ... ok
+test types::currency::tests::test_same_currency_rate ... ok
+test types::currency::tests::test_set_rate_with_info ... ok
+test grammar::lexer::tests::test_arithmetic_not_treated_as_date ... ok
+test types::datetime::tests::test_22_jan_2026_format ... ok
+test types::datetime::tests::test_parse_datetime_with_partial_date ... ok
+test types::datetime::tests::test_parse_iso_date ... ok
+test types::datetime::tests::test_parse_dot_date_european ... ok
+test types::datetime::tests::test_parse_dot_date_iso ... ok
+test grammar::datetime_grammar::tests::test_parse_various_formats ... ok
+test types::datetime::tests::test_parse_month_name_date ... ok
+test types::datetime::tests::test_datetime_subtraction ... ok
+test types::decimal::tests::test_decimal_checked_div ... ok
+test types::decimal::tests::test_decimal_creation ... ok
+test types::decimal::tests::test_decimal_division ... ok
+test types::decimal::tests::test_decimal_from_str ... ok
+test types::decimal::tests::test_decimal_is_negative ... ok
+test types::decimal::tests::test_decimal_operations ... ok
+test types::expression::tests::test_binary_expression ... ok
+test types::expression::tests::test_binary_op_precedence ... ok
+test types::expression::tests::test_complex_expression ... ok
+test types::datetime::tests::test_parse_time_12h ... ok
+test types::expression::tests::test_currency_expression ... ok
+test types::expression::tests::test_depth ... ok
+test types::expression::tests::test_number_expression ... ok
+test types::rational::tests::test_big_power ... ok
+test types::rational::tests::test_checked_div_by_zero ... ok
+test types::rational::tests::test_fraction_string ... ok
+test types::datetime::tests::test_parse_us_date ... ok
+test grammar::lexer::tests::test_tokenize_numeric_date_literals ... ok
+test types::rational::tests::test_negative_power ... ok
+test types::rational::tests::test_one_sixth_times_six ... ok
+test types::rational::tests::test_negative_rational ... ok
+test types::datetime::tests::test_parse_time_with_utc ... ok
+test types::rational::tests::test_rational_from_integer ... ok
+test types::rational::tests::test_from_decimal ... ok
+test types::rational::tests::test_repeating_decimal_one_seventh ... ok
+test types::rational::tests::test_rational_creation ... ok
+test types::rational::tests::test_one_third_times_three ... ok
+test types::rational::tests::test_repeating_decimal_one_sixth ... ok
+test types::rational::tests::test_rational_simplification ... ok
+test types::rational::tests::test_repeating_decimal_one_third ... ok
+test types::rational::tests::test_two_thirds_times_three ... ok
+test types::rational::tests::test_terminating_decimal ... ok
+test types::unit::tests::test_data_size_bits ... ok
+test types::unit::tests::test_data_size_conversion_cross_standard ... ok
+test types::unit::tests::test_data_size_conversion_within_iec ... ok
+test types::unit::tests::test_data_size_conversion_within_si ... ok
+test types::unit::tests::test_data_size_unit_compatibility ... ok
+test types::unit::tests::test_data_size_unit_display ... ok
+test types::unit::tests::test_data_size_unit_parse ... ok
+test types::unit::tests::test_duration_conversion ... ok
+test types::unit::tests::test_unit_compatibility ... ok
+test types::unit::tests::test_unit_display ... ok
+test types::value::tests::test_currency_value ... ok
+test types::value::tests::test_currency_addition_same ... ok
+test types::value::tests::test_division_by_zero ... ok
+test types::value::tests::test_format_duration ... ok
+test types::value::tests::test_number_value ... ok
+test types::value::tests::test_number_addition ... ok
+test types::value::tests::test_one_third_times_three ... ok
+test types::value::tests::test_rational_addition ... ok
+test types::value::tests::test_rational_division_by_zero ... ok
+test types::value::tests::test_two_thirds_times_three ... ok
+test utils::tests::test_issue_link_generation ... ok
+test utils::tests::test_truncate ... ok
+test wasm::tests::test_get_version ... ok
+test wasm::tests::test_health_check ... ok
+test wasm::tests::test_parse_consolidated_lino_rates_empty ... ok
+test wasm::tests::test_parse_consolidated_lino_rates_legacy_format ... ok
+test wasm::tests::test_parse_lino_rate ... ok
+test wasm::tests::test_parse_consolidated_lino_rates_new_format ... ok
+test wasm::tests::test_parse_lino_rate_missing_fields ... ok
+test types::value::tests::test_duration_plus_datetime ... ok
+test types::value::tests::test_datetime_plus_duration ... ok
+test types::value::tests::test_datetime_subtraction ... ok
+test types::value::tests::test_issue_8_expression ... ok
+
+test result: ok. 156 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running unittests src/main.rs (target/debug/deps/link_calculator-5bcfe4e0b54d6d49)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/currency_issues_tests.rs (target/debug/deps/currency_issues_tests-afe25c244a71f03c)
+
+running 16 tests
+test test_issue_51_euro_prefix_parses ... ok
+test test_issue_51_dollar_prefix_parses ... ok
+test test_issue_51_dollar_prefix_in_expression ... ok
+test test_issue_51_ruble_prefix_parses ... ok
+test test_issue_51_pound_prefix_parses ... ok
+test test_issue_51_full_expression ... ok
+test test_issue_51_rupee_prefix_parses ... ok
+test test_issue_52_russian_rupiy_recognized ... ok
+test test_issue_52_russian_rublei_with_usd ... ok
+test test_issue_52_russian_rublei_recognized ... ok
+test test_issue_53_inr_is_recognized ... ok
+test test_issue_52_full_expression ... ok
+test test_issue_53_english_rupee_name ... ok
+test test_issue_53_inr_to_usd_conversion ... ok
+test test_issue_53_rub_to_inr_triangulation ... ok
+test test_issue_53_rub_usd_inr_expression ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/datetime_issues_tests.rs (target/debug/deps/datetime_issues_tests-6d851ef36fb19e50)
+
+running 29 tests
+test issue_23_until_and_natural_dates::test_time_with_timezone_and_ordinal_date ... ok
+test issue_23_until_and_natural_dates::test_time_with_on_and_day_name ... ok
+test issue_23_until_and_natural_dates::test_day_name_stripping ... ok
+test issue_23_until_and_natural_dates::test_ordinal_date ... ok
+test issue_23_until_and_natural_dates::test_time_with_on_day_name_lino_is_datetime ... ok
+test issue_23_until_and_natural_dates::test_timezone_cet ... ok
+test issue_23_until_and_natural_dates::test_time_with_on_preposition ... ok
+test issue_23_until_and_natural_dates::test_timezone_pst ... ok
+test issue_23_until_and_natural_dates::test_timezone_est ... ok
+test issue_34_now_keyword::test_now_est ... ok
+test issue_23_until_and_natural_dates::test_until_datetime ... ok
+test issue_34_now_keyword::test_now_in_parentheses ... ok
+test issue_23_until_and_natural_dates::test_until_lino ... ok
+test issue_34_now_keyword::test_now_standalone ... ok
+test issue_34_now_keyword::test_now_utc ... ok
+test issue_23_until_and_natural_dates::test_until_with_on_and_day_name ... ok
+test issue_34_now_keyword::test_utc_now ... ok
+test issue_34_now_keyword::test_now_lino ... ok
+test issue_23_until_and_natural_dates::test_until_with_ordinal_and_timezone ... ok
+test issue_45_datetime_display::test_standalone_datetime_shows_elapsed ... ok
+test issue_45_datetime_display::test_natural_date_shows_elapsed ... ok
+test issue_34_now_keyword::test_now_in_subtraction ... ok
+test issue_34_now_keyword::test_datetime_minus_now_utc ... ok
+test issue_45_datetime_display::test_standalone_datetime_lino_wrapped ... ok
+test issue_68_utc_time::test_time_utc ... ok
+test issue_68_utc_time::test_current_time ... ok
+test issue_68_utc_time::test_current_utc_time ... ok
+test issue_68_utc_time::test_utc_time ... ok
+test issue_45_datetime_display::test_datetime_subtraction_still_works ... ok
+
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/equality_check_tests.rs (target/debug/deps/equality_check_tests-d55ec2a53f9c3a76)
+
+running 14 tests
+test test_equality_lino_notation ... ok
+test test_equality_both_sides_have_operations ... ok
+test test_equality_associativity ... ok
+test test_equality_issue_87_lino_notation ... ok
+test test_equality_negative_numbers ... ok
+test test_equality_with_multiplication ... ok
+test test_equality_with_decimal ... ok
+test test_equality_with_parentheses ... ok
+test test_equality_steps_show_comparison ... ok
+test test_simple_equality_false ... ok
+test test_issue_87_example ... ok
+test test_simple_equality_true ... ok
+test test_equality_with_division ... ok
+test test_equality_unequal_different_operations ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/expression_parser_tests.rs (target/debug/deps/expression_parser_tests-dc831bf43c3f738b)
+
+running 24 tests
+test test_evaluate_function_with_expression ... ok
+test test_evaluate_multiplication ... ok
+test test_evaluate_complex_expression ... ok
+test test_evaluate_negation ... ok
+test test_evaluate_nested_functions ... ok
+test test_evaluate_parentheses ... ok
+test test_evaluate_percent_addition ... ok
+test test_evaluate_percent_standalone ... ok
+test test_evaluate_percent_of_expression ... ok
+test test_evaluate_percent_times_number ... ok
+test test_evaluate_pi ... ok
+test test_evaluate_power ... ok
+test test_evaluate_simple ... ok
+test test_evaluate_precedence ... ok
+test test_evaluate_sqrt ... ok
+test test_evaluate_sin ... ok
+test test_parse_currency_subtraction ... ok
+test test_parse_currency ... ok
+test test_parse_percent_expression ... ok
+test test_parse_function_call ... ok
+test test_parse_simple_number ... ok
+test test_parse_addition ... ok
+test test_lino_representation ... ok
+test test_datetime_subtraction ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/integration_test.rs (target/debug/deps/integration_test-b673adb010b1fea5)
+
+running 66 tests
+test advanced_math_tests::test_e_constant ... ok
+test advanced_math_tests::test_abs_function ... ok
+test advanced_math_tests::test_ceil_function ... ok
+test advanced_math_tests::test_cos_function ... ok
+test advanced_math_tests::test_exp_function ... ok
+test advanced_math_tests::test_factorial ... ok
+test advanced_math_tests::test_floor_function ... ok
+test advanced_math_tests::test_deg_function ... ok
+test advanced_math_tests::test_function_with_expression ... ok
+test advanced_math_tests::test_ln_negative_error ... ok
+test advanced_math_tests::test_ln_function ... ok
+test advanced_math_tests::test_log_function ... ok
+test advanced_math_tests::test_min_function ... ok
+test advanced_math_tests::test_nested_functions ... ok
+test advanced_math_tests::test_max_function ... ok
+test advanced_math_tests::test_pi_constant ... ok
+test advanced_math_tests::test_power_operator ... ok
+test advanced_math_tests::test_pow_function ... ok
+test advanced_math_tests::test_rad_function ... ok
+test advanced_math_tests::test_sin_function ... ok
+test advanced_math_tests::test_sqrt_function_decimal ... ok
+test advanced_math_tests::test_sqrt_negative_error ... ok
+test api_rate_update_tests::test_calculation_steps_show_api_rate_source ... ok
+test api_rate_update_tests::test_api_rate_overrides_hardcoded_rate ... ok
+test api_rate_update_tests::test_update_rates_from_api_empty ... ok
+test api_rate_update_tests::test_calculation_uses_updated_api_rate ... ok
+test api_rate_update_tests::test_update_rates_from_api_invalid_json ... ok
+test api_rate_update_tests::test_update_rates_from_api_returns_count ... ok
+test api_rate_update_tests::test_update_rates_from_api_skips_same_currency ... ok
+test calculator_tests::test_calculator_creation ... ok
+test advanced_math_tests::test_sqrt_function ... ok
+test advanced_math_tests::test_unknown_function_error ... ok
+test calculator_tests::test_decimal_numbers ... ok
+test calculator_tests::test_division_by_zero ... ok
+test calculator_tests::test_negative_numbers ... ok
+test calculator_tests::test_operator_precedence ... ok
+test calculator_tests::test_parentheses ... ok
+test advanced_math_tests::test_integrate_sin ... ok
+test calculator_tests::test_simple_addition ... ok
+test calculator_tests::test_simple_division ... ok
+test calculator_tests::test_simple_multiplication ... ok
+test currency_tests::test_currency_value ... ok
+test currency_tests::test_currency_conversion_steps_show_rate_info ... ok
+test currency_tests::test_same_currency_no_rate_info ... ok
+test currency_tests::test_same_currency_addition ... ok
+test error_handling_tests::test_empty_input ... ok
+test error_handling_tests::test_invalid_input_generates_issue_link ... ok
+test currency_tests::test_currency_conversion ... ok
+test calculator_tests::test_simple_subtraction ... ok
+test indefinite_integral_tests::test_definite_integral_still_works ... ok
+test indefinite_integral_tests::test_natural_integral_notation_constant ... ok
+test advanced_math_tests::test_integrate_x_squared ... ok
+test datetime_tests::test_datetime_subtraction ... ok
+test indefinite_integral_tests::test_natural_integral_notation_exp ... ok
+test indefinite_integral_tests::test_natural_integral_notation_cos ... ok
+test datetime_tests::test_datetime_subtraction_lino_notation_issue_30 ... ok
+test indefinite_integral_tests::test_natural_integral_notation_different_variable ... ok
+test indefinite_integral_tests::test_natural_integral_notation_sin ... ok
+test lino_tests::test_lino_representation_simple ... ok
+test version_tests::test_version_is_not_empty ... ok
+test version_tests::test_version_matches_cargo_toml ... ok
+test indefinite_integral_tests::test_natural_integral_notation_x_squared ... ok
+test indefinite_integral_tests::test_natural_integral_notation_x ... ok
+test lino_tests::test_lino_representation_currency ... ok
+test indefinite_integral_tests::test_latex_rendering_for_integral ... ok
+test indefinite_integral_tests::test_natural_integral_notation_sin_x_over_x ... ok
+
+test result: ok. 66 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/issue_115_timezone_conversion_tests.rs (target/debug/deps/issue_115_timezone_conversion_tests-e9f0ab7c8c2ca635)
+
+running 23 tests
+test lino_notation::test_timezone_lino ... ok
+test lino_notation::test_timezone_conversion_lino ... ok
+test timezone_abbreviations::test_half_hour_offset_ist ... ok
+test timezone_abbreviations::test_australian_timezones ... ok
+test timezone_conversion::test_conversion_across_midnight ... ok
+test timezone_conversion::test_est_to_pst_conversion ... ok
+test timezone_abbreviations::test_african_timezones ... ok
+test timezone_conversion::test_gmt_to_msk_conversion ... ok
+test timezone_abbreviations::test_south_american_timezones ... ok
+test timezone_abbreviations::test_asian_timezones ... ok
+test timezone_abbreviations::test_european_timezones ... ok
+test timezone_conversion::test_timezone_conversion_with_in_keyword ... ok
+test timezone_conversion::test_gtm_to_msk_conversion ... ok
+test timezone_conversion::test_utc_to_est_conversion ... ok
+test timezone_parsing::test_am_time_with_timezone ... ok
+test timezone_conversion::test_msk_to_jst_conversion ... ok
+test timezone_conversion::test_timezone_conversion_with_to_keyword ... ok
+test timezone_parsing::test_gtm_typo_treated_as_gmt ... ok
+test timezone_parsing::test_time_with_est ... ok
+test timezone_parsing::test_time_with_gmt ... ok
+test timezone_parsing::test_time_with_jst ... ok
+test timezone_parsing::test_time_with_msk ... ok
+test timezone_parsing::test_time_without_timezone ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/issue_116_vnd_tests.rs (target/debug/deps/issue_116_vnd_tests-882a85908a15c58d)
+
+running 24 tests
+test parse_currency_tests::test_parse_russian_dong_dative_plural ... ok
+test parse_currency_tests::test_parse_english_dongs ... ok
+test parse_currency_tests::test_parse_english_dong ... ok
+test parse_currency_tests::test_parse_russian_dong_genitive_plural ... ok
+test parse_currency_tests::test_parse_russian_dong_nominative ... ok
+test parse_currency_tests::test_parse_russian_dong_instrumental_plural ... ok
+test parse_currency_tests::test_parse_russian_dong_prepositional_plural ... ok
+test parse_currency_tests::test_parse_vietnamese_dong ... ok
+test parse_currency_tests::test_parse_vnd_iso_code ... ok
+test parse_currency_tests::test_parse_vnd_lowercase ... ok
+test parse_currency_tests::test_parse_vnd_symbol ... ok
+test test_issue_116_dong_symbol_recognized ... ok
+test test_issue_116_english_dong_recognized ... ok
+test test_issue_116_rub_in_vnd_iso ... ok
+test test_issue_116_russian_dong_nominative_recognized ... ok
+test test_issue_116_dongov_v_rublyah_converts ... ok
+test test_issue_116_rub_to_vnd_converts ... ok
+test test_issue_116_russian_dongov_recognized ... ok
+test test_issue_116_vietnamese_dong_recognized ... ok
+test test_issue_116_vnd_addition ... ok
+test test_issue_116_vnd_iso_code_recognized ... ok
+test test_issue_116_vnd_in_rub_converts ... ok
+test test_issue_116_vnd_to_rub_reasonable_value ... ok
+test test_issue_116_vnd_to_usd_converts ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/issue_123_kzt_tenge_tests.rs (target/debug/deps/issue_123_kzt_tenge_tests-0d8b5512695b5c80)
+
+running 17 tests
+test parse_currency_tests::test_parse_english_tenge ... ok
+test parse_currency_tests::test_parse_kazakh_tenge ... ok
+test parse_currency_tests::test_parse_english_tenges ... ok
+test parse_currency_tests::test_parse_kzt_iso_code ... ok
+test parse_currency_tests::test_parse_kzt_lowercase ... ok
+test parse_currency_tests::test_parse_russian_tenge ... ok
+test test_issue_123_kzt_iso_code_recognized ... ok
+test test_issue_123_kzt_to_usd_converts ... ok
+test test_issue_123_kzt_to_eur_via_usd_converts ... ok
+test test_issue_123_russian_tenge_nominative_singular ... ok
+test test_issue_123_kzt_addition ... ok
+test test_issue_123_rub_to_tenge_converts ... ok
+test test_issue_123_russian_tenge_recognized_as_kzt ... ok
+test test_issue_123_tenge_to_usd_value_is_reasonable ... ok
+test test_issue_123_tenge_to_rub_converts ... ok
+test test_issue_123_usd_to_kzt_converts ... ok
+test test_issue_123_tenge_in_dollars_russian ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/issue_125_multilingual_date_arithmetic_tests.rs (target/debug/deps/issue_125_multilingual_date_arithmetic_tests-2536ddf79fd1c402)
+
+running 23 tests
+test duration_unit_parse_tests::test_arabic_duration_units ... ok
+test duration_unit_parse_tests::test_chinese_duration_units ... ok
+test duration_unit_parse_tests::test_french_duration_units ... ok
+test duration_unit_parse_tests::test_hindi_duration_units ... ok
+test duration_unit_parse_tests::test_german_duration_units ... ok
+test test_chinese_date_plus_months ... ok
+test test_arabic_date_plus_months ... ok
+test test_chinese_duration_days ... ok
+test test_chinese_duration_weeks ... ok
+test test_arabic_date_minus_months ... ok
+test test_arabic_duration_units ... ok
+test test_french_date_plus_months ... ok
+test test_chinese_month_name_recognized ... ok
+test test_french_date_minus_months ... ok
+test test_german_date_plus_months ... ok
+test test_french_fevrier_no_accent ... ok
+test test_german_date_minus_months ... ok
+test test_german_duration_units ... ok
+test test_french_duration_units ... ok
+test test_hindi_date_plus_months ... ok
+test test_german_maerz_month ... ok
+test test_hindi_date_minus_months ... ok
+test test_hindi_duration_units ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/issue_125_russian_date_arithmetic_tests.rs (target/debug/deps/issue_125_russian_date_arithmetic_tests-90d9d5c3e9f7a090)
+
+running 17 tests
+test test_issue_125_russian_date_january ... ok
+test test_issue_125_russian_date_december ... ok
+test test_issue_125_english_date_without_comma_dd_month_yyyy ... ok
+test test_issue_125_english_date_january_without_comma ... ok
+test test_issue_125_lino_notation ... ok
+test test_issue_125_english_date_without_comma_mon_dd_yyyy ... ok
+test test_issue_125_russian_date_minus_months ... ok
+test test_issue_125_russian_date_standalone ... ok
+test test_issue_125_russian_date_plus_months ... ok
+test test_issue_125_russian_january_minus_months ... ok
+test test_issue_125_russian_months_unit ... ok
+test test_issue_125_russian_month_singular ... ok
+test test_issue_125_russian_days_unit ... ok
+test test_issue_125_russian_hours_unit ... ok
+test test_issue_125_russian_month_nominative ... ok
+test test_issue_125_russian_weeks_unit ... ok
+test test_issue_125_russian_years_unit ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/issue_128_calendar_month_arithmetic_tests.rs (target/debug/deps/issue_128_calendar_month_arithmetic_tests-07dd29d563588dfe)
+
+running 8 tests
+test test_issue_128_month_end_clamping ... ok
+test test_issue_128_exact_day_preserved_add_months ... ok
+test test_issue_128_exact_day_preserved_russian ... ok
+test test_issue_128_steps_show_full_word_months ... ok
+test test_issue_128_russian_steps_show_full_word_months ... ok
+test test_issue_128_exact_day_preserved_english ... ok
+test test_issue_128_year_arithmetic_preserves_day ... ok
+test test_issue_128_subtract_year_preserves_day ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/issue_132_factorial_notation_tests.rs (target/debug/deps/issue_132_factorial_notation_tests-74f5d1b3e60bbd52)
+
+running 12 tests
+test test_issue_132_63_factorial ... ok
+test test_issue_132_1_factorial ... ok
+test test_issue_132_10_factorial ... ok
+test test_issue_132_0_factorial ... ok
+test test_issue_132_expression_factorial ... ok
+test test_issue_132_5_factorial ... ok
+test test_issue_132_factorial_function_notation_unchanged ... ok
+test test_issue_132_non_integer_factorial_error ... ok
+test test_issue_132_sum_of_factorials ... ok
+test test_issue_132_factorial_times_number ... ok
+test test_issue_132_negative_factorial_error ... ok
+test test_issue_132_factorial_division ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/issue_134_russian_partial_date_subtraction_tests.rs (target/debug/deps/issue_134_russian_partial_date_subtraction_tests-a873a058a14a29d0)
+
+running 2 tests
+test test_issue_134_partial_russian_date_uses_current_year ... ok
+test test_issue_134_russian_partial_dates_subtract_as_dates ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/issue_136_temporal_unit_conversion_tests.rs (target/debug/deps/issue_136_temporal_unit_conversion_tests-cea229129fb1780b)
+
+running 10 tests
+test test_original_issue_russian_date_parses ... ok
+test test_russian_rub_in_inr_at_date ... ok
+test test_unit_conversion_at_date_lino_format ... ok
+test test_unit_conversion_at_date_uses_historical_rate ... ok
+test test_data_size_conversion_ignores_date_context ... ok
+test test_russian_na_as_at_keyword ... ok
+test test_unit_conversion_with_trailing_at_parses ... ok
+test test_unit_conversion_in_keyword_with_at_date ... ok
+test test_unit_conversion_to_keyword_with_at_date ... ok
+test test_unit_conversion_different_dates_give_different_rates ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/issue_138_historical_cbr_rates_tests.rs (target/debug/deps/issue_138_historical_cbr_rates_tests-7ec01bc397955cc2)
+
+running 5 tests
+test missing_historical_rate_before_first_known_date_still_fails ... ok
+test current_cbr_rate_is_not_used_for_a_different_historical_date ... ok
+test current_cbr_rate_is_available_for_its_own_effective_date ... ok
+test missing_weekend_rate_uses_previous_available_business_day_rate ... ok
+test original_issue_expression_uses_april_11_cbr_lino_rate ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/issue_140_wasm_lino_tests.rs (target/debug/deps/issue_140_wasm_lino_tests-f2ff726be3ee25aa)
+
+running 3 tests
+test load_rates_returns_zero_for_empty_content ... ok
+test load_rates_returns_count_not_result ... ok
+test issue_140_rub_to_inr_on_april_11_2026_succeeds ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/issue_145_percent_of_tests.rs (target/debug/deps/issue_145_percent_of_tests-8b9a1d9708446575)
+
+running 7 tests
+test test_issue_145_10_percent_of_200 ... ok
+test test_issue_145_100_percent_of_42 ... ok
+test test_issue_145_50_percent_of_80 ... ok
+test test_issue_145_percent_standalone_unchanged ... ok
+test test_issue_145_8_percent_of_50_usd ... ok
+test test_issue_145_8_percent_times_50_usd ... ok
+test test_issue_145_percent_times_number_unchanged ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/issue_147_ms_to_seconds_tests.rs (target/debug/deps/issue_147_ms_to_seconds_tests-731ddb49cde33b04)
+
+running 8 tests
+test test_hours_to_minutes ... ok
+test test_300000_ms_in_seconds ... ok
+test test_ms_to_s_short ... ok
+test test_minutes_to_seconds ... ok
+test test_ms_as_seconds ... ok
+test test_hours_to_seconds ... ok
+test test_ms_to_seconds_keyword ... ok
+test test_seconds_to_ms ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/issue_149_russian_msk_time_tests.rs (target/debug/deps/issue_149_russian_msk_time_tests-24347b4a14b70f89)
+
+running 1 test
+test parses_hour_by_moscow_time ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/issue_152_russian_msk_colon_time_tests.rs (target/debug/deps/issue_152_russian_msk_colon_time_tests-4eed05b88ff6bc1b)
+
+running 3 tests
+test parses_colon_time_by_moscow_time_with_latin_timezone ... ok
+test parses_colon_time_by_moscow_time_with_lowercase_cyrillic_timezone ... ok
+test parses_colon_time_by_moscow_time ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/issue_154_timezone_conversion_display_tests.rs (target/debug/deps/issue_154_timezone_conversion_display_tests-59095ff43dd0bc0e)
+
+running 1 test
+test msk_time_shows_utc_equivalent_in_steps ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/issue_156_library_surface_tests.rs (target/debug/deps/issue_156_library_surface_tests-24552f00c6ef0d62)
+
+running 19 tests
+test calculate_with_value_propagates_empty_input_error ... ok
+test evaluate_power_helper_is_reachable ... ok
+test calculate_with_value_propagates_parse_error ... ok
+test calculator_plan_returns_typed_calculation_plan ... ok
+test calculate_internal_returns_calculation_result_with_steps_and_lino ... ok
+test calculator_calculate_with_value_returns_every_artefact ... ok
+test expression_parser_apply_binary_op_is_callable_directly ... ok
+test expression_parser_evaluate_expr_with_steps_uses_caller_buffer ... ok
+test expression_parser_evaluate_expr_works_without_steps ... ok
+test expression_parser_evaluate_at_substitutes_variable ... ok
+test expression_parser_evaluate_expr_with_var_keeps_value_kind ... ok
+test expression_parser_evaluate_with_steps_is_callable_directly ... ok
+test high_level_and_low_level_paths_produce_the_same_value ... ok
+test lexer_is_reachable_through_grammar_module ... ok
+test utils_generate_issue_link_is_reachable ... ok
+test parser_accessors_expose_underlying_expression_parser ... ok
+test utils_truncate_is_reachable ... ok
+test structured_value_kind_is_reachable_through_public_value_kind ... ok
+test version_constant_is_reachable ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/issue_158_modulo_and_strict_parse_tests.rs (target/debug/deps/issue_158_modulo_and_strict_parse_tests-534854d7c2b69b7b)
+
+running 7 tests
+test issue_158_binary_percent_supports_negative_left_operand ... ok
+test issue_158_percent_of_still_works ... ok
+test issue_158_rejects_custom_unit_text_after_arithmetic ... ok
+test issue_158_postfix_percent_still_works ... ok
+test issue_158_rejects_trailing_tokens_after_postfix_percent ... ok
+test issue_158_binary_percent_remainder_matches_reported_expression ... ok
+test issue_158_binary_percent_has_multiplicative_precedence ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/issue_160_linear_equation_tests.rs (target/debug/deps/issue_160_linear_equation_tests-50fda1dfec8453be)
+
+running 3 tests
+test calculate_with_value_returns_structured_equation_solution ... ok
+test preserves_numeric_equality_checks ... ok
+test solves_issue_160_examples ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/issue_162_si_suffix_tests.rs (target/debug/deps/issue_162_si_suffix_tests-2ee594187a9a2ae4)
+
+running 6 tests
+test issue_162_cyrillic_k_scales_before_russian_currency_unit ... ok
+test issue_162_adjacent_duration_abbreviations_still_parse_as_units ... ok
+test issue_162_decimal_and_larger_si_suffixes_scale_values ... ok
+test issue_162_exact_input_evaluates_as_19000_rub_to_usd ... ok
+test issue_162_si_suffixes_follow_case_sensitive_meanings ... ok
+test issue_162_latin_k_scales_before_currency_units_across_languages ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/issue_164_russian_abbreviated_month_tests.rs (target/debug/deps/issue_164_russian_abbreviated_month_tests-0579fe81858e5698)
+
+running 3 tests
+test date_parser_accepts_reported_russian_abbreviation ... ok
+test calculator_accepts_reported_russian_abbreviated_date ... ok
+test calculator_accepts_neighboring_russian_month_forms ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/issue_166_numeric_date_parsing_tests.rs (target/debug/deps/issue_166_numeric_date_parsing_tests-fb052010f949e512)
+
+running 20 tests
+test test_decimal_addition_preserved ... ok
+test test_european_dash_date ... ok
+test test_european_slash_date ... ok
+test test_dash_date_plus_duration ... ok
+test test_fraction_division_preserved ... ok
+test test_invalid_numeric_date_falls_back_to_arithmetic ... ok
+test test_european_dot_date ... ok
+test test_dot_date_minus_duration ... ok
+test test_date_difference_yields_duration ... ok
+test test_iso_dash_date ... ok
+test test_iso_date_minus_duration ... ok
+test test_two_component_slash_is_division ... ok
+test test_iso_date_plus_duration ... ok
+test test_spaced_arithmetic_still_subtracts ... ok
+test test_us_dash_date ... ok
+test test_us_slash_date ... ok
+test test_us_dot_date ... ok
+test test_iso_dot_date ... ok
+test test_issue_166_dot_separated_date_plus_duration ... ok
+test test_issue_166_slash_separated_date_plus_duration ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/issue_20_clf_tests.rs (target/debug/deps/issue_20_clf_tests-a72d8b0e428e9909)
+
+running 13 tests
+test test_issue_20_parse_currency_clf ... ok
+test test_issue_20_parse_currency_natural_language ... ok
+test test_issue_20_clf_is_known_currency ... ok
+test test_issue_20_clf_usd_rate_exists ... ok
+test test_issue_20_clf_iso_code ... ok
+test test_issue_20_parse_currency_uf ... ok
+test test_issue_20_uf_plus_eur ... ok
+test test_issue_20_clf_to_usd_conversion ... ok
+test test_issue_20_uf_alone ... ok
+test test_issue_20_uf_plus_usd ... ok
+test test_issue_20_usd_clf_rate_exists ... ok
+test test_issue_20_uf_to_usd_value ... ok
+test test_issue_20_usd_plus_uf ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/issue_37_rra_tests.rs (target/debug/deps/issue_37_rra_tests-db8343f730eca63a)
+
+running 17 tests
+test test_2_pow_64_exact ... ok
+test test_10_pow_100_not_zero ... ok
+test test_10_pow_100_not_infinity ... ok
+test test_10_pow_100_is_exact ... ok
+test test_2_pow_256_exact ... ok
+test test_exact_fraction_power ... ok
+test test_large_power_addition ... ok
+test test_beyond_i128_range ... ok
+test test_googol_operations ... ok
+test test_exact_fraction_one_third_times_three ... ok
+test test_large_power_arithmetic ... ok
+test test_power_of_zero ... ok
+test test_right_associative_power ... ok
+test test_negative_exponent ... ok
+test test_small_powers_still_exact ... ok
+test test_power_of_one ... ok
+test test_large_power_subtraction ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/issue_45_datetime_countdown_tests.rs (target/debug/deps/issue_45_datetime_countdown_tests-f547e6d0f6415732)
+
+running 9 tests
+test now_expression_still_live ... ok
+test plan_standalone_datetime_is_live_time ... ok
+test plan_standalone_date_is_live_time ... ok
+test datetime_steps_contain_time_since_or_until ... ok
+test future_datetime_steps_contain_time_until ... ok
+test datetime_lino_has_parentheses ... ok
+test standalone_datetime_has_live_time ... ok
+test standalone_date_has_live_time ... ok
+test datetime_subtraction_not_live_time ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/issue_70_cbr_rates_tests.rs (target/debug/deps/issue_70_cbr_rates_tests-e9a12dc1357f28cf)
+
+running 8 tests
+test test_update_cbr_rates_invalid_json ... ok
+test test_cbr_rates_override_hardcoded_usd_rub ... ok
+test test_cbr_rates_provide_direct_inr_rub_rate ... ok
+test test_cbr_rate_source_shown_in_steps ... ok
+test test_cbr_rates_eliminate_triangulation_for_inr_rub ... ok
+test test_issue_70_rub_usd_inr_uses_cbr_rates ... ok
+test test_update_cbr_rates_returns_count ... ok
+test test_update_cbr_rates_skips_rub ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/issue_72_currency_rate_steps_tests.rs (target/debug/deps/issue_72_currency_rate_steps_tests-1567a5cd95133a0a)
+
+running 9 tests
+test test_default_rate_shown_in_unit_conversion_steps ... ok
+test test_fiat_unit_conversion_steps_show_rate_info ... ok
+test test_issue_72_eth_in_eur_shows_eth_usd_rate ... ok
+test test_fiat_unit_conversion_in_keyword_steps_show_rate_info ... ok
+test test_fiat_unit_conversion_steps_show_exact_rate_value ... ok
+test test_crypto_direct_unit_conversion_steps_show_rate_info ... ok
+test test_issue_72_eth_in_eur_steps_show_rate_info ... ok
+test test_reverse_fiat_unit_conversion_steps_show_rate_info ... ok
+test test_same_currency_unit_conversion_no_rate_step ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/issue_73_cbr_rates_in_browser_tests.rs (target/debug/deps/issue_73_cbr_rates_in_browser_tests-4aeac4f83d012faf)
+
+running 6 tests
+test test_issue_73_inr_lino_rate_format ... ok
+test test_issue_73_expression_with_cbr_rates ... ok
+test test_issue_73_hardcoded_default_gives_wrong_result ... ok
+test test_issue_73_inr_rub_no_triangulation_after_cbr ... ok
+test test_issue_73_steps_show_cbr_source ... ok
+test test_issue_73_usd_rub_rate_is_cbr_not_hardcoded ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/issue_75_multilingual_conversion_tests.rs (target/debug/deps/issue_75_multilingual_conversion_tests-5db2aefea0333b6c)
+
+running 71 tests
+test parse_currency_tests::test_parse_arabic_cny ... ok
+test parse_currency_tests::test_parse_arabic_chf ... ok
+test parse_currency_tests::test_parse_arabic_eur ... ok
+test parse_currency_tests::test_parse_arabic_gbp ... ok
+test parse_currency_tests::test_parse_arabic_jpy ... ok
+test parse_currency_tests::test_parse_arabic_inr ... ok
+test parse_currency_tests::test_parse_arabic_rub ... ok
+test parse_currency_tests::test_parse_arabic_usd ... ok
+test parse_currency_tests::test_parse_chinese_chf ... ok
+test parse_currency_tests::test_parse_chinese_cny ... ok
+test parse_currency_tests::test_parse_chinese_eur ... ok
+test parse_currency_tests::test_parse_chinese_inr ... ok
+test parse_currency_tests::test_parse_chinese_jpy ... ok
+test parse_currency_tests::test_parse_chinese_rub ... ok
+test parse_currency_tests::test_parse_chinese_usd ... ok
+test parse_currency_tests::test_parse_french_dollar_americain ... ok
+test parse_currency_tests::test_parse_french_livre_sterling ... ok
+test parse_currency_tests::test_parse_french_rouble_russe ... ok
+test parse_currency_tests::test_parse_german_franken ... ok
+test parse_currency_tests::test_parse_german_pfund ... ok
+test parse_currency_tests::test_parse_french_roupie ... ok
+test parse_currency_tests::test_parse_chinese_gbp ... ok
+test parse_currency_tests::test_parse_french_yuans ... ok
+test parse_currency_tests::test_parse_french_franc_suisse ... ok
+test parse_currency_tests::test_parse_german_rupie ... ok
+test parse_currency_tests::test_parse_german_us_dollar ... ok
+test parse_currency_tests::test_parse_hindi_chf ... ok
+test parse_currency_tests::test_parse_hindi_gbp ... ok
+test parse_currency_tests::test_parse_hindi_eur ... ok
+test parse_currency_tests::test_parse_german_rubel ... ok
+test parse_currency_tests::test_parse_hindi_inr ... ok
+test parse_currency_tests::test_parse_hindi_cny ... ok
+test parse_currency_tests::test_parse_hindi_jpy ... ok
+test parse_currency_tests::test_parse_hindi_rub ... ok
+test parse_currency_tests::test_parse_hindi_usd ... ok
+test test_arabic_dollar_ila_euro ... ok
+test test_arabic_frank_ila_dollar ... ok
+test test_arabic_rupiya_ila_dollar ... ok
+test test_arabic_junayh_ila_euro ... ok
+test test_arabic_rubl_ila_dollar ... ok
+test test_arabic_ila_keyword_with_iso_codes ... ok
+test test_arabic_yen_ila_dollar ... ok
+test test_arabic_yuan_ila_dollar ... ok
+test test_chinese_dui_huan_cheng_keyword ... ok
+test test_chinese_gbp_to_cny ... ok
+test test_chinese_jpy_to_usd ... ok
+test test_chinese_inr_to_usd ... ok
+test test_chinese_mei_jin_to_eur ... ok
+test test_chinese_rub_to_usd ... ok
+test test_chinese_renminbi_to_usd ... ok
+test test_chinese_usd_to_eur_huan_cheng ... ok
+test test_french_dollars_en_euros ... ok
+test test_chinese_usd_to_eur_zhuan_huan_wei ... ok
+test test_french_en_keyword_with_iso_codes ... ok
+test test_french_franc_en_euros ... ok
+test test_french_yuans_en_euros ... ok
+test test_french_livre_en_euros ... ok
+test test_french_rouble_en_dollars ... ok
+test test_french_roupie_en_euros ... ok
+test test_german_dollar_in_euro ... ok
+test test_german_pfund_in_dollar ... ok
+test test_german_rubel_to_euro ... ok
+test test_german_franken_in_euro ... ok
+test test_german_rupien_plural_in_euro ... ok
+test test_german_rupie_in_dollar ... ok
+test test_hindi_pound_mein_rupaye ... ok
+test test_hindi_dollar_mein_euro ... ok
+test test_hindi_rubal_mein_dollar ... ok
+test test_hindi_mein_keyword_with_iso_codes ... ok
+test test_hindi_rupaye_mein_dollar ... ok
+test test_hindi_yen_mein_dollar ... ok
+
+test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/issue_75_russian_conversion_tests.rs (target/debug/deps/issue_75_russian_conversion_tests-63e5f7708d06acab)
+
+running 14 tests
+test test_issue_75_russian_currency_with_as ... ok
+test test_issue_75_rub_to_usd_value_is_reasonable ... ok
+test test_issue_75_rub_v_usd_iso_code ... ok
+test test_issue_75_rub_in_dollars_russian ... ok
+test test_issue_75_russian_currency_with_english_in ... ok
+test test_issue_75_russian_dollar_genitive_plural ... ok
+test test_issue_75_russian_dollar_nominative ... ok
+test test_issue_75_russian_dollar_prepositional_plural ... ok
+test test_issue_75_russian_evro_to_rub ... ok
+test test_issue_75_russian_evro ... ok
+test test_issue_75_russian_funt ... ok
+test test_issue_75_russian_v_as_in_keyword ... ok
+test test_issue_75_russian_yen ... ok
+test test_issue_75_russian_yuan ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/issue_83_now_minus_duration_tests.rs (target/debug/deps/issue_83_now_minus_duration_tests-b309b13ca1465c87)
+
+running 19 tests
+test issue_83_now_minus_duration::test_duration_unit_abbreviation_week ... ok
+test issue_83_now_minus_duration::test_duration_unit_abbreviation_minute ... ok
+test issue_83_now_minus_duration::test_duration_unit_abbreviation_hour ... ok
+test issue_83_now_minus_duration::test_duration_unit_abbreviation_day ... ok
+test issue_83_now_minus_duration::test_duration_unit_abbreviation_second ... ok
+test issue_83_now_minus_duration::test_now_minus_days ... ok
+test issue_83_now_minus_duration::test_now_minus_10_days_exact_issue ... ok
+test issue_83_now_minus_duration::test_now_minus_hours ... ok
+test issue_83_now_minus_duration::test_now_minus_months ... ok
+test issue_83_now_minus_duration::test_now_minus_minutes ... ok
+test issue_83_now_minus_duration::test_now_minus_seconds ... ok
+test issue_83_now_minus_duration::test_fixed_date_plus_days ... ok
+test issue_83_now_minus_duration::test_now_plus_hours ... ok
+test issue_83_now_minus_duration::test_now_plus_days ... ok
+test issue_83_now_minus_duration::test_now_plus_weeks ... ok
+test issue_83_now_minus_duration::test_now_plus_minutes ... ok
+test issue_83_now_minus_duration::test_fixed_date_minus_days ... ok
+test issue_83_now_minus_duration::test_now_minus_years ... ok
+test issue_83_now_minus_duration::test_now_minus_weeks ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/issue_84_lino_notation_tests.rs (target/debug/deps/issue_84_lino_notation_tests-2c37cb77d132157d)
+
+running 24 tests
+test alternative_interpretation_tests::test_power_expression_no_alternatives ... ok
+test alternative_interpretation_tests::test_simple_expression_no_alternatives ... ok
+test alternative_interpretation_tests::test_reverse_mixed_precedence ... ok
+test alternative_interpretation_tests::test_function_call_no_alternatives ... ok
+test alternative_interpretation_tests::test_mixed_precedence_has_alternatives ... ok
+test lino_notation_tests::test_abs_function_lino ... ok
+test lino_notation_tests::test_e_constant_lino ... ok
+test lino_notation_tests::test_binary_expression_lino ... ok
+test lino_notation_tests::test_cos_function_lino ... ok
+test lino_notation_tests::test_function_with_expression_arg_lino ... ok
+test lino_notation_tests::test_indefinite_integral_lino ... ok
+test lino_notation_tests::test_indefinite_integral_cos_x_lino ... ok
+test lino_notation_tests::test_max_function_lino ... ok
+test lino_notation_tests::test_nested_functions_lino ... ok
+test lino_notation_tests::test_min_function_lino ... ok
+test lino_notation_tests::test_pi_constant_lino ... ok
+test lino_notation_tests::test_pow_function_lino ... ok
+test lino_notation_tests::test_power_operator_lino ... ok
+test lino_notation_tests::test_sin_function_lino ... ok
+test lino_notation_tests::test_sqrt_function_lino ... ok
+test alternative_interpretation_tests::test_integrate_function_no_alternatives ... ok
+test lino_notation_tests::test_integrate_function_lino ... ok
+test lino_notation_tests::test_indefinite_integral_sin_over_x_lino ... ok
+test lino_notation_tests::test_all_expressions_have_outer_parens ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/issue_91_tests.rs (target/debug/deps/issue_91_tests-20019cd74dd9bc25)
+
+running 13 tests
+test issue_91_format::test_est_time_phrase ... ok
+test issue_91_format::test_current_utc_time_display_format ... ok
+test issue_91_format::test_est_time_contains_offset ... ok
+test issue_91_format::test_now_display_format ... ok
+test issue_91_format::test_current_time_is_live_time ... ok
+test issue_91_format::test_est_time_contains_tz_name_in_value ... ok
+test issue_91_format::test_utc_time_contains_offset ... ok
+test issue_91_format::test_now_is_live_time ... ok
+test issue_91_format::test_utc_time_contains_tz_name_in_value ... ok
+test issue_91_format::test_utc_time_display_format ... ok
+test issue_91_format::test_utc_time_format_has_outer_parentheses ... ok
+test issue_91_format::test_utc_time_is_live_time ... ok
+test issue_91_format::test_static_datetime_is_live_for_countdown ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/issue_99_multilingual_mass_tests.rs (target/debug/deps/issue_99_multilingual_mass_tests-f441c5dcd76031d1)
+
+running 53 tests
+test parse_mass_unit_tests::test_parse_arabic_gram ... ok
+test parse_mass_unit_tests::test_parse_arabic_kilogram ... ok
+test parse_mass_unit_tests::test_parse_arabic_pound ... ok
+test parse_mass_unit_tests::test_parse_chinese_gram ... ok
+test parse_mass_unit_tests::test_parse_arabic_ounce ... ok
+test parse_mass_unit_tests::test_parse_arabic_ton ... ok
+test parse_mass_unit_tests::test_parse_chinese_mg ... ok
+test parse_mass_unit_tests::test_parse_chinese_ounce ... ok
+test parse_mass_unit_tests::test_parse_chinese_pound ... ok
+test parse_mass_unit_tests::test_parse_chinese_kg ... ok
+test parse_mass_unit_tests::test_parse_chinese_ton ... ok
+test parse_mass_unit_tests::test_parse_german_units ... ok
+test parse_mass_unit_tests::test_parse_french_units ... ok
+test parse_mass_unit_tests::test_parse_hindi_gram ... ok
+test parse_mass_unit_tests::test_parse_hindi_kilogram ... ok
+test parse_mass_unit_tests::test_parse_hindi_ton ... ok
+test parse_mass_unit_tests::test_parse_russian_gram ... ok
+test parse_mass_unit_tests::test_parse_russian_kg ... ok
+test parse_mass_unit_tests::test_parse_russian_kilogramm ... ok
+test parse_mass_unit_tests::test_parse_russian_mg ... ok
+test parse_mass_unit_tests::test_parse_russian_tonna ... ok
+test parse_mass_unit_tests::test_parse_russian_untsia ... ok
+test test_arabic_kg_abbreviation ... ok
+test test_arabic_ton ... ok
+test test_arabic_ratl_pound ... ok
+test test_arabic_gram ... ok
+test test_chinese_angsi_ounce ... ok
+test test_arabic_kilogram ... ok
+test test_chinese_bang_pound ... ok
+test test_chinese_dun_ton ... ok
+test test_chinese_gongjin_kg ... ok
+test test_chinese_qianke_kg ... ok
+test test_chinese_ke_gram ... ok
+test test_chinese_haoke_milligram ... ok
+test test_french_once_ounce ... ok
+test test_hindi_gram ... ok
+test test_german_unze ... ok
+test test_hindi_kilo_short ... ok
+test test_hindi_ton ... ok
+test test_issue_99_exact_input ... ok
+test test_russian_gram_alias ... ok
+test test_hindi_kilogram ... ok
+test test_russian_grammov_genitive ... ok
+test test_russian_kg_alias ... ok
+test test_russian_kilogramm_full_word ... ok
+test test_russian_mg_alias ... ok
+test test_russian_tonn_genitive ... ok
+test test_russian_tonna ... ok
+test test_russian_untsia_ounce ... ok
+test test_german_gramm ... ok
+test test_french_gramme ... ok
+test test_french_kilogramme ... ok
+test test_german_kilogramm ... ok
+
+test result: ok. 53 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/lino_loading_tests.rs (target/debug/deps/lino_loading_tests-8591998a7b29597c)
+
+running 6 tests
+test test_calculator_creation ... ok
+test test_load_rate_from_lino ... ok
+test test_load_rates_batch ... ok
+test test_load_rates_from_consolidated_lino_empty ... ok
+test test_load_rates_from_consolidated_lino_new_format ... ok
+test test_load_rates_from_consolidated_lino_legacy_format ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/lino_rate_tests.rs (target/debug/deps/lino_rate_tests-5b2f9df0983e6b35)
+
+running 9 tests
+test test_currency_arithmetic_with_loaded_rates ... ok
+test test_currency_subtraction_with_loaded_rates ... ok
+test test_inverse_rate_available ... ok
+test test_legacy_lino_format ... ok
+test test_iso_date_format_in_at_clause ... ok
+test test_different_dates_use_different_rates ... ok
+test test_load_lino_rates_and_use_in_conversion ... ok
+test test_rate_info_shown_in_steps ... ok
+test test_multiple_currency_pairs ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/lino_rates_loader_tests.rs (target/debug/deps/lino_rates_loader_tests-5f049cc6564f1caf)
+
+running 1 test
+test lino_rates_used_in_historical_conversion ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/plan_tests.rs (target/debug/deps/plan_tests-9d3dc8a610dc80c1)
+
+running 19 tests
+test plan_detects_live_time ... ok
+test plan_currency_conversion_needs_ecb ... ok
+test plan_crypto_needs_coingecko ... ok
+test plan_crypto_rub_to_eur_needs_all_three ... ok
+test plan_crypto_to_rub_needs_crypto_and_cbr ... ok
+test plan_crypto_to_usd_needs_only_crypto ... ok
+test plan_invalid_expression ... ok
+test plan_generates_alternatives ... ok
+test plan_pure_math_needs_no_sources ... ok
+test plan_non_live_expression ... ok
+test plan_mixed_rub_crypto_usd_needs_only_cbr_and_crypto ... ok
+test plan_execute_consistency ... ok
+test plan_rub_gbp_eur_needs_cbr_and_ecb ... ok
+test plan_rub_needs_cbr ... ok
+test plan_rub_to_eur_needs_only_cbr ... ok
+test plan_rub_to_gbp_needs_only_cbr ... ok
+test plan_rub_to_usd_needs_only_cbr ... ok
+test plan_usd_eur_needs_ecb ... ok
+test plan_usd_needs_ecb ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/unit_conversion_tests.rs (target/debug/deps/unit_conversion_tests-3dfce8df99f5ebd2)
+
+running 42 tests
+test crypto_unit_tests::test_toncoin_in_usd_issue_57 ... ok
+test crypto_unit_tests::test_ton_as_usd_ticker ... ok
+test crypto_unit_tests::test_ton_in_usd_lowercase_issue_57 ... ok
+test crypto_unit_tests::test_ton_in_dollars_issue_57 ... ok
+test crypto_unit_tests::test_btc_as_usd ... ok
+test crypto_unit_tests::test_ton_to_usd_issue_57 ... ok
+test crypto_unit_tests::test_tons_mass_not_crypto_issue_57 ... ok
+test crypto_unit_tests::test_update_crypto_rates_invalid_json ... ok
+test crypto_unit_tests::test_update_crypto_rates_returns_count ... ok
+test data_size_tests::test_1_kib_as_bytes ... ok
+test data_size_tests::test_1000_bytes_as_kb ... ok
+test data_size_tests::test_1_gib_as_mib ... ok
+test data_size_tests::test_1_gib_as_gb ... ok
+test data_size_tests::test_741_kb_as_mebibytes_issue_55 ... ok
+test data_size_tests::test_741_kb_as_mb_issue_55 ... ok
+test data_size_tests::test_8_bits_as_byte ... ok
+test data_size_tests::test_741_kib_as_mib_issue_55 ... ok
+test data_size_tests::test_1_gb_as_mb ... ok
+test data_size_tests::test_data_size_arithmetic_then_convert ... ok
+test data_size_tests::test_lino_for_unit_conversion ... ok
+test mass_unit_tests::test_grams_to_kg ... ok
+test data_size_tests::test_full_name_kilobytes ... ok
+test mass_unit_tests::test_kg_in_kg_no_change ... ok
+test data_size_tests::test_full_name_kibibytes_to_mebibytes ... ok
+test mass_unit_tests::test_kg_to_pounds ... ok
+test mass_unit_tests::test_kg_to_grams ... ok
+test mass_unit_tests::test_kg_to_oz ... ok
+test mass_unit_tests::test_mass_arithmetic_then_convert ... ok
+test mass_unit_tests::test_kg_to_tonnes ... ok
+test mass_unit_tests::test_tons_to_kg_issue_57 ... ok
+test unit_ambiguity_tests::test_ton_in_kg_computes_correctly_issue_104 ... ok
+test mass_unit_tests::test_pounds_to_kg ... ok
+test unit_ambiguity_tests::test_ton_in_kg_resolves_to_mass_issue_104 ... ok
+test mass_unit_tests::test_tonne_to_kg ... ok
+test unit_ambiguity_tests::test_ton_in_usd_resolves_to_crypto_issue_104 ... ok
+test unit_ambiguity_tests::test_ton_standalone_has_alternatives_issue_104 ... ok
+test unit_ambiguity_tests::test_ton_uppercase_has_alternatives_issue_104 ... ok
+test unit_ambiguity_tests::test_toncoin_natural_language_no_ambiguity_issue_104 ... ok
+test unit_ambiguity_tests::test_tonne_no_ambiguity_issue_104 ... ok
+test unit_ambiguity_tests::test_tonnes_no_ambiguity_issue_104 ... ok
+test unit_ambiguity_tests::test_tons_plural_no_ambiguity_issue_104 ... ok
+test mass_unit_tests::test_kilograms_word_conversion ... ok
+
+test result: ok. 42 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Doc-tests link_calculator
+
+running 1 test
+test src/lib.rs - (line 11) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+
