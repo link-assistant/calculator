@@ -812,13 +812,13 @@ impl ExpressionParser {
         // 4 * sum of odd terms
         for i in (1..n).step_by(2) {
             let x = (i as f64).mul_add(h, a);
-            sum += 4.0 * self.evaluate_at(integrand, &var_name, x)?.to_f64();
+            sum = 4.0_f64.mul_add(self.evaluate_at(integrand, &var_name, x)?.to_f64(), sum);
         }
 
         // 2 * sum of even terms
         for i in (2..n).step_by(2) {
             let x = (i as f64).mul_add(h, a);
-            sum += 2.0 * self.evaluate_at(integrand, &var_name, x)?.to_f64();
+            sum = 2.0_f64.mul_add(self.evaluate_at(integrand, &var_name, x)?.to_f64(), sum);
         }
 
         let result = sum * h / 3.0;
