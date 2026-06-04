@@ -300,10 +300,10 @@ impl Lexer {
                     self.pos = end;
                     token
                 } else {
-                    self.scan_number()
+                    self.scan_number()?
                 }
             }
-            _ if ch == '.' => self.scan_number(),
+            _ if ch == '.' => self.scan_number()?,
             _ if ch.is_alphabetic() => self.scan_identifier(),
             // Currency symbols used as prefix notation (e.g., $10, €5, £3)
             // These are recognized as single-character identifiers and mapped to ISO codes
@@ -328,10 +328,16 @@ impl Lexer {
         Ok(token)
     }
 
-    fn scan_number(&mut self) -> Token {
+    fn scan_number(&mut self) -> Result<Token, CalculatorError> {
         let start = self.pos;
         let mut text = String::new();
         let mut has_dot = false;
+
+        if self.current() == '.' && !self.peek().is_some_and(|c| c.is_ascii_digit()) {
+            return Err(CalculatorError::parse(format!(
+                "Unexpected character '.' at position {start}"
+            )));
+        }
 
         while !self.is_at_end() {
             let ch = self.current();
@@ -352,7 +358,12 @@ impl Lexer {
             }
         }
 
-        Token::new(TokenKind::Number(text.clone()), start, self.pos, text)
+        Ok(Token::new(
+            TokenKind::Number(text.clone()),
+            start,
+            self.pos,
+            text,
+        ))
     }
 
     /// Attempts to scan a full numeric date literal starting at the current
