@@ -15,6 +15,8 @@ result:
   timezoneConversions 'समय क्षेत्र रूपांतरण'
   localTime 'स्थानीय समय'
   utcTime 'UTC समय'
+  notations 'दशमलव नोटेशन'
+  plot 'फ़ंक्शन ग्राफ़'
 examples:
   title 'इन उदाहरणों को आज़माएं:'
 errors:
@@ -36,6 +38,7 @@ errors:
   unknownFunction 'अज्ञात फ़ंक्शन: {{name}}'
   invalidFunctionArgs 'फ़ंक्शन "{{function}}" के लिए अमान्य तर्क: {{reason}}'
   domainError 'डोमेन त्रुटि: {{message}}'
+  unknownError 'अज्ञात त्रुटि'
 footer:
   poweredBy 'Rust + WebAssembly द्वारा संचालित'
   viewOnGitHub 'GitHub पर देखें'
@@ -57,8 +60,15 @@ share:
   copied 'कॉपी किया गया!'
 steps:
   inputExpression 'इनपुट अभिव्यक्ति: {{expression}}'
+  input 'इनपुट: {{expression}}'
   literalValue 'शाब्दिक मान: {{value}}'
   dateTimeValue 'दिनांक/समय मान: {{value}}'
+  utcEquivalent 'UTC समतुल्य: {{value}}'
+  timeUntil 'शेष समय: {{duration}}'
+  timeSince 'बीता समय: {{duration}}'
+  currentTime 'वर्तमान समय: {{time}}'
+  timeUntilTarget '{{target}} तक शेष समय: {{duration}}'
+  timeSinceTarget '{{target}} से बीता समय: {{duration}}'
   compute 'गणना: {{left}} {{op}} {{right}}'
   equals '= {{value}}'
   negate 'नकारात्मक: -{{value}} = {{result}}'
@@ -73,6 +83,13 @@ steps:
   result 'परिणाम: {{value}}'
   finalResult 'अंतिम परिणाम: {{value}}'
   exchangeRate 'विनिमय दर: 1 {{from}} = {{rate}} {{to}} (स्रोत: {{source}}, तारीख: {{date}})'
+  convert 'रूपांतरित करें: {{value}} को {{unit}} में'
+  indefiniteIntegral 'अनिश्चित समाकल: ∫ {{integrand}} d{{variable}}'
+  computedSymbolicResult 'प्रतीकात्मक परिणाम की गणना की गई'
+  solveLinearEquation 'रेखीय समीकरण हल करें:'
+  solution 'हल: {{value}}'
+  checkEquality 'समानता जाँचें:'
+  compare 'तुलना करें: {{left}} = {{right}}'
 issueReport:
   environment वातावरण
   version संस्करण
@@ -86,7 +103,14 @@ issueReport:
   resultSection परिणाम
   resultLabel परिणाम
   linksNotation 'लिंक्स नोटेशन'
+  alternativeInterpretations 'वैकल्पिक व्याख्याएँ'
   stepsLabel चरण
+  reproductionSteps 'पुनरुत्पादन चरण'
+  reproductionOpen '{{url}} खोलें'
+  reproductionEnter '{{expression}} दर्ज करें'
+  reproductionRunCalculation 'गणना चलाएँ'
+  reproductionUseCalculator 'समस्या होने तक कैलकुलेटर का उपयोग करें'
+  reproductionClickReportIssue 'समस्या की रिपोर्ट करें पर क्लिक करें'
   errorLabel त्रुटि
   description विवरण
   descriptionPlaceholder 'कृपया आपको जो समस्या आई उसका वर्णन करें'

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { useTheme, useUrlExpression, useDelayedLoading, useExpressionCache } from './hooks';
 import { SUPPORTED_LANGUAGES, loadPreferences, savePreferences } from './i18n';
+import { localizeCalculationSteps } from './utils/localizeCalculation';
 import { generateIssueUrl, type PageState } from './utils/reportIssue';
 import { formatLocalDateTime, formatUtcDateTime } from './utils/datetimeDisplay';
 import { AutoResizeTextarea, ColorCodedLino, RepeatingDecimalNotations, UniversalKeyboard, type AutoResizeTextareaRef } from './components';
@@ -406,9 +407,15 @@ function App() {
   };
 
   const handleReportIssue = () => {
+    const localizedResult = result
+      ? {
+          ...result,
+          steps: localizeCalculationSteps(t, result),
+        }
+      : null;
     const pageState: PageState = {
       expression: input,
-      result,
+      result: localizedResult,
       wasmReady,
       version,
       theme: resolvedTheme,
@@ -436,6 +443,7 @@ function App() {
 
   // Determine if RTL language
   const isRtl = i18n.language === 'ar';
+  const localizedSteps = result ? localizeCalculationSteps(t, result) : [];
 
   return (
     <div className={`app-wrapper ${isRtl ? 'rtl' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
@@ -722,11 +730,11 @@ function App() {
                     )}
 
                     {/* Section 5: Steps / Reasoning (optional) */}
-                    {result.steps.length > 0 && !result.is_symbolic && (
+                    {localizedSteps.length > 0 && !result.is_symbolic && (
                       <div className="steps-section">
                         <h3>{t('result.steps')}</h3>
                         <ul className="steps-list">
-                          {result.steps.map((step, i) => (
+                          {localizedSteps.map((step, i) => (
                             <li key={i}>{step}</li>
                           ))}
                         </ul>

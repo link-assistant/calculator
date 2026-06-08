@@ -15,6 +15,8 @@ result:
   timezoneConversions 时区转换
   localTime 本地时间
   utcTime 'UTC 时间'
+  notations 十进制表示法
+  plot 函数图
 examples:
   title 试试这些示例：
 errors:
@@ -36,6 +38,7 @@ errors:
   unknownFunction '未知函数：{{name}}'
   invalidFunctionArgs '函数 "{{function}}" 的参数无效：{{reason}}'
   domainError '域错误：{{message}}'
+  unknownError 未知错误
 footer:
   poweredBy '由 Rust + WebAssembly 驱动'
   viewOnGitHub '在 GitHub 上查看'
@@ -57,8 +60,15 @@ share:
   copied 已复制！
 steps:
   inputExpression '输入表达式：{{expression}}'
+  input '输入：{{expression}}'
   literalValue '字面值：{{value}}'
   dateTimeValue '日期时间值：{{value}}'
+  utcEquivalent 'UTC 等效时间：{{value}}'
+  timeUntil '剩余时间：{{duration}}'
+  timeSince '已经过：{{duration}}'
+  currentTime '当前时间：{{time}}'
+  timeUntilTarget '距离 {{target}}：{{duration}}'
+  timeSinceTarget '自 {{target}} 已经过：{{duration}}'
   compute '计算：{{left}} {{op}} {{right}}'
   equals '= {{value}}'
   negate '取反：-{{value}} = {{result}}'
@@ -73,6 +83,13 @@ steps:
   result '结果：{{value}}'
   finalResult '最终结果：{{value}}'
   exchangeRate '汇率：1 {{from}} = {{rate}} {{to}}（来源：{{source}}，日期：{{date}}）'
+  convert '转换：{{value}} 到 {{unit}}'
+  indefiniteIntegral '不定积分：∫ {{integrand}} d{{variable}}'
+  computedSymbolicResult 已计算符号结果
+  solveLinearEquation 求解线性方程：
+  solution '解：{{value}}'
+  checkEquality 检查相等性：
+  compare '比较：{{left}} = {{right}}'
 issueReport:
   environment 环境
   version 版本
@@ -86,7 +103,14 @@ issueReport:
   resultSection 结果
   resultLabel 结果
   linksNotation 链接表示法
+  alternativeInterpretations 替代解释
   stepsLabel 步骤
+  reproductionSteps 复现步骤
+  reproductionOpen '打开 {{url}}'
+  reproductionEnter '输入 {{expression}}'
+  reproductionRunCalculation 运行计算
+  reproductionUseCalculator 使用计算器直到问题出现
+  reproductionClickReportIssue 点击报告问题
   errorLabel 错误
   description 描述
   descriptionPlaceholder 请描述您遇到的问题

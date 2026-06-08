@@ -49,6 +49,11 @@ export interface IssueReportLabels {
   alternativeInterpretations: string;
   stepsLabel: string;
   reproductionSteps: string;
+  reproductionOpen: string;
+  reproductionEnter: string;
+  reproductionRunCalculation: string;
+  reproductionUseCalculator: string;
+  reproductionClickReportIssue: string;
   errorLabel: string;
   description: string;
   descriptionPlaceholder: string;
@@ -114,6 +119,11 @@ export function getDefaultLabels(): IssueReportLabels {
     alternativeInterpretations: 'Alternative interpretations',
     stepsLabel: 'Steps',
     reproductionSteps: 'Reproduction Steps',
+    reproductionOpen: 'Open {{url}}',
+    reproductionEnter: 'Enter {{expression}}',
+    reproductionRunCalculation: 'Run the calculation',
+    reproductionUseCalculator: 'Use the calculator until the issue occurs',
+    reproductionClickReportIssue: 'Click Report Issue',
     errorLabel: 'Error',
     description: 'Description',
     descriptionPlaceholder: 'Please describe the issue you encountered',
@@ -147,6 +157,20 @@ export function getLabelsFromI18n(t: IssueReportTranslator): IssueReportLabels {
     ),
     stepsLabel: t('issueReport.stepsLabel', 'Steps'),
     reproductionSteps: t('issueReport.reproductionSteps', 'Reproduction Steps'),
+    reproductionOpen: t('issueReport.reproductionOpen', 'Open {{url}}'),
+    reproductionEnter: t('issueReport.reproductionEnter', 'Enter {{expression}}'),
+    reproductionRunCalculation: t(
+      'issueReport.reproductionRunCalculation',
+      'Run the calculation'
+    ),
+    reproductionUseCalculator: t(
+      'issueReport.reproductionUseCalculator',
+      'Use the calculator until the issue occurs'
+    ),
+    reproductionClickReportIssue: t(
+      'issueReport.reproductionClickReportIssue',
+      'Click Report Issue'
+    ),
     errorLabel: t('issueReport.errorLabel', 'Error'),
     description: t('issueReport.description', 'Description'),
     descriptionPlaceholder: t(
@@ -240,17 +264,29 @@ function normalizeResult(result: CalculationResultLike | IssueReportResult | nul
   };
 }
 
-function getDefaultReproductionSteps(state: PageState): string[] {
-  const steps = [`Open ${state.url}`];
+function interpolateTemplate(template: string, values: Record<string, string>): string {
+  return template.replace(/\{\{([^}]+)\}\}/g, (match, key) => values[key] || match);
+}
+
+function getDefaultReproductionSteps(state: PageState, labels: IssueReportLabels): string[] {
+  const steps = [
+    interpolateTemplate(labels.reproductionOpen, {
+      url: state.url,
+    }),
+  ];
 
   if (state.expression) {
-    steps.push(`Enter ${state.expression}`);
-    steps.push('Run the calculation');
+    steps.push(
+      interpolateTemplate(labels.reproductionEnter, {
+        expression: state.expression,
+      })
+    );
+    steps.push(labels.reproductionRunCalculation);
   } else {
-    steps.push('Use the calculator until the issue occurs');
+    steps.push(labels.reproductionUseCalculator);
   }
 
-  steps.push('Click Report Issue');
+  steps.push(labels.reproductionClickReportIssue);
   return steps;
 }
 
@@ -258,10 +294,12 @@ function pageStateToReportOptions(
   state: PageState,
   labels?: IssueReportLabels
 ): GenerateIssueReportOptions {
+  const reportLabels = labels || getDefaultLabels();
+
   return {
     input: state.expression,
     result: normalizeResult(state.result),
-    reproductionSteps: getDefaultReproductionSteps(state),
+    reproductionSteps: getDefaultReproductionSteps(state, reportLabels),
     environment: {
       version: state.version,
       url: state.url,
@@ -271,7 +309,7 @@ function pageStateToReportOptions(
       wasmReady: state.wasmReady,
       timestamp: state.timestamp,
     },
-    labels,
+    labels: reportLabels,
   };
 }
 

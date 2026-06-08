@@ -15,6 +15,8 @@ result:
   timezoneConversions 'Conversions de fuseau horaire'
   localTime 'Heure locale'
   utcTime 'Heure UTC'
+  notations 'Notations décimales'
+  plot 'Graphe de fonction'
 examples:
   title 'Essayez ces exemples :'
 errors:
@@ -36,6 +38,7 @@ errors:
   unknownFunction 'Fonction inconnue : {{name}}'
   invalidFunctionArgs 'Arguments invalides pour la fonction "{{function}}" : {{reason}}'
   domainError 'Erreur de domaine : {{message}}'
+  unknownError 'Erreur inconnue'
 footer:
   poweredBy 'Propulsé par Rust + WebAssembly'
   viewOnGitHub 'Voir sur GitHub'
@@ -57,8 +60,15 @@ share:
   copied 'Copié !'
 steps:
   inputExpression "Expression d'entrée : {{expression}}"
+  input 'Entrée : {{expression}}'
   literalValue 'Valeur littérale : {{value}}'
   dateTimeValue 'Valeur date/heure : {{value}}'
+  utcEquivalent 'Équivalent UTC : {{value}}'
+  timeUntil "Temps restant : {{duration}}"
+  timeSince 'Temps écoulé : {{duration}}'
+  currentTime 'Heure actuelle : {{time}}'
+  timeUntilTarget "Temps restant jusqu'à {{target}} : {{duration}}"
+  timeSinceTarget 'Temps écoulé depuis {{target}} : {{duration}}'
   compute 'Calculer : {{left}} {{op}} {{right}}'
   equals '= {{value}}'
   negate 'Négation : -{{value}} = {{result}}'
@@ -73,6 +83,13 @@ steps:
   result 'Résultat : {{value}}'
   finalResult 'Résultat final : {{value}}'
   exchangeRate 'Taux de change : 1 {{from}} = {{rate}} {{to}} (source : {{source}}, date : {{date}})'
+  convert 'Convertir : {{value}} en {{unit}}'
+  indefiniteIntegral 'Intégrale indéfinie : ∫ {{integrand}} d{{variable}}'
+  computedSymbolicResult 'Résultat symbolique calculé'
+  solveLinearEquation "Résoudre l'équation linéaire :"
+  solution 'Solution : {{value}}'
+  checkEquality "Vérifier l'égalité :"
+  compare 'Comparer : {{left}} = {{right}}'
 issueReport:
   environment Environnement
   version Version
@@ -86,7 +103,14 @@ issueReport:
   resultSection Résultat
   resultLabel Résultat
   linksNotation 'Notation Links'
+  alternativeInterpretations 'Interprétations alternatives'
   stepsLabel Étapes
+  reproductionSteps 'Étapes de reproduction'
+  reproductionOpen 'Ouvrez {{url}}'
+  reproductionEnter 'Saisissez {{expression}}'
+  reproductionRunCalculation 'Lancez le calcul'
+  reproductionUseCalculator "Utilisez la calculatrice jusqu'à ce que le problème se produise"
+  reproductionClickReportIssue 'Cliquez sur Signaler un problème'
   errorLabel Erreur
   description Description
   descriptionPlaceholder 'Veuillez décrire le problème rencontré'

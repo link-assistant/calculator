@@ -15,6 +15,8 @@ result:
   timezoneConversions 'Zeitzonen-Umrechnungen'
   localTime 'Lokale Zeit'
   utcTime 'UTC-Zeit'
+  notations 'Dezimalschreibweisen'
+  plot 'Funktionsgraph'
 examples:
   title 'Probieren Sie diese Beispiele:'
 errors:
@@ -36,6 +38,7 @@ errors:
   unknownFunction 'Unbekannte Funktion: {{name}}'
   invalidFunctionArgs 'Ungültige Argumente für Funktion "{{function}}": {{reason}}'
   domainError 'Definitionsbereichsfehler: {{message}}'
+  unknownError 'Unbekannter Fehler'
 footer:
   poweredBy 'Powered by Rust + WebAssembly'
   viewOnGitHub 'Auf GitHub ansehen'
@@ -57,8 +60,15 @@ share:
   copied Kopiert!
 steps:
   inputExpression 'Eingabeausdruck: {{expression}}'
+  input 'Eingabe: {{expression}}'
   literalValue 'Literalwert: {{value}}'
   dateTimeValue 'Datums-/Zeitwert: {{value}}'
+  utcEquivalent 'UTC-Entsprechung: {{value}}'
+  timeUntil 'Zeit bis dahin: {{duration}}'
+  timeSince 'Zeit seitdem: vor {{duration}}'
+  currentTime 'Aktuelle Zeit: {{time}}'
+  timeUntilTarget 'Zeit bis {{target}}: {{duration}}'
+  timeSinceTarget 'Zeit seit {{target}}: vor {{duration}}'
   compute 'Berechne: {{left}} {{op}} {{right}}'
   equals '= {{value}}'
   negate 'Negation: -{{value}} = {{result}}'
@@ -73,6 +83,13 @@ steps:
   result 'Ergebnis: {{value}}'
   finalResult 'Endergebnis: {{value}}'
   exchangeRate 'Wechselkurs: 1 {{from}} = {{rate}} {{to}} (Quelle: {{source}}, Datum: {{date}})'
+  convert 'Umrechnen: {{value}} in {{unit}}'
+  indefiniteIntegral 'Unbestimmtes Integral: ∫ {{integrand}} d{{variable}}'
+  computedSymbolicResult 'Symbolisches Ergebnis berechnet'
+  solveLinearEquation 'Lineare Gleichung lösen:'
+  solution 'Lösung: {{value}}'
+  checkEquality 'Gleichheit prüfen:'
+  compare 'Vergleichen: {{left}} = {{right}}'
 issueReport:
   environment Umgebung
   version Version
@@ -86,7 +103,14 @@ issueReport:
   resultSection Ergebnis
   resultLabel Ergebnis
   linksNotation Links-Notation
+  alternativeInterpretations 'Alternative Interpretationen'
   stepsLabel Schritte
+  reproductionSteps 'Reproduktionsschritte'
+  reproductionOpen 'Öffnen Sie {{url}}'
+  reproductionEnter 'Geben Sie {{expression}} ein'
+  reproductionRunCalculation 'Führen Sie die Berechnung aus'
+  reproductionUseCalculator 'Verwenden Sie den Rechner, bis das Problem auftritt'
+  reproductionClickReportIssue 'Klicken Sie auf Problem melden'
   errorLabel Fehler
   description Beschreibung
   descriptionPlaceholder 'Bitte beschreiben Sie das aufgetretene Problem'

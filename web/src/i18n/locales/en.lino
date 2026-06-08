@@ -15,6 +15,8 @@ result:
   timezoneConversions 'Timezone conversions'
   localTime 'Local time'
   utcTime 'UTC time'
+  notations 'Decimal Notations'
+  plot 'Function Plot'
 examples:
   title 'Try these examples:'
 errors:
@@ -36,6 +38,7 @@ errors:
   unknownFunction 'Unknown function: {{name}}'
   invalidFunctionArgs 'Invalid arguments for function "{{function}}": {{reason}}'
   domainError 'Domain error: {{message}}'
+  unknownError 'Unknown error'
 footer:
   poweredBy 'Powered by Rust + WebAssembly'
   viewOnGitHub 'View on GitHub'
@@ -57,8 +60,15 @@ share:
   copied Copied!
 steps:
   inputExpression 'Input expression: {{expression}}'
+  input 'Input: {{expression}}'
   literalValue 'Literal value: {{value}}'
   dateTimeValue 'DateTime value: {{value}}'
+  utcEquivalent 'UTC equivalent: {{value}}'
+  timeUntil 'Time until: {{duration}}'
+  timeSince 'Time since: {{duration}} ago'
+  currentTime 'Current time: {{time}}'
+  timeUntilTarget 'Time until {{target}}: {{duration}}'
+  timeSinceTarget 'Time since {{target}}: {{duration}} ago'
   compute 'Compute: {{left}} {{op}} {{right}}'
   equals '= {{value}}'
   negate 'Negate: -{{value}} = {{result}}'
@@ -73,6 +83,13 @@ steps:
   result 'Result: {{value}}'
   finalResult 'Final result: {{value}}'
   exchangeRate 'Exchange rate: 1 {{from}} = {{rate}} {{to}} (source: {{source}}, date: {{date}})'
+  convert 'Convert: {{value}} to {{unit}}'
+  indefiniteIntegral 'Indefinite integral: ∫ {{integrand}} d{{variable}}'
+  computedSymbolicResult 'Computed symbolic result'
+  solveLinearEquation 'Solve linear equation:'
+  solution 'Solution: {{value}}'
+  checkEquality 'Check equality:'
+  compare 'Compare: {{left}} = {{right}}'
 issueReport:
   environment Environment
   version Version
@@ -86,7 +103,14 @@ issueReport:
   resultSection Result
   resultLabel Result
   linksNotation 'Links Notation'
+  alternativeInterpretations 'Alternative interpretations'
   stepsLabel Steps
+  reproductionSteps 'Reproduction Steps'
+  reproductionOpen 'Open {{url}}'
+  reproductionEnter 'Enter {{expression}}'
+  reproductionRunCalculation 'Run the calculation'
+  reproductionUseCalculator 'Use the calculator until the issue occurs'
+  reproductionClickReportIssue 'Click Report Issue'
   errorLabel Error
   description Description
   descriptionPlaceholder 'Please describe the issue you encountered'
