@@ -469,6 +469,8 @@ impl Lexer {
             "to" => TokenKind::To,
             "until" => TokenKind::Until,
             "of" => TokenKind::Of,
+            // Russian: "от" means "of/from" in percent-of expressions (e.g. "38% от 100к").
+            "от" => TokenKind::Of,
             // Russian: "в" means "in/into" (e.g. "1000 рублей в долларах")
             "в" => TokenKind::In,
             // Russian: "по" means "by/according to" for timezone context (e.g. "11 по мск").
