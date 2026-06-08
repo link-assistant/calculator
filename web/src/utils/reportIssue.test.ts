@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateIssueReport, generateIssueUrl, type PageState } from './reportIssue';
+import { generateIssueReport, generateIssueUrl, type IssueReportTranslator, type PageState } from './reportIssue';
 
 describe('reportIssue utilities', () => {
   const basePageState: PageState = {
@@ -150,6 +150,23 @@ describe('reportIssue utilities', () => {
   describe('generateIssueUrl', () => {
     // Helper to decode URL with + signs converted to spaces (URLSearchParams encoding)
     const decodeUrl = (url: string) => decodeURIComponent(url.replace(/\+/g, ' '));
+    const getIssueBody = (url: string) => new URL(url).searchParams.get('body') || '';
+
+    function makeTranslator(translations: Record<string, string>): IssueReportTranslator {
+      return ((key: string, fallbackOrOptions?: string | Record<string, unknown>) => {
+        const fallback =
+          typeof fallbackOrOptions === 'string'
+            ? fallbackOrOptions
+            : String(fallbackOrOptions?.defaultValue || key);
+        let value = translations[key] || fallback;
+        if (fallbackOrOptions && typeof fallbackOrOptions === 'object') {
+          Object.entries(fallbackOrOptions).forEach(([name, replacement]) => {
+            value = value.replace(`{{${name}}}`, String(replacement));
+          });
+        }
+        return value;
+      }) as IssueReportTranslator;
+    }
 
     it('should generate issue URL for a caller-supplied repository and report payload', () => {
       const url = generateIssueUrl({
@@ -237,6 +254,56 @@ describe('reportIssue utilities', () => {
       expect(url).toContain('title=');
       expect(url).toContain('body=');
       expect(url).toContain('labels=bug');
+    });
+
+    it('should localize generated reproduction steps when a translator is provided', () => {
+      const t = makeTranslator({
+        'issueReport.environment': 'Окружение',
+        'issueReport.version': 'Версия',
+        'issueReport.url': 'URL',
+        'issueReport.userAgent': 'Браузер',
+        'issueReport.theme': 'Тема',
+        'issueReport.language': 'Язык',
+        'issueReport.wasmReady': 'WASM готов',
+        'issueReport.timestamp': 'Время',
+        'issueReport.input': 'Ввод',
+        'issueReport.resultSection': 'Результат',
+        'issueReport.resultLabel': 'Результат',
+        'issueReport.linksNotation': 'Нотация ссылок',
+        'issueReport.alternativeInterpretations': 'Альтернативные интерпретации',
+        'issueReport.stepsLabel': 'Шаги',
+        'issueReport.reproductionSteps': 'Шаги воспроизведения',
+        'issueReport.reproductionOpen': 'Откройте {{url}}',
+        'issueReport.reproductionEnter': 'Введите {{expression}}',
+        'issueReport.reproductionRunCalculation': 'Запустите вычисление',
+        'issueReport.reproductionUseCalculator': 'Используйте калькулятор до возникновения проблемы',
+        'issueReport.reproductionClickReportIssue': 'Нажмите Сообщить о проблеме',
+        'issueReport.errorLabel': 'Ошибка',
+        'issueReport.description': 'Описание',
+        'issueReport.descriptionPlaceholder': 'Опишите возникшую проблему',
+        'issueReport.issueTitle': 'Проблема с выражением: {{expression}}',
+        'common.yes': 'Да',
+        'common.no': 'Нет',
+        'common.unknown': 'Неизвестно',
+        'errors.unknownError': 'Неизвестная ошибка',
+      });
+      const url = generateIssueUrl(
+        {
+          ...basePageState,
+          expression: '1/2 + 1/4',
+          language: 'ru',
+        },
+        t
+      );
+      const body = getIssueBody(url);
+
+      expect(body).toContain('## Шаги воспроизведения');
+      expect(body).toContain('1. Откройте https://example.com/calculator/');
+      expect(body).toContain('2. Введите 1/2 + 1/4');
+      expect(body).toContain('3. Запустите вычисление');
+      expect(body).toContain('4. Нажмите Сообщить о проблеме');
+      expect(body).not.toContain('Run the calculation');
+      expect(body).not.toContain('Click Report Issue');
     });
 
     it('should include expression in title when provided', () => {

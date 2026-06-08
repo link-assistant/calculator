@@ -10,11 +10,13 @@ result:
   calculating Вычисление...
   loading 'Загрузка движка калькулятора...'
   placeholder 'Введите выражение выше'
-  linksNotation 'Links Notation'
+  linksNotation 'Нотация ссылок'
   steps Шаги
   timezoneConversions 'Преобразования часовых поясов'
   localTime 'Местное время'
   utcTime 'Время UTC'
+  notations 'Десятичные нотации'
+  plot 'График функции'
 examples:
   title 'Попробуйте эти примеры:'
 errors:
@@ -36,6 +38,7 @@ errors:
   unknownFunction 'Неизвестная функция: {{name}}'
   invalidFunctionArgs 'Неверные аргументы для функции "{{function}}": {{reason}}'
   domainError 'Ошибка области определения: {{message}}'
+  unknownError 'Неизвестная ошибка'
 footer:
   poweredBy 'На базе Rust + WebAssembly'
   viewOnGitHub 'Смотреть на GitHub'
@@ -57,8 +60,15 @@ share:
   copied Скопировано!
 steps:
   inputExpression 'Входное выражение: {{expression}}'
+  input 'Ввод: {{expression}}'
   literalValue 'Литеральное значение: {{value}}'
   dateTimeValue 'Значение даты/времени: {{value}}'
+  utcEquivalent 'Эквивалент UTC: {{value}}'
+  timeUntil 'До события: {{duration}}'
+  timeSince 'С момента события: {{duration}} назад'
+  currentTime 'Текущее время: {{time}}'
+  timeUntilTarget 'До {{target}}: {{duration}}'
+  timeSinceTarget 'С момента {{target}}: {{duration}} назад'
   compute 'Вычислить: {{left}} {{op}} {{right}}'
   equals '= {{value}}'
   negate 'Отрицание: -{{value}} = {{result}}'
@@ -73,6 +83,13 @@ steps:
   result 'Результат: {{value}}'
   finalResult 'Итоговый результат: {{value}}'
   exchangeRate 'Курс обмена: 1 {{from}} = {{rate}} {{to}} (источник: {{source}}, дата: {{date}})'
+  convert 'Преобразовать: {{value}} в {{unit}}'
+  indefiniteIntegral 'Неопределённый интеграл: ∫ {{integrand}} d{{variable}}'
+  computedSymbolicResult 'Вычислен символьный результат'
+  solveLinearEquation 'Решить линейное уравнение:'
+  solution 'Решение: {{value}}'
+  checkEquality 'Проверить равенство:'
+  compare 'Сравнить: {{left}} = {{right}}'
 issueReport:
   environment Окружение
   version Версия
@@ -85,8 +102,15 @@ issueReport:
   input Ввод
   resultSection Результат
   resultLabel Результат
-  linksNotation 'Links Notation'
+  linksNotation 'Нотация ссылок'
+  alternativeInterpretations 'Альтернативные интерпретации'
   stepsLabel Шаги
+  reproductionSteps 'Шаги воспроизведения'
+  reproductionOpen 'Откройте {{url}}'
+  reproductionEnter 'Введите {{expression}}'
+  reproductionRunCalculation 'Запустите вычисление'
+  reproductionUseCalculator 'Используйте калькулятор до возникновения проблемы'
+  reproductionClickReportIssue 'Нажмите Сообщить о проблеме'
   errorLabel Ошибка
   description Описание
   descriptionPlaceholder 'Пожалуйста, опишите возникшую проблему'

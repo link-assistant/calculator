@@ -15,6 +15,8 @@ result:
   timezoneConversions 'تحويلات المنطقة الزمنية'
   localTime 'الوقت المحلي'
   utcTime 'وقت UTC'
+  notations 'تدوينات عشرية'
+  plot 'رسم الدالة'
 examples:
   title 'جرب هذه الأمثلة:'
 errors:
@@ -36,6 +38,7 @@ errors:
   unknownFunction 'دالة غير معروفة: {{name}}'
   invalidFunctionArgs 'وسائط غير صالحة للدالة "{{function}}": {{reason}}'
   domainError 'خطأ في النطاق: {{message}}'
+  unknownError 'خطأ غير معروف'
 footer:
   poweredBy 'مدعوم بـ Rust + WebAssembly'
   viewOnGitHub 'عرض على GitHub'
@@ -57,8 +60,15 @@ share:
   copied 'تم النسخ!'
 steps:
   inputExpression 'تعبير الإدخال: {{expression}}'
+  input 'الإدخال: {{expression}}'
   literalValue 'القيمة الحرفية: {{value}}'
   dateTimeValue 'قيمة التاريخ/الوقت: {{value}}'
+  utcEquivalent 'المكافئ بتوقيت UTC: {{value}}'
+  timeUntil 'الوقت المتبقي: {{duration}}'
+  timeSince 'الوقت المنقضي: {{duration}}'
+  currentTime 'الوقت الحالي: {{time}}'
+  timeUntilTarget 'الوقت المتبقي حتى {{target}}: {{duration}}'
+  timeSinceTarget 'الوقت المنقضي منذ {{target}}: {{duration}}'
   compute 'حساب: {{left}} {{op}} {{right}}'
   equals '= {{value}}'
   negate 'نفي: -{{value}} = {{result}}'
@@ -73,6 +83,13 @@ steps:
   result 'النتيجة: {{value}}'
   finalResult 'النتيجة النهائية: {{value}}'
   exchangeRate 'سعر الصرف: 1 {{from}} = {{rate}} {{to}} (المصدر: {{source}}، التاريخ: {{date}})'
+  convert 'تحويل: {{value}} إلى {{unit}}'
+  indefiniteIntegral 'تكامل غير محدد: ∫ {{integrand}} d{{variable}}'
+  computedSymbolicResult 'تم حساب نتيجة رمزية'
+  solveLinearEquation 'حل المعادلة الخطية:'
+  solution 'الحل: {{value}}'
+  checkEquality 'التحقق من المساواة:'
+  compare 'مقارنة: {{left}} = {{right}}'
 issueReport:
   environment البيئة
   version الإصدار
@@ -86,7 +103,14 @@ issueReport:
   resultSection النتيجة
   resultLabel النتيجة
   linksNotation 'تدوين الروابط'
+  alternativeInterpretations 'تفسيرات بديلة'
   stepsLabel الخطوات
+  reproductionSteps 'خطوات إعادة الإنتاج'
+  reproductionOpen 'افتح {{url}}'
+  reproductionEnter 'أدخل {{expression}}'
+  reproductionRunCalculation 'شغّل الحساب'
+  reproductionUseCalculator 'استخدم الحاسبة حتى تحدث المشكلة'
+  reproductionClickReportIssue 'انقر على الإبلاغ عن مشكلة'
   errorLabel الخطأ
   description الوصف
   descriptionPlaceholder 'يرجى وصف المشكلة التي واجهتها'
