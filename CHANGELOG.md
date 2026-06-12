@@ -53,6 +53,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.19.0] - 2026-06-12
+
+### Added
+- Added comparison syntax for `<`, `>`, `<=`, `>=`, `!=`, `==`, `compare A and B`, and `A vs B`.
+
 ## [0.18.2] - 2026-06-12
 
 ### Fixed
