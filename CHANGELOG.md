@@ -51,6 +51,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.18.1] - 2026-06-12
+
+### Fixed
+- Added regression coverage for compact placeholder equations, mixed placeholder
+  equations, and additional named-variable school equation shapes.
+
 ## [0.18.0] - 2026-06-12
 
 ### Fixed
