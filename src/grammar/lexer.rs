@@ -122,6 +122,8 @@ pub enum TokenKind {
     Minus,
     /// The multiplication operator.
     Star,
+    /// The question mark placeholder unknown for equations.
+    Question,
     /// The division operator.
     Slash,
     /// The power/exponent operator.
@@ -255,6 +257,10 @@ impl Lexer {
             '*' => {
                 self.advance();
                 Token::new(TokenKind::Star, start, self.pos, "*".to_string())
+            }
+            '?' => {
+                self.advance();
+                Token::new(TokenKind::Question, start, self.pos, "?".to_string())
             }
             '/' => {
                 self.advance();

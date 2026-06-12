@@ -1,12 +1,13 @@
 //! Expression parser that combines all grammars.
 
 use crate::error::CalculatorError;
+use crate::grammar::linear_equation;
 use crate::grammar::token_parser::TokenParser;
 use crate::grammar::{
     evaluate_function, evaluate_indefinite_integral, DateTimeGrammar, Lexer, NumberGrammar,
 };
 use crate::types::{
-    BinaryOp, CurrencyDatabase, DateTime, Decimal, Expression, Rational, Unit, Value, ValueKind,
+    BinaryOp, CurrencyDatabase, DateTime, Decimal, Expression, Rational, Value, ValueKind,
 };
 
 /// Evaluates a power expression, using exact rational arithmetic when possible.
@@ -68,152 +69,6 @@ pub struct ExpressionParser {
     currency_db: CurrencyDatabase,
     /// Current date context for historical currency conversions (set by AtTime expressions).
     current_date_context: Option<DateTime>,
-}
-
-#[derive(Debug, Clone)]
-struct LinearForm {
-    variable: Option<String>,
-    coefficient: Rational,
-    constant: Rational,
-}
-
-impl LinearForm {
-    fn constant(value: Rational) -> Self {
-        Self {
-            variable: None,
-            coefficient: Rational::zero(),
-            constant: value,
-        }
-    }
-
-    fn variable(name: String) -> Self {
-        Self {
-            variable: Some(name),
-            coefficient: Rational::one(),
-            constant: Rational::zero(),
-        }
-    }
-
-    fn from_expression(expr: &Expression) -> Result<Self, CalculatorError> {
-        match expr {
-            Expression::Number { value, unit, .. } => {
-                if *unit != Unit::None {
-                    return Err(Self::unsupported_equation());
-                }
-                Ok(Self::constant(Rational::from_decimal(*value)))
-            }
-            Expression::Variable(name) => Ok(Self::variable(name.clone())),
-            Expression::Binary { left, op, right } => {
-                let left = Self::from_expression(left)?;
-                let right = Self::from_expression(right)?;
-                match op {
-                    BinaryOp::Add => left.add(right),
-                    BinaryOp::Subtract => left.subtract(right),
-                    BinaryOp::Multiply => left.multiply(right),
-                    BinaryOp::Divide => left.divide(right),
-                    BinaryOp::Modulo => Err(Self::unsupported_equation()),
-                }
-            }
-            Expression::Negate(inner) => Ok(Self::from_expression(inner)?.negate()),
-            Expression::Group(inner) => Self::from_expression(inner),
-            Expression::DateTime(_)
-            | Expression::Now
-            | Expression::Until(_)
-            | Expression::AtTime { .. }
-            | Expression::FunctionCall { .. }
-            | Expression::Power { .. }
-            | Expression::IndefiniteIntegral { .. }
-            | Expression::UnitConversion { .. }
-            | Expression::Equality { .. } => Err(Self::unsupported_equation()),
-        }
-    }
-
-    fn add(self, other: Self) -> Result<Self, CalculatorError> {
-        Ok(Self {
-            variable: Self::merge_variable(self.variable, other.variable)?,
-            coefficient: self.coefficient + other.coefficient,
-            constant: self.constant + other.constant,
-        })
-    }
-
-    fn subtract(self, other: Self) -> Result<Self, CalculatorError> {
-        Ok(Self {
-            variable: Self::merge_variable(self.variable, other.variable)?,
-            coefficient: self.coefficient - other.coefficient,
-            constant: self.constant - other.constant,
-        })
-    }
-
-    fn multiply(self, other: Self) -> Result<Self, CalculatorError> {
-        match (self.variable.is_some(), other.variable.is_some()) {
-            (true, true) => Err(CalculatorError::InvalidOperation(
-                "equation is not linear".into(),
-            )),
-            (true, false) => {
-                let scale = other.constant;
-                Ok(Self {
-                    variable: self.variable,
-                    coefficient: self.coefficient * scale.clone(),
-                    constant: self.constant * scale,
-                })
-            }
-            (false, true) => {
-                let scale = self.constant;
-                Ok(Self {
-                    variable: other.variable,
-                    coefficient: other.coefficient * scale.clone(),
-                    constant: other.constant * scale,
-                })
-            }
-            (false, false) => Ok(Self::constant(self.constant * other.constant)),
-        }
-    }
-
-    fn divide(self, other: Self) -> Result<Self, CalculatorError> {
-        if other.variable.is_some() {
-            return Err(CalculatorError::InvalidOperation(
-                "equation has a variable denominator".into(),
-            ));
-        }
-        if other.constant.is_zero() {
-            return Err(CalculatorError::DivisionByZero);
-        }
-
-        Ok(Self {
-            variable: self.variable,
-            coefficient: self.coefficient / other.constant.clone(),
-            constant: self.constant / other.constant,
-        })
-    }
-
-    fn negate(self) -> Self {
-        Self {
-            variable: self.variable,
-            coefficient: -self.coefficient,
-            constant: -self.constant,
-        }
-    }
-
-    fn merge_variable(
-        left: Option<String>,
-        right: Option<String>,
-    ) -> Result<Option<String>, CalculatorError> {
-        match (left, right) {
-            (Some(left), Some(right)) if left == right => Ok(Some(left)),
-            (Some(_), Some(_)) => Err(CalculatorError::InvalidOperation(
-                "equation has more than one variable".into(),
-            )),
-            (Some(variable), None) | (None, Some(variable)) => Ok(Some(variable)),
-            (None, None) => Ok(None),
-        }
-    }
-
-    fn unsupported_equation() -> CalculatorError {
-        CalculatorError::InvalidOperation(
-            "only simple single-variable linear equations with unitless numbers are supported"
-                .into(),
-        )
-    }
 }
 
 impl ExpressionParser {
@@ -315,21 +170,7 @@ impl ExpressionParser {
         left: &Expression,
         right: &Expression,
     ) -> Result<Value, CalculatorError> {
-        let left_form = LinearForm::from_expression(left)?;
-        let right_form = LinearForm::from_expression(right)?;
-        let variable =
-            LinearForm::merge_variable(left_form.variable.clone(), right_form.variable.clone())?
-                .ok_or_else(LinearForm::unsupported_equation)?;
-
-        let coefficient = left_form.coefficient - right_form.coefficient;
-        if coefficient.is_zero() {
-            return Err(CalculatorError::InvalidOperation(
-                "linear equation has no unique solution".into(),
-            ));
-        }
-
-        let value = (right_form.constant - left_form.constant) / coefficient;
-        Ok(Value::equation_solution(variable, value))
+        Ok(linear_equation::solve(left, right)?.to_value())
     }
 
     /// Evaluates an expression with step-by-step tracking.
@@ -709,7 +550,9 @@ impl ExpressionParser {
                     || Self::expression_contains_variable(right)
                 {
                     steps.push("Solve linear equation:".to_string());
-                    let result = Self::solve_linear_equation(left, right)?;
+                    let solution = linear_equation::solve(left, right)?;
+                    steps.extend(solution.derivation_steps());
+                    let result = solution.to_value();
                     steps.push(format!("Solution: {}", result.to_display_string()));
                     return Ok(result);
                 }

@@ -188,6 +188,16 @@ impl<'a> TokenParser<'a> {
             return Ok(Expression::group(expr));
         }
 
+        // Placeholder unknowns for single-variable equations.
+        if self.check(&TokenKind::Question) {
+            self.advance();
+            return Ok(Expression::variable("?"));
+        }
+        if self.check(&TokenKind::Star) {
+            self.advance();
+            return Ok(Expression::variable("*"));
+        }
+
         // Numeric date literal (e.g. 2026-01-22, 15/10/2025, 15.10.2025).
         // The lexer already validated that this parses as a real calendar date.
         if let Some(TokenKind::DateLiteral(s)) = self.current_kind() {

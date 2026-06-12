@@ -4,6 +4,7 @@ mod datetime_grammar;
 mod expression_parser;
 mod integral;
 mod lexer;
+mod linear_equation;
 mod math_functions;
 mod number_grammar;
 mod token_parser;
