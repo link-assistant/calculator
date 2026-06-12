@@ -90,6 +90,7 @@ steps:
   solution 'Solution: {{value}}'
   checkEquality 'Check equality:'
   compare 'Compare: {{left}} = {{right}}'
+  compareOperator 'Compare: {{left}} {{op}} {{right}}'
 issueReport:
   environment Environment
   version Version

@@ -229,6 +229,13 @@ function parseRawCalculationStep(step: string): ParsedCalculationStep | null {
       }),
     },
     {
+      regex: /^Compare: (.+) (==|<=|>=|!=|<|>|vs) (.+)$/,
+      build: match => ({
+        key: 'steps.compareOperator',
+        params: { left: match[1], op: match[2], right: match[3] },
+      }),
+    },
+    {
       regex: /^Compare: (.+) = (.+)$/,
       build: match => ({
         key: 'steps.compare',

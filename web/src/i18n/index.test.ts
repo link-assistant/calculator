@@ -56,6 +56,7 @@ const REQUIRED_USER_OUTPUT_KEYS = [
   'steps.solution',
   'steps.checkEquality',
   'steps.compare',
+  'steps.compareOperator',
 ] as const;
 
 function flattenTranslations(

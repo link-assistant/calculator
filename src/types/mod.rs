@@ -11,7 +11,7 @@ mod value;
 pub use currency::{Currency, CurrencyDatabase, ExchangeRateInfo};
 pub use datetime::{DateTime, DateTimeResult};
 pub use decimal::Decimal;
-pub use expression::{BinaryOp, Expression};
+pub use expression::{BinaryOp, ComparisonOp, Expression};
 pub use rational::{Rational, RepeatingDecimal};
 pub use unit::{DataSizeUnit, DurationUnit, MassUnit, Unit};
 pub use value::{Value, ValueKind};

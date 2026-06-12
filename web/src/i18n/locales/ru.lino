@@ -90,6 +90,7 @@ steps:
   solution 'Решение: {{value}}'
   checkEquality 'Проверить равенство:'
   compare 'Сравнить: {{left}} = {{right}}'
+  compareOperator 'Сравнить: {{left}} {{op}} {{right}}'
 issueReport:
   environment Окружение
   version Версия

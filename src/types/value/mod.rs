@@ -111,6 +111,23 @@ impl Value {
         }
     }
 
+    /// Creates a generic comparison result value.
+    #[must_use]
+    pub fn comparison_result(
+        left: impl Into<String>,
+        relation: impl Into<String>,
+        right: impl Into<String>,
+    ) -> Self {
+        Self {
+            kind: ValueKind::Comparison {
+                left: left.into(),
+                relation: relation.into(),
+                right: right.into(),
+            },
+            unit: Unit::None,
+        }
+    }
+
     /// Creates a solved equation value.
     #[must_use]
     pub fn equation_solution(variable: impl Into<String>, value: Rational) -> Self {
@@ -830,6 +847,7 @@ impl Value {
             ValueKind::DateTime(_) => "datetime",
             ValueKind::Duration { .. } => "duration",
             ValueKind::Boolean(_) => "boolean",
+            ValueKind::Comparison { .. } => "comparison result",
             ValueKind::EquationSolution { .. }
             | ValueKind::EquationSolutions { .. }
             | ValueKind::SymbolicEquationSolution { .. } => "equation solution",
@@ -859,6 +877,11 @@ impl Value {
             ValueKind::DateTime(dt) => dt.to_string(),
             ValueKind::Duration { seconds } => format_duration(*seconds),
             ValueKind::Boolean(b) => b.to_string(),
+            ValueKind::Comparison {
+                left,
+                relation,
+                right,
+            } => format!("{left} {relation} {right}"),
             ValueKind::EquationSolution { variable, value } => {
                 format!("{variable} = {}", value.to_display_string())
             }

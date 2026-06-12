@@ -8,8 +8,10 @@ use crate::grammar::{
     evaluate_function, evaluate_indefinite_integral, DateTimeGrammar, Lexer, NumberGrammar,
 };
 use crate::types::{
-    BinaryOp, CurrencyDatabase, DateTime, Decimal, Expression, Rational, Value, ValueKind,
+    BinaryOp, ComparisonOp, CurrencyDatabase, DateTime, Decimal, Expression, Rational, Unit, Value,
+    ValueKind,
 };
+use std::cmp::Ordering;
 
 /// Evaluates a power expression, using exact rational arithmetic when possible.
 ///
@@ -147,8 +149,11 @@ impl ExpressionParser {
             | Expression::Power {
                 base: left,
                 exponent: right,
+            } => {
+                Self::expression_contains_variable(left)
+                    || Self::expression_contains_variable(right)
             }
-            | Expression::Equality { left, right } => {
+            Expression::Equality { left, right } | Expression::Comparison { left, right, .. } => {
                 Self::expression_contains_variable(left)
                     || Self::expression_contains_variable(right)
             }
@@ -319,6 +324,11 @@ impl ExpressionParser {
                 let left_val = self.evaluate_expr(left)?;
                 let right_val = self.evaluate_expr(right)?;
                 Ok(Value::boolean(left_val == right_val))
+            }
+            Expression::Comparison { left, op, right } => {
+                let left_val = self.evaluate_expr(left)?;
+                let right_val = self.evaluate_expr(right)?;
+                self.evaluate_comparison_values(&left_val, *op, &right_val)
             }
         }
     }
@@ -577,6 +587,167 @@ impl ExpressionParser {
                 steps.push(format!("= {}", result.to_display_string()));
                 Ok(result)
             }
+            Expression::Comparison { left, op, right } => {
+                let left_val = self.evaluate_expr_with_steps(left, steps)?;
+                let right_val = self.evaluate_expr_with_steps(right, steps)?;
+                let operator = if *op == ComparisonOp::Compare {
+                    "vs"
+                } else {
+                    op.symbol()
+                };
+                steps.push(format!(
+                    "Compare: {} {} {}",
+                    left_val.to_display_string(),
+                    operator,
+                    right_val.to_display_string()
+                ));
+                self.currency_db.clear_last_used_rate();
+                let result = self.evaluate_comparison_values(&left_val, *op, &right_val)?;
+                for (from, to, rate_info) in self.currency_db.get_last_used_rates() {
+                    steps.push(format!(
+                        "Exchange rate: {}",
+                        rate_info.format_for_display(from, to)
+                    ));
+                }
+                steps.push(format!("= {}", result.to_display_string()));
+                Ok(result)
+            }
+        }
+    }
+
+    fn evaluate_comparison_values(
+        &mut self,
+        left: &Value,
+        op: ComparisonOp,
+        right: &Value,
+    ) -> Result<Value, CalculatorError> {
+        if op == ComparisonOp::Equal {
+            return Ok(Value::boolean(
+                self.compare_values(left, right)
+                    .map_or_else(|_| left == right, |ordering| ordering == Ordering::Equal),
+            ));
+        }
+
+        if op == ComparisonOp::NotEqual {
+            return Ok(Value::boolean(
+                self.compare_values(left, right)
+                    .map_or_else(|_| left != right, |ordering| ordering != Ordering::Equal),
+            ));
+        }
+
+        let ordering = self.compare_values(left, right)?;
+        let result = match op {
+            ComparisonOp::Less => Value::boolean(ordering == Ordering::Less),
+            ComparisonOp::LessOrEqual => {
+                Value::boolean(matches!(ordering, Ordering::Less | Ordering::Equal))
+            }
+            ComparisonOp::Greater => Value::boolean(ordering == Ordering::Greater),
+            ComparisonOp::GreaterOrEqual => {
+                Value::boolean(matches!(ordering, Ordering::Greater | Ordering::Equal))
+            }
+            ComparisonOp::Compare => Value::comparison_result(
+                left.to_display_string(),
+                Self::ordering_symbol(ordering),
+                right.to_display_string(),
+            ),
+            ComparisonOp::Equal => unreachable!("handled before ordering comparison"),
+            ComparisonOp::NotEqual => unreachable!("handled before ordering comparison"),
+        };
+
+        Ok(result)
+    }
+
+    fn compare_values(&mut self, left: &Value, right: &Value) -> Result<Ordering, CalculatorError> {
+        if let (Some(left_seconds), Some(right_seconds)) = (
+            Self::duration_seconds_for_comparison(left),
+            Self::duration_seconds_for_comparison(right),
+        ) {
+            return left_seconds.partial_cmp(&right_seconds).ok_or_else(|| {
+                CalculatorError::InvalidOperation(format!(
+                    "cannot order {} and {}",
+                    left.type_name(),
+                    right.type_name()
+                ))
+            });
+        }
+
+        let (left, right) = self.normalize_comparison_values(left, right)?;
+
+        if let (Some(left_rational), Some(right_rational)) =
+            (left.to_rational(), right.to_rational())
+        {
+            return Ok(left_rational.cmp(&right_rational));
+        }
+
+        match (&left.kind, &right.kind) {
+            (ValueKind::DateTime(left_dt), ValueKind::DateTime(right_dt)) => {
+                Ok(left_dt.cmp(right_dt))
+            }
+            (
+                ValueKind::Duration {
+                    seconds: left_seconds,
+                },
+                ValueKind::Duration {
+                    seconds: right_seconds,
+                },
+            ) => Ok(left_seconds.cmp(right_seconds)),
+            _ => Err(CalculatorError::InvalidOperation(format!(
+                "cannot order {} and {}",
+                left.type_name(),
+                right.type_name()
+            ))),
+        }
+    }
+
+    fn normalize_comparison_values(
+        &mut self,
+        left: &Value,
+        right: &Value,
+    ) -> Result<(Value, Value), CalculatorError> {
+        if left.unit == right.unit {
+            return Ok((left.clone(), right.clone()));
+        }
+
+        if left.unit == Unit::None || right.unit == Unit::None {
+            return Err(CalculatorError::InvalidOperation(format!(
+                "cannot compare {} with {}",
+                left.to_display_string(),
+                right.to_display_string()
+            )));
+        }
+
+        let date_context = self.current_date_context.clone();
+        let right_converted = right
+            .convert_to_unit_at_date(&left.unit, &mut self.currency_db, date_context.as_ref())
+            .map_err(|_| {
+                CalculatorError::InvalidOperation(format!(
+                    "cannot compare {} with {}",
+                    left.to_display_string(),
+                    right.to_display_string()
+                ))
+            })?;
+
+        Ok((left.clone(), right_converted))
+    }
+
+    fn duration_seconds_for_comparison(value: &Value) -> Option<f64> {
+        match (&value.kind, &value.unit) {
+            (ValueKind::Duration { seconds }, Unit::None) => Some(*seconds as f64),
+            (ValueKind::Number(decimal), Unit::Duration(unit)) => {
+                Some(unit.to_secs(decimal.to_f64()))
+            }
+            (ValueKind::Rational(rational), Unit::Duration(unit)) => {
+                Some(unit.to_secs(rational.to_f64()))
+            }
+            _ => None,
+        }
+    }
+
+    const fn ordering_symbol(ordering: Ordering) -> &'static str {
+        match ordering {
+            Ordering::Less => "<",
+            Ordering::Equal => "=",
+            Ordering::Greater => ">",
         }
     }
 
@@ -803,6 +974,11 @@ impl ExpressionParser {
                 let left_val = self.evaluate_expr_with_var(left, var_name, var_value)?;
                 let right_val = self.evaluate_expr_with_var(right, var_name, var_value)?;
                 Ok(Value::boolean(left_val == right_val))
+            }
+            Expression::Comparison { left, op, right } => {
+                let left_val = self.evaluate_expr_with_var(left, var_name, var_value)?;
+                let right_val = self.evaluate_expr_with_var(right, var_name, var_value)?;
+                self.evaluate_comparison_values(&left_val, *op, &right_val)
             }
         }
     }
