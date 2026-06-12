@@ -302,6 +302,59 @@ fn calculate_with_value_returns_structured_placeholder_solution_and_trace() {
 }
 
 #[test]
+fn calculate_with_value_returns_structured_star_placeholder_solution_and_trace() {
+    let mut calc = Calculator::new();
+    let (_expr, value, steps, lino) = calc
+        .calculate_with_value("2 * * + 3 = 11")
+        .expect("star placeholder equation should solve");
+
+    assert_eq!(value.to_display_string(), "* = 4");
+    assert_eq!(
+        value.kind,
+        ValueKind::EquationSolution {
+            variable: "*".to_string(),
+            value: Rational::from_integer(4),
+        }
+    );
+    assert_eq!(lino, "(((2 * *) + 3) = 11)");
+    assert!(
+        steps.iter().any(|step| step == "Solve linear equation:"),
+        "steps should mark equation solving: {steps:?}"
+    );
+    assert!(
+        steps.iter().any(|step| step.starts_with("Linear form:")),
+        "steps should expose the normalized linear form: {steps:?}"
+    );
+    assert!(
+        steps.iter().any(|step| step.starts_with("Solve for *:")),
+        "steps should expose the derivation step for the star placeholder: {steps:?}"
+    );
+}
+
+#[test]
+fn calculate_with_value_returns_structured_repeated_placeholder_solution() {
+    for (input, variable, expected_value) in [
+        ("? + ? = 10", "?", Rational::from_integer(5)),
+        ("* + * = 10", "*", Rational::from_integer(5)),
+    ] {
+        let mut calc = Calculator::new();
+        let (_expr, value, steps, _lino) = calc
+            .calculate_with_value(input)
+            .unwrap_or_else(|err| panic!("expected success for {input:?}, got {err:?}"));
+
+        assert_eq!(
+            value.kind,
+            ValueKind::EquationSolution {
+                variable: variable.to_string(),
+                value: expected_value,
+            },
+            "wrong structured solution for {input:?}"
+        );
+        assert_required_step_labels(&steps, input);
+    }
+}
+
+#[test]
 fn calculate_with_value_returns_structured_symbolic_solution_and_detailed_trace() {
     let mut calc = Calculator::new();
     let (_expr, value, steps, lino) = calc
