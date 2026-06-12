@@ -50,6 +50,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.18.0] - 2026-06-12
+
+### Fixed
+- Recognize Russian abbreviated month names such as `июл` in full date expressions.
+
+### Added
+- Recognize numeric date literals inside expressions, e.g. `15.10.2025 + 180 days`
+  and `15/10/2025 + 180 days`. Dot- (`DD.MM.YYYY`, `YYYY.MM.DD`), slash-, and
+  dash-separated dates in day-first, month-first, and ISO orderings are now
+  parsed as dates instead of arithmetic (issue #166).
+
+### Fixed
+- Stop rejecting `15.10.2025 + 180 days` with "Unexpected trailing input
+  '.2025'" and stop silently evaluating numeric dates such as `15/10/2025` and
+  `2021-02-08` as division/subtraction. A strict 4-digit-year + valid-calendar
+  guard keeps ordinary arithmetic (`2026 - 1 - 22`, `1/3 * 3`, `10/2`,
+  `3.14 + 2.86`) untouched.
+
+### Fixed
+- Reject bare or dangling decimal points such as `2. 3`, `2+2. 3+3`, `2.`,
+  and `. 3` as recoverable parse errors instead of looping during tokenization
+  until the process aborts from memory allocation failure (issue #168).
+
+### Fixed
+- Recognize Russian `от` in percent-of expressions such as `38% от 100к`.
+
+### Fixed
+- Localized calculation steps and generated issue-report reproduction steps instead of showing raw English text in non-English languages.
+
+### Added
+- Added web test coverage and CI execution for translation key parity across supported languages.
+
+### Added
+- Support `?` and operand-position `*` as single-unknown placeholders in
+  supported linear equations, with structured equation-solution results and
+  derivation steps.
+- Support symbolic solutions for linear equations with multiple variables, such
+  as `x + y = 10` -> `x = 10 - y`, including detailed step-by-step derivations.
+- Support exact real rational roots for single-variable polynomial equations
+  with nonnegative integer powers, including quadratic and higher-power cases
+  such as `x^2 = 4` -> `x = -2 or x = 2`.
+
 ## [0.17.2] - 2026-05-20
 
 ### Fixed
