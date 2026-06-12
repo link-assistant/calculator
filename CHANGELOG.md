@@ -52,6 +52,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.18.2] - 2026-06-12
+
+### Fixed
+- Added regression coverage for structured `*` placeholder equation results and derivation traces.
+
 ## [0.18.1] - 2026-06-12
 
 ### Fixed
