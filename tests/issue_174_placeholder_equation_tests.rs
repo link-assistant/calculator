@@ -118,6 +118,34 @@ fn solves_symbolic_multi_variable_equations() {
 }
 
 #[test]
+fn solves_quadratic_and_higher_power_equations() {
+    assert_equation_solutions(&[
+        ("x^2 = 4", "x = -2 or x = 2"),
+        ("x^2 - 5 * x + 6 = 0", "x = 2 or x = 3"),
+        ("x^2 + 5 * x + 6 = 0", "x = -3 or x = -2"),
+        ("x^2 = 0", "x = 0"),
+        ("x^3 = 27", "x = 3"),
+        ("x^3 - x = 0", "x = -1 or x = 0 or x = 1"),
+        ("x^4 = 16", "x = -2 or x = 2"),
+        ("x^5 - 32 = 0", "x = 2"),
+        ("x^6 - 64 = 0", "x = -2 or x = 2"),
+        ("x^7 + 128 = 0", "x = -2"),
+        ("(x - 2) * (x + 3) = 0", "x = -3 or x = 2"),
+        ("(x - 1)^3 = 0", "x = 1"),
+        ("(x - 1) * (x - 2) * (x - 3) = 0", "x = 1 or x = 2 or x = 3"),
+        (
+            "(2 * x - 1) * (x - 3) * (x + 2) = 0",
+            "x = -2 or x = 0.5 or x = 3",
+        ),
+        ("2 * x^2 - 8 = 0", "x = -2 or x = 2"),
+        ("?^2 = 9", "? = -3 or ? = 3"),
+        ("*^2 = 9", "* = -3 or * = 3"),
+        ("? * ? = 4", "? = -2 or ? = 2"),
+        ("* * * = 4", "* = -2 or * = 2"),
+    ]);
+}
+
+#[test]
 fn solves_more_than_500_named_multi_variable_equations_with_explicit_steps() {
     let variables = ["x", "y", "z", "a", "b", "c", "m", "n", "p", "q", "r", "s"];
     let mut case_count = 0;
@@ -141,6 +169,30 @@ fn solves_more_than_500_named_multi_variable_equations_with_explicit_steps() {
     assert!(
         case_count > 500,
         "expected more than 500 generated multi-variable cases, got {case_count}"
+    );
+}
+
+#[test]
+fn solves_more_than_1000_power_equation_edge_cases_with_explicit_steps() {
+    let variables = ["x", "y", "z", "a", "b", "c", "m", "n", "p", "q"];
+    let mut case_count = 0;
+
+    for variable in variables {
+        for power in 2..=11 {
+            for root in -5..=5 {
+                let rhs = pow_i128(root, power);
+                let input = format!("{variable}^{power} = {rhs}");
+                let expected = expected_power_solution(variable, root, power);
+
+                assert_polynomial_solution_with_required_steps(&input, &expected);
+                case_count += 1;
+            }
+        }
+    }
+
+    assert!(
+        case_count > 1000,
+        "expected more than 1000 generated power-equation cases, got {case_count}"
     );
 }
 
@@ -194,8 +246,41 @@ fn calculate_with_value_returns_structured_symbolic_solution_and_detailed_trace(
 }
 
 #[test]
+fn calculate_with_value_returns_structured_polynomial_solutions_and_detailed_trace() {
+    let mut calc = Calculator::new();
+    let (_expr, value, steps, lino) = calc
+        .calculate_with_value("x^2 - 5 * x + 6 = 0")
+        .expect("quadratic equation should solve");
+
+    assert_eq!(value.to_display_string(), "x = 2 or x = 3");
+    assert_eq!(
+        value.kind,
+        ValueKind::EquationSolutions {
+            variable: "x".to_string(),
+            values: vec![Rational::from_integer(2), Rational::from_integer(3)],
+        }
+    );
+    assert_eq!(lino, "((((x ^ 2) - (5 * x)) + 6) = 0)");
+    assert_required_polynomial_step_labels(&steps, "x^2 - 5 * x + 6 = 0");
+}
+
+#[test]
 fn rejects_unsupported_placeholder_equations() {
-    for input in ["? * ? = 4", "* * * = 4", "? + = 4", "2 * = 8", "** + 2 = 4"] {
+    for input in ["? + = 4", "2 * = 8", "** + 2 = 4"] {
+        let mut calc = Calculator::new();
+        let result = calc.calculate_internal(input);
+
+        assert!(
+            !result.success,
+            "expected {input:?} to be rejected, got {}",
+            result.result
+        );
+    }
+}
+
+#[test]
+fn rejects_unsupported_polynomial_equations() {
+    for input in ["x^2 + y = 4", "x / x = 1", "x^2 = 2"] {
         let mut calc = Calculator::new();
         let result = calc.calculate_internal(input);
 
@@ -248,6 +333,24 @@ fn assert_equation_solution_with_required_steps(input: &str, expected: &str) {
     assert_required_step_labels(&steps, input);
 }
 
+fn assert_polynomial_solution_with_required_steps(input: &str, expected: &str) {
+    let mut calc = Calculator::new();
+    let (_expr, value, steps, lino) = calc
+        .calculate_with_value(input)
+        .unwrap_or_else(|err| panic!("expected success for {input:?}, got {err:?}"));
+
+    assert_eq!(
+        value.to_display_string(),
+        expected,
+        "wrong result for {input:?}"
+    );
+    assert!(
+        lino.contains('='),
+        "equation lino should contain '=' for {input:?}: {lino}",
+    );
+    assert_required_polynomial_step_labels(&steps, input);
+}
+
 fn assert_required_step_labels(steps: &[String], input: &str) {
     for label in [
         "Input expression:",
@@ -270,4 +373,47 @@ fn assert_required_step_labels(steps: &[String], input: &str) {
             "steps for {input:?} should include {label:?}: {steps:?}"
         );
     }
+}
+
+fn assert_required_polynomial_step_labels(steps: &[String], input: &str) {
+    for label in [
+        "Input expression:",
+        "Solve polynomial equation:",
+        "Original equation:",
+        "Move all terms to the left:",
+        "Polynomial form:",
+        "Polynomial degree:",
+        "Choose target variable:",
+        "Find real rational roots:",
+        "Verify root",
+        "Solutions:",
+        "Solution:",
+        "Final result:",
+    ] {
+        assert!(
+            steps.iter().any(|step| step.starts_with(label)),
+            "steps for {input:?} should include {label:?}: {steps:?}"
+        );
+    }
+}
+
+fn expected_power_solution(variable: &str, root: i128, power: u32) -> String {
+    if root == 0 {
+        return format!("{variable} = 0");
+    }
+
+    if power % 2 == 0 {
+        let root_abs = root.abs();
+        format!("{variable} = -{root_abs} or {variable} = {root_abs}")
+    } else {
+        format!("{variable} = {root}")
+    }
+}
+
+fn pow_i128(value: i128, power: u32) -> i128 {
+    let mut result = 1;
+    for _ in 0..power {
+        result *= value;
+    }
+    result
 }

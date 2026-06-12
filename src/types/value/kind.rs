@@ -25,6 +25,13 @@ pub enum ValueKind {
         /// The value assigned to the variable.
         value: Rational,
     },
+    /// A solved equation with multiple exact values for the same variable.
+    EquationSolutions {
+        /// The solved variable name.
+        variable: String,
+        /// The values assigned to the variable.
+        values: Vec<Rational>,
+    },
     /// A solved linear equation whose result still contains other variables.
     SymbolicEquationSolution {
         /// The solved variable name.

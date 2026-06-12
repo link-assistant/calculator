@@ -2,6 +2,7 @@
 
 use crate::error::CalculatorError;
 use crate::grammar::linear_equation;
+use crate::grammar::polynomial_equation;
 use crate::grammar::token_parser::TokenParser;
 use crate::grammar::{
     evaluate_function, evaluate_indefinite_integral, DateTimeGrammar, Lexer, NumberGrammar,
@@ -166,11 +167,12 @@ impl ExpressionParser {
         }
     }
 
-    fn solve_linear_equation(
-        left: &Expression,
-        right: &Expression,
-    ) -> Result<Value, CalculatorError> {
-        Ok(linear_equation::solve(left, right)?.to_value())
+    fn solve_equation(left: &Expression, right: &Expression) -> Result<Value, CalculatorError> {
+        if let Ok(solution) = linear_equation::solve(left, right) {
+            return Ok(solution.to_value());
+        }
+
+        Ok(polynomial_equation::solve(left, right)?.to_value())
     }
 
     /// Evaluates an expression with step-by-step tracking.
@@ -311,7 +313,7 @@ impl ExpressionParser {
                 if Self::expression_contains_variable(left)
                     || Self::expression_contains_variable(right)
                 {
-                    return Self::solve_linear_equation(left, right);
+                    return Self::solve_equation(left, right);
                 }
 
                 let left_val = self.evaluate_expr(left)?;
@@ -549,10 +551,16 @@ impl ExpressionParser {
                 if Self::expression_contains_variable(left)
                     || Self::expression_contains_variable(right)
                 {
-                    steps.push("Solve linear equation:".to_string());
-                    let solution = linear_equation::solve(left, right)?;
-                    steps.extend(solution.derivation_steps());
-                    let result = solution.to_value();
+                    let result = if let Ok(solution) = linear_equation::solve(left, right) {
+                        steps.push("Solve linear equation:".to_string());
+                        steps.extend(solution.derivation_steps());
+                        solution.to_value()
+                    } else {
+                        steps.push("Solve polynomial equation:".to_string());
+                        let solution = polynomial_equation::solve(left, right)?;
+                        steps.extend(solution.derivation_steps());
+                        solution.to_value()
+                    };
                     steps.push(format!("Solution: {}", result.to_display_string()));
                     return Ok(result);
                 }

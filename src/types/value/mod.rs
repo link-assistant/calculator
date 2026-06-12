@@ -1,6 +1,8 @@
 //! Value type representing typed values with units.
 
+mod duration;
 mod kind;
+use duration::format_duration;
 pub use kind::ValueKind;
 
 use serde::{Deserialize, Serialize};
@@ -116,6 +118,18 @@ impl Value {
             kind: ValueKind::EquationSolution {
                 variable: variable.into(),
                 value,
+            },
+            unit: Unit::None,
+        }
+    }
+
+    /// Creates a solved equation value with multiple exact solutions.
+    #[must_use]
+    pub fn equation_solutions(variable: impl Into<String>, values: Vec<Rational>) -> Self {
+        Self {
+            kind: ValueKind::EquationSolutions {
+                variable: variable.into(),
+                values,
             },
             unit: Unit::None,
         }
@@ -816,9 +830,9 @@ impl Value {
             ValueKind::DateTime(_) => "datetime",
             ValueKind::Duration { .. } => "duration",
             ValueKind::Boolean(_) => "boolean",
-            ValueKind::EquationSolution { .. } | ValueKind::SymbolicEquationSolution { .. } => {
-                "equation solution"
-            }
+            ValueKind::EquationSolution { .. }
+            | ValueKind::EquationSolutions { .. }
+            | ValueKind::SymbolicEquationSolution { .. } => "equation solution",
         }
     }
 
@@ -848,6 +862,11 @@ impl Value {
             ValueKind::EquationSolution { variable, value } => {
                 format!("{variable} = {}", value.to_display_string())
             }
+            ValueKind::EquationSolutions { variable, values } => values
+                .iter()
+                .map(|value| format!("{variable} = {}", value.to_display_string()))
+                .collect::<Vec<_>>()
+                .join(" or "),
             ValueKind::SymbolicEquationSolution {
                 variable,
                 expression,
@@ -947,51 +966,6 @@ fn add_calendar_months_or_duration(dt: &DateTime, unit: DurationUnit, amount: f6
                 dt.add_duration(-seconds)
             }
         }
-    }
-}
-
-/// Formats a duration in seconds to a human-readable string.
-fn format_duration(total_seconds: i64) -> String {
-    let is_negative = total_seconds < 0;
-    let total_seconds = total_seconds.abs();
-
-    let days = total_seconds / 86400;
-    let hours = (total_seconds % 86400) / 3600;
-    let minutes = (total_seconds % 3600) / 60;
-    let seconds = total_seconds % 60;
-
-    let mut parts = Vec::new();
-
-    if days > 0 {
-        parts.push(format!("{} day{}", days, if days == 1 { "" } else { "s" }));
-    }
-    if hours > 0 {
-        parts.push(format!(
-            "{} hour{}",
-            hours,
-            if hours == 1 { "" } else { "s" }
-        ));
-    }
-    if minutes > 0 {
-        parts.push(format!(
-            "{} minute{}",
-            minutes,
-            if minutes == 1 { "" } else { "s" }
-        ));
-    }
-    if seconds > 0 || parts.is_empty() {
-        parts.push(format!(
-            "{} second{}",
-            seconds,
-            if seconds == 1 { "" } else { "s" }
-        ));
-    }
-
-    let result = parts.join(", ");
-    if is_negative {
-        format!("-{result}")
-    } else {
-        result
     }
 }
 
