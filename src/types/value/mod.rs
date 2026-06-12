@@ -1,5 +1,8 @@
 //! Value type representing typed values with units.
 
+mod kind;
+pub use kind::ValueKind;
+
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
@@ -13,31 +16,6 @@ pub struct Value {
     pub kind: ValueKind,
     /// The unit of measurement.
     pub unit: Unit,
-}
-
-/// Different kinds of values the calculator can work with.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub enum ValueKind {
-    /// A decimal number (for compatibility and complex operations).
-    Number(Decimal),
-    /// A rational number for exact fractional arithmetic.
-    Rational(Rational),
-    /// A date and/or time.
-    DateTime(DateTime),
-    /// A duration (difference between two datetimes).
-    Duration {
-        /// Duration in seconds.
-        seconds: i64,
-    },
-    /// A boolean value.
-    Boolean(bool),
-    /// A solved single-variable equation.
-    EquationSolution {
-        /// The solved variable name.
-        variable: String,
-        /// The value assigned to the variable.
-        value: Rational,
-    },
 }
 
 impl Value {
@@ -138,6 +116,21 @@ impl Value {
             kind: ValueKind::EquationSolution {
                 variable: variable.into(),
                 value,
+            },
+            unit: Unit::None,
+        }
+    }
+
+    /// Creates a solved symbolic equation value.
+    #[must_use]
+    pub fn symbolic_equation_solution(
+        variable: impl Into<String>,
+        expression: impl Into<String>,
+    ) -> Self {
+        Self {
+            kind: ValueKind::SymbolicEquationSolution {
+                variable: variable.into(),
+                expression: expression.into(),
             },
             unit: Unit::None,
         }
@@ -823,7 +816,9 @@ impl Value {
             ValueKind::DateTime(_) => "datetime",
             ValueKind::Duration { .. } => "duration",
             ValueKind::Boolean(_) => "boolean",
-            ValueKind::EquationSolution { .. } => "equation solution",
+            ValueKind::EquationSolution { .. } | ValueKind::SymbolicEquationSolution { .. } => {
+                "equation solution"
+            }
         }
     }
 
@@ -852,6 +847,12 @@ impl Value {
             ValueKind::Boolean(b) => b.to_string(),
             ValueKind::EquationSolution { variable, value } => {
                 format!("{variable} = {}", value.to_display_string())
+            }
+            ValueKind::SymbolicEquationSolution {
+                variable,
+                expression,
+            } => {
+                format!("{variable} = {expression}")
             }
         }
     }

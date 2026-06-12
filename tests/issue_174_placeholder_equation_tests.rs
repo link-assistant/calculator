@@ -106,6 +106,45 @@ fn named_variable_equations_keep_working_across_many_shapes() {
 }
 
 #[test]
+fn solves_symbolic_multi_variable_equations() {
+    assert_equation_solutions(&[
+        ("x + y = 10", "x = 10 - y"),
+        ("2 * x + 3 * y = 12", "x = 6 - 1.5*y"),
+        ("y + x = 10", "y = 10 - x"),
+        ("x + ? = 4", "? = 4 - x"),
+        ("x + * = 4", "* = 4 - x"),
+        ("? + * = 4", "? = 4 - *"),
+    ]);
+}
+
+#[test]
+fn solves_more_than_500_named_multi_variable_equations_with_explicit_steps() {
+    let variables = ["x", "y", "z", "a", "b", "c", "m", "n", "p", "q", "r", "s"];
+    let mut case_count = 0;
+
+    for target in variables {
+        for other in variables {
+            if target == other {
+                continue;
+            }
+
+            for total in 2..=6 {
+                let input = format!("{target} + {other} = {total}");
+                let expected = format!("{target} = {total} - {other}");
+
+                assert_equation_solution_with_required_steps(&input, &expected);
+                case_count += 1;
+            }
+        }
+    }
+
+    assert!(
+        case_count > 500,
+        "expected more than 500 generated multi-variable cases, got {case_count}"
+    );
+}
+
+#[test]
 fn calculate_with_value_returns_structured_placeholder_solution_and_trace() {
     let mut calc = Calculator::new();
     let (_expr, value, steps, lino) = calc
@@ -136,17 +175,27 @@ fn calculate_with_value_returns_structured_placeholder_solution_and_trace() {
 }
 
 #[test]
-fn rejects_mixed_unknowns_and_unsupported_placeholder_equations() {
-    for input in [
-        "x + ? = 4",
-        "? + * = 4",
-        "x + * = 4",
-        "? * ? = 4",
-        "* * * = 4",
-        "? + = 4",
-        "2 * = 8",
-        "** + 2 = 4",
-    ] {
+fn calculate_with_value_returns_structured_symbolic_solution_and_detailed_trace() {
+    let mut calc = Calculator::new();
+    let (_expr, value, steps, lino) = calc
+        .calculate_with_value("2 * x + 3 * y = 12")
+        .expect("multi-variable equation should solve symbolically");
+
+    assert_eq!(value.to_display_string(), "x = 6 - 1.5*y");
+    assert_eq!(
+        value.kind,
+        ValueKind::SymbolicEquationSolution {
+            variable: "x".to_string(),
+            expression: "6 - 1.5*y".to_string(),
+        }
+    );
+    assert_eq!(lino, "(((2 * x) + (3 * y)) = 12)");
+    assert_required_step_labels(&steps, "2 * x + 3 * y = 12");
+}
+
+#[test]
+fn rejects_unsupported_placeholder_equations() {
+    for input in ["? * ? = 4", "* * * = 4", "? + = 4", "2 * = 8", "** + 2 = 4"] {
         let mut calc = Calculator::new();
         let result = calc.calculate_internal(input);
 
@@ -179,4 +228,46 @@ fn assert_equation_solution(input: &str, expected: &str) {
         "equation lino should contain '=' for {input:?}: {}",
         result.lino_interpretation
     );
+}
+
+fn assert_equation_solution_with_required_steps(input: &str, expected: &str) {
+    let mut calc = Calculator::new();
+    let (_expr, value, steps, lino) = calc
+        .calculate_with_value(input)
+        .unwrap_or_else(|err| panic!("expected success for {input:?}, got {err:?}"));
+
+    assert_eq!(
+        value.to_display_string(),
+        expected,
+        "wrong result for {input:?}"
+    );
+    assert!(
+        lino.contains('='),
+        "equation lino should contain '=' for {input:?}: {lino}",
+    );
+    assert_required_step_labels(&steps, input);
+}
+
+fn assert_required_step_labels(steps: &[String], input: &str) {
+    for label in [
+        "Input expression:",
+        "Solve linear equation:",
+        "Original equation:",
+        "Linear form:",
+        "Choose target variable:",
+        "Combine target coefficients:",
+        "Move non-target variable terms to the right:",
+        "Move constants to the right:",
+        "Right side after moving terms:",
+        "Isolate variable term:",
+        "Divide both sides by",
+        "Solve for",
+        "Solution:",
+        "Final result:",
+    ] {
+        assert!(
+            steps.iter().any(|step| step.starts_with(label)),
+            "steps for {input:?} should include {label:?}: {steps:?}"
+        );
+    }
 }
