@@ -68,6 +68,24 @@ fn solves_star_placeholder_equations_by_parser_position() {
 }
 
 #[test]
+fn solves_compact_placeholder_equations_from_integrations() {
+    assert_equation_solutions(&[
+        ("?+2=4", "? = 2"),
+        ("*+2=4", "* = 2"),
+        ("2+?=4", "? = 2"),
+        ("2+*=4", "* = 2"),
+        ("?*2=8", "? = 4"),
+        ("2*?=8", "? = 4"),
+        ("**2=8", "* = 4"),
+        ("2**=8", "* = 4"),
+        ("(?+2)*3=12", "? = 2"),
+        ("(*+2)*3=12", "* = 2"),
+        ("-?+10=4", "? = 6"),
+        ("-*+10=4", "* = 6"),
+    ]);
+}
+
+#[test]
 fn named_variable_equations_keep_working_across_many_shapes() {
     for variable in ["x", "y", "z"] {
         for (template, expected_value) in [
@@ -106,6 +124,46 @@ fn named_variable_equations_keep_working_across_many_shapes() {
 }
 
 #[test]
+fn solves_eighty_named_variable_school_equations_with_explicit_steps() {
+    let variables = ["x", "y", "z", "a"];
+    let templates = [
+        "{v} + 5 = 12",
+        "5 + {v} = 12",
+        "{v} - 5 = 2",
+        "12 - {v} = 5",
+        "{v} * 5 = 35",
+        "5 * {v} = 35",
+        "{v} / 7 = 1",
+        "({v} + 3) / 2 = 5",
+        "2 * ({v} + 3) = 20",
+        "3 * ({v} - 2) = 15",
+        "{v} + 3 = 2 * {v} - 4",
+        "5 * {v} - 3 = 2 * {v} + 18",
+        "{v} / 2 + 3 = 6.5",
+        "-{v} + 12 = 5",
+        "0 - {v} = -7",
+        "({v} - 1) / 3 + 2 = 4",
+        "4 = ({v} + 5) / 3",
+        "1.5 * {v} + 0.5 = 11",
+        "2 * ({v} - 1.5) = 11",
+        "({v} + 1) * 0.5 = 4",
+    ];
+    let mut case_count = 0;
+
+    for variable in variables {
+        for template in templates {
+            let input = template.replace("{v}", variable);
+            let expected = format!("{variable} = 7");
+
+            assert_equation_solution_with_required_steps(&input, &expected);
+            case_count += 1;
+        }
+    }
+
+    assert_eq!(case_count, 80);
+}
+
+#[test]
 fn solves_symbolic_multi_variable_equations() {
     assert_equation_solutions(&[
         ("x + y = 10", "x = 10 - y"),
@@ -115,6 +173,23 @@ fn solves_symbolic_multi_variable_equations() {
         ("x + * = 4", "* = 4 - x"),
         ("? + * = 4", "? = 4 - *"),
     ]);
+}
+
+#[test]
+fn solves_mixed_placeholder_and_named_equations_with_explicit_steps() {
+    for (input, expected) in [
+        ("x + ? = 4", "? = 4 - x"),
+        ("x + * = 4", "* = 4 - x"),
+        ("? + * = 4", "? = 4 - *"),
+        ("2 * ? + x = 10", "? = 5 - 0.5*x"),
+        ("2 * * + y = 12", "* = 6 - 0.5*y"),
+        ("? + 2 * * = 12", "? = 12 - 2*(*)"),
+        ("2 * ? + 4 * * = 20", "? = 10 - 2*(*)"),
+        ("2 * x + ? = 10", "? = 10 - 2*x"),
+        ("2 * x + 4 * * = 10", "* = 2.5 - 0.5*x"),
+    ] {
+        assert_equation_solution_with_required_steps(input, expected);
+    }
 }
 
 #[test]
