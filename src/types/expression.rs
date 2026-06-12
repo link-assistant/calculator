@@ -44,6 +44,47 @@ impl fmt::Display for BinaryOp {
     }
 }
 
+/// A comparison operation.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ComparisonOp {
+    /// Equal (`==`).
+    Equal,
+    /// Strictly less than (`<`).
+    Less,
+    /// Less than or equal (`<=`).
+    LessOrEqual,
+    /// Strictly greater than (`>`).
+    Greater,
+    /// Greater than or equal (`>=`).
+    GreaterOrEqual,
+    /// Not equal (`!=`).
+    NotEqual,
+    /// Generic comparison (`compare a and b`, `a vs b`).
+    Compare,
+}
+
+impl ComparisonOp {
+    /// Returns the symbol for the comparison operation.
+    #[must_use]
+    pub fn symbol(&self) -> &'static str {
+        match self {
+            Self::Equal => "==",
+            Self::Less => "<",
+            Self::LessOrEqual => "<=",
+            Self::Greater => ">",
+            Self::GreaterOrEqual => ">=",
+            Self::NotEqual => "!=",
+            Self::Compare => "compare",
+        }
+    }
+}
+
+impl fmt::Display for ComparisonOp {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.symbol())
+    }
+}
+
 /// An expression in the calculator grammar.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum Expression {
@@ -104,6 +145,15 @@ pub enum Expression {
     Equality {
         /// The left-hand side expression.
         left: Box<Expression>,
+        /// The right-hand side expression.
+        right: Box<Expression>,
+    },
+    /// Value comparison expression (e.g., `1 < 2`, `compare 1 and 2`).
+    Comparison {
+        /// The left-hand side expression.
+        left: Box<Expression>,
+        /// The comparison operator.
+        op: ComparisonOp,
         /// The right-hand side expression.
         right: Box<Expression>,
     },
@@ -236,6 +286,16 @@ impl Expression {
         }
     }
 
+    /// Creates a comparison expression (e.g., `1 < 2`).
+    #[must_use]
+    pub fn comparison(left: Expression, op: ComparisonOp, right: Expression) -> Self {
+        Self::Comparison {
+            left: Box::new(left),
+            op,
+            right: Box::new(right),
+        }
+    }
+
     /// Converts the expression to links notation format.
     ///
     /// Links notation wraps all compound expressions in parentheses:
@@ -331,6 +391,15 @@ impl Expression {
                 let right_str = right.to_lino_internal(None);
                 format!("({left_str} = {right_str})")
             }
+            Self::Comparison { left, op, right } => {
+                let left_str = left.to_lino_internal(None);
+                let right_str = right.to_lino_internal(None);
+                if *op == ComparisonOp::Compare {
+                    format!("(compare {left_str} {right_str})")
+                } else {
+                    format!("({left_str} {op} {right_str})")
+                }
+            }
         }
     }
 
@@ -411,6 +480,10 @@ impl Expression {
                     arg.collect_alternatives(alternatives);
                 }
             }
+            Self::Equality { left, right } | Self::Comparison { left, right, .. } => {
+                left.collect_alternatives(alternatives);
+                right.collect_alternatives(alternatives);
+            }
             _ => {}
         }
     }
@@ -470,7 +543,10 @@ impl Expression {
     fn needs_parens_for_unary(&self) -> bool {
         matches!(
             self,
-            Self::Binary { .. } | Self::AtTime { .. } | Self::UnitConversion { .. }
+            Self::Binary { .. }
+                | Self::AtTime { .. }
+                | Self::UnitConversion { .. }
+                | Self::Comparison { .. }
         )
     }
 
@@ -519,7 +595,7 @@ impl Expression {
                 base.contains_live_time() || exponent.contains_live_time()
             }
             Self::UnitConversion { value, .. } => value.contains_live_time(),
-            Self::Equality { left, right } => {
+            Self::Equality { left, right } | Self::Comparison { left, right, .. } => {
                 left.contains_live_time() || right.contains_live_time()
             }
             Self::IndefiniteIntegral { integrand, .. } => integrand.contains_live_time(),
@@ -551,7 +627,8 @@ impl Expression {
                 base: left,
                 exponent: right,
             }
-            | Self::Equality { left, right } => {
+            | Self::Equality { left, right }
+            | Self::Comparison { left, right, .. } => {
                 left.collect_currencies_inner(currencies);
                 right.collect_currencies_inner(currencies);
             }
@@ -589,7 +666,8 @@ impl Expression {
             | Self::Power {
                 base: left,
                 exponent: right,
-            } => 1 + left.depth().max(right.depth()),
+            }
+            | Self::Comparison { left, right, .. } => 1 + left.depth().max(right.depth()),
             Self::Negate(inner) | Self::Group(inner) | Self::Until(inner) => 1 + inner.depth(),
             Self::AtTime { value, time } => 1 + value.depth().max(time.depth()),
             Self::FunctionCall { args, .. } => {
@@ -738,6 +816,27 @@ impl Expression {
             Self::Equality { left, right } => {
                 format!("{} = {}", left.to_latex(), right.to_latex())
             }
+            Self::Comparison { left, op, right } => {
+                let latex_op = match op {
+                    ComparisonOp::Less => "<",
+                    ComparisonOp::Equal => "=",
+                    ComparisonOp::LessOrEqual => "\\le",
+                    ComparisonOp::Greater => ">",
+                    ComparisonOp::GreaterOrEqual => "\\ge",
+                    ComparisonOp::NotEqual => "\\ne",
+                    ComparisonOp::Compare => "\\operatorname{compare}",
+                };
+                if *op == ComparisonOp::Compare {
+                    format!(
+                        "{}\\left({}, {}\\right)",
+                        latex_op,
+                        left.to_latex(),
+                        right.to_latex()
+                    )
+                } else {
+                    format!("{} {} {}", left.to_latex(), latex_op, right.to_latex())
+                }
+            }
         }
     }
 }
@@ -779,6 +878,13 @@ impl fmt::Display for Expression {
                 write!(f, "{value} as {target_unit}")
             }
             Self::Equality { left, right } => write!(f, "{left} = {right}"),
+            Self::Comparison { left, op, right } => {
+                if *op == ComparisonOp::Compare {
+                    write!(f, "compare {left} and {right}")
+                } else {
+                    write!(f, "{left} {op} {right}")
+                }
+            }
         }
     }
 }

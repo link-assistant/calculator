@@ -82,7 +82,8 @@ impl LinearForm {
             | Expression::Power { .. }
             | Expression::IndefiniteIntegral { .. }
             | Expression::UnitConversion { .. }
-            | Expression::Equality { .. } => Err(Self::unsupported_equation()),
+            | Expression::Equality { .. }
+            | Expression::Comparison { .. } => Err(Self::unsupported_equation()),
         }
     }
 

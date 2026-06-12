@@ -23,6 +23,7 @@ describe('calculation step localization', () => {
     'steps.equals': '= {{value}}',
     'steps.evaluateGroup': 'Вычислить сгруппированное выражение:',
     'steps.finalResult': 'Итоговый результат: {{value}}',
+    'steps.compareOperator': 'Сравнить: {{left}} {{op}} {{right}}',
   });
 
   it('should translate raw arithmetic steps from issue 171', () => {
@@ -63,5 +64,11 @@ describe('calculation step localization', () => {
     };
 
     expect(localizeCalculationSteps(ruT, result)).toEqual(['Входное выражение: 2 + 3']);
+  });
+
+  it('should translate raw comparison operator steps', () => {
+    expect(translateCalculationStep(ruT, 'Compare: 1 < 2')).toBe('Сравнить: 1 < 2');
+    expect(translateCalculationStep(ruT, 'Compare: 1 == 1')).toBe('Сравнить: 1 == 1');
+    expect(translateCalculationStep(ruT, 'Compare: 1 vs 2')).toBe('Сравнить: 1 vs 2');
   });
 });

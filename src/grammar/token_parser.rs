@@ -1,4 +1,5 @@
 //! Token-based expression parser.
+mod comparison;
 mod units;
 
 use crate::error::CalculatorError;
@@ -28,10 +29,6 @@ impl<'a> TokenParser<'a> {
         }
     }
 
-    pub fn parse_expression(&mut self) -> Result<Expression, CalculatorError> {
-        self.parse_equality()
-    }
-
     pub fn parse_complete_expression(&mut self) -> Result<Expression, CalculatorError> {
         let expr = self.parse_expression()?;
 
@@ -44,18 +41,6 @@ impl<'a> TokenParser<'a> {
             "Unexpected trailing input '{}' at position {}",
             token.text, token.start
         )))
-    }
-
-    fn parse_equality(&mut self) -> Result<Expression, CalculatorError> {
-        let left = self.parse_additive()?;
-
-        if self.check(&TokenKind::Equals) {
-            self.advance(); // consume '='
-            let right = self.parse_additive()?;
-            return Ok(Expression::equality(left, right));
-        }
-
-        Ok(left)
     }
 
     fn parse_additive(&mut self) -> Result<Expression, CalculatorError> {

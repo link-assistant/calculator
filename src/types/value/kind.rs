@@ -18,6 +18,15 @@ pub enum ValueKind {
     },
     /// A boolean value.
     Boolean(bool),
+    /// A generic comparison result such as `1 < 2`.
+    Comparison {
+        /// Display string for the left value.
+        left: String,
+        /// Relation symbol (`<`, `>`, or `=`).
+        relation: String,
+        /// Display string for the right value.
+        right: String,
+    },
     /// A solved single-variable equation.
     EquationSolution {
         /// The solved variable name.

@@ -90,6 +90,7 @@ steps:
   solution 'الحل: {{value}}'
   checkEquality 'التحقق من المساواة:'
   compare 'مقارنة: {{left}} = {{right}}'
+  compareOperator 'مقارنة: {{left}} {{op}} {{right}}'
 issueReport:
   environment البيئة
   version الإصدار

@@ -150,8 +150,26 @@ pub enum TokenKind {
     Until,
     /// The "of" keyword for percent-of expressions (e.g., `8% of $50`).
     Of,
+    /// The "and" keyword for natural comparison forms.
+    And,
+    /// The "compare" keyword for natural comparison forms.
+    Compare,
+    /// The "vs" / "versus" keyword for natural comparison forms.
+    Vs,
     /// The equals sign for equality checks (e.g., `1 + 1 = 2`).
     Equals,
+    /// The explicit equality comparison operator (`==`).
+    DoubleEquals,
+    /// The not-equals comparison operator (`!=`).
+    NotEqual,
+    /// The less-than comparison operator (`<`).
+    Less,
+    /// The less-than-or-equal comparison operator (`<=`).
+    LessOrEqual,
+    /// The greater-than comparison operator (`>`).
+    Greater,
+    /// The greater-than-or-equal comparison operator (`>=`).
+    GreaterOrEqual,
     /// The exclamation mark for factorial postfix notation (e.g., `5!`).
     Bang,
     /// End of input.
@@ -292,11 +310,39 @@ impl Lexer {
             }
             '=' => {
                 self.advance();
-                Token::new(TokenKind::Equals, start, self.pos, "=".to_string())
+                if !self.is_at_end() && self.current() == '=' {
+                    self.advance();
+                    Token::new(TokenKind::DoubleEquals, start, self.pos, "==".to_string())
+                } else {
+                    Token::new(TokenKind::Equals, start, self.pos, "=".to_string())
+                }
             }
             '!' => {
                 self.advance();
-                Token::new(TokenKind::Bang, start, self.pos, "!".to_string())
+                if !self.is_at_end() && self.current() == '=' {
+                    self.advance();
+                    Token::new(TokenKind::NotEqual, start, self.pos, "!=".to_string())
+                } else {
+                    Token::new(TokenKind::Bang, start, self.pos, "!".to_string())
+                }
+            }
+            '<' => {
+                self.advance();
+                if !self.is_at_end() && self.current() == '=' {
+                    self.advance();
+                    Token::new(TokenKind::LessOrEqual, start, self.pos, "<=".to_string())
+                } else {
+                    Token::new(TokenKind::Less, start, self.pos, "<".to_string())
+                }
+            }
+            '>' => {
+                self.advance();
+                if !self.is_at_end() && self.current() == '=' {
+                    self.advance();
+                    Token::new(TokenKind::GreaterOrEqual, start, self.pos, ">=".to_string())
+                } else {
+                    Token::new(TokenKind::Greater, start, self.pos, ">".to_string())
+                }
             }
             _ if ch.is_ascii_digit() => {
                 // Prefer a full numeric date literal (e.g. 2026-01-22, 15.10.2025)
@@ -475,6 +521,9 @@ impl Lexer {
             "to" => TokenKind::To,
             "until" => TokenKind::Until,
             "of" => TokenKind::Of,
+            "and" => TokenKind::And,
+            "compare" => TokenKind::Compare,
+            "vs" | "versus" => TokenKind::Vs,
             // Russian: "от" means "of/from" in percent-of expressions (e.g. "38% от 100к").
             "от" => TokenKind::Of,
             // Russian: "в" means "in/into" (e.g. "1000 рублей в долларах")

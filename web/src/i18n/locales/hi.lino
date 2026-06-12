@@ -90,6 +90,7 @@ steps:
   solution 'हल: {{value}}'
   checkEquality 'समानता जाँचें:'
   compare 'तुलना करें: {{left}} = {{right}}'
+  compareOperator 'तुलना करें: {{left}} {{op}} {{right}}'
 issueReport:
   environment वातावरण
   version संस्करण

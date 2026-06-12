@@ -90,6 +90,7 @@ steps:
   solution '解：{{value}}'
   checkEquality 检查相等性：
   compare '比较：{{left}} = {{right}}'
+  compareOperator '比较：{{left}} {{op}} {{right}}'
 issueReport:
   environment 环境
   version 版本
