@@ -277,11 +277,30 @@ impl DateTimeGrammar {
         None
     }
 
+    /// Localizes a parsed datetime to the user's local timezone, when one is known.
+    ///
+    /// A bare `now` becomes the current local time; bare (timezone-less) times are
+    /// re-anchored to the local offset. Inputs with an explicit timezone, and the
+    /// explicit `now utc` / `now <tz>` forms, are returned unchanged.
+    fn localize(dt: DateTime, raw: &str, offset: Option<i32>) -> DateTime {
+        let Some(offset) = offset else {
+            return dt;
+        };
+        if raw.trim().eq_ignore_ascii_case("now") {
+            return DateTime::now_local(offset);
+        }
+        dt.reinterpret_naive_as_local(offset)
+    }
+
     /// Tries to parse a datetime subtraction expression like "(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)".
+    ///
+    /// `local_offset` is the user's timezone offset in seconds east of UTC, when
+    /// known; it makes bare `now` and timezone-less times resolve to local time.
     #[must_use]
     pub fn try_parse_datetime_subtraction(
         &self,
         input: &str,
+        local_offset: Option<i32>,
     ) -> Option<(Value, Vec<String>, String)> {
         // Look for pattern: (datetime) - (datetime)
         let input = input.trim();
@@ -292,6 +311,8 @@ impl DateTimeGrammar {
 
         if let Some((left, right)) = input.split_once(" - ") {
             if let (Ok(dt1), Ok(dt2)) = (self.parse(left.trim()), self.parse(right.trim())) {
+                let dt1 = Self::localize(dt1, left.trim(), local_offset);
+                let dt2 = Self::localize(dt2, right.trim(), local_offset);
                 return Some(Self::datetime_difference_result(
                     &dt1,
                     &dt2,
@@ -352,6 +373,9 @@ impl DateTimeGrammar {
             return None;
         };
 
+        let dt1 = Self::localize(dt1, first_dt_str.trim(), local_offset);
+        let dt2 = Self::localize(dt2, second_dt_str.trim(), local_offset);
+
         Some(Self::datetime_difference_result(
             &dt1,
             &dt2,
@@ -366,10 +390,10 @@ impl DateTimeGrammar {
         first_dt_str: &str,
         second_dt_str: &str,
     ) -> (Value, Vec<String>, String) {
-        // Calculate the difference
-        let diff = dt1.subtract(dt2);
-        #[allow(clippy::cast_possible_wrap)]
-        let seconds = diff.as_secs() as i64;
+        // Calculate the signed difference (dt1 - dt2). Using signed seconds keeps
+        // the result correct when dt1 is earlier than dt2 (a negative duration),
+        // instead of collapsing to zero.
+        let seconds = dt1.signed_subtract_seconds(dt2);
 
         let value = Value::duration(seconds);
 

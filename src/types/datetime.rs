@@ -127,6 +127,52 @@ impl DateTime {
         }
     }
 
+    /// Creates a `DateTime` for the current instant, displayed in the user's
+    /// local timezone given by `offset_seconds` (seconds east of UTC).
+    ///
+    /// The internal instant is still the true current UTC time; only the display
+    /// offset and label differ from [`Self::now`]. Used when the calculator is
+    /// told the user's local timezone so that `now` reflects their wall clock
+    /// instead of UTC.
+    #[must_use]
+    pub fn now_local(offset_seconds: i32) -> Self {
+        Self {
+            inner: Utc::now(),
+            offset_seconds: Some(offset_seconds),
+            has_time: true,
+            has_date: true,
+            label: Some("current local time".to_string()),
+            tz_abbrev: None,
+        }
+    }
+
+    /// Re-anchors a timezone-less ("naive") time or datetime to a local timezone.
+    ///
+    /// Bare times like `12:30` are parsed with their wall-clock reading stored as
+    /// if it were UTC. When the user's local timezone is known, the same
+    /// wall-clock reading should instead be interpreted as local time. This shifts
+    /// the internal UTC instant back by `offset_seconds` so the displayed wall
+    /// clock is preserved while the underlying instant becomes correct for the
+    /// local timezone.
+    ///
+    /// Values that already carry an explicit timezone (e.g. `12:30 UTC`) or that
+    /// have no time component (plain dates) are returned unchanged.
+    #[must_use]
+    pub fn reinterpret_naive_as_local(&self, offset_seconds: i32) -> Self {
+        if self.offset_seconds.is_some() || !self.has_time {
+            return self.clone();
+        }
+        let adjusted = self.inner - Duration::seconds(i64::from(offset_seconds));
+        Self {
+            inner: adjusted,
+            offset_seconds: Some(offset_seconds),
+            has_time: self.has_time,
+            has_date: self.has_date,
+            label: self.label.clone(),
+            tz_abbrev: None,
+        }
+    }
+
     /// Returns whether this datetime has a label (i.e., represents a named live time expression).
     #[must_use]
     pub fn is_live_time(&self) -> bool {

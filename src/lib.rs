@@ -466,6 +466,28 @@ impl Calculator {
         self.execute(input)
     }
 
+    /// Sets the user's local timezone offset, in minutes east of UTC.
+    ///
+    /// From the browser, pass `-new Date().getTimezoneOffset()` (note the sign:
+    /// `getTimezoneOffset()` returns minutes *behind* UTC, so it must be negated).
+    /// For example, UTC+5:30 (India) is `330`, and UTC-5 (US Eastern) is `-300`.
+    ///
+    /// Once set, bare times such as `12:30` and the `now` keyword are interpreted
+    /// in this local timezone instead of UTC. Inputs with an explicit timezone
+    /// (e.g. `12:30 UTC`, `now UTC`) are always honored regardless of this setting.
+    #[wasm_bindgen]
+    pub fn set_timezone_offset(&mut self, offset_minutes: i32) {
+        self.parser
+            .set_local_offset_seconds(Some(offset_minutes * 60));
+    }
+
+    /// Clears any previously configured local timezone offset, restoring the
+    /// default UTC interpretation for `now` and bare times.
+    #[wasm_bindgen]
+    pub fn clear_timezone_offset(&mut self) {
+        self.parser.set_local_offset_seconds(None);
+    }
+
     /// Returns the version of the calculator.
     #[wasm_bindgen]
     #[must_use]

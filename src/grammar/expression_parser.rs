@@ -13,6 +13,11 @@ use crate::types::{
 };
 use std::cmp::Ordering;
 
+// Local-timezone handling for `now` and bare times lives in a child module so it
+// can access `ExpressionParser`'s private fields while keeping this file small.
+#[path = "expression_parser_timezone.rs"]
+mod timezone;
+
 /// Evaluates a power expression, using exact rational arithmetic when possible.
 ///
 /// When both base and exponent are rational and the exponent is an integer
@@ -72,6 +77,12 @@ pub struct ExpressionParser {
     currency_db: CurrencyDatabase,
     /// Current date context for historical currency conversions (set by AtTime expressions).
     current_date_context: Option<DateTime>,
+    /// The user's local timezone offset in seconds east of UTC, when known.
+    ///
+    /// When set, `now` and bare (timezone-less) times such as `12:30` are
+    /// interpreted in this local timezone instead of UTC. Explicit timezones
+    /// (e.g. `12:30 UTC`) are always honored regardless of this setting.
+    local_offset_seconds: Option<i32>,
 }
 
 impl ExpressionParser {
@@ -83,6 +94,7 @@ impl ExpressionParser {
             datetime_grammar: DateTimeGrammar::new(),
             currency_db: CurrencyDatabase::new(),
             current_date_context: None,
+            local_offset_seconds: None,
         }
     }
 
@@ -110,7 +122,10 @@ impl ExpressionParser {
         self.currency_db.clear_last_used_rate();
 
         // Try datetime subtraction pattern first: "(datetime) - (datetime)"
-        if let Some(result) = self.datetime_grammar.try_parse_datetime_subtraction(input) {
+        if let Some(result) = self
+            .datetime_grammar
+            .try_parse_datetime_subtraction(input, self.local_offset_seconds)
+        {
             return Ok(result);
         }
 
@@ -131,7 +146,13 @@ impl ExpressionParser {
         let mut lexer = Lexer::new(input);
         let tokens = lexer.tokenize()?;
         let mut parser = TokenParser::new(&tokens, &self.number_grammar, input);
-        parser.parse_complete_expression()
+        let mut expr = parser.parse_complete_expression()?;
+        // Re-anchor timezone-less datetime literals to the user's local timezone
+        // when it is known, so bare times like `12:30` mean local time.
+        if let Some(offset) = self.local_offset_seconds {
+            expr.apply_local_offset(offset);
+        }
+        Ok(expr)
     }
 
     /// Evaluates an expression.
@@ -214,14 +235,10 @@ impl ExpressionParser {
                 Ok(Value::rational_with_unit(rational, unit.clone()))
             }
             Expression::DateTime(dt) => Ok(Value::datetime(dt.clone())),
-            Expression::Now => Ok(Value::datetime(DateTime::now_with_label(
-                "current UTC time",
-                Some(0),
-                Some("UTC".to_string()),
-            ))),
+            Expression::Now => Ok(Value::datetime(self.current_now())),
             Expression::Until(target) => {
                 let target_val = self.evaluate_expr(target)?;
-                let now = DateTime::now();
+                let now = self.current_now();
                 match &target_val.kind {
                     ValueKind::DateTime(target_dt) => {
                         let seconds = target_dt.signed_subtract_seconds(&now);
@@ -358,7 +375,7 @@ impl ExpressionParser {
                 }
                 let dt_val = Value::datetime(dt.clone());
                 // For standalone datetime, show time from now
-                let now = DateTime::now();
+                let now = self.current_now();
                 let seconds = dt.signed_subtract_seconds(&now);
                 if seconds > 0 {
                     steps.push(format!(
@@ -374,14 +391,13 @@ impl ExpressionParser {
                 Ok(dt_val)
             }
             Expression::Now => {
-                let now =
-                    DateTime::now_with_label("current UTC time", Some(0), Some("UTC".to_string()));
+                let now = self.current_now();
                 steps.push(format!("Current time: {now}"));
                 Ok(Value::datetime(now))
             }
             Expression::Until(target) => {
                 let target_val = self.evaluate_expr_with_steps(target, steps)?;
-                let now = DateTime::now();
+                let now = self.current_now();
                 match &target_val.kind {
                     ValueKind::DateTime(target_dt) => {
                         let seconds = target_dt.signed_subtract_seconds(&now);
@@ -889,14 +905,10 @@ impl ExpressionParser {
                 Ok(Value::rational_with_unit(rational, unit.clone()))
             }
             Expression::DateTime(dt) => Ok(Value::datetime(dt.clone())),
-            Expression::Now => Ok(Value::datetime(DateTime::now_with_label(
-                "current UTC time",
-                Some(0),
-                Some("UTC".to_string()),
-            ))),
+            Expression::Now => Ok(Value::datetime(self.current_now())),
             Expression::Until(target) => {
                 let target_val = self.evaluate_expr_with_var(target, var_name, var_value)?;
-                let now = DateTime::now();
+                let now = self.current_now();
                 match &target_val.kind {
                     ValueKind::DateTime(target_dt) => {
                         let seconds = target_dt.signed_subtract_seconds(&now);

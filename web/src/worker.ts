@@ -24,6 +24,8 @@ interface CalculatorInstance {
   update_crypto_rates_from_api(base: string, date: string, rates_json: string): number;
   update_cbr_rates_from_api(date: string, rates_json: string): number;
   load_rates_from_consolidated_lino(content: string): number;
+  set_timezone_offset(offset_minutes: number): void;
+  clear_timezone_offset(): void;
 }
 
 interface CalculatorStatic {
@@ -74,6 +76,17 @@ async function initWasm() {
     await init();
     const CalcClass = Calculator as unknown as CalculatorStatic;
     calculator = new CalcClass();
+
+    // Issue #185: interpret `now` and timezone-less times in the user's local
+    // timezone by default, so `now-12:30` matches the user's wall clock.
+    // `Date.prototype.getTimezoneOffset()` returns minutes *behind* UTC (e.g.
+    // -330 for UTC+5:30), so negate it to get minutes *east* of UTC.
+    try {
+      calculator.set_timezone_offset(-new Date().getTimezoneOffset());
+    } catch (tzError) {
+      console.warn('Failed to set local timezone offset:', tzError);
+    }
+
     const version = CalcClass.version();
     self.postMessage({ type: 'ready', data: { version } });
 

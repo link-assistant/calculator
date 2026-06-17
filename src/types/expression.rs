@@ -308,6 +308,46 @@ impl Expression {
         self.to_lino_internal(None)
     }
 
+    /// Recursively re-anchors timezone-less datetime literals in this expression
+    /// to the user's local timezone, given by `offset_seconds` (seconds east of UTC).
+    ///
+    /// See [`DateTime::reinterpret_naive_as_local`]. `now` is resolved at
+    /// evaluation time, so it is intentionally left untouched here.
+    pub fn apply_local_offset(&mut self, offset_seconds: i32) {
+        match self {
+            Self::DateTime(dt) => {
+                *dt = dt.reinterpret_naive_as_local(offset_seconds);
+            }
+            Self::Until(inner) | Self::Negate(inner) | Self::Group(inner) => {
+                inner.apply_local_offset(offset_seconds);
+            }
+            Self::Binary { left, right, .. }
+            | Self::Power {
+                base: left,
+                exponent: right,
+            }
+            | Self::Equality { left, right }
+            | Self::Comparison { left, right, .. } => {
+                left.apply_local_offset(offset_seconds);
+                right.apply_local_offset(offset_seconds);
+            }
+            Self::AtTime { value, time } => {
+                value.apply_local_offset(offset_seconds);
+                time.apply_local_offset(offset_seconds);
+            }
+            Self::FunctionCall { args, .. } => {
+                for arg in args {
+                    arg.apply_local_offset(offset_seconds);
+                }
+            }
+            Self::IndefiniteIntegral { integrand, .. } => {
+                integrand.apply_local_offset(offset_seconds);
+            }
+            Self::UnitConversion { value, .. } => value.apply_local_offset(offset_seconds),
+            Self::Number { .. } | Self::Now | Self::Variable(_) => {}
+        }
+    }
+
     /// Internal helper for to_lino.
     /// `parent_op` is the parent operator's precedence (if any) to determine
     /// if we need parentheses for this subexpression.
