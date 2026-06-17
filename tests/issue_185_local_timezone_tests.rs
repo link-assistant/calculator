@@ -46,7 +46,11 @@ fn explicit_utc_is_still_honored() {
     calc.set_timezone_offset(IST_MINUTES);
 
     let result = calc.calculate_internal("12:30 UTC");
-    assert!(result.success, "12:30 UTC should succeed: {:?}", result.error);
+    assert!(
+        result.success,
+        "12:30 UTC should succeed: {:?}",
+        result.error
+    );
     assert!(
         result.result.contains("UTC"),
         "explicit UTC must remain UTC regardless of the local offset: {}",
@@ -94,7 +98,11 @@ fn time_difference_uses_wall_clock_in_local_timezone() {
     // result is the wall-clock difference: 14:44 - 12:30 = 2h 14m.
     // Spaced form exercises the dedicated datetime-subtraction grammar path.
     let result = calc.calculate_internal("(14:44) - (12:30)");
-    assert!(result.success, "subtraction should succeed: {:?}", result.error);
+    assert!(
+        result.success,
+        "subtraction should succeed: {:?}",
+        result.error
+    );
     assert!(
         result.result.contains("2 hours") && result.result.contains("14 minutes"),
         "expected 2 hours, 14 minutes, got: {}",
@@ -109,7 +117,11 @@ fn unspaced_time_difference_uses_wall_clock() {
 
     // Unspaced form goes through the general expression evaluator (Binary op).
     let result = calc.calculate_internal("14:44-12:30");
-    assert!(result.success, "subtraction should succeed: {:?}", result.error);
+    assert!(
+        result.success,
+        "subtraction should succeed: {:?}",
+        result.error
+    );
     assert!(
         result.result.contains("2 hours") && result.result.contains("14 minutes"),
         "expected 2 hours, 14 minutes, got: {}",
@@ -123,7 +135,11 @@ fn negative_time_difference_is_not_collapsed_to_zero() {
     // an earlier-minus-later subtraction must yield a negative duration.
     let mut calc = Calculator::new();
     let result = calc.calculate_internal("12:00-14:00");
-    assert!(result.success, "subtraction should succeed: {:?}", result.error);
+    assert!(
+        result.success,
+        "subtraction should succeed: {:?}",
+        result.error
+    );
     assert!(
         !result.result.contains("0 seconds"),
         "negative difference must not collapse to 0 seconds: {}",
@@ -144,7 +160,11 @@ fn issue_185_now_minus_time_succeeds() {
     calc.set_timezone_offset(IST_MINUTES);
 
     let result = calc.calculate_internal("now-12:30");
-    assert!(result.success, "now-12:30 should succeed: {:?}", result.error);
+    assert!(
+        result.success,
+        "now-12:30 should succeed: {:?}",
+        result.error
+    );
     assert!(
         result.result.contains("second")
             || result.result.contains("minute")

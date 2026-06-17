@@ -111,9 +111,7 @@ impl ExpressionParser {
     fn current_now(&self) -> DateTime {
         match self.local_offset_seconds {
             Some(offset) => DateTime::now_local(offset),
-            None => {
-                DateTime::now_with_label("current UTC time", Some(0), Some("UTC".to_string()))
-            }
+            None => DateTime::now_with_label("current UTC time", Some(0), Some("UTC".to_string())),
         }
     }
 
