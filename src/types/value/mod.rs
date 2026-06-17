@@ -402,8 +402,9 @@ impl Value {
                 self.subtract_rationals(a_rat, b.clone(), other, currency_db, date)
             }
             (ValueKind::DateTime(dt1), ValueKind::DateTime(dt2)) => {
-                let diff = dt1.subtract(dt2);
-                Ok(Value::duration(diff.as_secs() as i64))
+                // Signed difference (dt1 - dt2): a negative result (dt1 earlier
+                // than dt2) is preserved instead of collapsing to zero.
+                Ok(Value::duration(dt1.signed_subtract_seconds(dt2)))
             }
             (ValueKind::DateTime(dt), ValueKind::Duration { seconds }) => {
                 Ok(Value::datetime(dt.add_duration(-seconds)))
