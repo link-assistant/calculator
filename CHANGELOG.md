@@ -55,6 +55,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.20.1] - 2026-06-20
+
+### Fixed
+- Show the grouped-denominator interpretation for chained division and multiplication such as `253 / 16 * 3`.
+
+### Fixed
+- Fixed duration division so compatible time units produce a unitless ratio, such as `8 hours / 30 minutes = 16`.
+
 ## [0.20.0] - 2026-06-17
 
 ### Fixed
