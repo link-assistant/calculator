@@ -450,7 +450,9 @@ impl Expression {
     ///
     /// Ambiguity arises from:
     /// - Binary operations where precedence changes meaning (e.g., `2 + 3 * 4`)
-    /// - Function calls that could also be read as other structures
+    /// - Division/product chains where users may intend a grouped denominator
+    ///   (e.g., `253 / 16 * 3` vs `253 / (16 * 3)`)
+    /// - Function call arguments that contain their own alternatives
     #[must_use]
     pub fn alternative_lino(&self) -> Option<Vec<String>> {
         let default_lino = self.to_lino();
@@ -495,18 +497,9 @@ impl Expression {
                     alternatives.push(alt);
                 }
             }
-            // For expressions with mixed precedence, show the explicit grouping
-            Self::Binary { left, op, right } => {
-                // Check if either child has a different-precedence binary operation
-                // e.g., in `2 + 3 * 4`, show both `(2 + (3 * 4))` and `((2 + 3) * 4)`
-                let has_different_precedence_child =
-                    Self::has_different_precedence_child(left, *op)
-                        || Self::has_different_precedence_child(right, *op);
-
-                if has_different_precedence_child {
-                    // Alternative: re-group with opposite precedence assumption
-                    // left-to-right grouping
-                    let alt = self.to_lino_left_to_right();
+            // For expressions with alternative groupings, show the explicit grouping
+            Self::Binary { left, right, .. } => {
+                if let Some(alt) = self.to_lino_alternative_grouping() {
                     alternatives.push(alt);
                 }
 
@@ -528,34 +521,42 @@ impl Expression {
         }
     }
 
-    /// Checks if a child expression has a binary op with different precedence.
-    fn has_different_precedence_child(child: &Expression, parent_op: BinaryOp) -> bool {
-        if let Self::Binary { op, .. } = child {
-            return op.precedence() != parent_op.precedence();
-        }
-        false
+    fn can_regroup_right_child(parent_op: BinaryOp, child_op: BinaryOp) -> bool {
+        child_op.precedence() != parent_op.precedence()
+            || matches!(
+                (parent_op, child_op),
+                (BinaryOp::Divide, BinaryOp::Multiply)
+            )
     }
 
-    /// Generates a left-to-right grouped lino notation (alternative grouping).
-    fn to_lino_left_to_right(&self) -> String {
+    fn can_regroup_left_child(child_op: BinaryOp, parent_op: BinaryOp) -> bool {
+        child_op.precedence() != parent_op.precedence()
+            || matches!(
+                (child_op, parent_op),
+                (BinaryOp::Divide, BinaryOp::Multiply)
+            )
+    }
+
+    /// Generates one alternative grouped lino notation, if this binary node has one.
+    fn to_lino_alternative_grouping(&self) -> Option<String> {
         match self {
             Self::Binary { left, op, right } => {
                 // In left-to-right: ((left op1 right_left) op2 right_right)
                 // or: (left_left op1 (left_right op2 right))
-                // depending on where the different-precedence child is
+                // depending on where the regroupable child is.
                 if let Self::Binary {
                     left: rl,
                     op: rop,
                     right: rr,
                 } = right.as_ref()
                 {
-                    if rop.precedence() != op.precedence() {
+                    if Self::can_regroup_right_child(*op, *rop) {
                         // Default: left op (rl rop rr) => already `(left op (rl rop rr))`
                         // Alternative: (left op rl) rop rr => `((left op rl) rop rr)`
                         let new_left =
                             Self::binary(left.as_ref().clone(), *op, rl.as_ref().clone());
                         let new_expr = Self::binary(new_left, *rop, rr.as_ref().clone());
-                        return new_expr.to_lino();
+                        return Some(new_expr.to_lino());
                     }
                 }
                 if let Self::Binary {
@@ -564,18 +565,18 @@ impl Expression {
                     right: lr,
                 } = left.as_ref()
                 {
-                    if lop.precedence() != op.precedence() {
+                    if Self::can_regroup_left_child(*lop, *op) {
                         // Default: (ll lop lr) op right => already `((ll lop lr) op right)`
                         // Alternative: ll lop (lr op right) => `(ll lop (lr op right))`
                         let new_right =
                             Self::binary(lr.as_ref().clone(), *op, right.as_ref().clone());
                         let new_expr = Self::binary(ll.as_ref().clone(), *lop, new_right);
-                        return new_expr.to_lino();
+                        return Some(new_expr.to_lino());
                     }
                 }
-                self.to_lino()
+                None
             }
-            _ => self.to_lino(),
+            _ => None,
         }
     }
 
