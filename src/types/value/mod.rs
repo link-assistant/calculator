@@ -2,14 +2,14 @@
 
 mod duration;
 mod kind;
-use duration::format_duration;
+use duration::{add_calendar_months_or_duration, divide_duration_units, format_duration};
 pub use kind::ValueKind;
 
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
 use crate::error::CalculatorError;
-use crate::types::{CurrencyDatabase, DateTime, Decimal, DurationUnit, Rational, Unit};
+use crate::types::{CurrencyDatabase, DateTime, Decimal, Rational, Unit};
 
 /// A typed value with an optional unit.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -599,6 +599,9 @@ impl Value {
                 if b.is_zero() {
                     return Err(CalculatorError::DivisionByZero);
                 }
+                if let Some(result) = divide_duration_units(self, other)? {
+                    return Ok(result);
+                }
                 let result = a.clone() / b.clone();
 
                 // Handle unit division
@@ -616,6 +619,9 @@ impl Value {
             (ValueKind::Number(a), ValueKind::Number(b)) => {
                 if b.is_zero() {
                     return Err(CalculatorError::DivisionByZero);
+                }
+                if let Some(result) = divide_duration_units(self, other)? {
+                    return Ok(result);
                 }
                 let result = a.checked_div(b).ok_or(CalculatorError::Overflow)?;
 
@@ -635,6 +641,9 @@ impl Value {
                 if b.is_zero() {
                     return Err(CalculatorError::DivisionByZero);
                 }
+                if let Some(result) = divide_duration_units(self, other)? {
+                    return Ok(result);
+                }
                 let b_rat = Rational::from_decimal(*b);
                 let result = a.clone() / b_rat;
 
@@ -651,6 +660,9 @@ impl Value {
             (ValueKind::Number(a), ValueKind::Rational(b)) => {
                 if b.is_zero() {
                     return Err(CalculatorError::DivisionByZero);
+                }
+                if let Some(result) = divide_duration_units(self, other)? {
+                    return Ok(result);
                 }
                 let a_rat = Rational::from_decimal(*a);
                 let result = a_rat / b.clone();
@@ -970,25 +982,6 @@ impl PartialEq for Value {
                 (a.to_f64() - b.to_f64()).abs() < 1e-10 && self.unit == other.unit
             }
             _ => self.kind == other.kind && self.unit == other.unit,
-        }
-    }
-}
-
-/// Applies a signed duration to a `DateTime`, using calendar arithmetic for
-/// months and years and second-based arithmetic for all other units.
-///
-/// `amount` is positive for addition and negative for subtraction.
-fn add_calendar_months_or_duration(dt: &DateTime, unit: DurationUnit, amount: f64) -> DateTime {
-    match unit {
-        DurationUnit::Months => dt.add_calendar_months(amount as i32),
-        DurationUnit::Years => dt.add_calendar_months((amount * 12.0) as i32),
-        other => {
-            let seconds = other.to_secs(amount.abs()) as i64;
-            if amount >= 0.0 {
-                dt.add_duration(seconds)
-            } else {
-                dt.add_duration(-seconds)
-            }
         }
     }
 }
