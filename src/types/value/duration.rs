@@ -72,6 +72,75 @@ pub(super) fn divide_duration_units(
     Ok(Some(Value::rational(left_seconds / right_seconds)))
 }
 
+/// Converts a raw duration in seconds into a numeric amount in `unit`.
+pub(super) fn duration_seconds_to_unit(seconds: i64, unit: DurationUnit) -> Rational {
+    Rational::from_integer(i128::from(seconds)) / duration_unit_seconds(unit)
+}
+
+/// Converts a raw duration in seconds into its numeric day count.
+pub(super) fn duration_seconds_to_days(seconds: i64) -> Rational {
+    duration_seconds_to_unit(seconds, DurationUnit::Days)
+}
+
+pub(super) fn divide_raw_duration(seconds: i64, divisor: &Value) -> Result<Value, CalculatorError> {
+    let divisor_amount = divisor.to_rational().ok_or_else(|| {
+        CalculatorError::InvalidOperation("duration division requires a numeric divisor".into())
+    })?;
+    if divisor_amount.is_zero() {
+        return Err(CalculatorError::DivisionByZero);
+    }
+
+    match &divisor.unit {
+        Unit::None => Ok(Value::rational(
+            duration_seconds_to_days(seconds) / divisor_amount,
+        )),
+        Unit::Duration(unit) => {
+            let divisor_seconds = divisor_amount * duration_unit_seconds(*unit);
+            if divisor_seconds.is_zero() {
+                return Err(CalculatorError::DivisionByZero);
+            }
+            Ok(Value::rational(
+                Rational::from_integer(i128::from(seconds)) / divisor_seconds,
+            ))
+        }
+        unit => Err(CalculatorError::InvalidOperation(format!(
+            "Cannot divide duration by {}",
+            unit.display_name()
+        ))),
+    }
+}
+
+pub(super) fn convert_raw_duration(
+    seconds: i64,
+    target_unit: &Unit,
+) -> Result<Value, CalculatorError> {
+    match target_unit {
+        Unit::None => Ok(Value::rational(duration_seconds_to_days(seconds))),
+        Unit::Duration(unit) => Ok(Value::rational_with_unit(
+            duration_seconds_to_unit(seconds, *unit),
+            Unit::Duration(*unit),
+        )),
+        _ => Err(CalculatorError::InvalidOperation(format!(
+            "Cannot convert duration to {}",
+            target_unit.display_name()
+        ))),
+    }
+}
+
+pub(super) fn apply_duration_unit(
+    value: &Value,
+    unit: DurationUnit,
+) -> Result<Value, CalculatorError> {
+    value
+        .to_rational()
+        .map(|amount| Value::rational_with_unit(amount, Unit::Duration(unit)))
+        .ok_or_else(|| {
+            CalculatorError::InvalidOperation(
+                "duration unit conversion requires a numeric value".into(),
+            )
+        })
+}
+
 /// Applies a signed duration to a `DateTime`, using calendar arithmetic for
 /// months and years and second-based arithmetic for all other units.
 ///
@@ -95,7 +164,7 @@ pub(super) fn add_calendar_months_or_duration(
     }
 }
 
-fn duration_unit_seconds(unit: DurationUnit) -> Rational {
+pub(super) fn duration_unit_seconds(unit: DurationUnit) -> Rational {
     match unit {
         DurationUnit::Milliseconds => Rational::new(1, 1000),
         DurationUnit::Seconds => Rational::one(),

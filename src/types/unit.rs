@@ -507,6 +507,15 @@ impl Unit {
             Self::Custom(name) => name.clone(),
         }
     }
+
+    /// Returns the display name for a unit conversion target.
+    #[must_use]
+    pub fn conversion_target_name(&self) -> String {
+        match self {
+            Self::None => "number".to_string(),
+            _ => self.display_name(),
+        }
+    }
 }
 
 impl fmt::Display for Unit {
