@@ -56,6 +56,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.20.2] - 2026-06-25
+
+### Fixed
+- Treat raw date-difference durations as day-count numbers when divided by scalars, and allow explicit conversion to duration units or unitless numbers.
+
 ## [0.20.1] - 2026-06-20
 
 ### Fixed
