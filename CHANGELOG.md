@@ -57,6 +57,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.20.3] - 2026-06-25
+
+### Fixed
+- Treat date-difference durations as numeric day/hour counts when dividing by currency expressions.
+
 ## [0.20.2] - 2026-06-25
 
 ### Fixed
