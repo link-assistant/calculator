@@ -2,7 +2,10 @@
 
 mod duration;
 mod kind;
-use duration::{add_calendar_months_or_duration, divide_duration_units, format_duration};
+use duration::{
+    add_calendar_months_or_duration, apply_duration_unit, convert_raw_duration,
+    divide_duration_units, divide_raw_duration, format_duration,
+};
 pub use kind::ValueKind;
 
 use serde::{Deserialize, Serialize};
@@ -677,19 +680,8 @@ impl Value {
 
                 Ok(Value::rational_with_unit(result, unit))
             }
-            (ValueKind::Duration { seconds }, ValueKind::Number(n)) => {
-                if n.is_zero() {
-                    return Err(CalculatorError::DivisionByZero);
-                }
-                let result_secs = (*seconds as f64) / n.to_f64();
-                Ok(Value::duration(result_secs as i64))
-            }
-            (ValueKind::Duration { seconds }, ValueKind::Rational(r)) => {
-                if r.is_zero() {
-                    return Err(CalculatorError::DivisionByZero);
-                }
-                let result_secs = (*seconds as f64) / r.to_f64();
-                Ok(Value::duration(result_secs as i64))
+            (ValueKind::Duration { seconds }, ValueKind::Number(_) | ValueKind::Rational(_)) => {
+                divide_raw_duration(*seconds, other)
             }
             _ => Err(CalculatorError::InvalidOperation(format!(
                 "Cannot divide {} by {}",
@@ -742,7 +734,19 @@ impl Value {
         currency_db: &mut CurrencyDatabase,
         date: Option<&DateTime>,
     ) -> Result<Self, CalculatorError> {
+        if let ValueKind::Duration { seconds } = &self.kind {
+            return convert_raw_duration(*seconds, target_unit);
+        }
+
         match (&self.unit, target_unit) {
+            (_, Unit::None) => {
+                let value = self.to_rational().ok_or_else(|| {
+                    CalculatorError::InvalidOperation(
+                        "number conversion requires a numeric value".into(),
+                    )
+                })?;
+                Ok(Value::rational(value))
+            }
             // Data size to data size conversion
             (Unit::DataSize(from), Unit::DataSize(to)) => {
                 let value_f64 = self.as_decimal().ok_or_else(|| {
@@ -815,6 +819,7 @@ impl Value {
                 })?;
                 Ok(Value::number_with_unit(value_f64, target_unit.clone()))
             }
+            (Unit::None, Unit::Duration(unit)) => apply_duration_unit(self, *unit),
             // DateTime timezone conversion (e.g., "6 PM GMT as MSK")
             (_, Unit::Timezone(tz_abbrev)) => {
                 if let ValueKind::DateTime(dt) = &self.kind {

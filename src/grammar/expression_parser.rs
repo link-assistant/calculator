@@ -549,7 +549,7 @@ impl ExpressionParser {
                 steps.push(format!(
                     "Convert: {} to {}",
                     val.to_display_string(),
-                    target_unit.display_name()
+                    target_unit.conversion_target_name()
                 ));
 
                 // Clear any previous rate tracking before the conversion

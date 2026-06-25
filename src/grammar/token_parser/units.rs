@@ -16,6 +16,10 @@ impl TokenParser<'_> {
         let unit_str = id.clone();
         self.advance();
 
+        if is_number_conversion_target(&unit_str) {
+            return Ok(Unit::None);
+        }
+
         if let Some(data_size) = DataSizeUnit::parse(&unit_str) {
             return Ok(Unit::DataSize(data_size));
         }
@@ -52,7 +56,8 @@ impl TokenParser<'_> {
              currencies (USD, EUR, GBP, TON, BTC, ETH, ...) and natural language \
              aliases (dollars, euros, bitcoin, toncoin, ...), \
              timezones (UTC, GMT, EST, MSK, JST, ...), \
-             time durations (ms, seconds, minutes, hours, days, weeks, months, years)."
+             time durations (ms, seconds, minutes, hours, days, weeks, months, years), \
+             and number/unitless."
         )))
     }
 
@@ -89,4 +94,24 @@ impl TokenParser<'_> {
         }
         expr
     }
+}
+
+fn is_number_conversion_target(unit_str: &str) -> bool {
+    matches!(
+        unit_str.to_lowercase().as_str(),
+        "number"
+            | "numbers"
+            | "unitless"
+            | "scalar"
+            | "число"
+            | "числа"
+            | "числом"
+            | "zahl"
+            | "nombre"
+            | "数字"
+            | "数"
+            | "संख्या"
+            | "رقم"
+            | "عدد"
+    )
 }

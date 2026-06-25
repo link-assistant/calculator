@@ -424,7 +424,8 @@ impl Expression {
             }
             Self::UnitConversion { value, target_unit } => {
                 let value_str = value.to_lino_internal(None);
-                format!("({value_str} as {target_unit})")
+                let target = target_unit.conversion_target_name();
+                format!("({value_str} as {target})")
             }
             Self::Equality { left, right } => {
                 let left_str = left.to_lino_internal(None);
@@ -852,7 +853,8 @@ impl Expression {
                 format!("\\int {} \\, d{}", integrand.to_latex(), variable)
             }
             Self::UnitConversion { value, target_unit } => {
-                format!("{} \\to \\text{{{target_unit}}}", value.to_latex())
+                let target = target_unit.conversion_target_name();
+                format!("{} \\to \\text{{{target}}}", value.to_latex())
             }
             Self::Equality { left, right } => {
                 format!("{} = {}", left.to_latex(), right.to_latex())
@@ -916,7 +918,8 @@ impl fmt::Display for Expression {
                 write!(f, "integrate {integrand} d{variable}")
             }
             Self::UnitConversion { value, target_unit } => {
-                write!(f, "{value} as {target_unit}")
+                let target = target_unit.conversion_target_name();
+                write!(f, "{value} as {target}")
             }
             Self::Equality { left, right } => write!(f, "{left} = {right}"),
             Self::Comparison { left, op, right } => {
