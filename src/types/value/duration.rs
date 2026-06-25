@@ -103,6 +103,9 @@ pub(super) fn divide_raw_duration(seconds: i64, divisor: &Value) -> Result<Value
                 Rational::from_integer(i128::from(seconds)) / divisor_seconds,
             ))
         }
+        Unit::Currency(_) => Ok(Value::rational(
+            duration_seconds_to_days(seconds) / divisor_amount,
+        )),
         unit => Err(CalculatorError::InvalidOperation(format!(
             "Cannot divide duration by {}",
             unit.display_name()

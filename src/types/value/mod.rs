@@ -608,13 +608,7 @@ impl Value {
                 let result = a.clone() / b.clone();
 
                 // Handle unit division
-                let unit = match (&self.unit, &other.unit) {
-                    (Unit::Currency(c1), Unit::Currency(c2)) if c1 == c2 => Unit::None,
-                    (unit, Unit::None) => unit.clone(),
-                    (Unit::None, _) => Unit::None,
-                    (u1, u2) if u1 == u2 => Unit::None,
-                    _ => self.unit.clone(),
-                };
+                let unit = Self::division_result_unit(&self.unit, &other.unit);
 
                 Ok(Value::rational_with_unit(result, unit))
             }
@@ -629,13 +623,7 @@ impl Value {
                 let result = a.checked_div(b).ok_or(CalculatorError::Overflow)?;
 
                 // Handle unit division
-                let unit = match (&self.unit, &other.unit) {
-                    (Unit::Currency(c1), Unit::Currency(c2)) if c1 == c2 => Unit::None,
-                    (unit, Unit::None) => unit.clone(),
-                    (Unit::None, _) => Unit::None,
-                    (u1, u2) if u1 == u2 => Unit::None,
-                    _ => self.unit.clone(),
-                };
+                let unit = Self::division_result_unit(&self.unit, &other.unit);
 
                 Ok(Value::number_with_unit(result, unit))
             }
@@ -650,13 +638,7 @@ impl Value {
                 let b_rat = Rational::from_decimal(*b);
                 let result = a.clone() / b_rat;
 
-                let unit = match (&self.unit, &other.unit) {
-                    (Unit::Currency(c1), Unit::Currency(c2)) if c1 == c2 => Unit::None,
-                    (unit, Unit::None) => unit.clone(),
-                    (Unit::None, _) => Unit::None,
-                    (u1, u2) if u1 == u2 => Unit::None,
-                    _ => self.unit.clone(),
-                };
+                let unit = Self::division_result_unit(&self.unit, &other.unit);
 
                 Ok(Value::rational_with_unit(result, unit))
             }
@@ -670,13 +652,7 @@ impl Value {
                 let a_rat = Rational::from_decimal(*a);
                 let result = a_rat / b.clone();
 
-                let unit = match (&self.unit, &other.unit) {
-                    (Unit::Currency(c1), Unit::Currency(c2)) if c1 == c2 => Unit::None,
-                    (unit, Unit::None) => unit.clone(),
-                    (Unit::None, _) => Unit::None,
-                    (u1, u2) if u1 == u2 => Unit::None,
-                    _ => self.unit.clone(),
-                };
+                let unit = Self::division_result_unit(&self.unit, &other.unit);
 
                 Ok(Value::rational_with_unit(result, unit))
             }
@@ -688,6 +664,17 @@ impl Value {
                 self.type_name(),
                 other.type_name()
             ))),
+        }
+    }
+
+    fn division_result_unit(left: &Unit, right: &Unit) -> Unit {
+        match (left, right) {
+            (Unit::Currency(c1), Unit::Currency(c2)) if c1 == c2 => Unit::None,
+            (Unit::Duration(_), Unit::Currency(_)) => Unit::None,
+            (unit, Unit::None) => unit.clone(),
+            (Unit::None, _) => Unit::None,
+            (u1, u2) if u1 == u2 => Unit::None,
+            _ => left.clone(),
         }
     }
 
