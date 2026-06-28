@@ -13,11 +13,17 @@ concurrency:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  GIT_CONFIG_COUNT: 1
+  GIT_CONFIG_KEY_0: init.defaultBranch
+  GIT_CONFIG_VALUE_0: main
 
 jobs:
   update-rates:
     name: Update Currency Rates from Central Banks
     runs-on: ubuntu-latest
+    concurrency:
+      group: main-writer-main
+      cancel-in-progress: false
     permissions:
       contents: write
     steps:
@@ -66,4 +72,4 @@ jobs:
           - Central Bank of Russia (CBR) via cbr.ru
 
           This is an automated daily update."
-          git push
+          node scripts/git-push-with-rebase.mjs --branch main
