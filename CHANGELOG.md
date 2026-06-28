@@ -58,6 +58,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.20.4] - 2026-06-28
+
+### Fixed
+- Hardened CI/CD jobs that generate commits on `main` against non-fast-forward push races by serializing main-writer jobs and retrying pushes after `git pull --rebase`.
+- Removed avoidable CI warning noise by pinning `wasm-pack`, using Cargo's native registry token environment variable, setting Git's default initial branch in Actions, and documenting the expected Vite bundle threshold.
+
 ## [0.20.3] - 2026-06-25
 
 ### Fixed
