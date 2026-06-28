@@ -26,6 +26,11 @@ import {
   getChangelogPath,
   parseRustRootConfig,
 } from './rust-paths.mjs';
+import {
+  resolveBranch,
+  syncWithRemote,
+  pushCurrentBranchWithRebase,
+} from './git-push-with-rebase.mjs';
 
 // Load use-m dynamically
 const { use } = eval(
@@ -245,6 +250,9 @@ async function main() {
     await $`git config user.name "github-actions[bot]"`;
     await $`git config user.email "github-actions[bot]@users.noreply.github.com"`;
 
+    const currentBranch = resolveBranch();
+    syncWithRemote({ branch: currentBranch });
+
     const current = getCurrentVersion();
     const newVersion = calculateNewVersion(current, bumpType);
 
@@ -311,8 +319,13 @@ async function main() {
     await $`git tag -f -a v${newVersion} -m ${tagMsg}`;
     console.log(`Created tag v${newVersion}`);
 
-    // Push changes and tag (force push tag to overwrite any orphan tag from a failed release)
-    await $`git push`;
+    // Push changes with retry. If a concurrent workflow advanced main, the helper
+    // rebases this release commit and retries instead of failing on a non-fast-forward.
+    pushCurrentBranchWithRebase({ branch: currentBranch });
+
+    // Recreate the tag after the branch push/rebase path so it always points at
+    // the final commit that actually landed on the release branch.
+    await $`git tag -f -a v${newVersion} -m ${tagMsg}`;
     await $`git push origin v${newVersion} --force`;
     console.log('Pushed changes and tags');
 

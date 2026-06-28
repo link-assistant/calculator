@@ -1,0 +1,28 @@
+
+> link-calculator-web@0.1.0 test
+> vitest run
+
+
+ RUN  v4.0.18 /tmp/gh-issue-solver-1782683573086/web
+
+ ✓ src/utils/reportIssue.test.ts (16 tests) 12ms
+ ✓ src/worker-rate-coordination.test.ts (22 tests) 13ms
+ ✓ src/hooks/useExpressionCache.test.ts (38 tests) 511ms
+ ✓ src/i18n/index.test.ts (24 tests) 239ms
+ ✓ src/examples/index.test.ts (13 tests) 11ms
+ ✓ src/hooks/useUrlExpression.test.ts (28 tests) 27ms
+ ✓ src/components/AutoResizeTextarea.test.tsx (17 tests) 755ms
+     ✓ should render a textarea element  306ms
+ ✓ src/components/UniversalKeyboard.test.tsx (12 tests) 1833ms
+     ✓ should render digit buttons  756ms
+ ✓ src/utils/localizeCalculation.test.ts (3 tests) 11ms
+ ✓ src/App.test.tsx (38 tests) 2783ms
+ ✓ src/hooks/useTheme.test.ts (8 tests) 52ms
+ ✓ src/worker-cbr-lino-loader.test.ts (2 tests) 9ms
+ ✓ src/hooks/useDelayedLoading.test.ts (6 tests) 28ms
+ ✓ src/utils/datetimeDisplay.test.ts (2 tests) 21ms
+
+ Test Files  14 passed (14)
+      Tests  229 passed (229)
+   Start at  22:08:47
+   Duration  5.73s (transform 1.98s, setup 1.75s, import 3.88s, tests 6.31s, environment 10.90s)

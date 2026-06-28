@@ -1,0 +1,1006 @@
+--- docs/case-studies/issue-195/template-ci-files/rust/.github/workflows/release.yml	2026-06-28 21:57:14.711785839 +0000
++++ .github/workflows/release.yml	2026-06-28 22:04:03.524922355 +0000
+@@ -4,8 +4,26 @@
+   push:
+     branches:
+       - main
++    paths:
++      - 'src/**'
++      - 'tests/**'
++      - 'data/**'
++      - 'scripts/**'
++      - 'web/**'
++      - 'Cargo.toml'
++      - 'Cargo.lock'
++      - '.github/workflows/**'
+   pull_request:
+     types: [opened, synchronize, reopened]
++    paths:
++      - 'src/**'
++      - 'tests/**'
++      - 'data/**'
++      - 'scripts/**'
++      - 'web/**'
++      - 'Cargo.toml'
++      - 'Cargo.lock'
++      - '.github/workflows/**'
+   workflow_dispatch:
+     inputs:
+       release_mode:
+@@ -34,17 +52,16 @@
+   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+ env:
++  GIT_CONFIG_COUNT: 1
++  GIT_CONFIG_KEY_0: init.defaultBranch
++  GIT_CONFIG_VALUE_0: main
+   CARGO_TERM_COLOR: always
+   RUSTFLAGS: -Dwarnings
+-  # Harden Cargo registry index and crate downloads against transient network
+-  # flakes on GitHub-hosted runners, including curl HTTP/2 framing failures.
+   CARGO_NET_RETRY: '10'
+   CARGO_HTTP_MULTIPLEXING: 'false'
+   # Support both CARGO_REGISTRY_TOKEN (cargo's native env var) and CARGO_TOKEN (for backwards compatibility)
+   CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN || secrets.CARGO_TOKEN }}
+-  CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+-  # Optional: set repository variable DOCKERHUB_IMAGE to namespace/image to publish Docker Hub releases.
+-  DOCKERHUB_IMAGE: ${{ vars.DOCKERHUB_IMAGE }}
++  CARGO_TOKEN: ${{ secrets.CARGO_TOKEN || secrets.CARGO_REGISTRY_TOKEN }}
+
+ jobs:
+   # === DETECT CHANGES - determines which jobs should run ===
+@@ -56,6 +73,7 @@
+     outputs:
+       rs-changed: ${{ steps.changes.outputs.rs-changed }}
+       toml-changed: ${{ steps.changes.outputs.toml-changed }}
++      mjs-changed: ${{ steps.changes.outputs.mjs-changed }}
+       docs-changed: ${{ steps.changes.outputs.docs-changed }}
+       workflow-changed: ${{ steps.changes.outputs.workflow-changed }}
+       any-code-changed: ${{ steps.changes.outputs.any-code-changed }}
+@@ -64,24 +82,25 @@
+         with:
+           fetch-depth: 0
+
+-      - name: Setup Rust
+-        uses: dtolnay/rust-toolchain@stable
+-
+-      - name: Install rust-script
+-        run: cargo install rust-script
++      - name: Setup Node.js
++        uses: actions/setup-node@v6
++        with:
++          node-version: '20.x'
+
+       - name: Detect changes
+         id: changes
+         env:
+           GITHUB_EVENT_NAME: ${{ github.event_name }}
+-        run: rust-script scripts/detect-code-changes.rs
++          GITHUB_BASE_SHA: ${{ github.event.pull_request.base.sha }}
++          GITHUB_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
++        run: node scripts/detect-code-changes.mjs
+
+   # === CHANGELOG CHECK - only runs on PRs with code changes ===
+   # Docs-only PRs (./docs folder, markdown files) don't require changelog fragments
+   changelog:
+     name: Changelog Fragment Check
+     runs-on: ubuntu-latest
+-    timeout-minutes: 10
++    timeout-minutes: 5
+     needs: [detect-changes]
+     if: github.event_name == 'pull_request' && needs.detect-changes.outputs.any-code-changed == 'true'
+     steps:
+@@ -89,16 +108,15 @@
+         with:
+           fetch-depth: 0
+
+-      - name: Setup Rust
+-        uses: dtolnay/rust-toolchain@stable
+-
+-      - name: Install rust-script
+-        run: cargo install rust-script
++      - name: Setup Node.js
++        uses: actions/setup-node@v6
++        with:
++          node-version: '20.x'
+
+       - name: Check for changelog fragments
+         env:
+           GITHUB_BASE_REF: ${{ github.base_ref }}
+-        run: rust-script scripts/check-changelog-fragment.rs
++        run: node scripts/check-changelog-fragment.mjs
+
+   # === VERSION CHECK - prevents manual version modification in PRs ===
+   # This ensures versions are only modified by the automated release pipeline
+@@ -112,49 +130,17 @@
+         with:
+           fetch-depth: 0
+
+-      - name: Setup Rust
+-        uses: dtolnay/rust-toolchain@stable
+-
+-      - name: Install rust-script
+-        run: cargo install rust-script
++      - name: Setup Node.js
++        uses: actions/setup-node@v6
++        with:
++          node-version: '20.x'
+
+       - name: Check for manual version changes
+         env:
+           GITHUB_EVENT_NAME: ${{ github.event_name }}
+           GITHUB_HEAD_REF: ${{ github.head_ref }}
+           GITHUB_BASE_REF: ${{ github.base_ref }}
+-        run: rust-script scripts/check-version-modification.rs
+-
+-  # === CARGO.LOCK GUARD ===
+-  # Binary crates must commit Cargo.lock so CI and release jobs resolve the same
+-  # dependency graph every run. This also prevents cache keys based on
+-  # hashFiles('**/Cargo.lock') from silently degrading to the empty hash.
+-  cargo-lock:
+-    name: Cargo.lock Guard
+-    runs-on: ubuntu-latest
+-    timeout-minutes: 5
+-    needs: [detect-changes]
+-    if: |
+-      always() && !cancelled() && (
+-        github.event_name == 'push' ||
+-        github.event_name == 'workflow_dispatch' ||
+-        needs.detect-changes.outputs.rs-changed == 'true' ||
+-        needs.detect-changes.outputs.toml-changed == 'true' ||
+-        needs.detect-changes.outputs.docs-changed == 'true' ||
+-        needs.detect-changes.outputs.workflow-changed == 'true' ||
+-        needs.detect-changes.outputs.any-code-changed == 'true'
+-      )
+-    steps:
+-      - uses: actions/checkout@v6
+-
+-      - name: Setup Rust
+-        uses: dtolnay/rust-toolchain@stable
+-
+-      - name: Install rust-script
+-        run: cargo install rust-script
+-
+-      - name: Check committed Cargo.lock for binary crates
+-        run: rust-script scripts/check-cargo-lock.rs
++        run: node scripts/check-version-modification.mjs
+
+   # === LINT AND FORMAT CHECK ===
+   # Lint runs independently of changelog check - it's a fast check that should always run
+@@ -162,21 +148,20 @@
+   lint:
+     name: Lint and Format Check
+     runs-on: ubuntu-latest
+-    timeout-minutes: 10
+-    needs: [detect-changes, cargo-lock]
++    timeout-minutes: 20
++    needs: [detect-changes]
+     # Note: always() is required because detect-changes is skipped on workflow_dispatch,
+     # and without always(), this job would also be skipped even though its condition includes workflow_dispatch.
+     # See: https://github.com/actions/runner/issues/491
+     if: |
+       always() && !cancelled() && (
+-        needs.cargo-lock.result == 'success' && (
+-          github.event_name == 'push' ||
+-          github.event_name == 'workflow_dispatch' ||
+-          needs.detect-changes.outputs.rs-changed == 'true' ||
+-          needs.detect-changes.outputs.toml-changed == 'true' ||
+-          needs.detect-changes.outputs.docs-changed == 'true' ||
+-          needs.detect-changes.outputs.workflow-changed == 'true'
+-        )
++        github.event_name == 'push' ||
++        github.event_name == 'workflow_dispatch' ||
++        needs.detect-changes.outputs.rs-changed == 'true' ||
++        needs.detect-changes.outputs.toml-changed == 'true' ||
++        needs.detect-changes.outputs.mjs-changed == 'true' ||
++        needs.detect-changes.outputs.docs-changed == 'true' ||
++        needs.detect-changes.outputs.workflow-changed == 'true'
+       )
+     steps:
+       - uses: actions/checkout@v6
+@@ -186,8 +171,10 @@
+         with:
+           components: rustfmt, clippy
+
+-      - name: Install rust-script
+-        run: cargo install rust-script
++      - name: Setup Node.js
++        uses: actions/setup-node@v6
++        with:
++          node-version: '20.x'
+
+       - name: Cache cargo registry
+         uses: actions/cache@v5
+@@ -207,33 +194,24 @@
+         run: cargo clippy --all-targets --all-features
+
+       - name: Check file size limit
+-        run: rust-script scripts/check-file-size.rs
++        run: node scripts/check-file-size.mjs
++
++      - name: Run script tests
++        run: node --test scripts/*.test.mjs
+
+   # === TEST ===
+-  # Test runs independently of changelog check and only for code-affecting changes
++  # Test runs independently of changelog check
+   test:
+     name: Test (${{ matrix.os }})
+     runs-on: ${{ matrix.os }}
+-    timeout-minutes: 10
+-    needs: [detect-changes, cargo-lock]
+-    # Note: always() is required because detect-changes is skipped on workflow_dispatch,
+-    # and without always(), this job would also be skipped even though its condition includes workflow_dispatch.
+-    # See: https://github.com/actions/runner/issues/491
+-    if: |
+-      always() && !cancelled() && (
+-        needs.cargo-lock.result == 'success' && (
+-          github.event_name == 'push' ||
+-          github.event_name == 'workflow_dispatch' ||
+-          needs.detect-changes.outputs.any-code-changed == 'true' ||
+-          needs.detect-changes.outputs.rs-changed == 'true' ||
+-          needs.detect-changes.outputs.toml-changed == 'true' ||
+-          needs.detect-changes.outputs.workflow-changed == 'true'
+-        )
+-      )
++    timeout-minutes: 30
++    needs: [detect-changes, changelog]
++    # Run if: push event, OR changelog succeeded, OR changelog was skipped (docs-only PR)
++    if: always() && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || needs.changelog.result == 'success' || needs.changelog.result == 'skipped')
+     strategy:
+       fail-fast: false
+       matrix:
+-        os: [ubuntu-latest, macos-latest, windows-latest]
++        os: [ubuntu-latest]
+     steps:
+       - uses: actions/checkout@v6
+
+@@ -257,29 +235,19 @@
+       - name: Run doc tests
+         run: cargo test --doc --verbose
+
+-  # === CODE COVERAGE ===
+-  # Generate and upload code coverage using cargo-llvm-cov
+-  coverage:
+-    name: Code Coverage
++  # === BUILD ===
++  # Build package - only runs if lint and test pass
++  build:
++    name: Build Package
+     runs-on: ubuntu-latest
+-    timeout-minutes: 15
+-    needs: [detect-changes, cargo-lock]
+-    if: |
+-      always() && !cancelled() && (
+-        needs.cargo-lock.result == 'success' && (
+-          github.event_name == 'push' ||
+-          github.event_name == 'workflow_dispatch' ||
+-          needs.detect-changes.outputs.rs-changed == 'true' ||
+-          needs.detect-changes.outputs.toml-changed == 'true'
+-        )
+-      )
++    timeout-minutes: 20
++    needs: [lint, test]
++    if: always() && !cancelled() && needs.lint.result == 'success' && needs.test.result == 'success'
+     steps:
+       - uses: actions/checkout@v6
+
+       - name: Setup Rust
+         uses: dtolnay/rust-toolchain@stable
+-        with:
+-          components: llvm-tools-preview
+
+       - name: Cache cargo registry
+         uses: actions/cache@v5
+@@ -288,28 +256,22 @@
+             ~/.cargo/registry
+             ~/.cargo/git
+             target
+-          key: ${{ runner.os }}-cargo-coverage-${{ hashFiles('**/Cargo.lock') }}
++          key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}
+           restore-keys: |
+-            ${{ runner.os }}-cargo-coverage-
+-
+-      - name: Install cargo-llvm-cov
+-        uses: taiki-e/install-action@cargo-llvm-cov
++            ${{ runner.os }}-cargo-build-
+
+-      - name: Generate code coverage
+-        run: cargo llvm-cov --all-features --lcov --output-path lcov.info
++      - name: Build release
++        run: cargo build --release --verbose
+
+-      - name: Upload coverage to Codecov
+-        uses: codecov/codecov-action@v5
+-        with:
+-          files: lcov.info
+-          fail_ci_if_error: false
++      - name: Check package
++        run: cargo package --list --allow-dirty
+
+-  # === BUILD ===
+-  # Build package - only runs if lint and test pass
+-  build:
+-    name: Build Package
++  # === WASM BUILD ===
++  # Build WASM package for web deployment
++  wasm-build:
++    name: WASM Build
+     runs-on: ubuntu-latest
+-    timeout-minutes: 10
++    timeout-minutes: 20
+     needs: [lint, test]
+     if: always() && !cancelled() && needs.lint.result == 'success' && needs.test.result == 'success'
+     steps:
+@@ -318,28 +280,105 @@
+       - name: Setup Rust
+         uses: dtolnay/rust-toolchain@stable
+
+-      - name: Install rust-script
+-        run: cargo install rust-script
++      - name: Install wasm-pack
++        uses: ./.github/actions/install-wasm-pack
+
+-      - name: Cache cargo registry
+-        uses: actions/cache@v5
++      - name: Build WASM
++        run: wasm-pack build --target web
++
++  # === WEB BUILD ===
++  # Build web application with WASM package
++  web-build:
++    name: Web Build
++    runs-on: ubuntu-latest
++    timeout-minutes: 25
++    needs: [wasm-build]
++    if: always() && !cancelled() && needs.wasm-build.result == 'success'
++    steps:
++      - uses: actions/checkout@v6
++
++      - name: Setup Rust
++        uses: dtolnay/rust-toolchain@stable
++
++      - name: Install wasm-pack
++        uses: ./.github/actions/install-wasm-pack
++
++      - name: Build WASM package
++        run: wasm-pack build --target web --out-dir web/public/pkg
++
++      - name: Setup Node.js
++        uses: actions/setup-node@v6
+         with:
+-          path: |
+-            ~/.cargo/registry
+-            ~/.cargo/git
+-            target
+-          key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}
+-          restore-keys: |
+-            ${{ runner.os }}-cargo-build-
++          node-version: '20'
++          cache: 'npm'
++          cache-dependency-path: web/package-lock.json
+
+-      - name: Build release
+-        run: cargo build --release --verbose
++      - name: Install dependencies
++        working-directory: web
++        run: npm ci
+
+-      - name: Check package
+-        run: cargo package --list --allow-dirty
++      - name: Copy currency data files to web public directory
++        run: |
++          mkdir -p web/public/data/currency
++          cp data/currency/*.lino web/public/data/currency/
++          echo "Copied $(ls data/currency/*.lino | wc -l) .lino files to web/public/data/currency/"
++
++      - name: Type check
++        working-directory: web
++        run: npx tsc --noEmit
++
++      - name: Run web tests
++        working-directory: web
++        run: npm test
++
++      - name: Build
++        working-directory: web
++        run: npm run build
++
++      - name: Upload web build artifact
++        uses: actions/upload-artifact@v7
++        with:
++          name: web-dist
++          path: web/dist
++          retention-days: 1
++
++  # === DEPLOY TO GITHUB PAGES ===
++  # Deploy web application to GitHub Pages (only on push to main)
++  deploy-pages:
++    name: Deploy to GitHub Pages
++    runs-on: ubuntu-latest
++    timeout-minutes: 10
++    needs: [web-build]
++    if: |
++      always() && !cancelled() &&
++      github.event_name == 'push' &&
++      github.ref == 'refs/heads/main' &&
++      needs.web-build.result == 'success'
++    permissions:
++      contents: read
++      pages: write
++      id-token: write
++    environment:
++      name: github-pages
++      url: ${{ steps.deployment.outputs.page_url }}
++    steps:
++      - name: Download web build artifact
++        uses: actions/download-artifact@v7
++        with:
++          name: web-dist
++          path: web/dist
++
++      - name: Setup Pages
++        uses: actions/configure-pages@v6
++
++      - name: Upload artifact
++        uses: actions/upload-pages-artifact@v5
++        with:
++          path: web/dist
+
+-      - name: Check crate package size
+-        run: rust-script scripts/check-crate-size.rs
++      - name: Deploy to GitHub Pages
++        id: deployment
++        uses: actions/deploy-pages@v5
+
+   # === AUTO RELEASE ===
+   # Automatic release on push to main using changelog fragments
+@@ -355,11 +394,14 @@
+       needs.build.result == 'success'
+     runs-on: ubuntu-latest
+     timeout-minutes: 30
+-    env:
+-      DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME || secrets.DOCKERHUB_USERNAME }}
+-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
++    concurrency:
++      group: main-writer-main
++      cancel-in-progress: false
+     permissions:
+       contents: write
++    outputs:
++      version_committed: ${{ steps.version.outputs.version_committed }}
++      new_version: ${{ steps.version.outputs.new_version }}
+     steps:
+       - uses: actions/checkout@v6
+         with:
+@@ -369,159 +411,156 @@
+       - name: Setup Rust
+         uses: dtolnay/rust-toolchain@stable
+
+-      - name: Install rust-script
+-        run: cargo install rust-script
++      - name: Setup Node.js
++        uses: actions/setup-node@v6
++        with:
++          node-version: '20.x'
+
+       - name: Configure git
+-        run: rust-script scripts/git-config.rs
++        run: node scripts/git-config.mjs
+
+       - name: Determine bump type from changelog fragments
+         id: bump_type
+-        run: rust-script scripts/get-bump-type.rs
++        run: node scripts/get-bump-type.mjs
+
+       - name: Check if version already released or no fragments
+         id: check
+         env:
+           HAS_FRAGMENTS: ${{ steps.bump_type.outputs.has_fragments }}
+-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+-        run: rust-script scripts/check-release-needed.rs
++        run: node scripts/check-release-needed.mjs
+
+       - name: Collect changelog and bump version
+         id: version
+         if: steps.check.outputs.should_release == 'true' && steps.check.outputs.skip_bump != 'true'
+         run: |
+-          rust-script scripts/version-and-commit.rs \
++          node scripts/version-and-commit.mjs \
+             --bump-type "${{ steps.bump_type.outputs.bump_type }}"
+
+       - name: Get current version
+         id: current_version
+         if: steps.check.outputs.should_release == 'true'
+-        run: rust-script scripts/get-version.rs
++        run: node scripts/get-version.mjs
+
+       - name: Build release
+         if: steps.check.outputs.should_release == 'true'
+         run: cargo build --release
+
+-      - name: Check crate package size
+-        if: steps.check.outputs.should_release == 'true' && steps.check.outputs.crate_published != 'true'
+-        run: rust-script scripts/check-crate-size.rs
+-
+       - name: Publish to Crates.io
+-        if: steps.check.outputs.should_release == 'true' && steps.check.outputs.crate_published != 'true'
++        if: steps.check.outputs.should_release == 'true'
+         id: publish-crate
+         env:
+           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN || secrets.CARGO_TOKEN }}
+-          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+-        run: rust-script scripts/publish-crate.rs
+-
+-      - name: Wait for Crate availability on Crates.io
+-        if: |
+-          steps.check.outputs.should_release == 'true' && (
+-            steps.check.outputs.crate_published == 'true' ||
+-            steps.publish-crate.outputs.publish_result == 'success'
+-          )
+-        run: rust-script scripts/wait-for-crate.rs --release-version "${{ steps.current_version.outputs.version }}"
+-
+-      - name: Smoke-test published crate
+-        if: |
+-          steps.check.outputs.should_release == 'true' && (
+-            steps.check.outputs.crate_published == 'true' ||
+-            steps.publish-crate.outputs.publish_result == 'success'
+-          )
+-        run: rust-script scripts/smoke-test-published-crate.rs --release-version "${{ steps.current_version.outputs.version }}"
+-
+-      - name: Configure Docker Hub publishing
+-        if: |
+-          steps.check.outputs.should_release == 'true' && (
+-            steps.check.outputs.crate_published == 'true' ||
+-            steps.publish-crate.outputs.publish_result == 'success'
+-          )
+-        id: dockerhub
+-        run: |
+-          disable_dockerhub() {
+-            echo "enabled=false" >> "$GITHUB_OUTPUT"
+-            echo "$1"
+-          }
+-
+-          if [ -z "$DOCKERHUB_IMAGE" ]; then
+-            disable_dockerhub "Docker Hub publishing disabled: DOCKERHUB_IMAGE repository variable is not set"
+-            exit 0
+-          fi
+-
+-          if [ ! -f Dockerfile ]; then
+-            disable_dockerhub "Docker Hub publishing disabled: Dockerfile was not found at repository root"
+-            exit 0
+-          fi
+-
+-          if [ -z "$DOCKERHUB_USERNAME" ] || [ -z "$DOCKERHUB_TOKEN" ]; then
+-            echo "::error::Docker Hub publishing requires DOCKERHUB_USERNAME and DOCKERHUB_TOKEN"
+-            echo "Set DOCKERHUB_USERNAME as a repository variable or secret, and DOCKERHUB_TOKEN as a secret."
+-            exit 1
+-          fi
+-
+-          echo "enabled=true" >> "$GITHUB_OUTPUT"
+-          echo "docker_hub_url=https://hub.docker.com/r/${DOCKERHUB_IMAGE}" >> "$GITHUB_OUTPUT"
+-
+-      - name: Log in to Docker Hub
+-        if: steps.dockerhub.outputs.enabled == 'true'
+-        uses: docker/login-action@v4
+-        with:
+-          username: ${{ env.DOCKERHUB_USERNAME }}
+-          password: ${{ env.DOCKERHUB_TOKEN }}
+-
+-      # Resilient buildx boot: pre-pull the pinned BuildKit image with retries
+-      # and a pull-through registry-mirror fallback so a transient Docker Hub
+-      # outage at boot does not take the publish job down. See issue #69 and
+-      # docs/case-studies/issue-69/README.md.
+-      - name: Set up Docker Buildx
+-        if: steps.dockerhub.outputs.enabled == 'true'
+-        uses: ./.github/actions/setup-buildx-resilient
+-
+-      - name: Extract Docker metadata
+-        if: steps.dockerhub.outputs.enabled == 'true'
+-        id: docker-meta
+-        uses: docker/metadata-action@v6
+-        with:
+-          images: ${{ env.DOCKERHUB_IMAGE }}
+-          tags: |
+-            type=raw,value=latest
+-            type=raw,value=${{ steps.current_version.outputs.version }}
+-          labels: |
+-            org.opencontainers.image.version=${{ steps.current_version.outputs.version }}
+-
+-      - name: Publish Docker image to Docker Hub
+-        if: steps.dockerhub.outputs.enabled == 'true'
+-        uses: docker/build-push-action@v7
+-        with:
+-          context: .
+-          push: true
+-          tags: ${{ steps.docker-meta.outputs.tags }}
+-          labels: ${{ steps.docker-meta.outputs.labels }}
++          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN || secrets.CARGO_REGISTRY_TOKEN }}
++        run: node scripts/publish-crate.mjs
+
+       - name: Create GitHub Release
+-        if: |
+-          steps.check.outputs.should_release == 'true' && (
+-            steps.check.outputs.crate_published == 'true' ||
+-            steps.publish-crate.outputs.publish_result == 'success'
+-          )
++        if: steps.check.outputs.should_release == 'true'
+         env:
+           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+-          DOCKER_HUB_URL: ${{ steps.dockerhub.outputs.docker_hub_url }}
++        run: node scripts/create-github-release.mjs --release-version "${{ steps.current_version.outputs.version }}" --repository "${{ github.repository }}"
++
++  # === DEPLOY WEB AFTER RELEASE ===
++  # Rebuild and redeploy the web app AFTER the auto-release job bumps the version.
++  # The standard wasm-build/web-build/deploy-pages jobs run in parallel with auto-release
++  # and therefore use the OLD Cargo.toml version. This job runs sequentially after
++  # auto-release to ensure the web footer shows the correct version.
++  # See: https://github.com/link-assistant/calculator/issues/78
++  deploy-after-release:
++    name: Deploy Web After Release
++    runs-on: ubuntu-latest
++    timeout-minutes: 25
++    needs: [auto-release, deploy-pages]
++    # Only run when auto-release actually committed a new version bump.
++    # This ensures the web app is rebuilt and redeployed with the updated version
++    # in the footer (CARGO_PKG_VERSION is embedded at WASM compile time).
++    # We also wait for deploy-pages to finish first to avoid concurrent deployments
++    # to the same GitHub Pages environment.
++    if: |
++      always() && !cancelled() &&
++      github.event_name == 'push' &&
++      github.ref == 'refs/heads/main' &&
++      needs.auto-release.result == 'success' &&
++      needs.auto-release.outputs.version_committed == 'true'
++    permissions:
++      contents: read
++      pages: write
++      id-token: write
++    environment:
++      name: github-pages
++      url: ${{ steps.deployment.outputs.page_url }}
++    steps:
++      - uses: actions/checkout@v6
++        with:
++          # Checkout the latest commit on main, which includes the version bump
++          # pushed by the auto-release job
++          ref: main
++
++      - name: Setup Rust
++        uses: dtolnay/rust-toolchain@stable
++
++      - name: Install wasm-pack
++        uses: ./.github/actions/install-wasm-pack
++
++      - name: Build WASM package with updated version
++        run: wasm-pack build --target web --out-dir web/public/pkg
++
++      - name: Setup Node.js
++        uses: actions/setup-node@v6
++        with:
++          node-version: '20'
++          cache: 'npm'
++          cache-dependency-path: web/package-lock.json
++
++      - name: Install dependencies
++        working-directory: web
++        run: npm ci
++
++      - name: Copy currency data files to web public directory
+         run: |
+-          # Use new_version from version-and-commit when available (tag-checked), else fall back to Cargo.toml version
+-          RELEASE_VERSION="${{ steps.version.outputs.new_version }}"
+-          if [ -z "$RELEASE_VERSION" ]; then
+-            RELEASE_VERSION="${{ steps.current_version.outputs.version }}"
+-          fi
+-
+-          release_args=(
+-            --release-version "$RELEASE_VERSION"
+-            --repository "${{ github.repository }}"
+-          )
+-          if [ -n "$DOCKER_HUB_URL" ]; then
+-            release_args+=(--docker-hub-url "$DOCKER_HUB_URL")
+-          fi
+-          rust-script scripts/create-github-release.rs "${release_args[@]}"
++          mkdir -p web/public/data/currency
++          cp data/currency/*.lino web/public/data/currency/
++          echo "Copied $(ls data/currency/*.lino | wc -l) .lino files to web/public/data/currency/"
++
++      - name: Build web app
++        working-directory: web
++        run: npm run build
++
++      - name: Setup Pages
++        uses: actions/configure-pages@v6
++
++      - name: Upload artifact
++        uses: actions/upload-pages-artifact@v5
++        with:
++          path: web/dist
++          # Use a unique name to avoid 409 Conflict with the artifact uploaded by
++          # the earlier deploy-pages job within the same workflow run.
++          # Both upload-pages-artifact and deploy-pages support custom artifact names.
++          name: github-pages-after-release
++
++      - name: Deploy to GitHub Pages
++        id: deployment
++        uses: actions/deploy-pages@v5
++        with:
++          artifact_name: github-pages-after-release
++
++  # === UPDATE SCREENSHOTS AFTER RELEASE ===
++  # After a new version is released and deployed, regenerate all documentation
++  # screenshots so they reflect the latest version of the app.
++  update-screenshots-after-release:
++    name: Update Screenshots After Release
++    needs: [auto-release, deploy-after-release]
++    # Only run when auto-release actually committed a new version bump and
++    # the updated web app has been deployed to GitHub Pages.
++    if: |
++      always() && !cancelled() &&
++      github.event_name == 'push' &&
++      github.ref == 'refs/heads/main' &&
++      needs.auto-release.result == 'success' &&
++      needs.auto-release.outputs.version_committed == 'true' &&
++      needs.deploy-after-release.result == 'success'
++    uses: ./.github/workflows/update-screenshots.yml
++    permissions:
++      contents: write
+
+   # === MANUAL INSTANT RELEASE ===
+   # Manual release via workflow_dispatch - only after CI passes
+@@ -537,9 +576,9 @@
+       needs.build.result == 'success'
+     runs-on: ubuntu-latest
+     timeout-minutes: 30
+-    env:
+-      DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME || secrets.DOCKERHUB_USERNAME }}
+-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
++    concurrency:
++      group: main-writer-main
++      cancel-in-progress: false
+     permissions:
+       contents: write
+     steps:
+@@ -551,136 +590,41 @@
+       - name: Setup Rust
+         uses: dtolnay/rust-toolchain@stable
+
+-      - name: Install rust-script
+-        run: cargo install rust-script
++      - name: Setup Node.js
++        uses: actions/setup-node@v6
++        with:
++          node-version: '20.x'
+
+       - name: Configure git
+-        run: rust-script scripts/git-config.rs
++        run: node scripts/git-config.mjs
+
+       - name: Collect changelog fragments
+-        run: rust-script scripts/collect-changelog.rs
++        run: node scripts/collect-changelog.mjs
+
+       - name: Version and commit
+         id: version
+         env:
+           BUMP_TYPE: ${{ github.event.inputs.bump_type }}
+           DESCRIPTION: ${{ github.event.inputs.description }}
+-        run: rust-script scripts/version-and-commit.rs --bump-type "${{ github.event.inputs.bump_type }}" --description "${{ github.event.inputs.description }}"
++        run: node scripts/version-and-commit.mjs --bump-type "${{ github.event.inputs.bump_type }}" --description "${{ github.event.inputs.description }}"
+
+       - name: Build release
+         if: steps.version.outputs.version_committed == 'true' || steps.version.outputs.already_released == 'true'
+         run: cargo build --release
+
+-      - name: Check crate package size
+-        if: steps.version.outputs.version_committed == 'true' || steps.version.outputs.already_released == 'true'
+-        run: rust-script scripts/check-crate-size.rs
+-
+       - name: Publish to Crates.io
+         if: steps.version.outputs.version_committed == 'true' || steps.version.outputs.already_released == 'true'
+         id: publish-crate
+         env:
+           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN || secrets.CARGO_TOKEN }}
+-          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
+-        run: rust-script scripts/publish-crate.rs
+-
+-      - name: Wait for Crate availability on Crates.io
+-        if: |
+-          (steps.version.outputs.version_committed == 'true' ||
+-            steps.version.outputs.already_released == 'true') &&
+-          steps.publish-crate.outputs.publish_result == 'success'
+-        run: rust-script scripts/wait-for-crate.rs --release-version "${{ steps.version.outputs.new_version }}"
+-
+-      - name: Smoke-test published crate
+-        if: |
+-          (steps.version.outputs.version_committed == 'true' ||
+-            steps.version.outputs.already_released == 'true') &&
+-          steps.publish-crate.outputs.publish_result == 'success'
+-        run: rust-script scripts/smoke-test-published-crate.rs --release-version "${{ steps.version.outputs.new_version }}"
+-
+-      - name: Configure Docker Hub publishing
+-        if: |
+-          (steps.version.outputs.version_committed == 'true' ||
+-            steps.version.outputs.already_released == 'true') &&
+-          steps.publish-crate.outputs.publish_result == 'success'
+-        id: dockerhub
+-        run: |
+-          disable_dockerhub() {
+-            echo "enabled=false" >> "$GITHUB_OUTPUT"
+-            echo "$1"
+-          }
+-
+-          if [ -z "$DOCKERHUB_IMAGE" ]; then
+-            disable_dockerhub "Docker Hub publishing disabled: DOCKERHUB_IMAGE repository variable is not set"
+-            exit 0
+-          fi
+-
+-          if [ ! -f Dockerfile ]; then
+-            disable_dockerhub "Docker Hub publishing disabled: Dockerfile was not found at repository root"
+-            exit 0
+-          fi
+-
+-          if [ -z "$DOCKERHUB_USERNAME" ] || [ -z "$DOCKERHUB_TOKEN" ]; then
+-            echo "::error::Docker Hub publishing requires DOCKERHUB_USERNAME and DOCKERHUB_TOKEN"
+-            echo "Set DOCKERHUB_USERNAME as a repository variable or secret, and DOCKERHUB_TOKEN as a secret."
+-            exit 1
+-          fi
+-
+-          echo "enabled=true" >> "$GITHUB_OUTPUT"
+-          echo "docker_hub_url=https://hub.docker.com/r/${DOCKERHUB_IMAGE}" >> "$GITHUB_OUTPUT"
+-
+-      - name: Log in to Docker Hub
+-        if: steps.dockerhub.outputs.enabled == 'true'
+-        uses: docker/login-action@v4
+-        with:
+-          username: ${{ env.DOCKERHUB_USERNAME }}
+-          password: ${{ env.DOCKERHUB_TOKEN }}
+-
+-      # Resilient buildx boot: pre-pull the pinned BuildKit image with retries
+-      # and a pull-through registry-mirror fallback so a transient Docker Hub
+-      # outage at boot does not take the publish job down. See issue #69 and
+-      # docs/case-studies/issue-69/README.md.
+-      - name: Set up Docker Buildx
+-        if: steps.dockerhub.outputs.enabled == 'true'
+-        uses: ./.github/actions/setup-buildx-resilient
+-
+-      - name: Extract Docker metadata
+-        if: steps.dockerhub.outputs.enabled == 'true'
+-        id: docker-meta
+-        uses: docker/metadata-action@v6
+-        with:
+-          images: ${{ env.DOCKERHUB_IMAGE }}
+-          tags: |
+-            type=raw,value=latest
+-            type=raw,value=${{ steps.version.outputs.new_version }}
+-          labels: |
+-            org.opencontainers.image.version=${{ steps.version.outputs.new_version }}
+-
+-      - name: Publish Docker image to Docker Hub
+-        if: steps.dockerhub.outputs.enabled == 'true'
+-        uses: docker/build-push-action@v7
+-        with:
+-          context: .
+-          push: true
+-          tags: ${{ steps.docker-meta.outputs.tags }}
+-          labels: ${{ steps.docker-meta.outputs.labels }}
++          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN || secrets.CARGO_REGISTRY_TOKEN }}
++        run: node scripts/publish-crate.mjs
+
+       - name: Create GitHub Release
+-        if: |
+-          (steps.version.outputs.version_committed == 'true' ||
+-            steps.version.outputs.already_released == 'true') &&
+-          steps.publish-crate.outputs.publish_result == 'success'
++        if: steps.version.outputs.version_committed == 'true' || steps.version.outputs.already_released == 'true'
+         env:
+           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+-          DOCKER_HUB_URL: ${{ steps.dockerhub.outputs.docker_hub_url }}
+-        run: |
+-          release_args=(
+-            --release-version "${{ steps.version.outputs.new_version }}"
+-            --repository "${{ github.repository }}"
+-          )
+-          if [ -n "$DOCKER_HUB_URL" ]; then
+-            release_args+=(--docker-hub-url "$DOCKER_HUB_URL")
+-          fi
+-          rust-script scripts/create-github-release.rs "${release_args[@]}"
++        run: node scripts/create-github-release.mjs --release-version "${{ steps.version.outputs.new_version }}" --repository "${{ github.repository }}"
+
+   # === MANUAL CHANGELOG PR ===
+   changelog-pr:
+@@ -696,17 +640,16 @@
+         with:
+           fetch-depth: 0
+
+-      - name: Setup Rust
+-        uses: dtolnay/rust-toolchain@stable
+-
+-      - name: Install rust-script
+-        run: cargo install rust-script
++      - name: Setup Node.js
++        uses: actions/setup-node@v6
++        with:
++          node-version: '20.x'
+
+       - name: Create changelog fragment
+         env:
+           BUMP_TYPE: ${{ github.event.inputs.bump_type }}
+           DESCRIPTION: ${{ github.event.inputs.description }}
+-        run: rust-script scripts/create-changelog-fragment.rs --bump-type "${{ github.event.inputs.bump_type }}" --description "${{ github.event.inputs.description }}"
++        run: node scripts/create-changelog-fragment.mjs --bump-type "${{ github.event.inputs.bump_type }}" --description "${{ github.event.inputs.description }}"
+
+       - name: Create Pull Request
+         uses: peter-evans/create-pull-request@v8
+@@ -730,70 +673,3 @@
+             1. Review the changelog fragment in this PR
+             2. Merge this PR to main
+             3. The automated release workflow will publish to crates.io and create a GitHub release
+-
+-  # === DEPLOY DOCUMENTATION ===
+-  # Deploy Rust API documentation to GitHub Pages after a successful package build.
+-  # Keep this independent from package/GitHub release publication so the website
+-  # still updates when the release path fails. Use the official Pages artifact
+-  # deployment path so repositories configured with "GitHub Actions" as their
+-  # Pages source fail this job if Pages cannot deploy.
+-  #
+-  # One-time setup: in the repository's Settings -> Pages, set Source to
+-  # "GitHub Actions". Without this, the first run fails on actions/deploy-pages
+-  # with "Get Pages site failed" / "Failed to create deployment". This cannot be
+-  # configured from a workflow. See README.md "Deploying API documentation".
+-  deploy-docs:
+-    name: Deploy Rust Documentation
+-    needs: [build]
+-    if: |
+-      !cancelled() &&
+-      needs.build.result == 'success' && (
+-        (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+-        (github.event_name == 'workflow_dispatch' && github.event.inputs.release_mode == 'instant')
+-      )
+-    runs-on: ubuntu-latest
+-    timeout-minutes: 15
+-    permissions:
+-      contents: read
+-      pages: write
+-      id-token: write
+-    environment:
+-      name: github-pages
+-      url: ${{ steps.deployment.outputs.page_url }}
+-    steps:
+-      - uses: actions/checkout@v6
+-        with:
+-          ref: main
+-
+-      - name: Setup Rust
+-        uses: dtolnay/rust-toolchain@stable
+-
+-      - name: Build documentation
+-        run: cargo doc --no-deps --all-features
+-
+-      - name: Generate Pages root index
+-        run: |
+-          # rustdoc emits target/doc/<crate>/index.html but no root index.html,
+-          # which makes the GitHub Pages root URL return 404. Redirect the root
+-          # to the crate docs directory that rustdoc generated.
+-          crate=$(cargo metadata --no-deps --format-version 1 \
+-            | python3 -c 'import json,sys; print(json.load(sys.stdin)["packages"][0]["name"].replace("-","_"))')
+-          printf '<!doctype html><meta http-equiv="refresh" content="0; url=%s/index.html">\n' "$crate" \
+-            > target/doc/index.html
+-          touch target/doc/.nojekyll
+-
+-      - name: Configure GitHub Pages
+-        uses: actions/configure-pages@v6
+-
+-      - name: Verify site tree
+-        run: find target/doc -maxdepth 2 -print
+-
+-      - name: Upload GitHub Pages artifact
+-        uses: actions/upload-pages-artifact@v5
+-        with:
+-          path: target/doc
+-          include-hidden-files: true
+-
+-      - name: Deploy to GitHub Pages
+-        id: deployment
+-        uses: actions/deploy-pages@v5

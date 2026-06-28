@@ -15,6 +15,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     target: 'esnext',
+    chunkSizeWarningLimit: 700,
   },
   worker: {
     format: 'es',

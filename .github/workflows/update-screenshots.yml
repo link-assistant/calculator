@@ -20,11 +20,21 @@ on:
         default: true
   workflow_call:
 
+env:
+  GIT_CONFIG_COUNT: 1
+  GIT_CONFIG_KEY_0: init.defaultBranch
+  GIT_CONFIG_VALUE_0: main
+  CARGO_NET_RETRY: '10'
+  CARGO_HTTP_MULTIPLEXING: 'false'
+
 jobs:
   update-screenshots:
     name: Update Screenshots
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    concurrency:
+      group: main-writer-main
+      cancel-in-progress: false
     permissions:
       contents: write
     steps:
@@ -32,12 +42,14 @@ jobs:
         with:
           # Always checkout latest main so we have the version-bumped Cargo.toml
           ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install wasm-pack
-        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+        uses: ./.github/actions/install-wasm-pack
 
       - name: Build WASM package
         run: wasm-pack build --target web --out-dir web/public/pkg
@@ -110,4 +122,4 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           git commit -m "chore: update screenshots [skip ci]"
-          git push
+          node scripts/git-push-with-rebase.mjs --branch main

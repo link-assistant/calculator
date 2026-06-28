@@ -1,0 +1,839 @@
+Update Screenshots	UNKNOWN STEP	﻿2026-06-25T19:08:40.6313730Z Current runner version: '2.335.1'
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6343068Z ##[group]Runner Image Provisioner
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6344072Z Hosted Compute Agent
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6345041Z Version: 20260611.554
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6345694Z Commit: 5e0782fdc9014723d3be820dd114dd31555c2bd1
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6346487Z Build Date: 2026-06-11T21:40:46Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6347240Z Worker ID: {407bd5b0-ead5-40d3-a06a-ef408e3e953e}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6347973Z Azure Region: westus
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6348594Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6350151Z ##[group]Operating System
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6350866Z Ubuntu
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6351455Z 24.04.4
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6351974Z LTS
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6352558Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6353154Z ##[group]Runner Image
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6353760Z Image: ubuntu-24.04
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6354470Z Version: 20260622.220.1
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6356157Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260622.220/images/ubuntu/Ubuntu2404-Readme.md
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6357990Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260622.220
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6358981Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6360230Z ##[group]GITHUB_TOKEN Permissions
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6362257Z Contents: write
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6363062Z Metadata: read
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6363625Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6366315Z Secret source: Actions
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6367155Z Prepare workflow directory
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6725177Z Prepare all required actions
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:40.6765474Z Getting action download info
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.0654602Z Download action repository 'actions/checkout@v6' (SHA:df4cb1c069e1874edd31b4311f1884172cec0e10)
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.1443096Z Download action repository 'dtolnay/rust-toolchain@stable' (SHA:29eef336d9b2848a0b548edc03f92a220660cdb8)
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.3602439Z Download action repository 'actions/setup-node@v6' (SHA:48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e)
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.4469925Z Download action repository 'actions/upload-artifact@v7' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.6659342Z Complete job name: Update Screenshots
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.7514607Z ##[group]Run actions/checkout@v6
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.7515920Z with:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.7516332Z   ref: main
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.7516786Z   repository: link-assistant/calculator
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.7521410Z   token: ***
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.7521837Z   ssh-strict: true
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.7522275Z   ssh-user: git
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.7522724Z   persist-credentials: true
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.7523206Z   clean: true
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.7523644Z   sparse-checkout-cone-mode: true
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.7524155Z   fetch-depth: 1
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.7524577Z   fetch-tags: false
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.7525310Z   show-progress: true
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.7525762Z   lfs: false
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.7526172Z   submodules: false
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.7526618Z   set-safe-directory: true
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.7527382Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.8522894Z Syncing repository: link-assistant/calculator
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.8525488Z ##[group]Getting Git version info
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.8526394Z Working directory is '/home/runner/work/calculator/calculator'
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.8527439Z [command]/usr/bin/git version
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.8616875Z git version 2.54.0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.8673742Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.8689315Z Temporarily overriding HOME='/home/runner/work/_temp/bbc8fd6b-435a-41cd-890a-e8ca35bf3a60' before making global git config changes
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.8691798Z Adding repository directory to the temporary git global config as a safe directory
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.8695581Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/calculator/calculator
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.8750544Z Deleting the contents of '/home/runner/work/calculator/calculator'
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:41.8755218Z ##[group]Determining repository object format
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1507413Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1509177Z ##[group]Initializing the repository
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1511788Z [command]/usr/bin/git init /home/runner/work/calculator/calculator
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1638671Z hint: Using 'master' as the name for the initial branch. This default branch name
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1646395Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1649650Z hint: to use in all of your new repositories, which will suppress this warning,
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1652086Z hint: call:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1653335Z hint:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1655024Z hint: 	git config --global init.defaultBranch <name>
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1656742Z hint:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1658226Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1660820Z hint: 'development'. The just-created branch can be renamed via this command:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1662794Z hint:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1664025Z hint: 	git branch -m <name>
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1665633Z hint:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1667267Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1670343Z Initialized empty Git repository in /home/runner/work/calculator/calculator/.git/
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1707207Z [command]/usr/bin/git remote add origin https://github.com/link-assistant/calculator
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1737756Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1739170Z ##[group]Disabling automatic garbage collection
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1740775Z [command]/usr/bin/git config --local gc.auto 0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1789183Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1791910Z ##[group]Setting up auth
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1794404Z Removing SSH command configuration
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1797504Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.1854844Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.2219162Z Removing HTTP extra header
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.2226129Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.2265273Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.2501228Z Removing includeIf entries pointing to credentials config files
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.2507492Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.2546950Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.2782356Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-0b2b916d-3c50-4493-ba2e-00e80770014c.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.2826518Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/calculator/calculator/.git.path /home/runner/work/_temp/git-credentials-0b2b916d-3c50-4493-ba2e-00e80770014c.config
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.2861499Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/calculator/calculator/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-0b2b916d-3c50-4493-ba2e-00e80770014c.config
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.2901058Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-0b2b916d-3c50-4493-ba2e-00e80770014c.config
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.2933575Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-0b2b916d-3c50-4493-ba2e-00e80770014c.config
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.2962114Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.2963610Z ##[group]Fetching the repository
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:42.2972260Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +refs/heads/main*:refs/remotes/origin/main* +refs/tags/main*:refs/tags/main*
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.5988047Z From https://github.com/link-assistant/calculator
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.5989084Z  * [new branch]      main       -> origin/main
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.6033415Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.6034340Z ##[group]Determining the checkout info
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.6042958Z [command]/usr/bin/git branch --list --remote origin/main
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.6096047Z   origin/main
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.6098836Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.6099672Z [command]/usr/bin/git sparse-checkout disable
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.6158634Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.6197707Z ##[group]Checking out the ref
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.6202011Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7002200Z Switched to a new branch 'main'
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7003032Z branch 'main' set up to track 'origin/main'.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7014979Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7064143Z [command]/usr/bin/git log -1 --format=%H
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7092042Z b3d3eb82409fadbf3c11ee6dd0c4aa4b997c0ee5
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7433708Z ##[group]Run dtolnay/rust-toolchain@stable
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7434072Z with:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7434275Z   toolchain: stable
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7434495Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7559225Z ##[group]Run : parse toolchain version
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7559699Z ^[[36;1m: parse toolchain version^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7560042Z ^[[36;1mif [[ -z $toolchain ]]; then^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7560702Z ^[[36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7561364Z ^[[36;1m  echo "'toolchain' is a required input" >&2^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7561696Z ^[[36;1m  exit 1^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7562072Z ^[[36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7562549Z ^[[36;1m  if [[ Linux == macOS ]]; then^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7563264Z ^[[36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7563896Z ^[[36;1m  else^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7564386Z ^[[36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7565106Z ^[[36;1m  fi^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7565446Z ^[[36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7566070Z ^[[36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7566594Z ^[[36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7567186Z ^[[36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7567753Z ^[[36;1melse^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7568015Z ^[[36;1m  echo "toolchain=$toolchain" >> $GITHUB_OUTPUT^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7568356Z ^[[36;1mfi^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7732971Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7733579Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7733899Z   toolchain: stable
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7734237Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7892368Z ##[group]Run : construct rustup command line
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7892759Z ^[[36;1m: construct rustup command line^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7893245Z ^[[36;1mecho "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7893925Z ^[[36;1mecho "components=$(for c in ${components//,/ }; do echo -n ' --component' $c; done)" >> $GITHUB_OUTPUT^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7894451Z ^[[36;1mecho "downgrade=" >> $GITHUB_OUTPUT^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7925967Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7926448Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7926693Z   targets:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7926909Z   components:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.7927132Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8016124Z ##[group]Run : set $CARGO_HOME
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8016611Z ^[[36;1m: set $CARGO_HOME^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8016991Z ^[[36;1mecho CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8046532Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8046975Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8131313Z ##[group]Run : install rustup if needed
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8131645Z ^[[36;1m: install rustup if needed^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8131964Z ^[[36;1mif ! command -v rustup &>/dev/null; then^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8132788Z ^[[36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://sh.rustup.rs | sh -s -- --default-toolchain none -y^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8133573Z ^[[36;1m  echo "$CARGO_HOME/bin" >> $GITHUB_PATH^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8133874Z ^[[36;1mfi^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8162305Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8162691Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8162914Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8163208Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8248152Z ##[group]Run rustup toolchain install stable --profile minimal --no-self-update
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8248847Z ^[[36;1mrustup toolchain install stable --profile minimal --no-self-update^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8278412Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8278828Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8279050Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8279363Z   RUSTUP_PERMIT_COPY_RENAME: 1
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:43.8279645Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.6647195Z info: syncing channel updates for stable-x86_64-unknown-linux-gnu
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9023275Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9117121Z   stable-x86_64-unknown-linux-gnu unchanged - rustc 1.96.0 (ac68faa20 2026-05-25)
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9191636Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9223297Z ##[group]Run rustup default stable
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9223652Z ^[[36;1mrustup default stable^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9257317Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9257779Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9258026Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9258344Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9368074Z info: using existing install for stable-x86_64-unknown-linux-gnu
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9375213Z info: default toolchain set to stable-x86_64-unknown-linux-gnu
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9375958Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9462253Z   stable-x86_64-unknown-linux-gnu unchanged - rustc 1.96.0 (ac68faa20 2026-05-25)
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9463110Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9505900Z ##[group]Run : create cachekey
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9506262Z ^[[36;1m: create cachekey^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9506979Z ^[[36;1mDATE=$(rustc +stable --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9507944Z ^[[36;1mHASH=$(rustc +stable --version --verbose | sed -ne 's/^commit-hash: //p')^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9508651Z ^[[36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9541884Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9542279Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9542501Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:44.9542797Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0227767Z ##[group]Run : disable incremental compilation
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0228154Z ^[[36;1m: disable incremental compilation^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0228521Z ^[[36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0228892Z ^[[36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0229207Z ^[[36;1mfi^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0262017Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0262398Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0262619Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0262897Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0341968Z ##[group]Run : enable colors in Cargo output
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0342310Z ^[[36;1m: enable colors in Cargo output^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0342637Z ^[[36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0343160Z ^[[36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0343479Z ^[[36;1mfi^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0374917Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0375300Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0375542Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0375843Z   CARGO_INCREMENTAL: 0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0376084Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0455218Z ##[group]Run : enable Cargo sparse registry
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0455585Z ^[[36;1m: enable Cargo sparse registry^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0456004Z ^[[36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0456866Z ^[[36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol ]; then^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0457747Z ^[[36;1m  if rustc +stable --version --verbose | grep -q '^release: 1\.6[89]\.'; then^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0458422Z ^[[36;1m    touch "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0459389Z ^[[36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0460006Z ^[[36;1m  elif rustc +stable --version --verbose | grep -q '^release: 1\.6[67]\.'; then^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0460683Z ^[[36;1m    touch "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0461299Z ^[[36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0461699Z ^[[36;1m  fi^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0461896Z ^[[36;1mfi^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0493047Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0493419Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0493618Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0493889Z   CARGO_INCREMENTAL: 0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0494116Z   CARGO_TERM_COLOR: always
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0494355Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0871871Z ##[group]Run : work around spurious network errors in curl 8.0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0872384Z ^[[36;1m: work around spurious network errors in curl 8.0^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0873001Z ^[[36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0873691Z ^[[36;1mif rustc +stable --version --verbose | grep -q '^release: 1\.7[01]\.'; then^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0874205Z ^[[36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0874554Z ^[[36;1mfi^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0909265Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0909710Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0909949Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0910280Z   CARGO_INCREMENTAL: 0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0910557Z   CARGO_TERM_COLOR: always
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.0910841Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1142518Z ##[group]Run rustc +stable --version --verbose
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1142965Z ^[[36;1mrustc +stable --version --verbose^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1177086Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1177581Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1177831Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1178166Z   CARGO_INCREMENTAL: 0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1178450Z   CARGO_TERM_COLOR: always
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1178729Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1380501Z rustc 1.96.0 (ac68faa20 2026-05-25)
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1381480Z binary: rustc
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1382594Z commit-hash: ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1383471Z commit-date: 2026-05-25
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1384097Z host: x86_64-unknown-linux-gnu
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1384983Z release: 1.96.0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1385689Z LLVM version: 22.1.2
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1458374Z ##[group]Run curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1459135Z ^[[36;1mcurl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1493873Z shell: /usr/bin/bash -e {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1494144Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1494542Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1495101Z   CARGO_INCREMENTAL: 0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1495348Z   CARGO_TERM_COLOR: always
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.1495593Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.2098593Z info: downloading wasm-pack
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.5977912Z info: successfully installed wasm-pack to `/home/runner/.cargo/bin/wasm-pack`
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.6043808Z ##[group]Run wasm-pack build --target web --out-dir web/public/pkg
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.6044398Z ^[[36;1mwasm-pack build --target web --out-dir web/public/pkg^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.6076478Z shell: /usr/bin/bash -e {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.6076787Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.6077037Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.6077368Z   CARGO_INCREMENTAL: 0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.6077650Z   CARGO_TERM_COLOR: always
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:45.6077938Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:48.4910378Z [INFO]: 🎯  Checking for the Wasm target...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:48.9071343Z info: downloading component rust-std
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:50.5708469Z [INFO]: 🌀  Compiling to Wasm...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:51.0075881Z ^[[1m^[[92m   Compiling^[[0m proc-macro2 v1.0.103
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:51.0077261Z ^[[1m^[[92m   Compiling^[[0m unicode-ident v1.0.22
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:51.0078163Z ^[[1m^[[92m   Compiling^[[0m quote v1.0.42
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:51.0079278Z ^[[1m^[[92m   Compiling^[[0m wasm-bindgen-shared v0.2.108
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:54.1854251Z ^[[1m^[[92m   Compiling^[[0m rustversion v1.0.22
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:55.8507911Z ^[[1m^[[92m   Compiling^[[0m bumpalo v3.19.1
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:56.2381477Z ^[[1m^[[92m   Compiling^[[0m serde_core v1.0.228
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:56.6346075Z ^[[1m^[[92m   Compiling^[[0m autocfg v1.5.0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:57.5911760Z ^[[1m^[[92m   Compiling^[[0m syn v2.0.111
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:57.9028280Z ^[[1m^[[92m   Compiling^[[0m wasm-bindgen v0.2.108
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:58.1359705Z ^[[1m^[[92m   Compiling^[[0m num-traits v0.2.19
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:58.3446537Z ^[[1m^[[92m   Compiling^[[0m once_cell v1.21.3
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:58.4042305Z ^[[1m^[[92m   Compiling^[[0m cfg-if v1.0.4
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:58.4306655Z ^[[1m^[[92m   Compiling^[[0m serde v1.0.228
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:59.2566802Z ^[[1m^[[92m   Compiling^[[0m memchr v2.7.6
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:59.6736136Z ^[[1m^[[92m   Compiling^[[0m zmij v1.0.16
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:59.8066166Z ^[[1m^[[92m   Compiling^[[0m aho-corasick v1.1.4
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:08:59.9308348Z ^[[1m^[[92m   Compiling^[[0m num-integer v0.1.46
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:00.4767940Z ^[[1m^[[92m   Compiling^[[0m wasm-bindgen-macro-support v0.2.108
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:00.7406145Z ^[[1m^[[92m   Compiling^[[0m slab v0.4.11
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:00.8516397Z ^[[1m^[[92m   Compiling^[[0m thiserror v1.0.69
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:01.1336195Z ^[[1m^[[92m   Compiling^[[0m pin-project-lite v0.2.16
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:01.1756491Z ^[[1m^[[92m   Compiling^[[0m serde_json v1.0.149
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:01.2767454Z ^[[1m^[[92m   Compiling^[[0m futures-core v0.3.31
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:01.3706178Z ^[[1m^[[92m   Compiling^[[0m futures-task v0.3.31
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:01.5018772Z ^[[1m^[[92m   Compiling^[[0m rust_decimal v1.40.0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:01.8776466Z ^[[1m^[[92m   Compiling^[[0m pin-utils v0.1.0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:01.9094143Z ^[[1m^[[92m   Compiling^[[0m regex-syntax v0.8.8
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:02.5265518Z ^[[1m^[[92m   Compiling^[[0m futures-util v0.3.31
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:04.5147348Z ^[[1m^[[92m   Compiling^[[0m regex-automata v0.4.13
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:07.0496276Z ^[[1m^[[92m   Compiling^[[0m itoa v1.0.17
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:07.1967387Z ^[[1m^[[92m   Compiling^[[0m arrayvec v0.7.6
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:09.2876422Z ^[[1m^[[92m   Compiling^[[0m regex v1.12.2
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:09.9626245Z ^[[1m^[[92m   Compiling^[[0m lazy_static v1.5.0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:12.7592914Z ^[[1m^[[92m   Compiling^[[0m wasm-bindgen-macro v0.2.108
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:12.7593775Z ^[[1m^[[92m   Compiling^[[0m serde_derive v1.0.228
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:12.7595187Z ^[[1m^[[92m   Compiling^[[0m thiserror-impl v1.0.69
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:14.2238461Z ^[[1m^[[92m   Compiling^[[0m js-sys v0.3.85
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:14.3946243Z ^[[1m^[[92m   Compiling^[[0m console_error_panic_hook v0.1.7
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:18.7396364Z ^[[1m^[[92m   Compiling^[[0m web-sys v0.3.85
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:18.7425905Z ^[[1m^[[92m   Compiling^[[0m wasm-bindgen-futures v0.4.58
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:19.2882447Z ^[[1m^[[92m   Compiling^[[0m num-bigint v0.4.6
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:19.3756510Z ^[[1m^[[92m   Compiling^[[0m serde-wasm-bindgen v0.6.5
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:19.8427659Z ^[[1m^[[92m   Compiling^[[0m chrono v0.4.43
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:21.0786105Z ^[[1m^[[92m   Compiling^[[0m num-rational v0.4.2
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:22.2605342Z ^[[1m^[[92m   Compiling^[[0m link-calculator v0.20.2 (/home/runner/work/calculator/calculator)
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:28.8972217Z ^[[1m^[[92m    Finished^[[0m `release` profile [optimized] target(s) in 38.31s
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:28.9077473Z [INFO]: ⬇️  Installing wasm-bindgen...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:29.8465946Z [INFO]: ✨   Done in 41.37s
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:29.8469007Z [INFO]: 📦   Your wasm pkg is ready to publish at /home/runner/work/calculator/calculator/web/public/pkg.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:29.8489544Z [WARN]: ⚠️   There's a newer version of wasm-pack available, the new version is: 0.15.0, you are using: 0.13.1. To update, navigate to: https://rustwasm.github.io/wasm-pack/installer/
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:29.8637833Z ##[group]Run actions/setup-node@v6
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:29.8638127Z with:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:29.8638320Z   node-version: 20
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:29.8638520Z   cache: npm
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:29.8638768Z   cache-dependency-path: web/package-lock.json
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:29.8639076Z   check-latest: false
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:29.8642121Z   token: ***
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:29.8642331Z   package-manager-cache: true
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:29.8642570Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:29.8642760Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:29.8643009Z   CARGO_INCREMENTAL: 0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:29.8643224Z   CARGO_TERM_COLOR: always
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:29.8643443Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:30.0436039Z Attempting to download 20...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:30.7796421Z Acquiring 20.20.2 - x64 from https://github.com/actions/node-versions/releases/download/20.20.2-23521894959/node-20.20.2-linux-x64.tar.gz
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:31.2216758Z Extracting ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:31.2343584Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/dcc31175-69f6-43e0-a8f9-01c8de2e083d -f /home/runner/work/_temp/386ac5bb-ad7c-49e6-be70-f95eb01199c6
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:32.2338650Z Adding to the cache ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:33.9929395Z ##[group]Environment details
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:34.2138384Z node: v20.20.2
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:34.2138832Z npm: 10.8.2
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:34.2139085Z yarn: 1.22.22
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:34.2139609Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:34.2159648Z [command]/opt/hostedtoolcache/node/20.20.2/x64/bin/npm config get cache
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:34.3241695Z /home/runner/.npm
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:34.6101494Z Cache hit for: node-cache-Linux-x64-npm-9a3316db7ec0b4c2731bebb8a60e8944457e1e525ff955515734598690237b14
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:35.9212065Z Received 0 of 59598004 (0.0%), 0.0 MBs/sec
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:36.6020518Z Received 59598004 of 59598004 (100.0%), 33.8 MBs/sec
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:36.6021628Z Cache Size: ~57 MB (59598004 B)
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:36.6057778Z [command]/usr/bin/tar -xf /home/runner/work/_temp/854dace3-d33c-47ba-b8cf-bd9ca97ea097/cache.tzst -P -C /home/runner/work/calculator/calculator --use-compress-program unzstd
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:36.7287362Z Cache restored successfully
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:36.7322361Z Cache restored from key: node-cache-Linux-x64-npm-9a3316db7ec0b4c2731bebb8a60e8944457e1e525ff955515734598690237b14
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:36.7498770Z ##[group]Run npm ci
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:36.7499052Z ^[[36;1mnpm ci^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:36.7532646Z shell: /usr/bin/bash -e {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:36.7532938Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:36.7533159Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:36.7533462Z   CARGO_INCREMENTAL: 0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:36.7533715Z   CARGO_TERM_COLOR: always
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:36.7533975Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.2913198Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.2921512Z added 194 packages, and audited 195 packages in 3s
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.2922007Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.2922314Z 32 packages are looking for funding
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.2922825Z   run `npm fund` for details
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.3162746Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.3163384Z 10 vulnerabilities (1 low, 4 moderate, 4 high, 1 critical)
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.3164098Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.3164430Z To address issues that do not require attention, run:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.3165092Z   npm audit fix
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.3165276Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.3165642Z To address all issues (including breaking changes), run:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.3166139Z   npm audit fix --force
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.3166354Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.3166523Z Run `npm audit` for details.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.3486392Z ##[group]Run npx playwright install chromium --with-deps
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.3486908Z ^[[36;1mnpx playwright install chromium --with-deps^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.3518215Z shell: /usr/bin/bash -e {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.3518475Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.3518684Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.3518957Z   CARGO_INCREMENTAL: 0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.3519189Z   CARGO_TERM_COLOR: always
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:40.3519424Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.3149476Z Installing dependencies...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.3217932Z Switching to root user to install dependencies...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.4008515Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.4506738Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.4508268Z Hit:6 https://packages.microsoft.com/repos/azure-cli noble InRelease
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.4509871Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.4515788Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.4547245Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.4585675Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.5017140Z Get:8 https://dl.google.com/linux/chrome-stable/deb stable InRelease [1825 B]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.6565572Z Get:9 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [156 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.6672707Z Get:10 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [186 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.6689394Z Get:11 https://packages.microsoft.com/ubuntu/24.04/prod noble/main armhf Packages [11.6 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.7054271Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1033 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.7126018Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [260 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.7145586Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [181 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.7161480Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 c-n-f Metadata [17.4 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.7171155Z Get:16 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1656 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.7257901Z Get:17 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [326 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.7296216Z Get:18 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [388 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.7306152Z Get:19 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 c-n-f Metadata [34.8 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.7318370Z Get:20 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.7599414Z Get:21 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [5760 B]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.8091185Z Get:22 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [10.5 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.8135632Z Get:23 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [780 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.8155967Z Get:24 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [178 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.8161486Z Get:25 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Components [44.9 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.8173662Z Get:26 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 c-n-f Metadata [11.5 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.8196209Z Get:27 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1170 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.8243325Z Get:28 http://azure.archive.ubuntu.com/ubuntu noble-security/universe Translation-en [229 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.8264061Z Get:29 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Components [76.3 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.8276449Z Get:30 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 c-n-f Metadata [24.1 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:41.9049333Z Get:31 https://dl.google.com/linux/chrome-stable/deb stable/main amd64 Packages [1213 B]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:46.7742759Z Fetched 7166 kB in 1s (7235 kB/s)
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.4520450Z Reading package lists...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.4762933Z Reading package lists...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.6553983Z Building dependency tree...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.6561692Z Reading state information...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8022876Z libasound2t64 is already the newest version (1.2.11-1ubuntu0.2).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8023777Z libasound2t64 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8024560Z libatk-bridge2.0-0t64 is already the newest version (2.52.0-1build1).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8025884Z libatk-bridge2.0-0t64 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8026549Z libatk1.0-0t64 is already the newest version (2.52.0-1build1).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8027143Z libatk1.0-0t64 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8027793Z libatspi2.0-0t64 is already the newest version (2.52.0-1build1).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8028759Z libatspi2.0-0t64 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8029362Z libcairo2 is already the newest version (1.18.0-3build1).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8029913Z libcairo2 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8030527Z libcups2t64 is already the newest version (2.4.7-1.2ubuntu7.14).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8031120Z libcups2t64 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8031725Z libdbus-1-3 is already the newest version (1.14.10-4ubuntu4.1).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8032305Z libdbus-1-3 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8032931Z libdrm2 is already the newest version (2.4.125-1ubuntu0.1~24.04.2).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8033514Z libdrm2 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8034102Z libgbm1 is already the newest version (25.2.8-0ubuntu0.24.04.2).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8034848Z libgbm1 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8035318Z libglib2.0-0t64 is already the newest version (2.80.0-6ubuntu3.8).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8035795Z libglib2.0-0t64 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8036265Z libnspr4 is already the newest version (2:4.35-1.1build1).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8036848Z libnspr4 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8037290Z libnss3 is already the newest version (2:3.98-1ubuntu0.1).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8037717Z libnss3 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8038187Z libpango-1.0-0 is already the newest version (1.52.1+ds-1build1).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8038657Z libpango-1.0-0 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8039113Z libx11-6 is already the newest version (2:1.8.7-1build1).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8039535Z libx11-6 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8039959Z libxcb1 is already the newest version (1.15-1ubuntu2).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8040363Z libxcb1 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8040826Z libxcomposite1 is already the newest version (1:0.4.5-1build3).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8041298Z libxcomposite1 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8041770Z libxdamage1 is already the newest version (1:1.1.6-1build1).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8042209Z libxdamage1 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8042641Z libxext6 is already the newest version (2:1.3.4-1build2).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8043061Z libxext6 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8043495Z libxfixes3 is already the newest version (1:6.0.0-2build1).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8043925Z libxfixes3 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8044374Z libxkbcommon0 is already the newest version (1.6.0-1build1).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8045069Z libxkbcommon0 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8045832Z libxrandr2 is already the newest version (2:1.5.2-2build1).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8046232Z libxrandr2 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8046634Z xvfb is already the newest version (2:21.1.12-1ubuntu1.6).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8047173Z fonts-noto-color-emoji is already the newest version (2.047-0ubuntu0.24.04.1).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8047737Z libfontconfig1 is already the newest version (2.15.0-1.1ubuntu2).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8048309Z libfontconfig1 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8048777Z libfreetype6 is already the newest version (2.13.2+dfsg-1ubuntu0.1).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8049205Z libfreetype6 set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8049619Z fonts-liberation is already the newest version (1:2.1.5-3).
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8050036Z fonts-liberation set to manually installed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8050434Z The following additional packages will be installed:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8050795Z   xfonts-encodings xfonts-utils
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8051087Z Recommended packages:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8051378Z   fonts-ipafont-mincho fonts-tlwg-loma
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8255977Z The following NEW packages will be installed:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8256930Z   fonts-freefont-ttf fonts-ipafont-gothic fonts-tlwg-loma-otf fonts-unifont
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8261544Z   fonts-wqy-zenhei xfonts-cyrillic xfonts-encodings xfonts-scalable
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8262237Z   xfonts-utils
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8433948Z 0 upgraded, 9 newly installed, 0 to remove and 9 not upgraded.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8434439Z Need to get 21.1 MB of archives.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8435144Z After this operation, 79.5 MB of additional disk space will be used.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.8435655Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:47.9345183Z Get:2 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-ipafont-gothic all 00303-21ubuntu1 [3513 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:48.0319402Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 fonts-freefont-ttf all 20211204+svn4273-2 [5641 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:48.3253339Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-tlwg-loma-otf all 1:0.7.3-1 [107 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:48.3983107Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-unifont all 1:15.1.01-1build1 [2993 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:48.6190966Z Get:6 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-wqy-zenhei all 0.9.45-8 [7472 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:48.9857462Z Get:7 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 xfonts-encodings all 1:1.0.5-0ubuntu2 [578 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.0611779Z Get:8 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 xfonts-utils amd64 1:7.7+6build3 [94.4 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.1342786Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 xfonts-cyrillic all 1:1.0.5+nmu1 [384 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.2089751Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 xfonts-scalable all 1:1.0.3-1.3 [304 kB]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.4699731Z Fetched 21.1 MB in 1s (15.3 MB/s)
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.4931053Z Selecting previously unselected package fonts-ipafont-gothic.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.5198810Z (Reading database ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.5199433Z (Reading database ... 5%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.5200092Z (Reading database ... 10%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.5200872Z (Reading database ... 15%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.5201655Z (Reading database ... 20%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.5202519Z (Reading database ... 25%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.5203423Z (Reading database ... 30%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.5204245Z (Reading database ... 35%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.5205102Z (Reading database ... 40%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.5205631Z (Reading database ... 45%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.5206133Z (Reading database ... 50%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.5248845Z (Reading database ... 55%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.6291621Z (Reading database ... 60%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:49.8360844Z (Reading database ... 65%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:50.0338035Z (Reading database ... 70%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:50.0882490Z (Reading database ... 75%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:50.1881046Z (Reading database ... 80%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:50.4395819Z (Reading database ... 85%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:50.6297724Z (Reading database ... 90%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:50.7855872Z (Reading database ... 95%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:50.7856657Z (Reading database ... 100%
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:50.7857795Z (Reading database ... 202407 files and directories currently installed.)
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:50.7900771Z Preparing to unpack .../0-fonts-ipafont-gothic_00303-21ubuntu1_all.deb ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:50.7995434Z Unpacking fonts-ipafont-gothic (00303-21ubuntu1) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.0275486Z Selecting previously unselected package fonts-freefont-ttf.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.0404038Z Preparing to unpack .../1-fonts-freefont-ttf_20211204+svn4273-2_all.deb ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.0414120Z Unpacking fonts-freefont-ttf (20211204+svn4273-2) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.1266280Z Selecting previously unselected package fonts-tlwg-loma-otf.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.1397091Z Preparing to unpack .../2-fonts-tlwg-loma-otf_1%3a0.7.3-1_all.deb ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.1413930Z Unpacking fonts-tlwg-loma-otf (1:0.7.3-1) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.1629172Z Selecting previously unselected package fonts-unifont.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.1757390Z Preparing to unpack .../3-fonts-unifont_1%3a15.1.01-1build1_all.deb ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.1766286Z Unpacking fonts-unifont (1:15.1.01-1build1) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.2817253Z Selecting previously unselected package fonts-wqy-zenhei.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.2946215Z Preparing to unpack .../4-fonts-wqy-zenhei_0.9.45-8_all.deb ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.3102962Z Unpacking fonts-wqy-zenhei (0.9.45-8) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.7728323Z Selecting previously unselected package xfonts-encodings.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.7855634Z Preparing to unpack .../5-xfonts-encodings_1%3a1.0.5-0ubuntu2_all.deb ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.7863201Z Unpacking xfonts-encodings (1:1.0.5-0ubuntu2) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.8158946Z Selecting previously unselected package xfonts-utils.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.8285664Z Preparing to unpack .../6-xfonts-utils_1%3a7.7+6build3_amd64.deb ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.8295004Z Unpacking xfonts-utils (1:7.7+6build3) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.8856988Z Selecting previously unselected package xfonts-cyrillic.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.8985083Z Preparing to unpack .../7-xfonts-cyrillic_1%3a1.0.5+nmu1_all.deb ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.8994956Z Unpacking xfonts-cyrillic (1:1.0.5+nmu1) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.9370762Z Selecting previously unselected package xfonts-scalable.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.9500191Z Preparing to unpack .../8-xfonts-scalable_1%3a1.0.3-1.3_all.deb ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.9512120Z Unpacking xfonts-scalable (1:1.0.3-1.3) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:51.9922524Z Setting up fonts-wqy-zenhei (0.9.45-8) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.0044274Z Setting up fonts-freefont-ttf (20211204+svn4273-2) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.0065246Z Setting up fonts-tlwg-loma-otf (1:0.7.3-1) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.0088331Z Setting up xfonts-encodings (1:1.0.5-0ubuntu2) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.0110644Z Setting up fonts-ipafont-gothic (00303-21ubuntu1) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.0182434Z update-alternatives: using /usr/share/fonts/opentype/ipafont-gothic/ipag.ttf to provide /usr/share/fonts/truetype/fonts-japanese-gothic.ttf (fonts-japanese-gothic.ttf) in auto mode
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.0198719Z Setting up fonts-unifont (1:15.1.01-1build1) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.0221857Z Setting up xfonts-utils (1:7.7+6build3) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.0266570Z Setting up xfonts-cyrillic (1:1.0.5+nmu1) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.0628983Z Setting up xfonts-scalable (1:1.0.3-1.3) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.0952047Z Processing triggers for man-db (2.12.0-4build2) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.0973161Z Not building database; man-db/auto-update is not 'true'.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.0987344Z Processing triggers for fontconfig (2.15.0-1.1ubuntu2) ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.8963712Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.8964458Z Running kernel seems to be up-to-date.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.8965261Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.8965500Z No services need to be restarted.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.8965762Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.8965991Z No containers need to be restarted.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.8966258Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.8966893Z No user sessions are running outdated binaries.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.8967215Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:52.8967639Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:53.7710403Z Downloading Chrome for Testing 145.0.7632.6 (playwright chromium v1208) from https://cdn.playwright.dev/chrome-for-testing-public/145.0.7632.6/linux64/chrome-linux64.zip
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:54.0052098Z |                                                                                |   0% of 167.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:54.2160365Z |■■■■■■■■                                                                        |  10% of 167.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:54.3116515Z |■■■■■■■■■■■■■■■■                                                                |  20% of 167.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:54.4015234Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 167.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:54.5211471Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 167.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:54.6510930Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 167.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:54.7651889Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 167.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:54.8575832Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 167.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:54.9517510Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 167.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:55.0425616Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 167.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:55.1273004Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 167.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:58.6055843Z Chrome for Testing 145.0.7632.6 (playwright chromium v1208) downloaded to /home/runner/.cache/ms-playwright/chromium-1208
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:58.6059930Z Downloading FFmpeg (playwright ffmpeg v1011) from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1011/ffmpeg-linux.zip
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:58.8070151Z |                                                                                |   0% of 2.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:58.8118787Z |■■■■■■■■                                                                        |  10% of 2.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:58.8151163Z |■■■■■■■■■■■■■■■■                                                                |  20% of 2.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:58.8179384Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 2.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:58.8206978Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 2.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:58.8235877Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 2.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:58.8264918Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 2.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:58.8295170Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 2.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:58.8325864Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 2.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:58.8355214Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 2.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:58.8383996Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 2.3 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:58.9098574Z FFmpeg (playwright ffmpeg v1011) downloaded to /home/runner/.cache/ms-playwright/ffmpeg-1011
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:58.9102926Z Downloading Chrome Headless Shell 145.0.7632.6 (playwright chromium-headless-shell v1208) from https://cdn.playwright.dev/chrome-for-testing-public/145.0.7632.6/linux64/chrome-headless-shell-linux64.zip
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:59.1551823Z |                                                                                |   0% of 110.9 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:59.3197007Z |■■■■■■■■                                                                        |  10% of 110.9 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:59.3994454Z |■■■■■■■■■■■■■■■■                                                                |  20% of 110.9 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:59.4831207Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 110.9 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:59.5449500Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 110.9 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:59.6028643Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 110.9 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:59.6656795Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 110.9 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:59.7406233Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 110.9 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:59.8086886Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 110.9 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:09:59.9443456Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 110.9 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:00.0326254Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 110.9 MiB
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.3834002Z Chrome Headless Shell 145.0.7632.6 (playwright chromium-headless-shell v1208) downloaded to /home/runner/.cache/ms-playwright/chromium_headless_shell-1208
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4048045Z ##[group]Run mkdir -p web/public/data/currency
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4048476Z ^[[36;1mmkdir -p web/public/data/currency^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4048878Z ^[[36;1mcp data/currency/*.lino web/public/data/currency/^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4049456Z ^[[36;1mecho "Copied $(ls data/currency/*.lino | wc -l) .lino files to web/public/data/currency/"^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4081424Z shell: /usr/bin/bash -e {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4081703Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4081931Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4082222Z   CARGO_INCREMENTAL: 0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4082472Z   CARGO_TERM_COLOR: always
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4082906Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4205398Z Copied 48 .lino files to web/public/data/currency/
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4231535Z ##[group]Run npm run build
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4231831Z ^[[36;1mnpm run build^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4260294Z shell: /usr/bin/bash -e {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4260563Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4260774Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4261061Z   CARGO_INCREMENTAL: 0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4261300Z   CARGO_TERM_COLOR: always
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.4261555Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.5328928Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.5329598Z > link-calculator-web@0.1.0 build
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.5330153Z > tsc && vite build
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:02.5330380Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:06.2350631Z ^[[36mvite v5.4.21 ^[[32mbuilding for production...^[[36m^[[39m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:06.2910630Z transforming...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:07.9622479Z ^[[32m✓^[[39m 96 modules transformed.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:08.0893072Z rendering chunks...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3419145Z computing gzip size...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3577243Z ^[[2mdist/^[[22m^[[32mindex.html                                       ^[[39m^[[1m^[[2m  0.63 kB^[[22m^[[1m^[[22m^[[2m │ gzip:   0.37 kB^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3578925Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Size3-Regular-CTq5MqoE.woff         ^[[39m^[[1m^[[2m  4.42 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3580563Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Size4-Regular-Dl5lxZxV.woff2        ^[[39m^[[1m^[[2m  4.93 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3582192Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Size2-Regular-Dy4dx90m.woff2        ^[[39m^[[1m^[[2m  5.21 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3583782Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Size1-Regular-mCD8mA8B.woff2        ^[[39m^[[1m^[[2m  5.47 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3585675Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Size4-Regular-BF-4gkZK.woff         ^[[39m^[[1m^[[2m  5.98 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3587297Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Size2-Regular-oD1tc_U0.woff         ^[[39m^[[1m^[[2m  6.19 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3588905Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Size1-Regular-C195tn64.woff         ^[[39m^[[1m^[[2m  6.50 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3590526Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Caligraphic-Regular-Di6jR-x-.woff2  ^[[39m^[[1m^[[2m  6.91 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3592135Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Caligraphic-Bold-Dq_IR9rO.woff2     ^[[39m^[[1m^[[2m  6.91 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3593683Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Size3-Regular-DgpXs0kz.ttf          ^[[39m^[[1m^[[2m  7.59 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3595449Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Caligraphic-Regular-CTRA-rTL.woff   ^[[39m^[[1m^[[2m  7.66 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3597058Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Caligraphic-Bold-BEiXGLvX.woff      ^[[39m^[[1m^[[2m  7.72 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3598648Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Script-Regular-D3wIWfF6.woff2       ^[[39m^[[1m^[[2m  9.64 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3600238Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_SansSerif-Regular-DDBCnlJ7.woff2    ^[[39m^[[1m^[[2m 10.34 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3601855Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Size4-Regular-DWFBv043.ttf          ^[[39m^[[1m^[[2m 10.36 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3603422Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Script-Regular-D5yQViql.woff        ^[[39m^[[1m^[[2m 10.59 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3605253Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Fraktur-Regular-CTYiF6lA.woff2      ^[[39m^[[1m^[[2m 11.32 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3606839Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Fraktur-Bold-CL6g_b3V.woff2         ^[[39m^[[1m^[[2m 11.35 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3608390Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Size2-Regular-B7gKUWhC.ttf          ^[[39m^[[1m^[[2m 11.51 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3609969Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_SansSerif-Italic-C3H0VqGB.woff2     ^[[39m^[[1m^[[2m 12.03 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3611170Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_SansSerif-Bold-D1sUS0GD.woff2       ^[[39m^[[1m^[[2m 12.22 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3612758Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Size1-Regular-Dbsnue_I.ttf          ^[[39m^[[1m^[[2m 12.23 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3613694Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_SansSerif-Regular-CS6fqUqJ.woff     ^[[39m^[[1m^[[2m 12.32 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3614835Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Caligraphic-Regular-wX97UBjC.ttf    ^[[39m^[[1m^[[2m 12.34 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3615812Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Caligraphic-Bold-ATXxdsX0.ttf       ^[[39m^[[1m^[[2m 12.37 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3616384Z ^[[33m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3616787Z (!) Some chunks are larger than 500 kB after minification. Consider:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3617280Z - Using dynamic import() to code-split the application
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3618105Z - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3619026Z - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.^[[39m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3619865Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Fraktur-Regular-Dxdc4cR9.woff       ^[[39m^[[1m^[[2m 13.21 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3620761Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Fraktur-Bold-BsDP51OF.woff          ^[[39m^[[1m^[[2m 13.30 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3621700Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Typewriter-Regular-CO6r4hn1.woff2   ^[[39m^[[1m^[[2m 13.57 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3622592Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_SansSerif-Italic-DN2j7dab.woff      ^[[39m^[[1m^[[2m 14.11 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3623480Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_SansSerif-Bold-DbIhKOiC.woff        ^[[39m^[[1m^[[2m 14.41 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3624375Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Typewriter-Regular-C0xS9mPB.woff    ^[[39m^[[1m^[[2m 16.03 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3625503Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Math-BoldItalic-CZnvNsCZ.woff2      ^[[39m^[[1m^[[2m 16.40 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3626444Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Math-Italic-t53AETM-.woff2          ^[[39m^[[1m^[[2m 16.44 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3627332Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Script-Regular-C5JkGWo-.ttf         ^[[39m^[[1m^[[2m 16.65 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3628231Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Main-BoldItalic-DxDJ3AOS.woff2      ^[[39m^[[1m^[[2m 16.78 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3629138Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Main-Italic-NWA7e6Wa.woff2          ^[[39m^[[1m^[[2m 16.99 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3630031Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Math-BoldItalic-iY-2wyZ7.woff       ^[[39m^[[1m^[[2m 18.67 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3630902Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Math-Italic-DA0__PXp.woff           ^[[39m^[[1m^[[2m 18.75 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3631846Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Main-BoldItalic-SpSLRI95.woff       ^[[39m^[[1m^[[2m 19.41 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3632834Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_SansSerif-Regular-BNo7hRIc.ttf      ^[[39m^[[1m^[[2m 19.44 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3633791Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Fraktur-Regular-CB_wures.ttf        ^[[39m^[[1m^[[2m 19.57 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3634930Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Fraktur-Bold-BdnERNNW.ttf           ^[[39m^[[1m^[[2m 19.58 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3635916Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Main-Italic-BMLOBm91.woff           ^[[39m^[[1m^[[2m 19.68 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3636877Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_SansSerif-Italic-YYjJ1zSn.ttf       ^[[39m^[[1m^[[2m 22.36 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3637811Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mworker-EWTO5tCd.js                        ^[[39m^[[1m^[[2m 22.69 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3638758Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_SansSerif-Bold-CFMepnvq.ttf         ^[[39m^[[1m^[[2m 24.50 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3640067Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Main-Bold-Cx986IdX.woff2            ^[[39m^[[1m^[[2m 25.32 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3641056Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Main-Regular-B22Nviop.woff2         ^[[39m^[[1m^[[2m 26.27 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3642018Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Typewriter-Regular-D3Ib7_Hf.ttf     ^[[39m^[[1m^[[2m 27.56 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3642972Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_AMS-Regular-BQhdFMY1.woff2          ^[[39m^[[1m^[[2m 28.08 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3643908Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Main-Bold-Jm3AIy58.woff             ^[[39m^[[1m^[[2m 29.91 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3645091Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Main-Regular-Dr94JaBh.woff          ^[[39m^[[1m^[[2m 30.77 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3646058Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Math-BoldItalic-B3XSjfu4.ttf        ^[[39m^[[1m^[[2m 31.20 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3647009Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Math-Italic-flOr_0UB.ttf            ^[[39m^[[1m^[[2m 31.31 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3647958Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Main-BoldItalic-DzxPMmG6.ttf        ^[[39m^[[1m^[[2m 32.97 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3648903Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_AMS-Regular-DMm9YOAa.woff           ^[[39m^[[1m^[[2m 33.52 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3649837Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Main-Italic-3WenGoN9.ttf            ^[[39m^[[1m^[[2m 33.58 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3650770Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Main-Bold-waoOVXN0.ttf              ^[[39m^[[1m^[[2m 51.34 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3651701Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_Main-Regular-ypZvNtVU.ttf           ^[[39m^[[1m^[[2m 53.58 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3652636Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[32mKaTeX_AMS-Regular-DRggAlZN.ttf            ^[[39m^[[1m^[[2m 63.63 kB^[[22m^[[1m^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3653675Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[35mindex-N1bEzPiB.css                        ^[[39m^[[1m^[[2m 15.90 kB^[[22m^[[1m^[[22m^[[2m │ gzip:   3.18 kB^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3654995Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[35mMathRenderer-Q3drjL_h.css                 ^[[39m^[[1m^[[2m 29.84 kB^[[22m^[[1m^[[22m^[[2m │ gzip:   8.05 kB^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3656141Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[36mFunctionPlot-CmL6NEhO.js                  ^[[39m^[[1m^[[2m  1.87 kB^[[22m^[[1m^[[22m^[[2m │ gzip:   0.87 kB^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3657246Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[36mMathRenderer-x8BWuHhL.js                  ^[[39m^[[1m^[[2m262.76 kB^[[22m^[[1m^[[22m^[[2m │ gzip:  77.67 kB^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3658307Z ^[[2mdist/^[[22m^[[2massets/^[[22m^[[36mindex-CRWe8jPC.js                         ^[[39m^[[1m^[[33m517.62 kB^[[39m^[[22m^[[2m │ gzip: 110.10 kB^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.3658955Z ^[[32m✓ built in 3.10s^[[39m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.4001235Z ##[group]Run npm run preview &
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.4001863Z ^[[36;1mnpm run preview &^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.4002380Z ^[[36;1mPREVIEW_PID=$!^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.4002943Z ^[[36;1m# Wait for server to be ready (up to 30 seconds)^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.4003576Z ^[[36;1mfor i in $(seq 1 30); do^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.4004248Z ^[[36;1m  curl -sf http://localhost:4173 > /dev/null 2>&1 && break^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.4005211Z ^[[36;1m  sleep 1^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.4005611Z ^[[36;1mdone^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.4006071Z ^[[36;1m# Take screenshots using browser-commander^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.4006724Z ^[[36;1mnode scripts/take-screenshots.mjs^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.4007289Z ^[[36;1mkill $PREVIEW_PID || true^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.4049834Z shell: /usr/bin/bash -e {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.4050111Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.4050325Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.4050623Z   CARGO_INCREMENTAL: 0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.4050860Z   CARGO_TERM_COLOR: always
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.4051133Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.5187846Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.5188524Z > link-calculator-web@0.1.0 preview
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.5189352Z > vite preview
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.5189528Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.7407075Z   ^[[32m➜^[[39m  ^[[1mLocal^[[22m:   ^[[36mhttp://localhost:^[[1m4173^[[22m/calculator/^[[39m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:09.7408548Z ^[[2m  ^[[32m➜^[[39m  ^[[1mNetwork^[[22m^[[2m: use ^[[22m^[[1m--host^[[22m^[[2m to expose^[[22m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:10.4873586Z Taking screenshots from http://localhost:4173 ...
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:12.4863642Z 01-initial-state
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:14.9053682Z   ✓ ../docs/use-cases/01-initial-state.png
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:14.9054366Z 02-simple-arithmetic
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:17.6677247Z   ✓ ../docs/use-cases/02-simple-arithmetic.png
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:17.6678363Z 03-currency-conversion
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:20.6206255Z   ✓ ../docs/use-cases/03-currency-conversion.png
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:20.6206881Z 04-integration
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:24.1895809Z   ✓ ../docs/use-cases/04-integration.png
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:24.1896491Z 05-dark-theme
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:32.5567921Z   ✓ ../docs/use-cases/05-dark-theme.png
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:32.5568557Z 06-definite-integral
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:40.4159605Z   ✓ ../docs/use-cases/06-definite-integral.png
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:40.4160266Z 07-math-functions
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:48.2934456Z   ✓ ../docs/use-cases/07-math-functions.png
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:48.2935274Z 08-datetime
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:51.3180419Z   ✓ ../docs/use-cases/08-datetime.png
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:51.3180885Z 09-parentheses
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:54.2698812Z   ✓ ../docs/use-cases/09-parentheses.png
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:54.2700830Z   ✓ copied calculator-main.png
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:54.2702691Z   ✓ copied calculator-arithmetic.png
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:54.2705431Z   ✓ copied calculator-currency.png
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:54.2706908Z   ✓ copied calculator-datetime.png
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:54.2709212Z   ✓ copied calculator-parentheses.png
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:54.2709778Z
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:54.2710749Z All screenshots taken successfully.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.3224101Z ##[group]Run git add -A
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.3224400Z ^[[36;1mgit add -A^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.3224864Z ^[[36;1mif git diff --cached --quiet; then^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.3225231Z ^[[36;1m  echo "has_changes=false" >> $GITHUB_OUTPUT^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.3225525Z ^[[36;1melse^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.3225758Z ^[[36;1m  echo "has_changes=true" >> $GITHUB_OUTPUT^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.3226041Z ^[[36;1mfi^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.3257056Z shell: /usr/bin/bash -e {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.3257307Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.3257506Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.3257759Z   CARGO_INCREMENTAL: 0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.3257978Z   CARGO_TERM_COLOR: always
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.3258201Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.4076346Z ##[group]Run git config user.name 'github-actions[bot]'
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.4076765Z ^[[36;1mgit config user.name 'github-actions[bot]'^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.4077193Z ^[[36;1mgit config user.email 'github-actions[bot]@users.noreply.github.com'^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.4077655Z ^[[36;1mgit commit -m "chore: update screenshots [skip ci]"^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.4077980Z ^[[36;1mgit push^[[0m
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.4109291Z shell: /usr/bin/bash -e {0}
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.4109557Z env:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.4109760Z   CARGO_HOME: /home/runner/.cargo
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.4110041Z   CARGO_INCREMENTAL: 0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.4110275Z   CARGO_TERM_COLOR: always
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.4110508Z ##[endgroup]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.4299550Z [main e641d19] chore: update screenshots [skip ci]
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:10:59.4301208Z  14 files changed, 0 insertions(+), 0 deletions(-)
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.0197899Z To https://github.com/link-assistant/calculator
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.0198967Z  ! [rejected]        main -> main (fetch first)
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.0200200Z error: failed to push some refs to 'https://github.com/link-assistant/calculator'
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.0210891Z hint: Updates were rejected because the remote contains work that you do not
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.0211935Z hint: have locally. This is usually caused by another repository pushing to
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.0212873Z hint: the same ref. If you want to integrate the remote changes, use
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.0213953Z hint: 'git pull' before pushing again.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.0216323Z hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.0227082Z ##[error]Process completed with exit code 1.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.0347482Z Post job cleanup.
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1175233Z [command]/usr/bin/git version
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1212557Z git version 2.54.0
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1286242Z Temporarily overriding HOME='/home/runner/work/_temp/9e6ff542-c924-4bf1-aaa6-8bc8f7c133b3' before making global git config changes
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1287836Z Adding repository directory to the temporary git global config as a safe directory
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1293006Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/calculator/calculator
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1323722Z Removing SSH command configuration
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1330589Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1364554Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1583539Z Removing HTTP extra header
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1588680Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1624358Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1837735Z Removing includeIf entries pointing to credentials config files
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1844486Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1869221Z includeif.gitdir:/home/runner/work/calculator/calculator/.git.path
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1870015Z includeif.gitdir:/home/runner/work/calculator/calculator/.git/worktrees/*.path
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1870573Z includeif.gitdir:/github/workspace/.git.path
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1871058Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1878503Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/calculator/calculator/.git.path
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1899507Z /home/runner/work/_temp/git-credentials-0b2b916d-3c50-4493-ba2e-00e80770014c.config
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1909171Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/calculator/calculator/.git.path /home/runner/work/_temp/git-credentials-0b2b916d-3c50-4493-ba2e-00e80770014c.config
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1941838Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/calculator/calculator/.git/worktrees/*.path
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1963299Z /home/runner/work/_temp/git-credentials-0b2b916d-3c50-4493-ba2e-00e80770014c.config
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.1972992Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/calculator/calculator/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-0b2b916d-3c50-4493-ba2e-00e80770014c.config
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.2005444Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.2025645Z /github/runner_temp/git-credentials-0b2b916d-3c50-4493-ba2e-00e80770014c.config
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.2033047Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-0b2b916d-3c50-4493-ba2e-00e80770014c.config
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.2062607Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.2082422Z /github/runner_temp/git-credentials-0b2b916d-3c50-4493-ba2e-00e80770014c.config
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.2090978Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-0b2b916d-3c50-4493-ba2e-00e80770014c.config
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.2120754Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.2341261Z Removing credentials config '/home/runner/work/_temp/git-credentials-0b2b916d-3c50-4493-ba2e-00e80770014c.config'
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.2518327Z Cleaning up orphan processes
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.2854183Z Terminate orphan process: pid (4270) (node)
+Update Screenshots	UNKNOWN STEP	2026-06-25T19:11:00.2892602Z Terminate orphan process: pid (4281) (esbuild)
