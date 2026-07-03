@@ -59,6 +59,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.20.5] - 2026-07-03
+
+### Fixed
+- Parse comma-decimal numbers such as `82,6172 / 100` using supported locale number conventions and expose ambiguous comma-number interpretations.
+
 ## [0.20.4] - 2026-06-28
 
 ### Fixed
