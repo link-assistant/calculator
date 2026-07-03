@@ -18,6 +18,9 @@ use std::cmp::Ordering;
 #[path = "expression_parser_timezone.rs"]
 mod timezone;
 
+#[path = "expression_parser_locale.rs"]
+mod locale;
+
 /// Evaluates a power expression, using exact rational arithmetic when possible.
 ///
 /// When both base and exponent are rational and the exponent is an integer
@@ -141,8 +144,7 @@ impl ExpressionParser {
         Ok((value, steps, lino))
     }
 
-    /// Parses an expression string into an Expression AST.
-    pub fn parse(&self, input: &str) -> Result<Expression, CalculatorError> {
+    pub(super) fn parse_tokenized(&self, input: &str) -> Result<Expression, CalculatorError> {
         let mut lexer = Lexer::new(input);
         let tokens = lexer.tokenize()?;
         let mut parser = TokenParser::new(&tokens, &self.number_grammar, input);
