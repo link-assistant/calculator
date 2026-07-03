@@ -628,8 +628,16 @@ impl Calculator {
             return plan::empty_plan();
         }
 
-        match self.parser.parse(input) {
-            Ok(expr) => plan::create_plan(input, &expr),
+        match self.parser.parse_interpretations(input) {
+            Ok(interpretations) => {
+                if let Some(expr) = interpretations.first() {
+                    let mut plan = plan::create_plan(input, expr);
+                    plan.alternative_lino = Self::combined_alternative_lino(&interpretations);
+                    plan
+                } else {
+                    plan::error_plan(input, "Parse error: no parseable interpretation")
+                }
+            }
             Err(e) => plan::error_plan(input, &e.to_string()),
         }
     }
@@ -638,10 +646,13 @@ impl Calculator {
     pub fn calculate_internal(&mut self, input: &str) -> CalculationResult {
         // Try to parse the expression to generate alternative interpretations
         // and detect live time expressions before evaluation.
-        let parsed_expr = self.parser.parse(input).ok();
-        let alternatives = parsed_expr.as_ref().and_then(Expression::alternative_lino);
-        let is_live_time = parsed_expr
+        let parsed_interpretations = self.parser.parse_interpretations(input).ok();
+        let alternatives = parsed_interpretations
             .as_ref()
+            .and_then(|interpretations| Self::combined_alternative_lino(interpretations));
+        let is_live_time = parsed_interpretations
+            .as_ref()
+            .and_then(|interpretations| interpretations.first())
             .is_some_and(Expression::contains_live_time);
 
         let mut result = match self.parser.parse_and_evaluate(input) {
@@ -678,6 +689,29 @@ impl Calculator {
         result.alternative_lino = alternatives;
 
         result
+    }
+
+    fn combined_alternative_lino(interpretations: &[Expression]) -> Option<Vec<String>> {
+        let first = interpretations.first()?;
+        let mut alternatives = vec![first.to_lino()];
+
+        for expr in interpretations {
+            if let Some(expr_alternatives) = expr.alternative_lino() {
+                for lino in expr_alternatives {
+                    Self::push_unique_lino(&mut alternatives, lino);
+                }
+            } else {
+                Self::push_unique_lino(&mut alternatives, expr.to_lino());
+            }
+        }
+
+        (alternatives.len() > 1).then_some(alternatives)
+    }
+
+    fn push_unique_lino(alternatives: &mut Vec<String>, lino: String) {
+        if !alternatives.contains(&lino) {
+            alternatives.push(lino);
+        }
     }
 
     /// Generates plot data for an integral expression.

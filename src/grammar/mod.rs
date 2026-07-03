@@ -5,6 +5,7 @@ mod expression_parser;
 mod integral;
 mod lexer;
 mod linear_equation;
+mod locale_numbers;
 mod math_functions;
 mod number_grammar;
 mod polynomial_equation;
