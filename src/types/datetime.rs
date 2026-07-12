@@ -146,6 +146,14 @@ impl DateTime {
         }
     }
 
+    /// Creates a date-only value for today's calendar date in the timezone
+    /// represented by `offset_seconds` (seconds east of UTC).
+    #[must_use]
+    pub fn today(offset_seconds: i32) -> Self {
+        let local_now = Utc::now() + Duration::seconds(i64::from(offset_seconds));
+        Self::from_date(local_now.date_naive())
+    }
+
     /// Re-anchors a timezone-less ("naive") time or datetime to a local timezone.
     ///
     /// Bare times like `12:30` are parsed with their wall-clock reading stored as
@@ -880,6 +888,7 @@ impl FromStr for DateTime {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use chrono::Timelike;
 
     #[test]
     fn test_parse_iso_date() {
@@ -945,6 +954,21 @@ mod tests {
         // Should be approximately 44 hours and 8 minutes
         let hours = diff.as_secs() / 3600;
         assert!(hours > 40 && hours < 50);
+    }
+
+    #[test]
+    fn test_today_uses_requested_timezone_date() {
+        let now = Utc::now();
+        let (offset_seconds, expected_date) = if now.time().hour() < 12 {
+            (-12 * 60 * 60, (now - Duration::hours(12)).date_naive())
+        } else {
+            (14 * 60 * 60, (now + Duration::hours(14)).date_naive())
+        };
+
+        let today = DateTime::today(offset_seconds);
+        assert_eq!(today.inner.date_naive(), expected_date);
+        assert!(today.has_date());
+        assert!(!today.has_time());
     }
 
     #[test]

@@ -9,7 +9,7 @@
 //! access `ExpressionParser`'s private `local_offset_seconds` field.
 
 use super::ExpressionParser;
-use crate::types::DateTime;
+use crate::types::{DateTime, Expression};
 
 impl ExpressionParser {
     /// Sets the user's local timezone offset in seconds east of UTC.
@@ -31,6 +31,15 @@ impl ExpressionParser {
         match self.local_offset_seconds {
             Some(offset) => DateTime::now_local(offset),
             None => DateTime::now_with_label("current UTC time", Some(0), Some("UTC".to_string())),
+        }
+    }
+
+    /// Resolves a dynamic current-date expression in the configured timezone.
+    pub(super) fn current_date(&self, expression: &Expression) -> DateTime {
+        match expression {
+            Expression::Now => self.current_now(),
+            Expression::Today => DateTime::today(self.local_offset_seconds.unwrap_or(0)),
+            _ => unreachable!("current_date only accepts dynamic date expressions"),
         }
     }
 }
