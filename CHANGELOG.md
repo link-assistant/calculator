@@ -60,6 +60,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.20.6] - 2026-07-16
+
+### Added
+- Support `today` as a timezone-aware current-date keyword in date arithmetic.
+
 ## [0.20.5] - 2026-07-03
 
 ### Fixed
