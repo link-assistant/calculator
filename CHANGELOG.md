@@ -61,6 +61,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.20.7] - 2026-07-16
+
+### Fixed
+- Interpret bare four-digit years as January 1 dates in datetime subtraction, enabling expressions such as `(now - 2023) in months`.
+
 ## [0.20.6] - 2026-07-16
 
 ### Added
