@@ -1,6 +1,24 @@
 use super::Value;
 use crate::error::CalculatorError;
-use crate::types::{DateTime, DurationUnit, Rational, Unit};
+use crate::types::{DateTime, DurationUnit, Rational, Unit, ValueKind};
+
+/// Interprets an unadorned four-digit integer as January 1 of that year.
+pub(super) fn bare_year_datetime(value: &Value) -> Option<DateTime> {
+    if value.unit != Unit::None {
+        return None;
+    }
+
+    let year = match &value.kind {
+        ValueKind::Rational(number) if number.is_integer() => i32::try_from(number.numer()).ok()?,
+        ValueKind::Number(number) => number.to_string().parse().ok()?,
+        _ => return None,
+    };
+
+    (1000..=9999)
+        .contains(&year)
+        .then(|| DateTime::from_year(year))
+        .flatten()
+}
 
 /// Formats a duration in seconds to a human-readable string.
 pub(super) fn format_duration(total_seconds: i64) -> String {

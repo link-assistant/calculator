@@ -214,6 +214,11 @@ impl DateTime {
         }
     }
 
+    /// Creates a date-only value for January 1 of a calendar year.
+    pub(crate) fn from_year(year: i32) -> Option<Self> {
+        NaiveDate::from_ymd_opt(year, 1, 1).map(Self::from_date)
+    }
+
     /// Creates a new DateTime from a time (today's date is used).
     #[must_use]
     pub fn from_time(time: NaiveTime) -> Self {
