@@ -3,7 +3,7 @@
 mod duration;
 mod kind;
 use duration::{
-    add_calendar_months_or_duration, apply_duration_unit, convert_raw_duration,
+    add_calendar_months_or_duration, apply_duration_unit, bare_year_datetime, convert_raw_duration,
     divide_duration_units, divide_raw_duration, format_duration,
 };
 pub use kind::ValueKind;
@@ -386,6 +386,15 @@ impl Value {
         currency_db: &mut CurrencyDatabase,
         date: Option<&DateTime>,
     ) -> Result<Self, CalculatorError> {
+        if let (ValueKind::DateTime(datetime), Some(year)) = (&self.kind, bare_year_datetime(other))
+        {
+            return Ok(Value::duration(datetime.signed_subtract_seconds(&year)));
+        }
+        if let (Some(year), ValueKind::DateTime(datetime)) = (bare_year_datetime(self), &other.kind)
+        {
+            return Ok(Value::duration(year.signed_subtract_seconds(datetime)));
+        }
+
         match (&self.kind, &other.kind) {
             // Rational - Rational
             (ValueKind::Rational(a), ValueKind::Rational(b)) => {
