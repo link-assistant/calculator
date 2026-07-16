@@ -301,6 +301,13 @@ impl<'a> TokenParser<'a> {
                 return Ok(Expression::Now);
             }
 
+            // Resolve "today" at evaluation time so long-lived calculator
+            // instances and configured local timezones use the current date.
+            if id.eq_ignore_ascii_case("today") {
+                self.advance();
+                return Ok(Expression::Today);
+            }
+
             // Check for prefix currency symbol notation (e.g., $10, €5, £3).
             if id.chars().count() == 1 {
                 let ch = id.chars().next().unwrap();

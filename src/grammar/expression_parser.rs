@@ -121,10 +121,7 @@ impl ExpressionParser {
             return Err(CalculatorError::EmptyInput);
         }
 
-        // Clear any previous rate tracking
         self.currency_db.clear_last_used_rate();
-
-        // Try datetime subtraction pattern first: "(datetime) - (datetime)"
         if let Some(result) = self
             .datetime_grammar
             .try_parse_datetime_subtraction(input, self.local_offset_seconds)
@@ -132,13 +129,8 @@ impl ExpressionParser {
             return Ok(result);
         }
 
-        // Parse the expression
         let expr = self.parse(input)?;
-
-        // Generate links notation representation
         let lino = expr.to_lino();
-
-        // Evaluate with step tracking
         let (value, steps) = self.evaluate_with_steps(&expr)?;
 
         Ok((value, steps, lino))
@@ -149,8 +141,6 @@ impl ExpressionParser {
         let tokens = lexer.tokenize()?;
         let mut parser = TokenParser::new(&tokens, &self.number_grammar, input);
         let mut expr = parser.parse_complete_expression()?;
-        // Re-anchor timezone-less datetime literals to the user's local timezone
-        // when it is known, so bare times like `12:30` mean local time.
         if let Some(offset) = self.local_offset_seconds {
             expr.apply_local_offset(offset);
         }
@@ -191,7 +181,10 @@ impl ExpressionParser {
                 Self::expression_contains_variable(integrand)
             }
             Expression::UnitConversion { value, .. } => Self::expression_contains_variable(value),
-            Expression::Number { .. } | Expression::DateTime(_) | Expression::Now => false,
+            Expression::Number { .. }
+            | Expression::DateTime(_)
+            | Expression::Now
+            | Expression::Today => false,
         }
     }
 
@@ -237,7 +230,7 @@ impl ExpressionParser {
                 Ok(Value::rational_with_unit(rational, unit.clone()))
             }
             Expression::DateTime(dt) => Ok(Value::datetime(dt.clone())),
-            Expression::Now => Ok(Value::datetime(self.current_now())),
+            Expression::Now | Expression::Today => Ok(Value::datetime(self.current_date(expr))),
             Expression::Until(target) => {
                 let target_val = self.evaluate_expr(target)?;
                 let now = self.current_now();
@@ -392,10 +385,15 @@ impl ExpressionParser {
                 }
                 Ok(dt_val)
             }
-            Expression::Now => {
-                let now = self.current_now();
-                steps.push(format!("Current time: {now}"));
-                Ok(Value::datetime(now))
+            Expression::Now | Expression::Today => {
+                let date = self.current_date(expr);
+                let description = if matches!(expr, Expression::Now) {
+                    "Current time"
+                } else {
+                    "Today's date"
+                };
+                steps.push(format!("{description}: {date}"));
+                Ok(Value::datetime(date))
             }
             Expression::Until(target) => {
                 let target_val = self.evaluate_expr_with_steps(target, steps)?;
@@ -907,7 +905,7 @@ impl ExpressionParser {
                 Ok(Value::rational_with_unit(rational, unit.clone()))
             }
             Expression::DateTime(dt) => Ok(Value::datetime(dt.clone())),
-            Expression::Now => Ok(Value::datetime(self.current_now())),
+            Expression::Now | Expression::Today => Ok(Value::datetime(self.current_date(expr))),
             Expression::Until(target) => {
                 let target_val = self.evaluate_expr_with_var(target, var_name, var_value)?;
                 let now = self.current_now();

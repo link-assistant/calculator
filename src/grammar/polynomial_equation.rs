@@ -76,6 +76,7 @@ impl PolynomialForm {
             }
             Expression::DateTime(_)
             | Expression::Now
+            | Expression::Today
             | Expression::Until(_)
             | Expression::AtTime { .. }
             | Expression::FunctionCall { .. }

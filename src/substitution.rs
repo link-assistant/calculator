@@ -15,7 +15,8 @@ impl Calculator {
             Expression::Variable(_)
             | Expression::Number { .. }
             | Expression::DateTime(_)
-            | Expression::Now => expr.clone(),
+            | Expression::Now
+            | Expression::Today => expr.clone(),
             Expression::Until(inner) => {
                 Expression::Until(Box::new(Self::substitute_variable(inner, var, value)))
             }

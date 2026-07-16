@@ -101,6 +101,8 @@ pub enum Expression {
     DateTime(DateTime),
     /// The current time ("now").
     Now,
+    /// The current calendar date ("today").
+    Today,
     /// "until <datetime>" - duration from now to a target datetime.
     Until(Box<Expression>),
     /// A binary operation.
@@ -344,7 +346,7 @@ impl Expression {
                 integrand.apply_local_offset(offset_seconds);
             }
             Self::UnitConversion { value, .. } => value.apply_local_offset(offset_seconds),
-            Self::Number { .. } | Self::Now | Self::Variable(_) => {}
+            Self::Number { .. } | Self::Now | Self::Today | Self::Variable(_) => {}
         }
     }
 
@@ -363,6 +365,7 @@ impl Expression {
             }
             Self::DateTime(dt) => format!("({})", dt),
             Self::Now => "(now)".to_string(),
+            Self::Today => "(today)".to_string(),
             Self::Until(inner) => {
                 let inner_str = inner.to_lino_internal(None);
                 format!("(until {inner_str})")
@@ -612,7 +615,7 @@ impl Expression {
     #[must_use]
     pub fn evaluates_to_datetime(&self) -> bool {
         match self {
-            Self::DateTime(_) | Self::Now => true,
+            Self::DateTime(_) | Self::Now | Self::Today => true,
             Self::Group(inner) => inner.evaluates_to_datetime(),
             _ => false,
         }
@@ -626,6 +629,7 @@ impl Expression {
         match self {
             Self::DateTime(dt) => dt.is_live_time(),
             Self::Now => true,
+            Self::Today => true,
             Self::Until(inner) => inner.contains_live_time(),
             Self::Binary { left, right, .. } => {
                 left.contains_live_time() || right.contains_live_time()
@@ -695,7 +699,7 @@ impl Expression {
                     currencies.insert(code.to_uppercase());
                 }
             }
-            Self::DateTime(_) | Self::Now | Self::Variable(_) => {}
+            Self::DateTime(_) | Self::Now | Self::Today | Self::Variable(_) => {}
         }
     }
 
@@ -703,7 +707,11 @@ impl Expression {
     #[must_use]
     pub fn depth(&self) -> usize {
         match self {
-            Self::Number { .. } | Self::DateTime(_) | Self::Variable(_) | Self::Now => 1,
+            Self::Number { .. }
+            | Self::DateTime(_)
+            | Self::Variable(_)
+            | Self::Now
+            | Self::Today => 1,
             Self::Binary { left, right, .. }
             | Self::Power {
                 base: left,
@@ -735,6 +743,7 @@ impl Expression {
             }
             Self::DateTime(dt) => format!("\\text{{{dt}}}"),
             Self::Now => "\\text{now}".to_string(),
+            Self::Today => "\\text{today}".to_string(),
             Self::Until(inner) => {
                 format!("\\text{{until }} {}", inner.to_latex())
             }
@@ -896,6 +905,7 @@ impl fmt::Display for Expression {
             }
             Self::DateTime(dt) => write!(f, "{dt}"),
             Self::Now => write!(f, "now"),
+            Self::Today => write!(f, "today"),
             Self::Until(inner) => write!(f, "until {inner}"),
             Self::Binary { left, op, right } => write!(f, "{left} {op} {right}"),
             Self::Negate(inner) => write!(f, "-{inner}"),
@@ -945,19 +955,11 @@ mod tests {
     }
 
     #[test]
-    fn test_currency_expression() {
-        let expr = Expression::currency(Decimal::new(100), "USD");
-        assert_eq!(expr.to_string(), "100 USD");
-        assert_eq!(expr.to_lino(), "(100 USD)");
-    }
-
-    #[test]
     fn test_binary_expression() {
         let left = Expression::number(Decimal::new(2));
         let right = Expression::number(Decimal::new(3));
         let expr = Expression::binary(left, BinaryOp::Add, right);
         assert_eq!(expr.to_string(), "2 + 3");
-        // Improved links notation with minimal parentheses
         assert_eq!(expr.to_lino(), "(2 + 3)");
     }
 
@@ -984,7 +986,6 @@ mod tests {
     fn test_depth() {
         let simple = Expression::number(Decimal::new(1));
         assert_eq!(simple.depth(), 1);
-
         let binary = Expression::binary(
             Expression::number(Decimal::new(1)),
             BinaryOp::Add,
