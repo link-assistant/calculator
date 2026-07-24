@@ -62,6 +62,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.20.8] - 2026-07-24
+
+### Added
+- Support ordinal dates with optional `of` and natural `days between` / `days to` time-span queries.
+
 ## [0.20.7] - 2026-07-16
 
 ### Fixed
