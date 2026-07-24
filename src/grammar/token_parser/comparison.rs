@@ -1,6 +1,6 @@
 use crate::error::CalculatorError;
 use crate::grammar::TokenKind;
-use crate::types::{ComparisonOp, Expression};
+use crate::types::{BinaryOp, ComparisonOp, DurationUnit, Expression, Unit};
 
 use super::TokenParser;
 
@@ -10,6 +10,10 @@ impl TokenParser<'_> {
     }
 
     fn parse_comparison(&mut self) -> Result<Expression, CalculatorError> {
+        if let Some(day_span) = self.try_parse_day_span()? {
+            return Ok(day_span);
+        }
+
         if self.check_compare() {
             self.advance(); // consume "compare"
             let left = self.parse_additive()?;
@@ -38,6 +42,44 @@ impl TokenParser<'_> {
         }
 
         Ok(left)
+    }
+
+    /// Parses natural day-span queries:
+    /// - `days between <datetime> and <datetime>`
+    /// - `days to <datetime>` (the target datetime minus now)
+    fn try_parse_day_span(&mut self) -> Result<Option<Expression>, CalculatorError> {
+        let Some(TokenKind::Identifier(unit)) = self.current_kind() else {
+            return Ok(None);
+        };
+        if !unit.eq_ignore_ascii_case("days") {
+            return Ok(None);
+        }
+
+        let is_between = matches!(
+            self.peek_kind(),
+            Some(TokenKind::Identifier(keyword)) if keyword.eq_ignore_ascii_case("between")
+        );
+        let is_to = matches!(self.peek_kind(), Some(TokenKind::To));
+        if !is_between && !is_to {
+            return Ok(None);
+        }
+
+        self.advance(); // consume "days"
+        self.advance(); // consume "between" or "to"
+
+        let left = self.parse_additive()?;
+        let difference = if is_between {
+            self.expect(&TokenKind::And)?;
+            let right = self.parse_additive()?;
+            Expression::binary(left, BinaryOp::Subtract, right)
+        } else {
+            Expression::binary(left, BinaryOp::Subtract, Expression::Now)
+        };
+
+        Ok(Some(Expression::unit_conversion(
+            difference,
+            Unit::Duration(DurationUnit::Days),
+        )))
     }
 
     fn match_ordering_op(&mut self) -> Option<ComparisonOp> {

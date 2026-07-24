@@ -235,7 +235,9 @@ impl<'a> TokenParser<'a> {
             // If followed by an identifier that looks like a month name (e.g., "17 February 2027"
             // or "17 февраля 2027"), try to parse the whole as a datetime expression.
             if let Some(TokenKind::Identifier(id)) = self.current_kind() {
-                if DateTimeGrammar::looks_like_datetime(id) {
+                let is_ordinal_suffix =
+                    matches!(id.to_lowercase().as_str(), "st" | "nd" | "rd" | "th");
+                if DateTimeGrammar::looks_like_datetime(id) || is_ordinal_suffix {
                     let save_before_dt = self.pos;
                     if let Ok(dt) = self.try_parse_datetime_from_tokens(&num_str) {
                         return Ok(dt);
@@ -461,6 +463,10 @@ impl<'a> TokenParser<'a> {
                     parts.push(id.clone());
                     self.advance();
                 }
+                Some(TokenKind::Of) => {
+                    parts.push("of".to_string());
+                    self.advance();
+                }
                 Some(TokenKind::Comma) => {
                     parts.push(",".to_string());
                     self.advance();
@@ -634,6 +640,11 @@ impl<'a> TokenParser<'a> {
                     }
                     token_positions.push(self.pos);
                     parts.push(id.clone());
+                    self.advance();
+                }
+                Some(TokenKind::Of) => {
+                    token_positions.push(self.pos);
+                    parts.push("of".to_string());
                     self.advance();
                 }
                 Some(TokenKind::Comma) => {
