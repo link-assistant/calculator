@@ -174,7 +174,7 @@ pub(super) fn translate_month_names(input: &str) -> String {
 }
 
 /// Pre-processes natural date strings by removing day names, ordinal suffixes,
-/// and the "on" preposition.
+/// and optional "on"/"of" prepositions.
 pub(super) fn preprocess_natural_date(input: &str) -> String {
     let mut result = input.to_string();
 
@@ -217,8 +217,12 @@ pub(super) fn preprocess_natural_date(input: &str) -> String {
         }
     }
 
-    // Remove "on " preposition (often between time and date)
-    result = result.replace(" on ", " ");
+    // Remove optional prepositions used in natural date phrases such as
+    // "on January 26th" and "8th of August".
+    if let Ok(re) = regex::Regex::new(r"(?i)\b(?:on|of)\b") {
+        result = re.replace_all(&result, "").to_string();
+        result = result.split_whitespace().collect::<Vec<_>>().join(" ");
+    }
 
     // Remove ordinal suffixes from day numbers (1st, 2nd, 3rd, 4th-31st)
     let re_result = regex::Regex::new(r"(\d{1,2})(st|nd|rd|th)\b");
