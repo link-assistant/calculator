@@ -63,6 +63,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.20.9] - 2026-08-04
+
+### Fixed
+- Recognize the Russian ruble abbreviation `руб` (and `рубл`) as RUB, so expressions like `20000 руб + 120000 руб + 25000 рублей` calculate instead of failing with "cannot add 'руб' and 'RUB'" ([#209](https://github.com/link-assistant/calculator/issues/209)).
+- Accept a trailing dot on abbreviated units (`руб.`, `кг.`), which previously raised `Unexpected character '.'`.
+
 ## [0.20.8] - 2026-07-24
 
 ### Added
