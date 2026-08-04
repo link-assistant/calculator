@@ -513,6 +513,18 @@ impl Lexer {
             }
         }
 
+        // Abbreviations are commonly written with a trailing dot ("руб.", "кг.", "янв.").
+        // Consume that dot when it terminates the word, i.e. when it is not followed by
+        // another word character (so "янв.2026" or "3.5" are left untouched).
+        if !text.is_empty()
+            && self.current() == '.'
+            && !self
+                .peek()
+                .is_some_and(|c| c.is_alphanumeric() || c == '_' || is_unicode_mark(c))
+        {
+            self.advance();
+        }
+
         // Check for keywords (including multilingual equivalents)
         let kind = match text.to_lowercase().as_str() {
             "at" => TokenKind::At,
