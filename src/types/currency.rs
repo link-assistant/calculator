@@ -526,6 +526,11 @@ impl CurrencyDatabase {
             // Prepositional: рубле, рублях
             "рубль" | "рубля" | "рубле" | "рубли" | "рублей" | "рублям" | "рублю" | "рублём"
             | "рублем" | "рублями" | "рублях" => return Some("RUB".to_string()),
+            // Common Russian abbreviations for RUB. The trailing dot of "руб." / "рубл."
+            // is stripped by the lexer, so only the dotless forms are listed here.
+            // A bare "р" is intentionally not accepted: single Latin/Cyrillic letters are
+            // used as variable names in equations.
+            "руб" | "рубл" => return Some("RUB".to_string()),
             // Russian language names for VND (Vietnamese Dong, all grammatical cases/forms)
             // Nominative: донг, донги; Genitive: донга, донгов;
             // Dative: донгу, донгам; Instrumental: донгом, донгами;
