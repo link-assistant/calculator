@@ -65,6 +65,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.20.11] - 2026-08-11
+
+### Fixed
+- Parse compact dates followed by a time, such as `08Aug2026 22:35 - now` (#211)
+
 ## [0.20.10] - 2026-08-11
 
 ### Fixed
