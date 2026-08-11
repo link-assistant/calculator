@@ -188,6 +188,21 @@ impl<'a> TokenParser<'a> {
         if let Some(TokenKind::DateLiteral(s)) = self.current_kind() {
             let s = s.clone();
             self.advance();
+
+            // A time may follow the date literal, as in "2026-08-08 22:35" or
+            // "15.10.2025 22:35 UTC". Try to absorb it, falling back to the
+            // bare date when the combined form does not parse.
+            if matches!(
+                self.current_kind(),
+                Some(TokenKind::Number(_) | TokenKind::Identifier(_))
+            ) {
+                let after_literal = self.pos;
+                if let Ok(dt) = self.try_parse_datetime_from_tokens(&s) {
+                    return Ok(dt);
+                }
+                self.pos = after_literal;
+            }
+
             return crate::types::DateTime::parse(&s).map(Expression::DateTime);
         }
 
