@@ -64,6 +64,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.20.10] - 2026-08-11
+
+### Fixed
+- Parse dates followed by a time without a comma, such as `08 Aug 2026 22:35`, `2026-08-08 22:35 UTC` and `08 Aug 2026 22:35 - now` (#212)
+
 ## [0.20.9] - 2026-08-04
 
 ### Fixed
