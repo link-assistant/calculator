@@ -606,6 +606,11 @@ impl DateTime {
             return Some(dt);
         }
 
+        // Try "<date> <time>" pattern without a comma: "08 Aug 2026 22:35"
+        if let Some(dt) = Self::try_parse_date_then_time(input) {
+            return Some(dt);
+        }
+
         // ISO 8601 format
         if let Ok(dt) = ChronoDateTime::parse_from_rfc3339(input) {
             return Some(Self {
@@ -627,6 +632,58 @@ impl DateTime {
                 has_date: true,
                 label: None,
                 tz_abbrev: None,
+            });
+        }
+
+        None
+    }
+
+    /// Try to parse "date time" patterns like "08 Aug 2026 22:35" or
+    /// "2026-08-08 22:35 UTC", where the date comes first and no comma
+    /// separates the two parts.
+    fn try_parse_date_then_time(input: &str) -> Option<Self> {
+        let input = input.trim();
+
+        let words: Vec<&str> = input.split_whitespace().collect();
+        if words.len() < 2 {
+            return None;
+        }
+
+        // Try progressively shorter date prefixes so the longest date wins
+        // (e.g. "08 Aug 2026" before "08 Aug").
+        for split_at in (1..words.len()).rev() {
+            let date_candidate = words[..split_at].join(" ");
+            let time_candidate = words[split_at..].join(" ");
+
+            let Some(time_dt) = Self::try_parse_time_formats(&time_candidate) else {
+                continue;
+            };
+
+            let date = Self::try_parse_date_formats(&date_candidate)
+                .map(|d| d.inner.date_naive())
+                .or_else(|| parse_partial_date(date_candidate.trim_end_matches(',')))?;
+
+            // `try_parse_time_formats` already shifted the time to UTC, so read
+            // the wall-clock time back in its own timezone before combining it
+            // with the date, then shift the whole datetime to UTC at once.
+            let offset = time_dt.offset_seconds.and_then(FixedOffset::east_opt);
+            let wall_time = offset.map_or_else(
+                || time_dt.inner.time(),
+                |off| time_dt.inner.with_timezone(&off).time(),
+            );
+
+            let naive = date.and_time(wall_time);
+            let inner = offset
+                .and_then(|off| off.from_local_datetime(&naive).single())
+                .map_or_else(|| naive.and_utc(), |adj| adj.with_timezone(&Utc));
+
+            return Some(Self {
+                inner,
+                offset_seconds: time_dt.offset_seconds,
+                has_time: true,
+                has_date: true,
+                label: None,
+                tz_abbrev: time_dt.tz_abbrev,
             });
         }
 
@@ -891,95 +948,5 @@ impl FromStr for DateTime {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use chrono::Timelike;
-
-    #[test]
-    fn test_parse_iso_date() {
-        let dt = DateTime::parse("2026-01-22").unwrap();
-        assert!(dt.has_date);
-        assert!(!dt.has_time);
-    }
-
-    #[test]
-    fn test_parse_us_date() {
-        let dt = DateTime::parse("01/22/2026").unwrap();
-        assert!(dt.has_date);
-    }
-
-    #[test]
-    fn test_parse_dot_date_european() {
-        // DD.MM.YYYY (German/Russian convention) — issue #166.
-        let dt = DateTime::parse("15.10.2025").unwrap();
-        assert!(dt.has_date);
-        assert_eq!(dt.year(), 2025);
-        assert_eq!(dt.to_string(), "2025-10-15");
-    }
-
-    #[test]
-    fn test_parse_dot_date_iso() {
-        // YYYY.MM.DD
-        let dt = DateTime::parse("2025.10.15").unwrap();
-        assert_eq!(dt.to_string(), "2025-10-15");
-    }
-
-    #[test]
-    fn test_parse_month_name_date() {
-        let dt = DateTime::parse("Jan 22, 2026").unwrap();
-        assert!(dt.has_date);
-        assert_eq!(dt.year(), 2026);
-    }
-
-    #[test]
-    fn test_parse_time_12h() {
-        let dt = DateTime::parse("8:59am").unwrap();
-        assert!(dt.has_time);
-    }
-
-    #[test]
-    fn test_parse_time_with_utc() {
-        let dt = DateTime::parse("8:59am UTC").unwrap();
-        assert!(dt.has_time);
-        assert!(dt.offset_seconds.is_some());
-    }
-
-    #[test]
-    fn test_parse_datetime_with_partial_date() {
-        let dt = DateTime::parse("Jan 27, 8:59am UTC").unwrap();
-        assert!(dt.has_date);
-        assert!(dt.has_time);
-    }
-
-    #[test]
-    fn test_datetime_subtraction() {
-        let dt1 = DateTime::parse("Jan 27, 8:59am UTC").unwrap();
-        let dt2 = DateTime::parse("Jan 25, 12:51pm UTC").unwrap();
-        let diff = dt1.subtract(&dt2);
-        // Should be approximately 44 hours and 8 minutes
-        let hours = diff.as_secs() / 3600;
-        assert!(hours > 40 && hours < 50);
-    }
-
-    #[test]
-    fn test_today_uses_requested_timezone_date() {
-        let now = Utc::now();
-        let (offset_seconds, expected_date) = if now.time().hour() < 12 {
-            (-12 * 60 * 60, (now - Duration::hours(12)).date_naive())
-        } else {
-            (14 * 60 * 60, (now + Duration::hours(14)).date_naive())
-        };
-
-        let today = DateTime::today(offset_seconds);
-        assert_eq!(today.inner.date_naive(), expected_date);
-        assert!(today.has_date());
-        assert!(!today.has_time());
-    }
-
-    #[test]
-    fn test_22_jan_2026_format() {
-        let dt = DateTime::parse("22 Jan 2026").unwrap();
-        assert!(dt.has_date);
-        assert_eq!(dt.year(), 2026);
-    }
-}
+#[path = "datetime_tests.rs"]
+mod tests;
