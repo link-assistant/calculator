@@ -66,6 +66,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.20.12] - 2026-08-13
+
+### Fixed
+- Parse dates followed by the Russian year marker, e.g. `17 августа 2026 года - 180 дней` (#215)
+
 ## [0.20.11] - 2026-08-11
 
 ### Fixed
