@@ -173,10 +173,23 @@ pub(super) fn translate_month_names(input: &str) -> String {
     result
 }
 
+/// Removes a trailing year marker word that follows a four-digit year.
+///
+/// Russian dates are commonly written as "17 августа 2026 года" (or the
+/// abbreviated "17 августа 2026 г."), where "года"/"г." only marks the
+/// preceding number as a year and carries no additional information.
+fn strip_year_marker(input: &str) -> String {
+    let Ok(re) = regex::Regex::new(r"(?i)(\d{4})\s*(года|году|годом|год|гг?\.?)\s*$")
+    else {
+        return input.to_string();
+    };
+    re.replace(input, "$1").trim_end().to_string()
+}
+
 /// Pre-processes natural date strings by removing day names, ordinal suffixes,
 /// and optional "on"/"of" prepositions.
 pub(super) fn preprocess_natural_date(input: &str) -> String {
-    let mut result = input.to_string();
+    let mut result = strip_year_marker(input);
 
     // Remove day names (case-insensitive)
     let day_names = [
