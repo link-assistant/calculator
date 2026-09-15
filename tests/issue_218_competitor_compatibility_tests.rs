@@ -89,11 +89,15 @@ fn documented_open_calculator_notation_remains_compatible() {
         ("Numbat", "2**3", "8"),
         ("Numbat", "2³", "8"),
         ("Numbat", "2⁻³", "0.125"),
+        ("Numbat", "2¹⁰", "1024"),
         ("Numbat", "mod(17, 4)", "1"),
         ("fend", "1_000_000 / 4", "250000"),
         ("fend", "1.5e-6", "0.0000015"),
         ("fend", "sqrt 16", "4"),
+        ("Numi", "cbrt 8", "2"),
+        ("Numi", "fact 5", "120"),
         ("Numi", "6 (3) = 18", "true"),
+        ("Qalculate!", "2(3+4)", "14"),
         ("math.js", "(1+2)(3+4)", "21"),
         ("math.js", "(4-1)2", "6"),
         ("math.js", "sqrt(4)(1+2)", "6"),
@@ -106,6 +110,7 @@ fn documented_open_calculator_notation_remains_compatible() {
     assert_approx("Numbat", "2 pi", 2.0 * std::f64::consts::PI);
     assert_approx("fend", "2pi", 2.0 * std::f64::consts::PI);
     assert_approx("fend", "sqrt 2", std::f64::consts::SQRT_2);
+    assert_approx("Numi", "arcsin 1", std::f64::consts::FRAC_PI_2);
 }
 
 #[test]
@@ -116,6 +121,7 @@ fn conventional_scientific_writing_is_supported() {
         ("∛27", "3"),
         ("6.022e23 / 6.022e23", "1"),
         ("2x + 4 = 10", "x = 3"),
+        ("2 x + 4 = 10", "x = 3"),
     ] {
         assert_result("conventional notation", expression, expected);
     }

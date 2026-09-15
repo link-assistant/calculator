@@ -1,5 +1,6 @@
 //! Token-based expression parser.
 mod comparison;
+mod integral;
 mod operators;
 mod units;
 
@@ -86,9 +87,16 @@ impl<'a> TokenParser<'a> {
     fn parse_multiplicative(&mut self) -> Result<Expression, CalculatorError> {
         let mut left = self.parse_power()?;
 
-        while let Some(op) = self.match_multiplicative_op() {
-            let right = self.parse_power()?;
-            left = Expression::binary(left, op, right);
+        loop {
+            if let Some(op) = self.match_multiplicative_op() {
+                let right = self.parse_power()?;
+                left = Expression::binary(left, op, right);
+            } else if self.implicit_multiplication_starts(&left) {
+                let right = self.parse_power()?;
+                left = Expression::binary(left, BinaryOp::Multiply, right);
+            } else {
+                break;
+            }
         }
 
         Ok(left)
@@ -102,6 +110,10 @@ impl<'a> TokenParser<'a> {
             self.advance();
             let right = self.parse_power()?; // Right-associative recursion
             left = Expression::power(left, right);
+        } else if let Some(TokenKind::Superscript(exponent)) = self.current_kind() {
+            let exponent = self.number_grammar.parse_number(exponent)?;
+            self.advance();
+            left = Expression::power(left, Expression::number(exponent));
         }
 
         Ok(left)
@@ -262,22 +274,27 @@ impl<'a> TokenParser<'a> {
             }
 
             // Check for unit (identifier following number that is not a function)
-            let (unit, alternative_units) =
-                if let Some(TokenKind::Identifier(id)) = self.current_kind() {
-                    // Don't treat function names as units
-                    if !is_math_function(id) && !self.peek_is_left_paren() {
-                        let (unit, alts) = self
-                            .number_grammar
-                            .parse_unit_with_alternatives(id)
-                            .unwrap_or_else(|_| (Unit::Custom(id.clone()), Vec::new()));
-                        self.advance();
-                        (unit, alts)
-                    } else {
-                        (Unit::None, Vec::new())
-                    }
+            let (unit, alternative_units) = if let Some(TokenKind::Identifier(id)) =
+                self.current_kind()
+            {
+                // An unknown single-letter identifier is a conventional
+                // coefficient (`2x` or `2 x`). Established short units
+                // (`2h`) and multi-letter custom units retain their meaning.
+                let coefficient_variable =
+                    Self::is_single_letter_variable(id) && !self.identifier_is_known_unit(id);
+                if !is_math_function(id) && !self.peek_is_left_paren() && !coefficient_variable {
+                    let (unit, alts) = self
+                        .number_grammar
+                        .parse_unit_with_alternatives(id)
+                        .unwrap_or_else(|_| (Unit::Custom(id.clone()), Vec::new()));
+                    self.advance();
+                    (unit, alts)
                 } else {
                     (Unit::None, Vec::new())
-                };
+                }
+            } else {
+                (Unit::None, Vec::new())
+            };
 
             if alternative_units.is_empty() {
                 return Ok(Expression::number_with_unit(value, unit));
@@ -292,6 +309,14 @@ impl<'a> TokenParser<'a> {
         // Standalone identifier (could be a function call, unit, variable, or datetime part)
         if let Some(TokenKind::Identifier(id)) = self.current_kind() {
             let id = id.clone();
+
+            if let Some(function) = self.natural_root_function(&id) {
+                self.advance(); // consume "square" / "cube"
+                self.advance(); // consume "root"
+                self.advance(); // consume "of"
+                let argument = self.parse_unary()?;
+                return Ok(Expression::function_call(function, vec![argument]));
+            }
 
             // Check for "now" keyword
             if id.to_lowercase() == "now" {
@@ -343,8 +368,12 @@ impl<'a> TokenParser<'a> {
 
             self.advance();
 
-            // Check if this is a function call (identifier followed by left paren)
+            // Check if this is a function call (identifier followed by left paren).
+            // `x(x - 3)` is conventional implicit polynomial multiplication.
             if self.check(&TokenKind::LeftParen) {
+                if Self::is_single_letter_variable(&id) && !is_math_function(&id) {
+                    return Ok(Expression::variable(id));
+                }
                 return self.parse_function_call(&id);
             }
 
@@ -358,16 +387,20 @@ impl<'a> TokenParser<'a> {
                 return self.try_parse_datetime_from_tokens(&id);
             }
 
-            // Check if this is a math constant (pi, e)
+            if Self::is_math_constant(&id) {
+                return Ok(Expression::function_call(id, vec![]));
+            }
+            if Self::is_unary_math_function(&id) && !self.is_at_end() {
+                let argument = self.parse_unary()?;
+                return Ok(Expression::function_call(id, vec![argument]));
+            }
             if is_math_function(&id) {
-                // It's a constant like pi() or e() used without parens
-                // Treat it as a zero-argument function call
                 return Ok(Expression::function_call(id, vec![]));
             }
 
             // Allow single-letter identifiers as variables (for use in integrate, etc.)
             // Variables will be validated at evaluation time
-            if id.len() == 1 && id.chars().next().unwrap().is_ascii_alphabetic() {
+            if Self::is_single_letter_variable(&id) {
                 return Ok(Expression::variable(id));
             }
 
@@ -714,199 +747,6 @@ impl<'a> TokenParser<'a> {
         )))
     }
 
-    /// Parses natural integral notation: "integrate <expr> d<var>"
-    /// Examples:
-    /// - integrate sin(x)/x dx
-    /// - integrate x^2 dx
-    fn parse_natural_integral(&mut self) -> Result<Expression, CalculatorError> {
-        // We've already consumed "integrate", now we need to find the integrand and d<var>
-        // Strategy: collect tokens until we find "d<var>" pattern (identifier starting with 'd')
-
-        let start_pos = self.pos;
-        let mut integrand_end_pos = None;
-        let mut var_name = None;
-
-        // Scan forward to find the d<var> pattern
-        let mut scan_pos = self.pos;
-        while scan_pos < self.tokens.len() {
-            if let TokenKind::Identifier(id) = &self.tokens[scan_pos].kind {
-                // Check if this is a differential notation like "dx", "dy", "dt"
-                let id_lower = id.to_lowercase();
-                if id_lower.starts_with('d') && id_lower.len() == 2 {
-                    let var_char = id_lower.chars().nth(1).unwrap();
-                    if var_char.is_ascii_alphabetic() {
-                        integrand_end_pos = Some(scan_pos);
-                        var_name = Some(var_char.to_string());
-                        break;
-                    }
-                }
-            }
-            scan_pos += 1;
-        }
-
-        // If we didn't find d<var>, return an error with helpful message
-        let (Some(end_pos), Some(var)) = (integrand_end_pos, var_name) else {
-            return Err(CalculatorError::parse(
-                "Invalid integration syntax. Expected: integrate <expression> d<var> (e.g., integrate sin(x)/x dx)"
-            ));
-        };
-
-        // Reset position and parse the integrand expression
-        // We need a sub-parser that only parses up to the d<var> token
-        self.pos = start_pos;
-
-        // Parse the integrand by parsing an expression and stopping at the d<var>
-        let integrand = self.parse_integrand_until(end_pos)?;
-
-        // Now consume the d<var> token
-        self.pos = end_pos;
-        self.advance();
-
-        Ok(Expression::indefinite_integral(integrand, var))
-    }
-
-    /// Parse an integrand expression up to (but not including) the position `until_pos`.
-    fn parse_integrand_until(&mut self, until_pos: usize) -> Result<Expression, CalculatorError> {
-        // Save the tokens after until_pos temporarily
-        let original_len = self.tokens.len();
-
-        // We need to be careful - parse_expression will consume tokens
-        // We'll parse and then check we didn't go past until_pos
-        let result = self.parse_integrand_expression(until_pos)?;
-
-        // Verify we stopped at the right place
-        if self.pos > until_pos {
-            self.pos = until_pos;
-        }
-
-        let _ = original_len; // Suppress unused warning
-        Ok(result)
-    }
-
-    /// Parse integrand with awareness of the boundary.
-    fn parse_integrand_expression(
-        &mut self,
-        boundary: usize,
-    ) -> Result<Expression, CalculatorError> {
-        self.parse_integrand_additive(boundary)
-    }
-
-    fn parse_integrand_additive(&mut self, boundary: usize) -> Result<Expression, CalculatorError> {
-        let mut left = self.parse_integrand_multiplicative(boundary)?;
-
-        while self.pos < boundary {
-            if let Some(op) = self.match_additive_op() {
-                if self.pos >= boundary {
-                    // Put the operator back
-                    self.pos -= 1;
-                    break;
-                }
-                let right = self.parse_integrand_multiplicative(boundary)?;
-                left = Expression::binary(left, op, right);
-            } else {
-                break;
-            }
-        }
-
-        Ok(left)
-    }
-
-    fn parse_integrand_multiplicative(
-        &mut self,
-        boundary: usize,
-    ) -> Result<Expression, CalculatorError> {
-        let mut left = self.parse_integrand_power(boundary)?;
-
-        while self.pos < boundary {
-            if let Some(op) = self.match_multiplicative_op() {
-                if self.pos >= boundary {
-                    // Put the operator back
-                    self.pos -= 1;
-                    break;
-                }
-                let right = self.parse_integrand_power(boundary)?;
-                left = Expression::binary(left, op, right);
-            } else {
-                break;
-            }
-        }
-
-        Ok(left)
-    }
-
-    fn parse_integrand_power(&mut self, boundary: usize) -> Result<Expression, CalculatorError> {
-        let mut left = self.parse_integrand_unary(boundary)?;
-
-        if self.pos < boundary && self.check(&TokenKind::Caret) {
-            self.advance();
-            let right = self.parse_integrand_power(boundary)?;
-            left = Expression::power(left, right);
-        }
-
-        Ok(left)
-    }
-
-    fn parse_integrand_unary(&mut self, boundary: usize) -> Result<Expression, CalculatorError> {
-        if self.pos < boundary && self.check(&TokenKind::Minus) {
-            self.advance();
-            let expr = self.parse_integrand_unary(boundary)?;
-            return Ok(Expression::negate(expr));
-        }
-
-        self.parse_integrand_primary(boundary)
-    }
-
-    fn parse_integrand_primary(&mut self, boundary: usize) -> Result<Expression, CalculatorError> {
-        if self.pos >= boundary {
-            return Err(CalculatorError::parse("Unexpected end of integrand"));
-        }
-
-        // Parenthesized expression
-        if self.check(&TokenKind::LeftParen) {
-            self.advance();
-            let expr = self.parse_expression()?;
-            self.expect(&TokenKind::RightParen)?;
-            return Ok(Expression::group(expr));
-        }
-
-        // Number
-        if let Some(TokenKind::Number(n)) = self.current_kind() {
-            let num_str = n.clone();
-            self.advance();
-            let value = self.number_grammar.parse_number(&num_str)?;
-            return Ok(Expression::number(value));
-        }
-
-        // Identifier (function call or variable)
-        if let Some(TokenKind::Identifier(id)) = self.current_kind() {
-            let id = id.clone();
-            self.advance();
-
-            // Check if this is a function call
-            if self.pos < boundary && self.check(&TokenKind::LeftParen) {
-                return self.parse_function_call(&id);
-            }
-
-            // Check if this is a math constant
-            if is_math_function(&id) {
-                return Ok(Expression::function_call(id, vec![]));
-            }
-
-            // Single-letter identifier is a variable
-            if id.len() == 1 && id.chars().next().unwrap().is_ascii_alphabetic() {
-                return Ok(Expression::variable(id));
-            }
-
-            // Multi-letter identifier could be an implicit variable in integration context
-            return Ok(Expression::variable(id));
-        }
-
-        Err(CalculatorError::parse(format!(
-            "Unexpected token in integrand: {:?}",
-            self.current()
-        )))
-    }
-
     fn check(&self, kind: &TokenKind) -> bool {
         self.current_kind()
             .is_some_and(|k| std::mem::discriminant(k) == std::mem::discriminant(kind))
@@ -946,6 +786,100 @@ impl<'a> TokenParser<'a> {
 
     fn peek_is_left_paren(&self) -> bool {
         matches!(self.peek_kind(), Some(TokenKind::LeftParen))
+    }
+
+    fn implicit_multiplication_starts(&self, left: &Expression) -> bool {
+        let left_can_multiply = matches!(
+            left,
+            Expression::Number {
+                unit: Unit::None,
+                ..
+            } | Expression::Group(_)
+                | Expression::FunctionCall { .. }
+                | Expression::Variable(_)
+                | Expression::Power { .. }
+                | Expression::Negate(_)
+        );
+        if !left_can_multiply {
+            return false;
+        }
+
+        match self.current_kind() {
+            Some(TokenKind::LeftParen) => true,
+            Some(TokenKind::Identifier(id)) => {
+                is_math_function(id) || Self::is_single_letter_variable(id)
+            }
+            Some(TokenKind::Number(_)) => {
+                matches!(left, Expression::Group(_) | Expression::FunctionCall { .. })
+            }
+            _ => false,
+        }
+    }
+
+    fn natural_root_function(&self, degree: &str) -> Option<&'static str> {
+        let function = if degree.eq_ignore_ascii_case("square") {
+            "sqrt"
+        } else if degree.eq_ignore_ascii_case("cube") {
+            "cbrt"
+        } else {
+            return None;
+        };
+        let has_root = matches!(
+            self.tokens.get(self.pos + 1).map(|token| &token.kind),
+            Some(TokenKind::Identifier(root)) if root.eq_ignore_ascii_case("root")
+        );
+        let has_of = matches!(
+            self.tokens.get(self.pos + 2).map(|token| &token.kind),
+            Some(TokenKind::Of)
+        );
+
+        (has_root && has_of).then_some(function)
+    }
+
+    fn is_single_letter_variable(id: &str) -> bool {
+        let mut chars = id.chars();
+        chars
+            .next()
+            .is_some_and(|character| character.is_ascii_alphabetic())
+            && chars.next().is_none()
+    }
+
+    fn is_math_constant(id: &str) -> bool {
+        matches!(id.to_ascii_lowercase().as_str(), "pi" | "e")
+    }
+
+    fn is_unary_math_function(id: &str) -> bool {
+        matches!(
+            id.to_ascii_lowercase().as_str(),
+            "sin"
+                | "cos"
+                | "tan"
+                | "asin"
+                | "acos"
+                | "atan"
+                | "sinh"
+                | "cosh"
+                | "tanh"
+                | "exp"
+                | "ln"
+                | "log"
+                | "log2"
+                | "log10"
+                | "sqrt"
+                | "cbrt"
+                | "abs"
+                | "floor"
+                | "ceil"
+                | "round"
+                | "trunc"
+                | "sign"
+                | "signum"
+                | "factorial"
+                | "deg"
+                | "degrees"
+                | "rad"
+                | "radians"
+        )
     }
 
     fn advance(&mut self) {
