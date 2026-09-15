@@ -675,7 +675,12 @@ impl DateTime {
 
         // A timezone may follow either the time or the entire expression. If it
         // is trailing, move it beside the time while testing split points.
-        let has_trailing_timezone = extract_timezone(input).1.is_some();
+        let has_trailing_timezone = words.last().is_some_and(|last| {
+            parse_tz_abbreviation(last).is_some() || {
+                let (remaining, offset, _) = extract_timezone(last);
+                remaining.is_empty() && offset.is_some()
+            }
+        });
         let date_end = words.len() - usize::from(has_trailing_timezone);
         if date_end < 2 {
             return None;

@@ -60,3 +60,12 @@ fn trailing_timezone_supports_12_hour_and_numeric_dates() {
         assert_eq!(result.result, "2026-09-16 00:35:00 IST", "{expression}");
     }
 }
+
+#[test]
+fn time_first_iso_date_without_timezone_is_not_mistaken_for_an_offset() {
+    let mut calculator = Calculator::new();
+    let result = calculator.calculate_internal("00:35 2026-09-16");
+
+    assert!(result.success, "calculation failed: {:?}", result.error);
+    assert_eq!(result.result, "2026-09-16 00:35:00 UTC");
+}
