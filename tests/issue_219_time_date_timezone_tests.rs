@@ -10,10 +10,7 @@ fn reported_time_date_timezone_expression_calculates() {
 
     assert!(result.success, "calculation failed: {:?}", result.error);
     assert_eq!(result.result, "2026-09-16 00:35:00 IST");
-    assert_eq!(
-        result.lino_interpretation,
-        "(2026-09-16 00:35:00 IST)"
-    );
+    assert_eq!(result.lino_interpretation, "(2026-09-16 00:35:00 IST)");
 
     let datetime = result.datetime_result.expect("missing datetime metadata");
     assert_eq!(datetime.utc, "2026-09-15 19:05:00 UTC");

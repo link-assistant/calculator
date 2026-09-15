@@ -464,6 +464,10 @@ impl<'a> TokenParser<'a> {
                     parts.push(n.clone());
                     self.advance();
                 }
+                Some(TokenKind::DateLiteral(date)) => {
+                    parts.push(date.clone());
+                    self.advance();
+                }
                 Some(TokenKind::Identifier(id)) => {
                     let id_lower = id.to_lowercase();
                     if matches!(id_lower.as_str(), "st" | "nd" | "rd" | "th") {
@@ -520,6 +524,10 @@ impl<'a> TokenParser<'a> {
             match self.current_kind() {
                 Some(TokenKind::Number(n)) => {
                     parts.push(n.clone());
+                    self.advance();
+                }
+                Some(TokenKind::DateLiteral(date)) => {
+                    parts.push(date.clone());
                     self.advance();
                 }
                 Some(TokenKind::Identifier(id)) => {
