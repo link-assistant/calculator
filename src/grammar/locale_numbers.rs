@@ -2,7 +2,8 @@
 //!
 //! The grammar itself uses `.` as the decimal separator. These helpers build
 //! normalized expression variants for user input that uses decimal/grouping
-//! conventions from supported UI locales, such as `82,6172` or `1.234,56`.
+//! conventions from supported UI locales, such as `82,6172`, `1.234,56`, or
+//! `15\u{202f}847`.
 
 #[derive(Debug, Clone, Copy)]
 struct NumberLocale {
@@ -32,14 +33,83 @@ const LOCALES: &[NumberLocale] = &[
 /// conventions. Variants are ordered by locale preference and de-duplicated.
 pub(super) fn variants(input: &str) -> Vec<String> {
     let mut variants = Vec::new();
+    let space_grouped = rewrite_space_grouping(input);
+    let source = space_grouped.as_deref().unwrap_or(input);
 
     for locale in LOCALES {
-        if let Some(variant) = rewrite_with_locale(input, *locale) {
+        if let Some(variant) = rewrite_with_locale(source, *locale) {
             push_unique(&mut variants, variant);
         }
     }
 
+    if let Some(variant) = space_grouped {
+        push_unique(&mut variants, variant);
+    }
+
     variants
+}
+
+fn rewrite_space_grouping(input: &str) -> Option<String> {
+    let mut output = String::with_capacity(input.len());
+    let mut chars = input.char_indices().peekable();
+    let mut changed = false;
+
+    while let Some((start, ch)) = chars.next() {
+        if !ch.is_ascii_digit() {
+            output.push(ch);
+            continue;
+        }
+
+        let mut end = start + ch.len_utf8();
+        while let Some(&(idx, next)) = chars.peek() {
+            let grouping_before_digit = is_space_grouping(next)
+                && chars
+                    .clone()
+                    .nth(1)
+                    .is_some_and(|(_, after)| after.is_ascii_digit());
+            if next.is_ascii_digit() || grouping_before_digit {
+                chars.next();
+                end = idx + next.len_utf8();
+            } else {
+                break;
+            }
+        }
+
+        let candidate = &input[start..end];
+        if let Some(normalized) = normalize_space_grouped_integer(candidate) {
+            output.push_str(&normalized);
+            changed = true;
+        } else {
+            output.push_str(candidate);
+        }
+    }
+
+    changed.then_some(output)
+}
+
+fn normalize_space_grouped_integer(candidate: &str) -> Option<String> {
+    if !candidate.chars().any(is_space_grouping) {
+        return None;
+    }
+
+    let groups: Vec<&str> = candidate.split(is_space_grouping).collect();
+    let first = groups.first()?;
+    if first.is_empty() || first.len() > 3 || !first.chars().all(|ch| ch.is_ascii_digit()) {
+        return None;
+    }
+    if groups
+        .iter()
+        .skip(1)
+        .any(|part| part.len() != 3 || !part.chars().all(|ch| ch.is_ascii_digit()))
+    {
+        return None;
+    }
+
+    Some(groups.join(""))
+}
+
+fn is_space_grouping(ch: char) -> bool {
+    matches!(ch, ' ' | '\u{00a0}' | '\u{2007}' | '\u{2009}' | '\u{202f}')
 }
 
 fn rewrite_with_locale(input: &str, locale: NumberLocale) -> Option<String> {
@@ -179,6 +249,27 @@ mod tests {
     fn normalizes_grouped_decimal_forms() {
         assert_eq!(variants("1.234,56"), vec!["1234.56"]);
         assert_eq!(variants("1,234.56"), vec!["1234.56"]);
+    }
+
+    #[test]
+    fn normalizes_space_grouped_integers() {
+        for separator in [' ', '\u{00a0}', '\u{2007}', '\u{2009}', '\u{202f}'] {
+            let input = format!("1{separator}234{separator}567 + 1");
+            assert_eq!(variants(&input), vec!["1234567 + 1"]);
+        }
+    }
+
+    #[test]
+    fn composes_space_grouping_with_decimal_locales() {
+        assert_eq!(variants("1\u{202f}234,56"), vec!["1234.56", "1234,56"]);
+        assert_eq!(variants("1\u{202f}234.56"), vec!["1234.56"]);
+    }
+
+    #[test]
+    fn leaves_malformed_space_grouping_unchanged() {
+        for input in ["12 34 + 1", "1234 567 + 1", "1\u{202f}23 + 4"] {
+            assert!(variants(input).is_empty());
+        }
     }
 
     #[test]

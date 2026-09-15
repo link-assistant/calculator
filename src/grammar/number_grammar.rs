@@ -24,9 +24,12 @@ impl NumberGrammar {
             .strip_prefix('-')
             .map_or((false, s), |stripped| (true, stripped.trim()));
 
-        let decimal: Decimal = s
-            .parse()
-            .map_err(|_| CalculatorError::parse(format!("Invalid number: {s}")))?;
+        let decimal = if s.contains(['e', 'E']) {
+            Decimal::from_scientific(s)
+        } else {
+            s.parse()
+        }
+        .map_err(|_| CalculatorError::parse(format!("Invalid number: {s}")))?;
 
         Ok(if is_negative { -decimal } else { decimal })
     }

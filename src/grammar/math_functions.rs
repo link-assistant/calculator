@@ -286,6 +286,12 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
             let result = factorial(n_int);
             Ok(Decimal::from_f64(result))
         }
+        "mod" | "modulo" => {
+            check_arg_count(&name_lower, args, 2)?;
+            args[0]
+                .checked_rem(&args[1])
+                .ok_or_else(|| CalculatorError::domain("modulo by zero"))
+        }
 
         // Conversion functions
         "deg" | "degrees" => {
@@ -338,6 +344,8 @@ pub fn is_math_function(name: &str) -> bool {
             | "max"
             | "integrate"
             | "factorial"
+            | "mod"
+            | "modulo"
             | "pi"
             | "e"
             | "deg"

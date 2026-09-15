@@ -17,6 +17,11 @@ impl Decimal {
         Self(RustDecimal::from(value))
     }
 
+    /// Parses conventional decimal scientific notation such as `1.5e-6`.
+    pub fn from_scientific(value: &str) -> Result<Self, rust_decimal::Error> {
+        RustDecimal::from_scientific(value).map(Self)
+    }
+
     /// Creates a new Decimal from a float (may lose precision).
     /// Returns None if the conversion fails.
     #[must_use]
@@ -88,6 +93,12 @@ impl Decimal {
         } else {
             self.0.checked_div(other.0).map(Self)
         }
+    }
+
+    /// Checked remainder, returning `None` when the divisor is zero.
+    #[must_use]
+    pub fn checked_rem(&self, other: &Self) -> Option<Self> {
+        self.0.checked_rem(other.0).map(Self)
     }
 }
 

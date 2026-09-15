@@ -40,6 +40,24 @@ enum GeneralCategory {
     Other,
 }
 
+fn superscript_value(ch: char) -> Option<char> {
+    match ch {
+        '⁰' => Some('0'),
+        '¹' => Some('1'),
+        '²' => Some('2'),
+        '³' => Some('3'),
+        '⁴' => Some('4'),
+        '⁵' => Some('5'),
+        '⁶' => Some('6'),
+        '⁷' => Some('7'),
+        '⁸' => Some('8'),
+        '⁹' => Some('9'),
+        '⁺' => Some('+'),
+        '⁻' => Some('-'),
+        _ => None,
+    }
+}
+
 /// Returns the Unicode General Category for combining mark detection.
 ///
 /// Covers the most common combining mark ranges needed for multilingual input:
@@ -109,6 +127,8 @@ fn unicode_general_category(ch: char) -> GeneralCategory {
 pub enum TokenKind {
     /// A number (integer or decimal).
     Number(String),
+    /// A Unicode superscript exponent (for example, `³` or `⁻³`).
+    Superscript(String),
     /// A numeric date literal (e.g. `2026-01-22`, `15/10/2025`, `15.10.2025`).
     ///
     /// Recognized as a single token so dates do not get split into separate
@@ -218,6 +238,7 @@ impl Token {
 pub struct Lexer {
     input: Vec<char>,
     pos: usize,
+    previous_token_can_end_value: bool,
 }
 
 impl Lexer {
@@ -227,6 +248,7 @@ impl Lexer {
         Self {
             input: input.chars().collect(),
             pos: 0,
+            previous_token_can_end_value: false,
         }
     }
 
@@ -268,21 +290,34 @@ impl Lexer {
                 self.advance();
                 Token::new(TokenKind::Plus, start, self.pos, "+".to_string())
             }
-            '-' => {
+            '-' | '−' => {
                 self.advance();
-                Token::new(TokenKind::Minus, start, self.pos, "-".to_string())
+                Token::new(TokenKind::Minus, start, self.pos, ch.to_string())
             }
             '*' => {
                 self.advance();
-                Token::new(TokenKind::Star, start, self.pos, "*".to_string())
+                if !self.is_at_end()
+                    && self.current() == '*'
+                    && self.previous_token_can_end_value
+                    && self.double_star_has_right_operand()
+                {
+                    self.advance();
+                    Token::new(TokenKind::Caret, start, self.pos, "**".to_string())
+                } else {
+                    Token::new(TokenKind::Star, start, self.pos, "*".to_string())
+                }
+            }
+            '×' | '·' | '⋅' => {
+                self.advance();
+                Token::new(TokenKind::Star, start, self.pos, ch.to_string())
             }
             '?' => {
                 self.advance();
                 Token::new(TokenKind::Question, start, self.pos, "?".to_string())
             }
-            '/' => {
+            '/' | '÷' => {
                 self.advance();
-                Token::new(TokenKind::Slash, start, self.pos, "/".to_string())
+                Token::new(TokenKind::Slash, start, self.pos, ch.to_string())
             }
             '^' => {
                 self.advance();
@@ -356,6 +391,17 @@ impl Lexer {
                 }
             }
             _ if ch == '.' => self.scan_number()?,
+            _ if superscript_value(ch).is_some() => self.scan_superscript(),
+            '√' | '∛' => {
+                self.advance();
+                let name = if ch == '√' { "sqrt" } else { "cbrt" };
+                Token::new(
+                    TokenKind::Identifier(name.to_string()),
+                    start,
+                    self.pos,
+                    ch.to_string(),
+                )
+            }
             _ if ch.is_alphabetic() => self.scan_identifier(),
             // Currency symbols used as prefix notation (e.g., $10, €5, £3)
             // These are recognized as single-character identifiers and mapped to ISO codes
@@ -377,7 +423,28 @@ impl Lexer {
             }
         };
 
+        self.previous_token_can_end_value = matches!(
+            token.kind,
+            TokenKind::Number(_)
+                | TokenKind::DateLiteral(_)
+                | TokenKind::Identifier(_)
+                | TokenKind::RightParen
+                | TokenKind::Superscript(_)
+                | TokenKind::Bang
+        );
+
         Ok(token)
+    }
+
+    fn double_star_has_right_operand(&self) -> bool {
+        self.input[self.pos + 1..]
+            .iter()
+            .find(|character| !character.is_whitespace())
+            .is_some_and(|character| {
+                character.is_ascii_digit()
+                    || character.is_alphabetic()
+                    || matches!(character, '.' | '(' | '+' | '-' | '−' | '√' | '∛')
+            })
     }
 
     fn scan_number(&mut self) -> Result<Token, CalculatorError> {
@@ -396,6 +463,16 @@ impl Lexer {
             if ch.is_ascii_digit() {
                 text.push(ch);
                 self.advance();
+            } else if ch == '_'
+                && text
+                    .chars()
+                    .last()
+                    .is_some_and(|previous| previous.is_ascii_digit())
+                && self.peek().is_some_and(|next| next.is_ascii_digit())
+            {
+                // `_` is a visual digit separator in Numbat, fend, and many
+                // programming languages. It is not part of the numeric value.
+                self.advance();
             } else if ch == '.' && !has_dot {
                 // Check if next char is a digit (otherwise it might be something else)
                 if self.peek().is_some_and(|c| c.is_ascii_digit()) {
@@ -410,12 +487,75 @@ impl Lexer {
             }
         }
 
+        // Scientific notation is consumed only when the exponent is complete,
+        // keeping an adjacent constant such as `2e` available for implicit
+        // multiplication rather than accepting a malformed number.
+        if matches!(self.current(), 'e' | 'E') {
+            let exponent_marker = self.pos;
+            let mut exponent_pos = exponent_marker + 1;
+            if matches!(self.input.get(exponent_pos), Some('+' | '-')) {
+                exponent_pos += 1;
+            }
+            if self
+                .input
+                .get(exponent_pos)
+                .is_some_and(char::is_ascii_digit)
+            {
+                text.push(self.current());
+                self.advance();
+                if matches!(self.current(), '+' | '-') {
+                    text.push(self.current());
+                    self.advance();
+                }
+                while !self.is_at_end() {
+                    let ch = self.current();
+                    if ch.is_ascii_digit() {
+                        text.push(ch);
+                        self.advance();
+                    } else if ch == '_'
+                        && text
+                            .chars()
+                            .last()
+                            .is_some_and(|previous| previous.is_ascii_digit())
+                        && self.peek().is_some_and(|next| next.is_ascii_digit())
+                    {
+                        self.advance();
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        let original: String = self.input[start..self.pos].iter().collect();
+
         Ok(Token::new(
             TokenKind::Number(text.clone()),
             start,
             self.pos,
-            text,
+            original,
         ))
+    }
+
+    fn scan_superscript(&mut self) -> Token {
+        let start = self.pos;
+        let mut normalized = String::new();
+
+        while !self.is_at_end() {
+            let Some(value) = superscript_value(self.current()) else {
+                break;
+            };
+            normalized.push(value);
+            self.advance();
+        }
+
+        let original: String = self.input[start..self.pos].iter().collect();
+        Token::new(
+            TokenKind::Superscript(normalized),
+            start,
+            self.pos,
+            original,
+        )
     }
 
     /// Attempts to scan a full numeric date literal starting at the current
@@ -527,6 +667,21 @@ impl Lexer {
 
         // Check for keywords (including multilingual equivalents)
         let kind = match text.to_lowercase().as_str() {
+            // Natural-language arithmetic aliases used by text calculators
+            // such as Numi and Parsify. Multi-word multiplication/division
+            // consume their optional `by` in the token parser.
+            "plus" | "with" => TokenKind::Plus,
+            "minus" | "subtract" | "without" => TokenKind::Minus,
+            "times" | "multiplied" | "mul" => TokenKind::Star,
+            "divide" | "divided" | "per" => TokenKind::Slash,
+            "power" => TokenKind::Caret,
+            "mod" | "modulo" if self.current() == '(' => TokenKind::Identifier("mod".to_string()),
+            "mod" | "modulo" => TokenKind::Percent,
+            "π" => TokenKind::Identifier("pi".to_string()),
+            "fact" => TokenKind::Identifier("factorial".to_string()),
+            "arcsin" => TokenKind::Identifier("asin".to_string()),
+            "arccos" => TokenKind::Identifier("acos".to_string()),
+            "arctan" => TokenKind::Identifier("atan".to_string()),
             "at" => TokenKind::At,
             "as" => TokenKind::As,
             "in" => TokenKind::In,

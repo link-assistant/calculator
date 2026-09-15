@@ -588,15 +588,7 @@ impl DateTime {
             // Try to parse partial date (no year - assume current year)
             if let Some(date) = parse_partial_date(date_part) {
                 if let Some(time_dt) = Self::try_parse_time_formats(time_part) {
-                    let datetime = date.and_time(time_dt.inner.time()).and_utc();
-                    return Some(Self {
-                        inner: datetime,
-                        offset_seconds: time_dt.offset_seconds,
-                        has_time: true,
-                        has_date: true,
-                        label: None,
-                        tz_abbrev: None,
-                    });
+                    return Some(Self::combine_date_and_time(date, time_dt));
                 }
             }
         }
@@ -659,96 +651,86 @@ impl DateTime {
                 continue;
             };
 
-            let date = Self::try_parse_date_formats(&date_candidate)
+            let Some(date) = Self::try_parse_date_formats(&date_candidate)
                 .map(|d| d.inner.date_naive())
-                .or_else(|| parse_partial_date(date_candidate.trim_end_matches(',')))?;
-
-            // `try_parse_time_formats` already shifted the time to UTC, so read
-            // the wall-clock time back in its own timezone before combining it
-            // with the date, then shift the whole datetime to UTC at once.
-            let offset = time_dt.offset_seconds.and_then(FixedOffset::east_opt);
-            let wall_time = offset.map_or_else(
-                || time_dt.inner.time(),
-                |off| time_dt.inner.with_timezone(&off).time(),
-            );
-
-            let naive = date.and_time(wall_time);
-            let inner = offset
-                .and_then(|off| off.from_local_datetime(&naive).single())
-                .map_or_else(|| naive.and_utc(), |adj| adj.with_timezone(&Utc));
-
-            return Some(Self {
-                inner,
-                offset_seconds: time_dt.offset_seconds,
-                has_time: true,
-                has_date: true,
-                label: None,
-                tz_abbrev: time_dt.tz_abbrev,
-            });
+                .or_else(|| parse_partial_date(date_candidate.trim_end_matches(',')))
+            else {
+                continue;
+            };
+            return Some(Self::combine_date_and_time(date, time_dt));
         }
 
         None
     }
 
-    /// Try to parse "time date" patterns like "11:59pm EST January 26"
+    /// Try to parse "time date" patterns like "11:59pm EST January 26" or
+    /// "00:35 16 September 2026 IST".
     fn try_parse_time_then_date(input: &str) -> Option<Self> {
         let input = input.trim();
 
-        // Look for am/pm pattern or HH:MM pattern at the start
         let words: Vec<&str> = input.split_whitespace().collect();
         if words.len() < 2 {
             return None;
         }
 
-        // Try progressively longer prefixes as the time part
-        for split_at in 1..words.len() {
-            let time_candidate = words[..split_at].join(" ");
-            let date_candidate = words[split_at..].join(" ");
-
-            if let Some(time_dt) = Self::try_parse_time_formats(&time_candidate) {
-                // Try the remaining as a date (partial or full)
-                if let Some(date) = parse_partial_date(&date_candidate) {
-                    let datetime = date.and_time(time_dt.inner.time()).and_utc();
-                    let mut result = Self {
-                        inner: datetime,
-                        offset_seconds: time_dt.offset_seconds,
-                        has_time: true,
-                        has_date: true,
-                        label: None,
-                        tz_abbrev: None,
-                    };
-                    // If time had a timezone, adjust the UTC time accordingly
-                    if let Some(offset) = time_dt.offset_seconds.and_then(FixedOffset::east_opt) {
-                        let local = result.inner.naive_utc();
-                        if let Some(adj) = offset.from_local_datetime(&local).single() {
-                            result.inner = adj.with_timezone(&Utc);
-                        }
-                    }
-                    return Some(result);
-                }
-                if let Some(date_dt) = Self::try_parse_date_formats(&date_candidate) {
-                    let date = date_dt.inner.date_naive();
-                    let datetime = date.and_time(time_dt.inner.time()).and_utc();
-                    let mut result = Self {
-                        inner: datetime,
-                        offset_seconds: time_dt.offset_seconds,
-                        has_time: true,
-                        has_date: true,
-                        label: None,
-                        tz_abbrev: None,
-                    };
-                    if let Some(offset) = time_dt.offset_seconds.and_then(FixedOffset::east_opt) {
-                        let local = result.inner.naive_utc();
-                        if let Some(adj) = offset.from_local_datetime(&local).single() {
-                            result.inner = adj.with_timezone(&Utc);
-                        }
-                    }
-                    return Some(result);
-                }
+        // A timezone may follow either the time or the entire expression. If it
+        // is trailing, move it beside the time while testing split points.
+        let has_trailing_timezone = words.last().is_some_and(|last| {
+            parse_tz_abbreviation(last).is_some() || {
+                let (remaining, offset, _) = extract_timezone(last);
+                remaining.is_empty() && offset.is_some()
             }
+        });
+        let date_end = words.len() - usize::from(has_trailing_timezone);
+        if date_end < 2 {
+            return None;
+        }
+
+        for split_at in 1..date_end {
+            let mut time_candidate = words[..split_at].join(" ");
+            if has_trailing_timezone {
+                time_candidate.push(' ');
+                time_candidate.push_str(words[words.len() - 1]);
+            }
+            let date_candidate = words[split_at..date_end].join(" ");
+
+            let Some(time_dt) = Self::try_parse_time_formats(&time_candidate) else {
+                continue;
+            };
+            let Some(date) = Self::try_parse_date_formats(&date_candidate)
+                .map(|date_dt| date_dt.inner.date_naive())
+                .or_else(|| parse_partial_date(date_candidate.trim_end_matches(',')))
+            else {
+                continue;
+            };
+            return Some(Self::combine_date_and_time(date, time_dt));
         }
 
         None
+    }
+
+    /// Combines a parsed date with a parsed time without applying its timezone
+    /// twice. `try_parse_time_formats` stores the instant in UTC, so recover the
+    /// source wall-clock time before attaching the requested calendar date.
+    fn combine_date_and_time(date: NaiveDate, time_dt: Self) -> Self {
+        let offset = time_dt.offset_seconds.and_then(FixedOffset::east_opt);
+        let wall_time = offset.map_or_else(
+            || time_dt.inner.time(),
+            |off| time_dt.inner.with_timezone(&off).time(),
+        );
+        let naive = date.and_time(wall_time);
+        let inner = offset
+            .and_then(|off| off.from_local_datetime(&naive).single())
+            .map_or_else(|| naive.and_utc(), |adjusted| adjusted.with_timezone(&Utc));
+
+        Self {
+            inner,
+            offset_seconds: time_dt.offset_seconds,
+            has_time: true,
+            has_date: true,
+            label: None,
+            tz_abbrev: time_dt.tz_abbrev,
+        }
     }
 
     /// Returns the underlying chrono DateTime.
