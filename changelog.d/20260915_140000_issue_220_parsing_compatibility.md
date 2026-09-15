@@ -5,6 +5,10 @@ bump: minor
 ### Added
 
 - Support natural-language arithmetic aliases such as `plus`, `times`, `multiplied by`, `divided by`, and `mod`.
+- Support shared open-calculator and scientific notation: decimal exponents,
+  digit separators, Unicode operators/roots/superscripts, implicit
+  multiplication, parenthesis-free unary functions, and natural root/power
+  phrases.
 - Add a primary-source competitor compatibility audit and executable example corpus.
 
 ### Fixed

@@ -30,8 +30,12 @@ A grammar-based expression calculator with DateTime and Currency support, built 
 ## Features
 
 ### Expression Parser
-- Arithmetic operations: `+`, `-`, `*`, `/` with proper operator precedence
-- Parentheses for grouping: `(2 + 3) * 4`
+- Arithmetic operations: `+`, `-`, `*`, `/`, `÷`, `×`, `·`, `⋅` with proper operator precedence
+- Scientific and readable numbers: `1.5e-6`, `1_000_000`
+- Powers and roots: `2^10`, `2**10`, `2¹⁰`, `√81`, `square root of 625`
+- Conventional implicit products and functions: `2π`, `2x`, `2(3 + 4)`, `sqrt 16`
+- Natural operators: `plus`, `minus`, `times`, `divided by`, `mod`, `power`
+- Parentheses for explicit grouping: `(2 + 3) * 4`
 - Negative numbers: `-5 + 3`
 - Decimal precision using `rust_decimal`
 

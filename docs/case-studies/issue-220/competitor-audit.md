@@ -29,20 +29,20 @@ when implemented.
 
 | Project and sources | Published surface | Current overlap | Representative gaps |
 | --- | --- | --- | --- |
-| [Qalculate! features](https://qalculate.github.io/features.html) | Arbitrary precision, complex/infinite numbers, interval uncertainty, bases, symbolic algebra/calculus, equations, matrices/vectors, units, dates, plots, customizable functions/variables. | Arithmetic, exact fractions, equations, selected functions, numeric integration/plots, limited units/dates. | Complex/interval values, matrices, broad symbolic transforms, bases/Roman numerals, general dimensional units, custom functions. |
-| [Numbat repository](https://github.com/sharkdp/numbat), [documentation](https://numbat.dev/docs/), and [tutorial](https://numbat.dev/docs/tutorial/) | Statically checked physical dimensions, extensive first-class/custom units, constants, functions, variables, procedures, assertions, REPL and web UI. | Deterministic scalar arithmetic/functions, mass/time/data units, currencies. | `30 km/h -> mph`, `5 in + 2 ft -> cm`, compound dimensions, typed variables, custom units, assertions. |
-| [fend repository](https://github.com/printfn/fend) and [manual](https://printfn.github.io/fend/documentation/) | Arbitrary-precision rational/complex arithmetic, units and temperatures, bases, bitwise operators, dice, dates, variables, lambdas, formats, scripting. | Arithmetic, fractions, factorial/modulo, common functions, mass/time/data units, dates/currencies. | `1 ft to cm`, `0.(3) to fraction`, `0b1001 + 3`, complex numbers, temperature, dice, persistent variables/lambdas. |
-| [math.js expression syntax](https://mathjs.org/docs/expressions/syntax.html), [data types](https://mathjs.org/docs/), and [units](https://mathjs.org/docs/datatypes/units.html) | Scalar/big/fraction/complex values, strings/booleans, matrices/objects, extensive functions, variables, symbolic work, broad/custom dimensional units. | Scalar/fraction arithmetic, comparisons, functions, limited units. | `45 cm + 0.1m`, `cos(45 deg)`, matrices, complex/boolean/string/object values, custom units. |
+| [Qalculate! features](https://qalculate.github.io/features.html) and [expression syntax](https://qalculate.github.io/manual/qalculate-expressions.html) | Arbitrary precision, complex/infinite numbers, interval uncertainty, bases, symbolic algebra/calculus, equations, matrices/vectors, units, dates, plots, customizable functions/variables. | Arithmetic, exact fractions, equations, selected functions, implicit products such as `5x` and `5(2 + 3)`, numeric integration/plots, limited units/dates. | Complex/interval values, matrices, broad symbolic transforms, bases/Roman numerals, general dimensional units, custom functions. |
+| [Numbat repository](https://github.com/sharkdp/numbat), [syntax examples](https://numbat.dev/docs/examples/example-numbat_syntax/), and [tutorial](https://numbat.dev/docs/tutorial/) | Statically checked physical dimensions, extensive first-class/custom units, constants, functions, variables, procedures, assertions, REPL and web UI. | Scientific notation, Unicode multiplication/division, `^`/`**`/superscript powers, implicit constant multiplication, modulo, deterministic scalar functions, mass/time/data units, currencies. | `30 km/h -> mph`, `5 in + 2 ft -> cm`, compound dimensions, typed variables, custom units, assertions. |
+| [fend repository](https://github.com/printfn/fend) and [manual](https://printfn.github.io/fend/documentation/) | Arbitrary-precision rational/complex arithmetic, units and temperatures, bases, bitwise operators, dice, dates, variables, lambdas, formats, scripting. | Arithmetic, digit separators, scientific notation, implicit `2pi`, functions without parentheses, fractions, factorial/modulo, common functions, mass/time/data units, dates/currencies. | `1 ft to cm`, `0.(3) to fraction`, `0b1001 + 3`, complex numbers, temperature, dice, persistent variables/lambdas. |
+| [math.js expression syntax](https://mathjs.org/docs/expressions/syntax.html), [data types](https://mathjs.org/docs/), and [units](https://mathjs.org/docs/datatypes/units.html) | Scalar/big/fraction/complex values, strings/booleans, matrices/objects, extensive functions, variables, symbolic work, broad/custom dimensional units. | Scalar/fraction arithmetic, comparisons, functions, and documented implicit multiplication forms such as `(1 + 2)(3 + 4)`. | `45 cm + 0.1m`, `cos(45 deg)`, matrices, complex/boolean/string/object values, custom units. |
 | [GNU Units manual](https://www.gnu.org/software/units/manual/units.html) | Large and user-extensible unit database, nonlinear/piecewise units, compound dimensions, physical constants, localization, currency and CPI data. | Mass/time/data/currency conversions. | General SI/imperial dimensions, compound/nonlinear units, physical constants, user unit files. |
 
 ### Commercial and general products
 
 | Project and sources | Published surface | Current overlap | Representative gaps |
 | --- | --- | --- | --- |
-| [Numi official wiki](https://github.com/nikolaeu/numi/wiki) | Word operators, currencies/timezones, bases, percentages/scales, variables, functions, units, line references/totals, labels/comments, import/export, JavaScript extensions. | Arithmetic/functions, percent-of, currencies, fixed timezone abbreviations, mass/time/data, comparisons. | `1 meter 20 cm = 120 cm`, bases, percent-on/off, city zones, persistent variables, line totals, custom extensions. |
+| [Numi official wiki](https://github.com/nikolaeu/numi/wiki) | Word operators, currencies/timezones, bases, percentages/scales, variables, functions, units, line references/totals, labels/comments, import/export, JavaScript extensions. | Arithmetic/functions, aliases such as `fact`/`arcsin`, functions without parentheses, adjacent-parenthesis multiplication, percent-of, currencies, fixed timezone abbreviations, mass/time/data, comparisons. | `1 meter 20 cm = 120 cm`, bases, percent-on/off, city zones, persistent variables, line totals, custom extensions. |
 | [Parsify getting started](https://parsify.notion.site/Getting-started-be7132e43e844bd88fe2ad48918b43d7) and [desktop repository](https://github.com/parsify-dev/desktop) | Word arithmetic, variables, angle-aware functions, broad/custom units, currency, calendars/timezones, plugins, labels/comments. | Arithmetic, word operators added here, common functions, mass/time/data/currency. | `sin(30 deg)`, variables across lines, broad/custom units, plugins. Parsify's `log(pi)` means natural log (about 1.145), while this project preserves its existing base-10 `log` result. |
 | [Soulver getting started](https://documentation.soulver.app/documentation/getting-started), [variables](https://documentation.soulver.app/documentation/variables), and [unit reference](https://documentation.soulver.app/syntax-reference/units-and-conversions/unit-reference) | Natural-language notepad, phrase variables, labels/comments, percent semantics, calendar/timezone math, 200+ units, financial/rate functions, line references/subtotals. | Arithmetic, percent-of, dates/durations, currencies, history, limited units. | Soulver treats `120 + 30%` as a 30% increase (156), while this project currently adds 0.3 (120.3); phrase variables, city zones, financial functions, broad units and timecode are absent. |
-| [Raycast calculator manual](https://manual.raycast.com/calculator) | Natural-language arithmetic plus unit/currency/crypto conversion, percentages, city timezones, relative calendar dates. | Arithmetic, percent-of, currencies, fixed timezone abbreviations, dates. | `10ft in m`, `5pm ldn in sf`, `time in tokyo`, `monday in 3 weeks`. |
+| [Raycast calculator manual](https://manual.raycast.com/calculator) | Natural-language arithmetic plus unit/currency/crypto conversion, percentages, city timezones, relative calendar dates. | Arithmetic, natural `square root of`/`power` phrases, percent-of, currencies, fixed timezone abbreviations, dates. | `10ft in m`, `5pm ldn in sf`, `time in tokyo`, `monday in 3 weeks`. |
 | [Wolfram|Alpha units](https://www.wolframalpha.com/examples/science-and-technology/units-and-measures), [dates/times](https://www.wolframalpha.com/examples/society-and-culture/dates-and-times), and [Pro](https://www.wolframalpha.com/pro/) | Computational knowledge across domains; broad units, calendars/timezones and natural-language queries. Paid features include step-by-step solutions, uploads, downloadable data, more compute, and customizable interactive visuals. | Arithmetic/functions, equation solving, numeric integration/plots, limited units/dates/currencies, calculation steps. | `20mL in drams`, `10 miles + 14 kilometers`, calendar systems/holidays/city zones, general knowledge, richer symbolic steps, 60+ upload formats, downloads and customizable visuals. `175lb vs 100kg` is supported. |
 
 [SpeedCrunch](https://www.speedcrunch.org/introduction.html) was also checked
@@ -64,11 +64,35 @@ are locked by `tests/issue_218_competitor_compatibility_tests.rs`:
 | fend | `1 + 3 * 4`; `16^2`; `5!` |
 | Wolfram|Alpha | `175lb vs 100kg` |
 
+The expanded conventional-notation corpus also locks these published grammar
+families:
+
+| Source | Expressions or forms now covered |
+| --- | --- |
+| Numbat | Decimal scientific notation; `1920 ÷ 16 × 9`; `6 · 7`; `6 ⋅ 7`; `2**3`; `2³`; `2⁻³`; `2¹⁰`; `mod(17, 4)`; `2 pi` |
+| fend | `_` digit separators; decimal scientific notation; `2pi`; `sqrt 2`; `sqrt 16` |
+| Qalculate! | `2(3 + 4)` and coefficient multiplication |
+| math.js | `(1 + 2)(3 + 4)`; `(4 - 1)2`; `sqrt(4)(1 + 2)` |
+| Numi | `cbrt 8`; `fact 5`; `arcsin 1`; `6 (3) = 18` |
+| Raycast | `square root of 625`; `2 power 10` |
+
+Conventional scientific writing adds Unicode minus and root signs (`−`, `√`,
+`∛`), `π`, and both compact and spaced coefficients (`2x`, `2 x`). The parser
+keeps established meanings at ambiguity boundaries: `2h` remains a duration,
+`2k USD` remains an SI-scaled currency amount, malformed `1__0` stays invalid,
+and leading/operand-less `**` remains the existing equation placeholder syntax.
+Implicit multiplication has ordinary multiplicative precedence; parentheses
+are recommended whenever adjacency could obscure the intended grouping.
+
 The word-operator test additionally covers all unambiguous aliases in the Numi
 operations table and the four Parsify word forms: `plus`, `with`, `minus`,
 `subtract`, `without`, `times`, `multiplied by`, `mul`, `divide`, `divided by`,
 `mod`, and `modulo`. Numi's `and` is intentionally not an addition alias here:
 this grammar already uses it as the separator in `compare A and B`.
+
+The corpus deliberately targets conventional mathematical notation and the
+documented surface of open calculators. It does not add Mathematica syntax,
+product-specific scripting languages, or proprietary/internal test cases.
 
 ## Capability gap plan
 
