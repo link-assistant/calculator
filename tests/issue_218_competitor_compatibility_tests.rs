@@ -45,6 +45,7 @@ fn documented_word_operator_aliases_are_supported() {
     // documents subtract/without, multiplied-by/mul, divide, and mod.
     for (expression, expected) in [
         ("2 plus 3", "5"),
+        ("2 with 3", "5"),
         ("9 minus 4", "5"),
         ("9 subtract 4", "5"),
         ("9 without 4", "5"),
@@ -54,6 +55,7 @@ fn documented_word_operator_aliases_are_supported() {
         ("20 divided by 4", "5"),
         ("20 divide by 4", "5"),
         ("25 mod 7", "4"),
+        ("25 modulo 7", "4"),
     ] {
         assert_result("word operator", expression, expected);
     }
