@@ -5,6 +5,7 @@
 //! deterministic subset executable prevents compatibility from becoming an
 //! unverified feature claim.
 
+use link_calculator::grammar::ExpressionParser;
 use link_calculator::Calculator;
 
 fn assert_result(source: &str, expression: &str, expected: &str) {
@@ -17,6 +18,22 @@ fn assert_result(source: &str, expression: &str, expected: &str) {
         result.error
     );
     assert_eq!(result.result, expected, "{source} example {expression:?}");
+}
+
+fn assert_approx(source: &str, expression: &str, expected: f64) {
+    let mut parser = ExpressionParser::new();
+    let (value, _, _) = parser
+        .parse_and_evaluate(expression)
+        .unwrap_or_else(|error| panic!("{source} example {expression:?} failed: {error}"));
+    let actual = value
+        .as_decimal()
+        .unwrap_or_else(|| panic!("{source} example {expression:?} was not numeric"))
+        .to_f64();
+
+    assert!(
+        (actual - expected).abs() < 1e-12,
+        "{source} example {expression:?}: expected {expected}, got {actual}"
+    );
 }
 
 #[test]
@@ -59,4 +76,76 @@ fn documented_word_operator_aliases_are_supported() {
     ] {
         assert_result("word operator", expression, expected);
     }
+}
+
+#[test]
+fn documented_open_calculator_notation_remains_compatible() {
+    // Numbat's syntax overview and the fend manual publish these forms.
+    for (source, expression, expected) in [
+        ("Numbat", "1.234e3", "1234"),
+        ("Numbat", "1920 ÷ 16 × 9", "1080"),
+        ("Numbat", "6 · 7", "42"),
+        ("Numbat", "6 ⋅ 7", "42"),
+        ("Numbat", "2**3", "8"),
+        ("Numbat", "2³", "8"),
+        ("Numbat", "2⁻³", "0.125"),
+        ("Numbat", "mod(17, 4)", "1"),
+        ("fend", "1_000_000 / 4", "250000"),
+        ("fend", "1.5e-6", "0.0000015"),
+        ("fend", "sqrt 16", "4"),
+        ("Numi", "6 (3) = 18", "true"),
+        ("math.js", "(1+2)(3+4)", "21"),
+        ("math.js", "(4-1)2", "6"),
+        ("math.js", "sqrt(4)(1+2)", "6"),
+        ("Raycast", "square root of 625", "25"),
+        ("Raycast", "2 power 10", "1024"),
+    ] {
+        assert_result(source, expression, expected);
+    }
+
+    assert_approx("Numbat", "2 pi", 2.0 * std::f64::consts::PI);
+    assert_approx("fend", "2pi", 2.0 * std::f64::consts::PI);
+    assert_approx("fend", "sqrt 2", std::f64::consts::SQRT_2);
+}
+
+#[test]
+fn conventional_scientific_writing_is_supported() {
+    for (expression, expected) in [
+        ("10 − 3", "7"),
+        ("√81", "9"),
+        ("∛27", "3"),
+        ("6.022e23 / 6.022e23", "1"),
+        ("2x + 4 = 10", "x = 3"),
+    ] {
+        assert_result("conventional notation", expression, expected);
+    }
+
+    assert_approx("conventional notation", "2π", 2.0 * std::f64::consts::PI);
+
+    let mut calculator = Calculator::new();
+    let polynomial = calculator.calculate_internal("x(x - 3) = 0");
+    assert!(
+        polynomial.success,
+        "implicit polynomial: {:?}",
+        polynomial.error
+    );
+    assert!(polynomial.result.contains("x = 0"), "{}", polynomial.result);
+    assert!(polynomial.result.contains("x = 3"), "{}", polynomial.result);
+}
+
+#[test]
+fn compatibility_notation_does_not_steal_existing_grammar() {
+    // Existing adjacent SI suffixes, units, dates, and strict invalid-input
+    // handling must keep their established meanings.
+    for (expression, expected) in [
+        ("2h in minutes", "120 minutes"),
+        ("2k USD", "2000 USD"),
+        ("15.10.2025 + 1 day", "2025-10-16"),
+    ] {
+        assert_result("grammar regression", expression, expected);
+    }
+
+    let mut calculator = Calculator::new();
+    let malformed_separator = calculator.calculate_internal("1__0");
+    assert!(!malformed_separator.success);
 }
