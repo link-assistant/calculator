@@ -527,6 +527,14 @@ impl Lexer {
 
         // Check for keywords (including multilingual equivalents)
         let kind = match text.to_lowercase().as_str() {
+            // Natural-language arithmetic aliases used by text calculators
+            // such as Numi and Parsify. Multi-word multiplication/division
+            // consume their optional `by` in the token parser.
+            "plus" | "with" => TokenKind::Plus,
+            "minus" | "subtract" | "without" => TokenKind::Minus,
+            "times" | "multiplied" | "mul" => TokenKind::Star,
+            "divide" | "divided" => TokenKind::Slash,
+            "mod" | "modulo" => TokenKind::Percent,
             "at" => TokenKind::At,
             "as" => TokenKind::As,
             "in" => TokenKind::In,

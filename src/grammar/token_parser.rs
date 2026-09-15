@@ -927,10 +927,23 @@ impl<'a> TokenParser<'a> {
 
     fn match_multiplicative_op(&mut self) -> Option<BinaryOp> {
         if self.check(&TokenKind::Star) {
+            let has_optional_by = self
+                .current()
+                .is_some_and(|token| token.text.eq_ignore_ascii_case("multiplied"));
             self.advance();
+            if has_optional_by && self.current_is_identifier("by") {
+                self.advance();
+            }
             Some(BinaryOp::Multiply)
         } else if self.check(&TokenKind::Slash) {
+            let has_optional_by = self.current().is_some_and(|token| {
+                token.text.eq_ignore_ascii_case("divide")
+                    || token.text.eq_ignore_ascii_case("divided")
+            });
             self.advance();
+            if has_optional_by && self.current_is_identifier("by") {
+                self.advance();
+            }
             Some(BinaryOp::Divide)
         } else if self.check(&TokenKind::Percent) && self.percent_starts_binary_expression() {
             self.advance();
@@ -971,6 +984,13 @@ impl<'a> TokenParser<'a> {
 
     fn current_kind(&self) -> Option<&TokenKind> {
         self.current().map(|t| &t.kind)
+    }
+
+    fn current_is_identifier(&self, expected: &str) -> bool {
+        matches!(
+            self.current_kind(),
+            Some(TokenKind::Identifier(identifier)) if identifier.eq_ignore_ascii_case(expected)
+        )
     }
 
     fn peek_kind(&self) -> Option<&TokenKind> {
