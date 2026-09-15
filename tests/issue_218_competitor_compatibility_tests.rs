@@ -89,10 +89,12 @@ fn documented_open_calculator_notation_remains_compatible() {
         ("Numbat", "2**3", "8"),
         ("Numbat", "2³", "8"),
         ("Numbat", "2⁻³", "0.125"),
+        ("Numbat", "2⁺³", "8"),
         ("Numbat", "2¹⁰", "1024"),
         ("Numbat", "mod(17, 4)", "1"),
         ("fend", "1_000_000 / 4", "250000"),
         ("fend", "1.5e-6", "0.0000015"),
+        ("fend", "1.5E+3", "1500"),
         ("fend", "sqrt 16", "4"),
         ("Numi", "cbrt 8", "2"),
         ("Numi", "fact 5", "120"),
@@ -111,6 +113,7 @@ fn documented_open_calculator_notation_remains_compatible() {
     assert_approx("fend", "2pi", 2.0 * std::f64::consts::PI);
     assert_approx("fend", "sqrt 2", std::f64::consts::SQRT_2);
     assert_approx("Numi", "arcsin 1", std::f64::consts::FRAC_PI_2);
+    assert_approx("scientific notation guard", "2e", 2.0 * std::f64::consts::E);
 }
 
 #[test]
@@ -147,6 +150,8 @@ fn compatibility_notation_does_not_steal_existing_grammar() {
         ("2h in minutes", "120 minutes"),
         ("2k USD", "2000 USD"),
         ("15.10.2025 + 1 day", "2025-10-16"),
+        ("**2=8", "* = 4"),
+        ("2**=8", "* = 4"),
     ] {
         assert_result("grammar regression", expression, expected);
     }
@@ -154,4 +159,7 @@ fn compatibility_notation_does_not_steal_existing_grammar() {
     let mut calculator = Calculator::new();
     let malformed_separator = calculator.calculate_internal("1__0");
     assert!(!malformed_separator.success);
+
+    let modulo_by_zero = calculator.calculate_internal("mod(5, 0)");
+    assert!(!modulo_by_zero.success);
 }
