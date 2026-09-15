@@ -58,7 +58,7 @@ are locked by `tests/issue_218_competitor_compatibility_tests.rs`:
 | Source | Expressions |
 | --- | --- |
 | Numbat | `1920 / 16 * 9`; `2^32` |
-| Parsify | `12+5`; `2 * (3/4)` |
+| Parsify | `12+5`; `2*(3/4)` |
 | Numi | `8 times 9`; `20% of $10` |
 | Soulver | `30% of 700` |
 | fend | `1 + 3 * 4`; `16^2`; `5!` |
@@ -101,4 +101,3 @@ Unicode spaces between digits are not interchangeable decoration. The
 defines locale-specific grouping symbols and explicitly includes narrow
 no-break space behavior. The implementation therefore validates grouping shape
 before removing separators; it does not globally strip whitespace.
-

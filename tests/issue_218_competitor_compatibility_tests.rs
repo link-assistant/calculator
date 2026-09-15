@@ -26,7 +26,7 @@ fn documented_competitor_examples_remain_compatible() {
         ("Numbat", "1920 / 16 * 9", "1080"),
         ("Numbat", "2^32", "4294967296"),
         ("Parsify", "12+5", "17"),
-        ("Parsify", "2 * (3/4)", "1.5"),
+        ("Parsify", "2*(3/4)", "1.5"),
         ("Numi", "8 times 9", "72"),
         ("Numi", "20% of $10", "2 USD"),
         ("Soulver", "30% of 700", "210"),
