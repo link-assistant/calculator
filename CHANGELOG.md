@@ -68,6 +68,66 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.22.0] - 2026-10-03
+
+### Changed
+- Updated `num-bigint` to 0.5 and `thiserror` to 2.0, and refreshed `Cargo.lock` (#223).
+- `num-rational` no longer enables its `num-bigint` feature, which pinned `num-bigint` 0.4.
+
+### Fixed
+- Publishing to crates.io failed with `413 Payload Too Large` because a stray wasm-pack archive was packaged; the crate now ships an explicit `include` list (#223).
+- `scripts/publish-crate.mjs` reported success when `cargo publish` failed, so 0.21.0 was never published (#223).
+
+### Fixed
+- `35usd- 200cny- 1hkd` failed with "Cannot convert HKD to USD: No exchange rate available" (#224). The latest rate of every `data/currency/*.lino` file is now bundled at build time, so HKD, AUD, CAD, SEK, KRW and the other ECB currencies convert without a live rate fetch; live rates still take precedence.
+- Uppercase `SEK` is now the Swedish krona instead of German `sek` (seconds); lowercase `sek` stays seconds unless a currency conversion target is given.
+- The CLI no longer loops forever at end of input, and accepts an expression as command-line arguments (`link-calculator "1 HKD in USD"`).
+
+### Fixed
+- `n!` / `factorial(n)` is computed exactly with big integers (`30!` used to return `0`, `25!` was rounded) (#222).
+- Function results outside the decimal range (e.g. `exp(70)`) now report an overflow error instead of silently returning `0`.
+- Unary minus binds looser than `^`: `-2^2` is `-4` (was `4`), matching standard notation; `2^-1` and `(-2)^2` are unchanged.
+
+### Added
+- `evaluate_function_values` evaluates a function on `Value` arguments, using exact arithmetic where available.
+
+### Added
+
+- Spelled numbers and operator words as a data-driven front end (issue #222):
+  `data/words/arithmetic-words.lino` lists number words, scale words and
+  operator phrases for English, Russian, Hindi, Chinese and Spanish, so
+  `two plus two`, `шесть умножить на семь`, `दस बटा दो`, `二十三加五` and
+  `10 dividido por 2` evaluate directly. Compound numbers (`one hundred
+  twenty-three`, `сто двадцать три`, `三百二十`) are composed exactly.
+  Adding a language only needs new lines in the data file.
+- `≠`, `≤` and `≥` work as comparison operators.
+
+### Changed
+
+- The English operator words (`plus`, `times`, `multiplied by`, …) moved
+  from the lexer into the same data file. All-uppercase currency codes such as
+  `ONE` or `DOS` keep their currency meaning.
+
+### Added
+
+- CI job `Dependency Freshness` (`scripts/check-dependency-freshness.mjs`)
+  fails when a direct Rust or web dependency is behind its latest release or
+  `cargo update` has pending lockfile updates, unless the blocker is documented
+  with an issue URL (a `Cargo.toml` comment, or `dependencyBlockers` in
+  `package.json`) (issue #223).
+- The Build job fails when the packaged `.crate` would exceed the 10 MiB
+  crates.io upload limit, which had blocked the v0.20.4..v0.21.0 releases.
+
+### Fixed
+
+- Exact values smaller than the 28-digit decimal range (for example `10^-40` or `2^-100`) are shown in scientific notation instead of `0`.
+
+### Changed
+
+- Web app dependencies updated to their latest releases (React 19, Vite 8, Vitest 5, TypeScript 7, i18next 26, KaTeX 0.19, links-notation 0.22, lino-objects-codec 0.8, jsdom 30, …); `vite-plugin-top-level-await` and `@types/katex` are no longer needed (#223).
+- CI runs on Node.js 24, since several updated web packages require Node.js 22 or newer (#223).
+
 ## [0.21.0] - 2026-09-15
 
 ### Added
