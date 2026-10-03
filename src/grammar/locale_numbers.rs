@@ -268,12 +268,12 @@ mod tests {
     #[test]
     fn leaves_malformed_space_grouping_unchanged() {
         for input in ["12 34 + 1", "1234 567 + 1", "1\u{202f}23 + 4"] {
-            assert!(variants(input).is_empty());
+            assert_eq!(variants(input), Vec::<String>::new());
         }
     }
 
     #[test]
     fn ignores_argument_separator_with_spaces() {
-        assert!(variants("integrate(x^2, x, 0, 3)").is_empty());
+        assert_eq!(variants("integrate(x^2, x, 0, 3)"), Vec::<String>::new());
     }
 }

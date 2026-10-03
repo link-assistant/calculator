@@ -882,6 +882,6 @@ mod tests {
         let mut db = CurrencyDatabase::new();
         let result = db.convert(100.0, "USD", "USD").unwrap();
         assert_eq!(result, 100.0);
-        assert!(db.get_last_used_rates().is_empty());
+        assert_eq!(db.get_last_used_rates().len(), 0);
     }
 }
