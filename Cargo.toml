@@ -40,6 +40,10 @@ name = "library_consumer"
 path = "examples/library_consumer.rs"
 
 [[example]]
+name = "issue_222_probe"
+path = "experiments/issue_222_probe.rs"
+
+[[example]]
 name = "test_advanced_math"
 path = "experiments/test_advanced_math.rs"
 

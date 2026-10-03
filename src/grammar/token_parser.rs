@@ -103,6 +103,15 @@ impl<'a> TokenParser<'a> {
     }
 
     fn parse_power(&mut self) -> Result<Expression, CalculatorError> {
+        // Unary minus binds looser than `^`, as in standard notation and in
+        // most calculators: -2^2 = -(2^2) = -4, while 2^-1 = 0.5 still works
+        // because the exponent is parsed by this same rule.
+        if self.check(&TokenKind::Minus) {
+            self.advance();
+            let operand = self.parse_power()?;
+            return Ok(Expression::negate(operand));
+        }
+
         let mut left = self.parse_unary()?;
 
         // Power is right-associative: 2^3^4 = 2^(3^4)

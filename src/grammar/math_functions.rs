@@ -4,7 +4,12 @@
 //! including trigonometry, logarithms, and numerical integration.
 
 use crate::error::CalculatorError;
-use crate::types::Decimal;
+use crate::types::{Decimal, Rational, Value};
+use num_bigint::BigInt;
+
+/// Largest `n` for which `n!` is computed exactly (35 660 digits); larger
+/// arguments report overflow instead of allocating unbounded memory.
+const MAX_EXACT_FACTORIAL: u32 = 10_000;
 
 /// The number of subdivisions for numerical integration (Simpson's rule).
 const INTEGRATION_SUBDIVISIONS: usize = 1000;
@@ -50,23 +55,23 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
         // Constants
         "pi" => {
             check_arg_count(&name_lower, args, 0)?;
-            Ok(Decimal::from_f64(std::f64::consts::PI))
+            checked_decimal(std::f64::consts::PI)
         }
         "e" => {
             check_arg_count(&name_lower, args, 0)?;
-            Ok(Decimal::from_f64(std::f64::consts::E))
+            checked_decimal(std::f64::consts::E)
         }
 
         // Trigonometric functions
         "sin" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            Ok(Decimal::from_f64(x.sin()))
+            checked_decimal(x.sin())
         }
         "cos" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            Ok(Decimal::from_f64(x.cos()))
+            checked_decimal(x.cos())
         }
         "tan" => {
             check_arg_count(&name_lower, args, 1)?;
@@ -75,7 +80,7 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
             if result.is_infinite() || result.is_nan() {
                 return Err(CalculatorError::domain("tan is undefined at this value"));
             }
-            Ok(Decimal::from_f64(result))
+            checked_decimal(result)
         }
         "asin" => {
             check_arg_count(&name_lower, args, 1)?;
@@ -83,7 +88,7 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
             if !(-1.0..=1.0).contains(&x) {
                 return Err(CalculatorError::domain("asin argument must be in [-1, 1]"));
             }
-            Ok(Decimal::from_f64(x.asin()))
+            checked_decimal(x.asin())
         }
         "acos" => {
             check_arg_count(&name_lower, args, 1)?;
@@ -91,35 +96,35 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
             if !(-1.0..=1.0).contains(&x) {
                 return Err(CalculatorError::domain("acos argument must be in [-1, 1]"));
             }
-            Ok(Decimal::from_f64(x.acos()))
+            checked_decimal(x.acos())
         }
         "atan" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            Ok(Decimal::from_f64(x.atan()))
+            checked_decimal(x.atan())
         }
         "atan2" => {
             check_arg_count(&name_lower, args, 2)?;
             let y = args[0].to_f64();
             let x = args[1].to_f64();
-            Ok(Decimal::from_f64(y.atan2(x)))
+            checked_decimal(y.atan2(x))
         }
 
         // Hyperbolic functions
         "sinh" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            Ok(Decimal::from_f64(x.sinh()))
+            checked_decimal(x.sinh())
         }
         "cosh" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            Ok(Decimal::from_f64(x.cosh()))
+            checked_decimal(x.cosh())
         }
         "tanh" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            Ok(Decimal::from_f64(x.tanh()))
+            checked_decimal(x.tanh())
         }
 
         // Exponential and logarithmic
@@ -130,7 +135,7 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
             if result.is_infinite() {
                 return Err(CalculatorError::Overflow);
             }
-            Ok(Decimal::from_f64(result))
+            checked_decimal(result)
         }
         "ln" => {
             check_arg_count(&name_lower, args, 1)?;
@@ -138,7 +143,7 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
             if x <= 0.0 {
                 return Err(CalculatorError::domain("ln argument must be positive"));
             }
-            Ok(Decimal::from_f64(x.ln()))
+            checked_decimal(x.ln())
         }
         "log" => {
             // log(x) is log base 10, log(x, base) is log base `base`
@@ -160,9 +165,9 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
                         "log base must be positive and not 1",
                     ));
                 }
-                Ok(Decimal::from_f64(x.log(base)))
+                checked_decimal(x.log(base))
             } else {
-                Ok(Decimal::from_f64(x.log10()))
+                checked_decimal(x.log10())
             }
         }
         "log2" => {
@@ -171,7 +176,7 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
             if x <= 0.0 {
                 return Err(CalculatorError::domain("log2 argument must be positive"));
             }
-            Ok(Decimal::from_f64(x.log2()))
+            checked_decimal(x.log2())
         }
         "log10" => {
             check_arg_count(&name_lower, args, 1)?;
@@ -179,7 +184,7 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
             if x <= 0.0 {
                 return Err(CalculatorError::domain("log10 argument must be positive"));
             }
-            Ok(Decimal::from_f64(x.log10()))
+            checked_decimal(x.log10())
         }
         "pow" => {
             check_arg_count(&name_lower, args, 2)?;
@@ -194,7 +199,7 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
             if result.is_infinite() {
                 return Err(CalculatorError::Overflow);
             }
-            Ok(Decimal::from_f64(result))
+            checked_decimal(result)
         }
 
         // Other mathematical functions
@@ -206,42 +211,42 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
                     "sqrt argument must be non-negative",
                 ));
             }
-            Ok(Decimal::from_f64(x.sqrt()))
+            checked_decimal(x.sqrt())
         }
         "cbrt" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            Ok(Decimal::from_f64(x.cbrt()))
+            checked_decimal(x.cbrt())
         }
         "abs" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            Ok(Decimal::from_f64(x.abs()))
+            checked_decimal(x.abs())
         }
         "floor" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            Ok(Decimal::from_f64(x.floor()))
+            checked_decimal(x.floor())
         }
         "ceil" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            Ok(Decimal::from_f64(x.ceil()))
+            checked_decimal(x.ceil())
         }
         "round" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            Ok(Decimal::from_f64(x.round()))
+            checked_decimal(x.round())
         }
         "trunc" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            Ok(Decimal::from_f64(x.trunc()))
+            checked_decimal(x.trunc())
         }
         "sign" | "signum" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            Ok(Decimal::from_f64(x.signum()))
+            checked_decimal(x.signum())
         }
         "min" => {
             if args.len() < 2 {
@@ -254,7 +259,7 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
                 .iter()
                 .map(Decimal::to_f64)
                 .fold(f64::INFINITY, f64::min);
-            Ok(Decimal::from_f64(min))
+            checked_decimal(min)
         }
         "max" => {
             if args.len() < 2 {
@@ -267,7 +272,7 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
                 .iter()
                 .map(Decimal::to_f64)
                 .fold(f64::NEG_INFINITY, f64::max);
-            Ok(Decimal::from_f64(max))
+            checked_decimal(max)
         }
         "factorial" => {
             check_arg_count(&name_lower, args, 1)?;
@@ -284,7 +289,7 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
                 return Err(CalculatorError::Overflow);
             }
             let result = factorial(n_int);
-            Ok(Decimal::from_f64(result))
+            checked_decimal(result)
         }
         "mod" | "modulo" => {
             check_arg_count(&name_lower, args, 2)?;
@@ -297,12 +302,12 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
         "deg" | "degrees" => {
             check_arg_count(&name_lower, args, 1)?;
             let radians = args[0].to_f64();
-            Ok(Decimal::from_f64(radians.to_degrees()))
+            checked_decimal(radians.to_degrees())
         }
         "rad" | "radians" => {
             check_arg_count(&name_lower, args, 1)?;
             let degrees = args[0].to_f64();
-            Ok(Decimal::from_f64(degrees.to_radians()))
+            checked_decimal(degrees.to_radians())
         }
 
         _ => Err(CalculatorError::unknown_function(name)),
@@ -353,6 +358,57 @@ pub fn is_math_function(name: &str) -> bool {
             | "rad"
             | "radians"
     )
+}
+
+/// Evaluates a function on already-evaluated argument values.
+///
+/// Functions with an exact integer definition are computed with arbitrary
+/// precision (e.g. `30!` = `265252859812191058636308480000000`); everything
+/// else goes through [`evaluate_function`] on `Decimal` arguments.
+pub fn evaluate_function_values(name: &str, args: &[Value]) -> Result<Value, CalculatorError> {
+    if let Some(result) = evaluate_exact_function(name, args) {
+        return result;
+    }
+    let decimals = args
+        .iter()
+        .map(|arg| {
+            arg.as_decimal()
+                .ok_or_else(|| CalculatorError::invalid_args(name, "expected numeric argument"))
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    evaluate_function(name, &decimals).map(Value::number)
+}
+
+/// Exact big-integer evaluation; `None` means "not applicable, use `Decimal`".
+fn evaluate_exact_function(name: &str, args: &[Value]) -> Option<Result<Value, CalculatorError>> {
+    let name_lower = name.to_lowercase();
+    if !matches!(name_lower.as_str(), "factorial" | "fact") || args.len() != 1 {
+        return None;
+    }
+    let n = args[0].to_rational().filter(Rational::is_integer)?;
+    if n.is_negative() {
+        return Some(Err(CalculatorError::domain(
+            "factorial argument must be a non-negative integer",
+        )));
+    }
+    let Some(n) = u32::try_from(n.numer())
+        .ok()
+        .filter(|n| *n <= MAX_EXACT_FACTORIAL)
+    else {
+        return Some(Err(CalculatorError::Overflow));
+    };
+    let product = (2..=n).fold(BigInt::from(1u8), |acc, k| acc * k);
+    Some(Ok(Value::rational(Rational::from_bigint(product))))
+}
+
+/// Converts a function result to `Decimal`, reporting overflow instead of
+/// silently returning zero when the value is outside `Decimal`'s range
+/// (previously `30!` or `exp(70)` evaluated to `0`).
+fn checked_decimal(value: f64) -> Result<Decimal, CalculatorError> {
+    if value.is_nan() {
+        return Err(CalculatorError::domain("result is undefined"));
+    }
+    Decimal::try_from_f64(value).ok_or(CalculatorError::Overflow)
 }
 
 /// Checks that the function received the expected number of arguments.
