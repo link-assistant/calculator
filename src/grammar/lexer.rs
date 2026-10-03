@@ -1,5 +1,8 @@
 //! Lexer for tokenizing calculator input.
 
+use std::collections::VecDeque;
+
+use super::arithmetic_words;
 use crate::error::CalculatorError;
 
 /// Checks if a character is a Unicode combining mark (General Category M).
@@ -38,6 +41,11 @@ enum GeneralCategory {
     Me,
     /// Any other category
     Other,
+}
+
+/// Characters that continue a word: alphanumerics, `_` and combining marks.
+pub(super) fn is_word_char(ch: char) -> bool {
+    ch.is_alphanumeric() || ch == '_' || is_unicode_mark(ch)
 }
 
 fn superscript_value(ch: char) -> Option<char> {
@@ -239,6 +247,8 @@ pub struct Lexer {
     input: Vec<char>,
     pos: usize,
     previous_token_can_end_value: bool,
+    /// Tokens already scanned from number or operator words.
+    pending: VecDeque<Token>,
 }
 
 impl Lexer {
@@ -249,6 +259,7 @@ impl Lexer {
             input: input.chars().collect(),
             pos: 0,
             previous_token_can_end_value: false,
+            pending: VecDeque::new(),
         }
     }
 
@@ -270,6 +281,25 @@ impl Lexer {
 
     /// Returns the next token.
     pub fn next_token(&mut self) -> Result<Token, CalculatorError> {
+        let token = match self.pending.pop_front() {
+            Some(token) => token,
+            None => self.scan_token()?,
+        };
+
+        self.previous_token_can_end_value = matches!(
+            token.kind,
+            TokenKind::Number(_)
+                | TokenKind::DateLiteral(_)
+                | TokenKind::Identifier(_)
+                | TokenKind::RightParen
+                | TokenKind::Superscript(_)
+                | TokenKind::Bang
+        );
+
+        Ok(token)
+    }
+
+    fn scan_token(&mut self) -> Result<Token, CalculatorError> {
         self.skip_whitespace();
 
         if self.is_at_end() {
@@ -361,6 +391,18 @@ impl Lexer {
                     Token::new(TokenKind::Bang, start, self.pos, "!".to_string())
                 }
             }
+            '≠' => {
+                self.advance();
+                Token::new(TokenKind::NotEqual, start, self.pos, ch.to_string())
+            }
+            '≤' => {
+                self.advance();
+                Token::new(TokenKind::LessOrEqual, start, self.pos, ch.to_string())
+            }
+            '≥' => {
+                self.advance();
+                Token::new(TokenKind::GreaterOrEqual, start, self.pos, ch.to_string())
+            }
             '<' => {
                 self.advance();
                 if !self.is_at_end() && self.current() == '=' {
@@ -402,7 +444,10 @@ impl Lexer {
                     ch.to_string(),
                 )
             }
-            _ if ch.is_alphabetic() => self.scan_identifier(),
+            _ if ch.is_alphabetic() => match self.scan_words() {
+                Some(token) => token,
+                None => self.scan_identifier(),
+            },
             // Currency symbols used as prefix notation (e.g., $10, €5, £3)
             // These are recognized as single-character identifiers and mapped to ISO codes
             // by CurrencyDatabase::parse_currency().
@@ -423,17 +468,19 @@ impl Lexer {
             }
         };
 
-        self.previous_token_can_end_value = matches!(
-            token.kind,
-            TokenKind::Number(_)
-                | TokenKind::DateLiteral(_)
-                | TokenKind::Identifier(_)
-                | TokenKind::RightParen
-                | TokenKind::Superscript(_)
-                | TokenKind::Bang
-        );
-
         Ok(token)
+    }
+
+    /// Number words and operator phrases from `data/words` (issue #222).
+    fn scan_words(&mut self) -> Option<Token> {
+        let tokens = arithmetic_words::scan(&self.input, self.pos)?;
+        let mut tokens = tokens
+            .into_iter()
+            .map(|(kind, start, end, text)| Token::new(kind, start, end, text));
+        let first = tokens.next()?;
+        self.pending.extend(tokens);
+        self.pos = self.pending.back().map_or(first.end, |token| token.end);
+        Some(first)
     }
 
     fn double_star_has_right_operand(&self) -> bool {
@@ -667,16 +714,10 @@ impl Lexer {
 
         // Check for keywords (including multilingual equivalents)
         let kind = match text.to_lowercase().as_str() {
-            // Natural-language arithmetic aliases used by text calculators
-            // such as Numi and Parsify. Multi-word multiplication/division
-            // consume their optional `by` in the token parser.
-            "plus" | "with" => TokenKind::Plus,
-            "minus" | "subtract" | "without" => TokenKind::Minus,
-            "times" | "multiplied" | "mul" => TokenKind::Star,
-            "divide" | "divided" | "per" => TokenKind::Slash,
-            "power" => TokenKind::Caret,
-            "mod" | "modulo" if self.current() == '(' => TokenKind::Identifier("mod".to_string()),
-            "mod" | "modulo" => TokenKind::Percent,
+            // Operator words ("plus", "multiplied by", "умножить на", …) come
+            // from data/words/arithmetic-words.lino via `scan_words`; `mod(`
+            // is left to us as the function name.
+            "mod" | "modulo" => TokenKind::Identifier("mod".to_string()),
             "π" => TokenKind::Identifier("pi".to_string()),
             "fact" => TokenKind::Identifier("factorial".to_string()),
             "arcsin" => TokenKind::Identifier("asin".to_string()),

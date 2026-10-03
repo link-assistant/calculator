@@ -85,7 +85,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
 
       - name: Detect changes
         id: changes
@@ -111,7 +111,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
 
       - name: Check for changelog fragments
         env:
@@ -133,7 +133,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
 
       - name: Check for manual version changes
         env:
@@ -174,7 +174,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
 
       - name: Cache cargo registry
         uses: actions/cache@v5
@@ -198,6 +198,44 @@ jobs:
 
       - name: Run script tests
         run: node --test scripts/*.test.mjs
+
+  # === DEPENDENCY FRESHNESS ===
+  # Fails when a direct dependency is behind its latest release, unless its
+  # manifest documents the blocker with an issue URL (issue #223). Upstream
+  # releases, not this repository's diff, make dependencies stale, so the job
+  # runs on every pipeline run.
+  dependency-freshness:
+    name: Dependency Freshness
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+
+      - name: Cache cargo-outdated
+        id: cargo-outdated-cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cargo/bin/cargo-outdated
+          key: ${{ runner.os }}-cargo-outdated-0.19
+
+      - name: Install cargo-outdated
+        if: steps.cargo-outdated-cache.outputs.cache-hit != 'true'
+        run: cargo install cargo-outdated --locked --version '^0.19'
+
+      - name: Install web dependencies
+        working-directory: web
+        run: npm ci
+
+      - name: Check dependency freshness
+        run: node scripts/check-dependency-freshness.mjs
 
   # === TEST ===
   # Test runs independently of changelog check
@@ -266,6 +304,18 @@ jobs:
       - name: Check package
         run: cargo package --list --allow-dirty
 
+      # crates.io rejects uploads over 10 MiB with "413 Payload Too Large",
+      # which silently blocked the v0.20.4..v0.21.0 releases (issue #223).
+      - name: Check package size
+        run: |
+          cargo package --allow-dirty --no-verify
+          size=$(stat -c %s target/package/*.crate)
+          echo "Package size: $size bytes"
+          if [ "$size" -ge 10485760 ]; then
+            echo "::error::The .crate file is $size bytes; crates.io accepts at most 10 MiB. Narrow the include list in Cargo.toml."
+            exit 1
+          fi
+
   # === WASM BUILD ===
   # Build WASM package for web deployment
   wasm-build:
@@ -309,7 +359,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
           cache-dependency-path: web/package-lock.json
 
@@ -414,7 +464,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
 
       - name: Configure git
         run: node scripts/git-config.mjs
@@ -507,7 +557,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
           cache-dependency-path: web/package-lock.json
 
@@ -593,7 +643,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
 
       - name: Configure git
         run: node scripts/git-config.mjs
@@ -643,7 +693,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
 
       - name: Create changelog fragment
         env:

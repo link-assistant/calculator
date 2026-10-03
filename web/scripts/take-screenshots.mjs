@@ -59,6 +59,11 @@ async function main() {
 
   const { browser, page } = await launchBrowser({
     engine: 'playwright',
+    // browser-commander >= 0.21 starts the installed Chrome itself by default
+    // ('real' launch). For headless CI screenshots keep the Playwright-managed
+    // launcher, which also adds --disable-dev-shm-usage so Chromium does not
+    // crash in containers with a small /dev/shm.
+    launch: 'engine',
     headless: true,
     userDataDir,
     slowMo: 0,

@@ -137,18 +137,31 @@ async function main() {
     try {
       // For multi-language repos, we need to cd into the rust directory
       // IMPORTANT: cd is a virtual command that calls process.chdir(), so we restore after
+      // NOTE: command-stream's $ has errexit=false by default, so it does NOT
+      // throw on a non-zero exit code. Without this check a rejected upload
+      // (e.g. "413 Payload Too Large") was reported as a successful publish,
+      // which is why v0.20.4..v0.21.0 never reached crates.io (issue #223).
+      let result;
       if (needsCd({ rustRoot })) {
-        await $`cd ${rustRoot} && cargo publish --allow-dirty`;
+        result = await $`cd ${rustRoot} && cargo publish --allow-dirty`;
         process.chdir(originalCwd);
       } else {
-        await $`cargo publish --allow-dirty`;
+        result = await $`cargo publish --allow-dirty`;
+      }
+
+      if (result.code !== 0) {
+        const error = new Error(
+          `${result.stderr || ''}\n${result.stdout || ''}`.trim() ||
+            `cargo publish exited with code ${result.code}`
+        );
+        throw error;
       }
 
       console.log(`Successfully published ${name}@${version} to crates.io`);
       setOutput('publish_result', 'success');
     } catch (error) {
       // Restore cwd on error
-      if (needsCd({ rustRoot })) {
+      if (needsCd({ rustRoot }) && process.cwd() !== originalCwd) {
         process.chdir(originalCwd);
       }
 

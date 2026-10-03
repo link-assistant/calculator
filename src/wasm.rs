@@ -501,7 +501,7 @@ mod tests {
     #[test]
     fn test_get_version() {
         let version = get_version();
-        assert!(!version.is_empty());
+        assert_ne!(version, "");
         assert!(version.contains('.'));
     }
 

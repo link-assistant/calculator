@@ -26,7 +26,7 @@ use link_calculator::{CalculationResult, Calculator, VERSION};
 fn version_constant_is_reachable() {
     // The constant has to live at the crate root for the documented
     // `link_calculator::VERSION` pattern to keep working.
-    assert!(!VERSION.is_empty());
+    assert_ne!(VERSION, "");
     assert!(VERSION.chars().any(char::is_numeric));
 }
 
@@ -174,7 +174,7 @@ fn utils_truncate_is_reachable() {
 fn lexer_is_reachable_through_grammar_module() {
     let mut lexer = Lexer::new("1 + 2");
     let tokens = lexer.tokenize().expect("tokenizes");
-    assert!(!tokens.is_empty());
+    assert_ne!(tokens.len(), 0);
 }
 
 #[test]

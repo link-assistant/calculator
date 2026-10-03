@@ -10,8 +10,8 @@ fn plan_pure_math_needs_no_sources() {
     let calc = Calculator::new();
     let plan = calc.plan_internal("2 + 3");
     assert!(plan.success);
-    assert!(plan.required_sources.is_empty());
-    assert!(plan.currencies.is_empty());
+    assert_eq!(plan.required_sources.len(), 0);
+    assert_eq!(plan.currencies.len(), 0);
     assert_eq!(plan.lino_interpretation, "(2 + 3)");
 }
 

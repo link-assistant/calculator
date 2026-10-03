@@ -35,6 +35,11 @@ impl TokenParser<'_> {
             return Ok(Unit::Mass(mass));
         }
 
+        // An uppercase ISO code such as "SEK" is a currency, not German "sek" (issue #224).
+        if crate::grammar::NumberGrammar::is_uppercase_currency_code(&unit_str) {
+            return Ok(Unit::currency(&unit_str));
+        }
+
         if let Some(duration) = crate::types::DurationUnit::parse(&unit_str) {
             return Ok(Unit::Duration(duration));
         }

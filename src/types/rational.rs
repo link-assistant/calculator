@@ -367,7 +367,43 @@ impl Rational {
             self.inner.numer().to_string()
         } else {
             let approx = self.to_decimal();
+            if approx.is_zero() && !self.is_zero() {
+                // Too small for the 28-digit decimal (e.g. `10^-40`): show it
+                // in scientific notation instead of rounding it to 0.
+                return self.to_scientific_string(15);
+            }
             approx.normalize().to_string()
+        }
+    }
+
+    /// Formats a non-zero rational as `m.mmme-k` with up to `digits`
+    /// significant digits, computed exactly (truncated, trailing zeros removed).
+    fn to_scientific_string(&self, digits: u32) -> String {
+        let numer = self.inner.numer().abs();
+        let denom = self.inner.denom().abs();
+        let ten = BigInt::from(10);
+        // Find the exponent e with 10^e <= |self| < 10^(e+1).
+        let mut exponent = numer.to_string().len() as i64 - denom.to_string().len() as i64;
+        let scaled = |e: i64| -> (BigInt, BigInt) {
+            if e >= 0 {
+                (numer.clone(), &denom * Pow::pow(&ten, e.unsigned_abs()))
+            } else {
+                (&numer * Pow::pow(&ten, e.unsigned_abs()), denom.clone())
+            }
+        };
+        let (n, d) = scaled(exponent);
+        if n < d {
+            exponent -= 1;
+        }
+        let (n, d) = scaled(exponent - i64::from(digits) + 1);
+        let mantissa = (n / d).to_string();
+        let (int_part, frac_part) = mantissa.split_at(1);
+        let frac_part = frac_part.trim_end_matches('0');
+        let sign = if self.is_negative() { "-" } else { "" };
+        if frac_part.is_empty() {
+            format!("{sign}{int_part}e{exponent}")
+        } else {
+            format!("{sign}{int_part}.{frac_part}e{exponent}")
         }
     }
 

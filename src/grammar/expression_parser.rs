@@ -5,7 +5,7 @@ use crate::grammar::linear_equation;
 use crate::grammar::polynomial_equation;
 use crate::grammar::token_parser::TokenParser;
 use crate::grammar::{
-    evaluate_function, evaluate_indefinite_integral, DateTimeGrammar, Lexer, NumberGrammar,
+    evaluate_function_values, evaluate_indefinite_integral, DateTimeGrammar, Lexer, NumberGrammar,
 };
 use crate::types::{
     BinaryOp, ComparisonOp, CurrencyDatabase, DateTime, Decimal, Expression, Rational, Unit, Value,
@@ -284,20 +284,11 @@ impl ExpressionParser {
                     return self.evaluate_integrate(args);
                 }
 
-                // Evaluate all arguments
-                let mut arg_values = Vec::new();
-                for arg in args {
-                    let val = self.evaluate_expr(arg)?;
-                    // Extract the decimal value
-                    let decimal = val.as_decimal().ok_or_else(|| {
-                        CalculatorError::invalid_args(name, "expected numeric argument")
-                    })?;
-                    arg_values.push(decimal);
-                }
-
-                // Call the function
-                let result = evaluate_function(name, &arg_values)?;
-                Ok(Value::number(result))
+                let arg_values = args
+                    .iter()
+                    .map(|arg| self.evaluate_expr(arg))
+                    .collect::<Result<Vec<_>, _>>()?;
+                evaluate_function_values(name, &arg_values)
             }
             Expression::Variable(name) => {
                 // Variables should not appear in direct evaluation
@@ -499,10 +490,7 @@ impl ExpressionParser {
                 for arg in args {
                     let val = self.evaluate_expr_with_steps(arg, steps)?;
                     arg_display.push(val.to_display_string());
-                    let decimal = val.as_decimal().ok_or_else(|| {
-                        CalculatorError::invalid_args(name, "expected numeric argument")
-                    })?;
-                    arg_values.push(decimal);
+                    arg_values.push(val);
                 }
 
                 steps.push(format!(
@@ -510,8 +498,7 @@ impl ExpressionParser {
                     name,
                     arg_display.join(", ")
                 ));
-                let result = evaluate_function(name, &arg_values)?;
-                let val = Value::number(result);
+                let val = evaluate_function_values(name, &arg_values)?;
                 steps.push(format!("= {}", val.to_display_string()));
                 Ok(val)
             }
@@ -945,17 +932,11 @@ impl ExpressionParser {
                 }
 
                 // Evaluate all arguments with variable substitution
-                let mut arg_values = Vec::new();
-                for arg in args {
-                    let val = self.evaluate_expr_with_var(arg, var_name, var_value)?;
-                    let decimal = val.as_decimal().ok_or_else(|| {
-                        CalculatorError::invalid_args(name, "expected numeric argument")
-                    })?;
-                    arg_values.push(decimal);
-                }
-
-                let result = evaluate_function(name, &arg_values)?;
-                Ok(Value::number(result))
+                let arg_values = args
+                    .iter()
+                    .map(|arg| self.evaluate_expr_with_var(arg, var_name, var_value))
+                    .collect::<Result<Vec<_>, _>>()?;
+                evaluate_function_values(name, &arg_values)
             }
             Expression::Variable(name) => {
                 if name == var_name {

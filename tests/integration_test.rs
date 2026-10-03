@@ -212,7 +212,7 @@ mod lino_tests {
         let mut calculator = Calculator::new();
         let result = calculator.calculate_internal("2 + 3");
         assert!(result.success);
-        assert!(!result.lino_interpretation.is_empty());
+        assert_ne!(result.lino_interpretation, "");
         assert!(result.lino_interpretation.contains('+'));
     }
 
@@ -501,7 +501,7 @@ mod version_tests {
 
     #[test]
     fn test_version_is_not_empty() {
-        assert!(!VERSION.is_empty());
+        assert_ne!(VERSION, "");
     }
 
     #[test]
