@@ -165,3 +165,16 @@ fn test_issue_222_unicode_comparison_signs() {
         ("two plus two ≥ four", "true"),
     ]);
 }
+
+/// Exact values below the 28-digit decimal range are shown in scientific
+/// notation instead of being rounded to 0.
+#[test]
+fn test_issue_222_tiny_exact_values_are_not_zero() {
+    assert_calculates(&[
+        ("10^-28", "0.0000000000000000000000000001"),
+        ("10^-29", "1e-29"),
+        ("10^-40", "1e-40"),
+        ("-3*10^-35", "-3e-35"),
+        ("2^-100", "7.88860905221011e-31"),
+    ]);
+}
