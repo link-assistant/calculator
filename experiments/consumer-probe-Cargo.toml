@@ -1,0 +1,8 @@
+[package]
+name = "consumer-probe"
+version = "0.1.0"
+edition = "2021"
+[dependencies]
+link-calculator = { path = "/tmp/gh-issue-solver-1791065265307" }
+num-bigint = "0.5"
+thiserror = "2"

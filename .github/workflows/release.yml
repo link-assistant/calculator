@@ -85,7 +85,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
 
       - name: Detect changes
         id: changes
@@ -111,7 +111,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
 
       - name: Check for changelog fragments
         env:
@@ -133,7 +133,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
 
       - name: Check for manual version changes
         env:
@@ -174,7 +174,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
 
       - name: Cache cargo registry
         uses: actions/cache@v5
@@ -217,7 +217,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
 
       - name: Cache cargo-outdated
         id: cargo-outdated-cache
@@ -359,7 +359,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
           cache-dependency-path: web/package-lock.json
 
@@ -464,7 +464,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
 
       - name: Configure git
         run: node scripts/git-config.mjs
@@ -557,7 +557,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
           cache-dependency-path: web/package-lock.json
 
@@ -643,7 +643,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
 
       - name: Configure git
         run: node scripts/git-config.mjs
@@ -693,7 +693,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24.x'
 
       - name: Create changelog fragment
         env:

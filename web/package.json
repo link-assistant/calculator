@@ -16,31 +16,32 @@
     "screenshots": "node scripts/take-screenshots.mjs"
   },
   "dependencies": {
-    "i18next": "^25.8.0",
-    "i18next-browser-languagedetector": "^8.2.0",
-    "katex": "^0.16.11",
-    "links-notation": "^0.13.0",
-    "lino-objects-codec": "^0.3.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-i18next": "^16.5.3"
+    "i18next": "^26.4.2",
+    "i18next-browser-languagedetector": "^8.2.1",
+    "katex": "^0.19.0",
+    "links-notation": "^0.22.0",
+    "lino-objects-codec": "^0.8.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-i18next": "^17.0.15"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.0",
-    "browser-commander": "^0.8.0",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^14.6.1",
-    "@types/katex": "^0.16.7",
-    "@types/node": "^25.0.10",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "@vitejs/plugin-react": "^4.2.0",
-    "jsdom": "^27.4.0",
-    "typescript": "^5.3.0",
-    "vite": "^5.0.0",
-    "vite-plugin-top-level-await": "^1.4.0",
-    "vite-plugin-wasm": "^3.3.0",
-    "vitest": "^4.0.18"
+    "@playwright/test": "^1.63.0",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
+    "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "browser-commander": "^0.21.2",
+    "jsdom": "^30.1.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.2",
+    "vite-plugin-wasm": "^3.6.0",
+    "vitest": "^5.0.3"
+  },
+  "engines": {
+    "node": ">=22.12"
   }
 }
