@@ -134,7 +134,20 @@ impl NumberGrammar {
 
         // Try to parse as duration unit (before currency, to avoid e.g. "h" being treated as a currency)
         if let Some(dur) = DurationUnit::parse(s) {
-            return Ok((Unit::Duration(dur), alternatives));
+            let duration = Unit::Duration(dur);
+            // "sek" is German for seconds but "SEK" is the Swedish krona (issue #224):
+            // an uppercase ISO code means the currency, otherwise keep it as an alternative.
+            if let Some(currency_code) = CurrencyDatabase::parse_currency(s) {
+                if Self::is_well_known_currency(&currency_code) {
+                    let currency = Unit::currency(&currency_code);
+                    if Self::is_uppercase_currency_code(s) {
+                        alternatives.push(duration);
+                        return Ok((currency, alternatives));
+                    }
+                    alternatives.push(currency);
+                }
+            }
+            return Ok((duration, alternatives));
         }
 
         // Try to parse as cryptocurrency or fiat currency alias
@@ -158,6 +171,12 @@ impl NumberGrammar {
         } else {
             Ok((Unit::Custom(s.to_string()), alternatives))
         }
+    }
+
+    /// Returns `true` for an all-uppercase three-letter well-known currency code
+    /// such as `SEK`, which then wins over a same-spelled unit like German `sek`.
+    pub(crate) fn is_uppercase_currency_code(s: &str) -> bool {
+        s.len() == 3 && s.bytes().all(|b| b.is_ascii_uppercase()) && Self::is_well_known_currency(s)
     }
 
     /// Checks if a currency code is a well-known fiat or crypto currency.
