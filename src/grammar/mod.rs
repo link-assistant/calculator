@@ -1,5 +1,6 @@
 //! Grammar modules for parsing expressions.
 
+mod arithmetic_words;
 mod datetime_grammar;
 mod expression_parser;
 mod integral;

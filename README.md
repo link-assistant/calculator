@@ -35,6 +35,12 @@ A grammar-based expression calculator with DateTime and Currency support, built 
 - Powers and roots: `2^10`, `2**10`, `2¹⁰`, `√81`, `square root of 625`
 - Conventional implicit products and functions: `2π`, `2x`, `2(3 + 4)`, `sqrt 16`
 - Natural operators: `plus`, `minus`, `times`, `divided by`, `mod`, `power`
+- Spelled numbers and operator words in English, Russian, Hindi, Chinese and
+  Spanish: `twenty-one times two`, `шесть умножить на семь`, `दस बटा दो`,
+  `二十三加五`, `10 dividido por 2` (vocabulary in
+  [`data/words/arithmetic-words.lino`](data/words/arithmetic-words.lino))
+- Exact big integers and factorials: `123123980921093128 * 2348023048230429324`, `30!`
+- Comparisons: `=`, `==`, `!=`, `≠`, `<`, `<=`, `≤`, `>`, `>=`, `≥`
 - Parentheses for explicit grouping: `(2 + 3) * 4`
 - Negative numbers: `-5 + 3`
 - Decimal precision using `rust_decimal`
