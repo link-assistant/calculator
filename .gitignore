@@ -69,3 +69,6 @@ web/public/data/currency/
 # wasm-pack release archives downloaded by CI (never commit them)
 wasm-pack-v*/
 wasm-pack-v*.tar.gz
+
+# Full per-case output of scripts/competitor-coverage.mjs (1 MB); the compact coverage-baseline.json is committed instead
+docs/case-studies/*/results/coverage-results.json
