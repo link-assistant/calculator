@@ -72,3 +72,6 @@ wasm-pack-v*.tar.gz
 
 # Full per-case output of scripts/competitor-coverage.mjs (1 MB); the compact coverage-baseline.json is committed instead
 docs/case-studies/*/results/coverage-results.json
+
+# Scratch directory for downloaded CI run logs and working notes during issue investigation
+/ci-logs/
