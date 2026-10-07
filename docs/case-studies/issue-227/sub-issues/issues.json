@@ -1,0 +1,233 @@
+{
+  "S1": {
+    "file": "01-coverage-gate-in-ci.md",
+    "number": 229,
+    "url": "https://github.com/link-assistant/calculator/issues/229",
+    "id": 5743009766,
+    "title": "Run the competitor coverage checker in CI and fail on regressions",
+    "bodySynced": true,
+    "linked": true,
+    "blockedBy": []
+  },
+  "S2": {
+    "file": "02-open-source-suite-import.md",
+    "number": 230,
+    "url": "https://github.com/link-assistant/calculator/issues/230",
+    "id": 5743010210,
+    "title": "Keep the imported open-source calculator test suites current and add the missing engines",
+    "bodySynced": true,
+    "linked": true,
+    "blockedBy": []
+  },
+  "S3": {
+    "file": "03-closed-source-docs-corpus.md",
+    "number": 231,
+    "url": "https://github.com/link-assistant/calculator/issues/231",
+    "id": 5743010739,
+    "title": "Complete the closed-source calculator documentation corpus",
+    "bodySynced": true,
+    "linked": true,
+    "blockedBy": []
+  },
+  "S4": {
+    "file": "04-multilingual-scientific-quote-corpus.md",
+    "number": 232,
+    "url": "https://github.com/link-assistant/calculator/issues/232",
+    "id": 5743011392,
+    "title": "Grow the multilingual scientific-quote corpus beyond the 13 seeded languages",
+    "bodySynced": true,
+    "linked": true,
+    "blockedBy": []
+  },
+  "S5": {
+    "file": "05-thousands-separators-locale-decimals.md",
+    "number": 233,
+    "url": "https://github.com/link-assistant/calculator/issues/233",
+    "id": 5743011918,
+    "title": "Thousands separators and locale decimal commas give silently wrong answers",
+    "bodySynced": true,
+    "linked": true,
+    "blockedBy": [
+      229
+    ]
+  },
+  "S6": {
+    "file": "06-percent-semantics-parity.md",
+    "number": 234,
+    "url": "https://github.com/link-assistant/calculator/issues/234",
+    "id": 5743012345,
+    "title": "Percent arithmetic differs from every competitor",
+    "bodySynced": true,
+    "linked": true,
+    "blockedBy": [
+      229
+    ]
+  },
+  "S7": {
+    "file": "07-dimensional-unit-algebra.md",
+    "number": 235,
+    "url": "https://github.com/link-assistant/calculator/issues/235",
+    "id": 5743012777,
+    "title": "General dimensional unit algebra: length, temperature, electrical and compound units",
+    "bodySynced": true,
+    "linked": true,
+    "blockedBy": [
+      229,
+      233
+    ]
+  },
+  "S8": {
+    "file": "08-si-prefixes-superscripts-uncertainty-scale-words.md",
+    "number": 236,
+    "url": "https://github.com/link-assistant/calculator/issues/236",
+    "id": 5743013170,
+    "title": "Scientific notation as written in papers: superscripts, SI prefixes, ± uncertainty, scale words after digits",
+    "bodySynced": true,
+    "linked": true,
+    "blockedBy": [
+      233,
+      235
+    ]
+  },
+  "S9": {
+    "file": "09-english-phrase-operators.md",
+    "number": 237,
+    "url": "https://github.com/link-assistant/calculator/issues/237",
+    "id": 5743013607,
+    "title": "English noun-phrase operators: squared, cubed, sum of, half of, dozen, rounded, log base",
+    "bodySynced": true,
+    "linked": true,
+    "blockedBy": [
+      229
+    ]
+  },
+  "S10": {
+    "file": "10-multilingual-phrase-operators-and-numbers.md",
+    "number": 238,
+    "url": "https://github.com/link-assistant/calculator/issues/238",
+    "id": 5743014036,
+    "title": "Multilingual phrase operators, spelled numbers and CJK tokenization",
+    "bodySynced": true,
+    "linked": true,
+    "blockedBy": [
+      237,
+      233,
+      236
+    ]
+  },
+  "S11": {
+    "file": "11-number-bases-bitwise-fraction-and-display-formats.md",
+    "number": 239,
+    "url": "https://github.com/link-assistant/calculator/issues/239",
+    "id": 5743014549,
+    "title": "Number bases, bitwise operators, repeating decimals and display formats (fraction, roman, words, eng, hex)",
+    "bodySynced": true,
+    "linked": true,
+    "blockedBy": [
+      229
+    ]
+  },
+  "S12": {
+    "file": "12-complex-numbers-vectors-matrices-special-values.md",
+    "number": 240,
+    "url": "https://github.com/link-assistant/calculator/issues/240",
+    "id": 5743014971,
+    "title": "Complex numbers, vectors and matrices, infinity/NaN and the missing special functions",
+    "bodySynced": true,
+    "linked": true,
+    "blockedBy": [
+      229,
+      239
+    ]
+  },
+  "S13": {
+    "file": "13-symbolic-algebra-equations.md",
+    "number": 241,
+    "url": "https://github.com/link-assistant/calculator/issues/241",
+    "id": 5743015387,
+    "title": "Symbolic algebra: variables in expressions, non-polynomial equations, calculus and simplification",
+    "bodySynced": true,
+    "linked": true,
+    "blockedBy": [
+      240
+    ]
+  },
+  "S14": {
+    "file": "14-notepad-state-booleans-strings-comments.md",
+    "number": 242,
+    "url": "https://github.com/link-assistant/calculator/issues/242",
+    "id": 5743015820,
+    "title": "Notepad state: variables, line references, totals, booleans, strings, comments and conditionals",
+    "bodySynced": true,
+    "linked": true,
+    "blockedBy": [
+      229
+    ]
+  },
+  "S15": {
+    "file": "15-dates-timezones-relative-calendar.md",
+    "number": 243,
+    "url": "https://github.com/link-assistant/calculator/issues/243",
+    "id": 5743016250,
+    "title": "Date and time parity: sign of clock differences, natural display, IANA/city zones, relative dates, workdays, timecode",
+    "bodySynced": true,
+    "linked": true,
+    "blockedBy": [
+      229
+    ]
+  },
+  "S16": {
+    "file": "16-finance-statistics-rates.md",
+    "number": 244,
+    "url": "https://github.com/link-assistant/calculator/issues/244",
+    "id": 5743016666,
+    "title": "Finance, statistics and rate phrases: VAT, interest, mortgages, mean/median, per-unit rates",
+    "bodySynced": true,
+    "linked": true,
+    "blockedBy": [
+      234,
+      235,
+      237
+    ]
+  },
+  "S17": {
+    "file": "17-latex-mathml-unicode-math-input.md",
+    "number": 245,
+    "url": "https://github.com/link-assistant/calculator/issues/245",
+    "id": 5743017021,
+    "title": "Accept LaTeX, MathML and Unicode math notation copied from papers",
+    "bodySynced": true,
+    "linked": true,
+    "blockedBy": [
+      236,
+      242
+    ]
+  },
+  "S18": {
+    "file": "18-parity-milestone.md",
+    "number": 246,
+    "url": "https://github.com/link-assistant/calculator/issues/246",
+    "id": 5743017502,
+    "title": "Milestone: every competitor and scientific-quote corpus row is supported or has a documented difference",
+    "bodySynced": true,
+    "linked": true,
+    "blockedBy": [
+      230,
+      231,
+      232,
+      233,
+      234,
+      235,
+      236,
+      237,
+      238,
+      239,
+      240,
+      241,
+      242,
+      243,
+      244,
+      245
+    ]
+  }
+}
