@@ -158,18 +158,18 @@ fn test_evaluate_percent_times_number() {
 
 #[test]
 fn test_evaluate_percent_standalone() {
-    // 50% should evaluate to 0.5
+    // Percent values retain their display (issue #234)
     let mut parser = ExpressionParser::new();
     let (value, _, _) = parser.parse_and_evaluate("50%").unwrap();
-    assert_eq!(value.to_display_string(), "0.5");
+    assert_eq!(value.to_display_string(), "50%");
 }
 
 #[test]
 fn test_evaluate_percent_addition() {
-    // 100 + 10% should be 100 + 0.1 = 100.1
+    // 100 + 10% increases 100 by ten percent (issue #234)
     let mut parser = ExpressionParser::new();
     let (value, _, _) = parser.parse_and_evaluate("100 + 10%").unwrap();
-    assert_eq!(value.to_display_string(), "100.1");
+    assert_eq!(value.to_display_string(), "110");
 }
 
 #[test]

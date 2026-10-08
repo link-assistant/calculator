@@ -1,12 +1,15 @@
 //! Value type representing typed values with units.
 
 mod duration;
+mod formatting;
 mod kind;
+mod ratio;
 use duration::{
     add_calendar_months_or_duration, apply_duration_unit, bare_year_datetime, convert_raw_duration,
     divide_duration_units, divide_raw_duration, format_duration,
 };
-pub use kind::ValueKind;
+pub use kind::{RatioFormat, ValueKind};
+pub use ratio::evaluate_ratio_function;
 
 use serde::{Deserialize, Serialize};
 use std::fmt;
@@ -186,6 +189,9 @@ impl Value {
         currency_db: &mut CurrencyDatabase,
         date: Option<&DateTime>,
     ) -> Result<Self, CalculatorError> {
+        if let Some(result) = self.additive_ratio(other, false) {
+            return result;
+        }
         match (&self.kind, &other.kind) {
             // Rational + Rational
             (ValueKind::Rational(a), ValueKind::Rational(b)) => {
@@ -395,6 +401,9 @@ impl Value {
             return Ok(Value::duration(year.signed_subtract_seconds(datetime)));
         }
 
+        if let Some(result) = self.additive_ratio(other, true) {
+            return result;
+        }
         match (&self.kind, &other.kind) {
             // Rational - Rational
             (ValueKind::Rational(a), ValueKind::Rational(b)) => {
@@ -553,6 +562,16 @@ impl Value {
 
     /// Multiplies two values.
     pub fn multiply(&self, other: &Self) -> Result<Self, CalculatorError> {
+        if self.has_ratio_display() || other.has_ratio_display() {
+            let result = self.scalar().multiply(&other.scalar())?;
+            return if self.is_percent() && other.is_percent() {
+                Ok(Self::percent(
+                    result.to_rational().expect("numeric product"),
+                ))
+            } else {
+                Ok(result)
+            };
+        }
         match (&self.kind, &other.kind) {
             // Rational * Rational
             (ValueKind::Rational(a), ValueKind::Rational(b)) => {
@@ -605,6 +624,9 @@ impl Value {
 
     /// Divides two values.
     pub fn divide(&self, other: &Self) -> Result<Self, CalculatorError> {
+        if self.has_ratio_display() || other.has_ratio_display() {
+            return self.scalar().divide(&other.scalar());
+        }
         match (&self.kind, &other.kind) {
             // Rational / Rational
             (ValueKind::Rational(a), ValueKind::Rational(b)) => {
@@ -847,119 +869,10 @@ impl Value {
         match &self.kind {
             ValueKind::Number(n) => Value::number_with_unit(-*n, self.unit.clone()),
             ValueKind::Rational(r) => Value::rational_with_unit(-r.clone(), self.unit.clone()),
+            ValueKind::Percent(r) => Self::percent(-r.clone()),
+            ValueKind::Ratio { value, format } => Self::ratio(-value.clone(), *format),
             ValueKind::Duration { seconds } => Value::duration(-seconds),
             _ => self.clone(),
-        }
-    }
-
-    /// Returns the type name for error messages.
-    #[must_use]
-    pub fn type_name(&self) -> &'static str {
-        match self.kind {
-            ValueKind::Number(_) => "number",
-            ValueKind::Rational(_) => "number",
-            ValueKind::DateTime(_) => "datetime",
-            ValueKind::Duration { .. } => "duration",
-            ValueKind::Boolean(_) => "boolean",
-            ValueKind::Comparison { .. } => "comparison result",
-            ValueKind::EquationSolution { .. }
-            | ValueKind::EquationSolutions { .. }
-            | ValueKind::SymbolicEquationSolution { .. } => "equation solution",
-        }
-    }
-
-    /// Converts the value to a display string.
-    #[must_use]
-    pub fn to_display_string(&self) -> String {
-        match &self.kind {
-            ValueKind::Number(n) => {
-                let n_str = n.normalize().to_string();
-                if self.unit == Unit::None {
-                    n_str
-                } else {
-                    format!("{} {}", n_str, self.unit)
-                }
-            }
-            ValueKind::Rational(r) => {
-                let r_str = r.to_display_string();
-                if self.unit == Unit::None {
-                    r_str
-                } else {
-                    format!("{} {}", r_str, self.unit)
-                }
-            }
-            ValueKind::DateTime(dt) => dt.to_string(),
-            ValueKind::Duration { seconds } => format_duration(*seconds),
-            ValueKind::Boolean(b) => b.to_string(),
-            ValueKind::Comparison {
-                left,
-                relation,
-                right,
-            } => format!("{left} {relation} {right}"),
-            ValueKind::EquationSolution { variable, value } => {
-                format!("{variable} = {}", value.to_display_string())
-            }
-            ValueKind::EquationSolutions { variable, values } => values
-                .iter()
-                .map(|value| format!("{variable} = {}", value.to_display_string()))
-                .collect::<Vec<_>>()
-                .join(" or "),
-            ValueKind::SymbolicEquationSolution {
-                variable,
-                expression,
-            } => {
-                format!("{variable} = {expression}")
-            }
-        }
-    }
-
-    /// Returns true if this is a number (either Decimal or Rational).
-    #[must_use]
-    pub fn is_number(&self) -> bool {
-        matches!(self.kind, ValueKind::Number(_) | ValueKind::Rational(_))
-    }
-
-    /// Returns the decimal value if this is a number.
-    #[must_use]
-    pub fn as_number(&self) -> Option<Decimal> {
-        match &self.kind {
-            ValueKind::Number(n) => Some(*n),
-            ValueKind::Rational(r) => Some(r.to_decimal()),
-            _ => None,
-        }
-    }
-
-    /// Alias for `as_number`.
-    #[must_use]
-    pub fn as_decimal(&self) -> Option<Decimal> {
-        self.as_number()
-    }
-
-    /// Returns the rational value if this is a Rational.
-    #[must_use]
-    pub fn as_rational(&self) -> Option<&Rational> {
-        match &self.kind {
-            ValueKind::Rational(r) => Some(r),
-            _ => None,
-        }
-    }
-
-    /// Converts this value to a Rational if numeric (clones Rational, converts Decimal).
-    #[must_use]
-    pub fn to_rational(&self) -> Option<Rational> {
-        match &self.kind {
-            ValueKind::Rational(r) => Some(r.clone()),
-            ValueKind::Number(d) => Some(Rational::from_decimal(*d)),
-            _ => None,
-        }
-    }
-
-    /// Returns the fraction string representation if this is a Rational.
-    #[must_use]
-    pub fn to_fraction_string(&self) -> Option<String> {
-        match &self.kind {
-            ValueKind::Rational(r) => Some(r.to_fraction_string()),
-            _ => None,
         }
     }
 }
@@ -972,6 +885,13 @@ impl fmt::Display for Value {
 
 impl PartialEq for Value {
     fn eq(&self, other: &Self) -> bool {
+        if self.has_ratio_display() || other.has_ratio_display() {
+            return self.unit == other.unit
+                && self
+                    .to_rational()
+                    .zip(other.to_rational())
+                    .is_some_and(|(a, b)| a == b);
+        }
         match (&self.kind, &other.kind) {
             (ValueKind::Number(a), ValueKind::Number(b)) => a == b && self.unit == other.unit,
             (ValueKind::Rational(a), ValueKind::Rational(b)) => a == b && self.unit == other.unit,

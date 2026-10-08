@@ -2,6 +2,17 @@ use serde::{Deserialize, Serialize};
 
 use crate::types::{DateTime, Decimal, Rational};
 
+/// Display format for an exact dimensionless ratio.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum RatioFormat {
+    /// A reduced fraction, such as `1/5`.
+    Fraction,
+    /// Odds with a numerator of one, such as `1/2.5`.
+    Reciprocal,
+    /// A multiplier, such as `4x`.
+    Multiplier,
+}
+
 /// Different kinds of values the calculator can work with.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ValueKind {
@@ -9,6 +20,15 @@ pub enum ValueKind {
     Number(Decimal),
     /// A rational number for exact fractional arithmetic.
     Rational(Rational),
+    /// A percentage stored as its exact fraction (`10%` stores `1/10`).
+    Percent(Rational),
+    /// An exact dimensionless ratio with an explicit display format.
+    Ratio {
+        /// The numeric fraction.
+        value: Rational,
+        /// The requested presentation.
+        format: RatioFormat,
+    },
     /// A date and/or time.
     DateTime(DateTime),
     /// A duration (difference between two datetimes).

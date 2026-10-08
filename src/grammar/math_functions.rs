@@ -357,6 +357,13 @@ pub fn is_math_function(name: &str) -> bool {
             | "degrees"
             | "rad"
             | "radians"
+            | "percent"
+            | "as_percent"
+            | "as_fraction"
+            | "as_reciprocal"
+            | "as_multiplier"
+            | "as_decimal"
+            | "percent_of"
     )
 }
 
@@ -366,6 +373,9 @@ pub fn is_math_function(name: &str) -> bool {
 /// precision (e.g. `30!` = `265252859812191058636308480000000`); everything
 /// else goes through [`evaluate_function`] on `Decimal` arguments.
 pub fn evaluate_function_values(name: &str, args: &[Value]) -> Result<Value, CalculatorError> {
+    if let Some(result) = crate::types::evaluate_ratio_function(name, args) {
+        return result;
+    }
     if let Some(result) = evaluate_exact_function(name, args) {
         return result;
     }

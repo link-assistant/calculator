@@ -149,3 +149,13 @@ test('orders all status transitions and keeps languages separate', () => {
   ], { results: [{ ...row, status: 'supported' }, { ...row, lang: 'ru', status: 'unsupported' }] });
   assert.deepEqual(regressions, []);
 });
+
+test('compares percent and decimal displays by their dimensionless value', () => {
+  assert.equal(resultsMatch('15%', '0.15'), true);
+  assert.equal(resultsMatch('0.0025', '0.25%'), true);
+  assert.equal(resultsMatch('100%', '1 (dimensionless)'), true);
+  assert.equal(resultsMatch('15%', '15'), false);
+  assert.equal(resultsMatch('15%', '0.2'), false);
+  assert.equal(resultsMatch('0%', '0.001'), false);
+  assert.equal(resultsMatch('10%', '0.1 kg'), false);
+});

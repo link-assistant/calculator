@@ -43,6 +43,12 @@ A grammar-based expression calculator with DateTime and Currency support, built 
 - Comparisons: `=`, `==`, `!=`, `≠`, `<`, `<=`, `≤`, `>`, `>=`, `≥`
 - Parentheses for explicit grouping: `(2 + 3) * 4`
 - Negative numbers: `-5 + 3`
+- Percentages retain their type: `200 + 10% = 220`,
+  `100 + 10% + 10% = 121`, and `10% + 20% = 30%`
+- Percentage questions and conversions: `180 is what % off 200`,
+  `50 to 75 is what %`, `20/200 as %`, and `50% as fraction`
+- Percentage phrases: `ten percent of fifty`,
+  `700 увеличить на 30 процентов`, `700的百分之三十`, and `700の30パーセント`
 - Decimal precision using `rust_decimal`
 
 ### DateTime Support

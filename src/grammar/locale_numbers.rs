@@ -42,10 +42,23 @@ pub(super) fn variants(input: &str) -> Vec<String> {
         }
     }
 
-    if let Some(variant) = space_grouped {
-        push_unique(&mut variants, variant);
+    if let Some(variant) = &space_grouped {
+        push_unique(&mut variants, variant.clone());
     }
 
+    // A decimal dot elsewhere in the expression disambiguates an English
+    // grouped integer (`56.7% of 1,234`), while comma-only input keeps its
+    // existing locale preference and alternative interpretations.
+    if input
+        .as_bytes()
+        .windows(3)
+        .any(|window| window[0].is_ascii_digit() && window[1] == b'.' && window[2].is_ascii_digit())
+    {
+        if let Some(english) = rewrite_with_locale(source, LOCALES[2]) {
+            variants.retain(|variant| variant != &english);
+            variants.insert(0, english);
+        }
+    }
     variants
 }
 

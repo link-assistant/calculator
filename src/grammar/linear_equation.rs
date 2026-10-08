@@ -62,8 +62,14 @@ impl LinearForm {
             }
             Expression::Variable(name) => Ok(Self::variable(name.clone())),
             Expression::Binary { left, op, right } => {
+                let relative = !left.is_percentage() && right.is_percentage();
                 let left = Self::from_expression(left)?;
                 let right = Self::from_expression(right)?;
+                let right = if relative && matches!(op, BinaryOp::Add | BinaryOp::Subtract) {
+                    left.clone().multiply(right)?
+                } else {
+                    right
+                };
                 match op {
                     BinaryOp::Add => Ok(left.add(right)),
                     BinaryOp::Subtract => Ok(left.subtract(right)),
@@ -71,6 +77,15 @@ impl LinearForm {
                     BinaryOp::Divide => left.divide(&right),
                     BinaryOp::Modulo => Err(Self::unsupported_equation()),
                 }
+            }
+            Expression::FunctionCall { name, args } if name == "percent" && args.len() == 1 => {
+                Self::from_expression(&args[0])?
+                    .divide(&Self::constant(Rational::from_integer(100)))
+            }
+            Expression::FunctionCall { name, args }
+                if matches!(name.as_str(), "as_percent" | "percent_of") && args.len() == 1 =>
+            {
+                Self::from_expression(&args[0])
             }
             Expression::Negate(inner) => Ok(Self::from_expression(inner)?.negate()),
             Expression::Group(inner) => Self::from_expression(inner),
