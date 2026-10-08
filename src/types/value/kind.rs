@@ -29,6 +29,13 @@ pub enum ValueKind {
         /// The requested presentation.
         format: RatioFormat,
     },
+    /// A measured value with a non-negative absolute uncertainty.
+    Uncertainty {
+        /// Central value.
+        value: Rational,
+        /// Absolute error bound.
+        uncertainty: Rational,
+    },
     /// A date and/or time.
     DateTime(DateTime),
     /// A duration (difference between two datetimes).

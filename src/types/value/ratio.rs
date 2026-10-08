@@ -109,13 +109,7 @@ pub fn evaluate_ratio_function(
             ));
         };
         if name == "percent_of" {
-            // Count labels in paper prose describe the population, not a physical unit.
-            let mut result = value.clone();
-            if matches!(&result.unit, Unit::Custom(label) if matches!(label.as_str(), "participants" | "people" | "respondents" | "subjects"))
-            {
-                result.unit = Unit::None;
-            }
-            return Ok(result);
+            return Ok(value.clone());
         }
         if value.unit != Unit::None {
             return Err(CalculatorError::InvalidOperation(

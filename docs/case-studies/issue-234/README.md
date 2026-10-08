@@ -45,9 +45,12 @@ preserving existing custom-unit fallbacks. Adjacent `%` followed by a separated
 number permits implicit multiplication (`120% 2`); ordinary binary modulo
 (`5%4`, `8 % 3`, `50%(13)`, `8 mod 3`) remains available.
 
-`56.7% of 1,234 participants` now uses the decimal dot to choose comma grouping
-and treats the population label as a count. Physical units remain attached.
-Comma-only input retains existing locale preferences.
+`56.7% of 1,234 participants` returns `699.678 participants`, preserving the
+population label as required by the number-separator fix merged from #252.
+Numeric separators use the shared lexer conventions. Percentage scaling also
+retains compound units: `20% of 50 km/h` returns `10 km/h`. The integration
+regression failed before resolving the merged function guard; unsupported
+compound-unit algebra still reports an error.
 
 ## Intentional compatibility changes
 
@@ -77,11 +80,13 @@ physical-unit and wrong-value mismatches. It recognizes Rink's explicit
 `(dimensionless)` label. Regression tests prevent precision rounding from
 accepting `0%` as `0.001`.
 
-Across 8,298 corpus rows, supported cases increase from 1,051 to 1,168:
-118 newly matching rows and the one intentional fend conflict. Three additional
-rows improve from unsupported to different. Among the 198 rows selected by
-the percentage inspection script, supported cases increase from 59 to 152,
-different results drop from 70 to 18, and unsupported cases drop from 69 to 28.
+Across 8,298 corpus rows, supported cases increase from 1,100 on the merged
+`main` to 1,222: 123 newly matching rows and the one intentional fend conflict.
+Four additional rows improve from unsupported to different. Compared with the
+pre-merge percentage implementation, 54 more rows match and none regress.
+Among the 198 rows selected by
+the percentage inspection script, supported cases increase from 60 to 152,
+different results drop from 69 to 18, and unsupported cases drop from 69 to 28.
 All Soulver examples from its percentages syntax page now match.
 
 ## Verification
@@ -103,6 +108,8 @@ logs are kept under the ignored `ci-logs` directory. The reusable example is
 [`percentage_arithmetic.rs`](../../../examples/percentage_arithmetic.rs), and
 [`inspect-corpus.py`](../../../experiments/issue-234/inspect-corpus.py) lists
 percentage rows and their committed coverage statuses.
+[`compare-coverage.py`](../../../experiments/issue-234/compare-coverage.py)
+compares saved baselines and reports every status decline.
 
 The new `web/e2e/percentages.spec.ts` regression fails with `main`'s WASM
 (`200.1` instead of `220`) and passes with this implementation. The broader

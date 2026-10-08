@@ -1,292 +1,289 @@
-//! Locale-aware number normalization helpers.
+//! Deterministic numeric conventions shared by every lexer entry point.
 //!
-//! The grammar itself uses `.` as the decimal separator. These helpers build
-//! normalized expression variants for user input that uses decimal/grouping
-//! conventions from supported UI locales, such as `82,6172`, `1.234,56`, or
-//! `15\u{202f}847`.
+//! A single comma before three digits groups thousands; otherwise it is a
+//! decimal comma. With both punctuation marks the rightmost one is decimal.
+//! The documented fend outlier `1,1` means 11 in the primary convention.
+//! Function-call commas remain argument separators.
 
-#[derive(Debug, Clone, Copy)]
-struct NumberLocale {
-    decimal_separator: char,
-    grouping_separator: Option<char>,
-}
+use crate::error::CalculatorError;
 
-const LOCALES: &[NumberLocale] = &[
-    // Russian, German, French, and other comma-decimal inputs without grouping.
-    NumberLocale {
-        decimal_separator: ',',
-        grouping_separator: None,
-    },
-    // German/Russian style: 1.234,56 -> 1234.56.
-    NumberLocale {
-        decimal_separator: ',',
-        grouping_separator: Some('.'),
-    },
-    // English/Hindi/Chinese style: 1,234.56 -> 1234.56.
-    NumberLocale {
-        decimal_separator: '.',
-        grouping_separator: Some(','),
-    },
-];
-
-/// Returns normalized variants of `input` using supported locale number
-/// conventions. Variants are ordered by locale preference and de-duplicated.
-pub(super) fn variants(input: &str) -> Vec<String> {
-    let mut variants = Vec::new();
-    let space_grouped = rewrite_space_grouping(input);
-    let source = space_grouped.as_deref().unwrap_or(input);
-
-    for locale in LOCALES {
-        if let Some(variant) = rewrite_with_locale(source, *locale) {
-            push_unique(&mut variants, variant);
-        }
+pub(super) fn scan(
+    input: &[char],
+    start: usize,
+    allow_comma: bool,
+    decimal_comma: bool,
+) -> Result<(String, usize), CalculatorError> {
+    if let Some(number) = scan_radix(input, start)? {
+        return Ok(number);
     }
-
-    if let Some(variant) = &space_grouped {
-        push_unique(&mut variants, variant.clone());
-    }
-
-    // A decimal dot elsewhere in the expression disambiguates an English
-    // grouped integer (`56.7% of 1,234`), while comma-only input keeps its
-    // existing locale preference and alternative interpretations.
-    if input
-        .as_bytes()
-        .windows(3)
-        .any(|window| window[0].is_ascii_digit() && window[1] == b'.' && window[2].is_ascii_digit())
-    {
-        if let Some(english) = rewrite_with_locale(source, LOCALES[2]) {
-            variants.retain(|variant| variant != &english);
-            variants.insert(0, english);
-        }
-    }
-    variants
-}
-
-fn rewrite_space_grouping(input: &str) -> Option<String> {
-    let mut output = String::with_capacity(input.len());
-    let mut chars = input.char_indices().peekable();
-    let mut changed = false;
-
-    while let Some((start, ch)) = chars.next() {
-        if !ch.is_ascii_digit() {
-            output.push(ch);
-            continue;
-        }
-
-        let mut end = start + ch.len_utf8();
-        while let Some(&(idx, next)) = chars.peek() {
-            let grouping_before_digit = is_space_grouping(next)
-                && chars
-                    .clone()
-                    .nth(1)
-                    .is_some_and(|(_, after)| after.is_ascii_digit());
-            if next.is_ascii_digit() || grouping_before_digit {
-                chars.next();
-                end = idx + next.len_utf8();
-            } else {
-                break;
+    let mut end = start;
+    let mut first_group_digits = 0;
+    let mut has_group_space = false;
+    let mut can_group_space = true;
+    while let Some(&ch) = input.get(end) {
+        if ch.is_ascii_digit() || ch == '_' {
+            if ch == '_' {
+                first_group_digits = 0;
             }
-        }
-
-        let candidate = &input[start..end];
-        if let Some(normalized) = normalize_space_grouped_integer(candidate) {
-            output.push_str(&normalized);
-            changed = true;
+            if ch.is_ascii_digit() && !has_group_space {
+                first_group_digits += 1;
+            }
+        } else if (matches!(ch, '.' | '\'' | '’') || (ch == ',' && allow_comma) || is_space(ch))
+            && input.get(end + 1).is_some_and(char::is_ascii_digit)
+        {
+            if is_space(ch) {
+                // Bound lookahead to four digits. Invalid groups leave a token
+                // boundary, also preserving date parts such as `Jan 17 2027`.
+                let digits = input[end + 1..]
+                    .iter()
+                    .take(4)
+                    .take_while(|ch| ch.is_ascii_digit())
+                    .count();
+                if !can_group_space || first_group_digits > 3 || digits != 3 {
+                    break;
+                }
+                has_group_space = true;
+            } else {
+                can_group_space = ch == '.';
+                first_group_digits = 0;
+                has_group_space = false;
+            }
         } else {
-            output.push_str(candidate);
+            break;
         }
+        end += 1;
     }
-
-    changed.then_some(output)
+    let candidate: String = input[start..end].iter().collect();
+    let normalized = normalize(&candidate, decimal_comma).ok_or_else(|| {
+        CalculatorError::parse(format!(
+            "Invalid number separators in '{candidate}' at position {start}"
+        ))
+    })?;
+    Ok((normalized, end))
 }
 
-fn normalize_space_grouped_integer(candidate: &str) -> Option<String> {
-    if !candidate.chars().any(is_space_grouping) {
-        return None;
-    }
-
-    let groups: Vec<&str> = candidate.split(is_space_grouping).collect();
-    let first = groups.first()?;
-    if first.is_empty() || first.len() > 3 || !first.chars().all(|ch| ch.is_ascii_digit()) {
-        return None;
-    }
-    if groups
-        .iter()
-        .skip(1)
-        .any(|part| part.len() != 3 || !part.chars().all(|ch| ch.is_ascii_digit()))
-    {
-        return None;
-    }
-
-    Some(groups.join(""))
-}
-
-fn is_space_grouping(ch: char) -> bool {
+fn is_space(ch: char) -> bool {
     matches!(ch, ' ' | '\u{00a0}' | '\u{2007}' | '\u{2009}' | '\u{202f}')
 }
 
-fn rewrite_with_locale(input: &str, locale: NumberLocale) -> Option<String> {
-    let mut output = String::with_capacity(input.len());
-    let mut chars = input.char_indices().peekable();
-    let mut changed = false;
-
-    while let Some((start, ch)) = chars.next() {
-        if !ch.is_ascii_digit() {
-            output.push(ch);
-            continue;
+fn normalize(candidate: &str, decimal_comma: bool) -> Option<String> {
+    // Underscores may separate digits, including fractional digits, but cannot
+    // hide malformed punctuation or occur consecutively.
+    let chars: Vec<char> = candidate.chars().collect();
+    for (i, ch) in chars.iter().enumerate() {
+        if *ch == '_'
+            && (i == 0
+                || !chars[i - 1].is_ascii_digit()
+                || !chars.get(i + 1).is_some_and(char::is_ascii_digit))
+        {
+            return None;
         }
+    }
+    // Space grouping may also continue an underscore-grouped integer.
+    let number = if candidate.chars().any(is_space) && !candidate.contains(['.', ',']) {
+        candidate.replace('_', " ")
+    } else {
+        candidate.replace('_', "")
+    };
+    // Issue #233 explicitly requires this fend compatibility outlier alongside
+    // decimal commas. Keep it narrow; `1,2` and `12,3` remain decimal fractions.
+    if number == "1,1" && !decimal_comma {
+        return Some("11".to_string());
+    }
+    let commas = number.matches(',').count();
+    let dots = number.matches('.').count();
+    let decimal = match (commas, dots) {
+        (0, 0) => None,
+        (0, 1) => Some('.'),
+        (1, 0) if decimal_comma || !valid_groups(&number, ',') => Some(','),
+        (_, 0) => None,
+        (0, _) => return None,
+        (_, _) if number.rfind(',') > number.rfind('.') => Some(','),
+        _ => Some('.'),
+    };
+    let (integer, fraction) = if let Some(decimal) = decimal {
+        let (integer, fraction) = number.rsplit_once(decimal)?;
+        if integer.contains(decimal)
+            || fraction.is_empty()
+            || !(fraction.chars().all(|ch| ch.is_ascii_digit())
+                || fraction.chars().any(is_space) && valid_groups(fraction, ' '))
+        {
+            return None;
+        }
+        (integer, Some(fraction))
+    } else {
+        (number.as_str(), None)
+    };
+    let grouping: Vec<char> = integer.chars().filter(|ch| !ch.is_ascii_digit()).collect();
+    let integer = if let Some(&separator) = grouping.first() {
+        if grouping.iter().any(|&ch| !same_group(ch, separator))
+            || !valid_groups(integer, separator)
+        {
+            return None;
+        }
+        integer
+            .chars()
+            .filter(char::is_ascii_digit)
+            .collect::<String>()
+    } else if integer.is_empty() {
+        // Preserve the conventional leading-dot decimal spelling `.5`.
+        if decimal != Some('.') {
+            return None;
+        }
+        "0".to_string()
+    } else {
+        integer.to_string()
+    };
+    Some(fraction.map_or_else(
+        || integer.clone(),
+        |fraction| {
+            format!(
+                "{integer}.{}",
+                fraction
+                    .chars()
+                    .filter(char::is_ascii_digit)
+                    .collect::<String>()
+            )
+        },
+    ))
+}
 
-        let mut end = start + ch.len_utf8();
-        while let Some(&(idx, next)) = chars.peek() {
-            if next.is_ascii_digit() || next == '.' || next == ',' {
-                chars.next();
-                end = idx + next.len_utf8();
-            } else {
+fn same_group(left: char, right: char) -> bool {
+    left == right
+        || (is_space(left) && is_space(right))
+        || (matches!(left, '\'' | '’') && matches!(right, '\'' | '’'))
+}
+
+fn valid_groups(number: &str, separator: char) -> bool {
+    let groups: Vec<&str> = number.split(|ch| same_group(ch, separator)).collect();
+    let Some(first) = groups.first() else {
+        return false;
+    };
+    if first.is_empty()
+        || first.len() > 3
+        || groups
+            .iter()
+            .any(|part| !part.chars().all(|ch| ch.is_ascii_digit()))
+    {
+        return false;
+    }
+    let western = groups.iter().skip(1).all(|part| part.len() == 3);
+    let indian = separator == ','
+        && groups.len() >= 3
+        && first.len() <= 2
+        && groups.last().is_some_and(|part| part.len() == 3)
+        && groups[1..groups.len() - 1]
+            .iter()
+            .all(|part| part.len() == 2);
+    western || indian
+}
+
+/// Parse radix fractions exactly within the decimal grammar's 28-place limit.
+/// Accumulation and expansion are bounded, and overflow is recoverable.
+fn scan_radix(input: &[char], start: usize) -> Result<Option<(String, usize)>, CalculatorError> {
+    if input.get(start) != Some(&'0') {
+        return Ok(None);
+    }
+    let radix = match input.get(start + 1) {
+        Some('b' | 'B') => 2,
+        Some('o' | 'O') => 8,
+        Some('x' | 'X') => 16,
+        _ => return Ok(None),
+    };
+    if !input.get(start + 2).is_some_and(|ch| ch.is_digit(radix)) {
+        return Ok(None);
+    }
+    let mut end = start + 2;
+    let mut numerator = 0u128;
+    let mut denominator = 1u128;
+    let mut fraction = false;
+    while let Some(&ch) = input.get(end) {
+        if let Some(digit) = ch.to_digit(radix) {
+            numerator = numerator
+                .checked_mul(u128::from(radix))
+                .and_then(|n| n.checked_add(u128::from(digit)))
+                .ok_or(CalculatorError::Overflow)?;
+            if fraction {
+                denominator = denominator
+                    .checked_mul(u128::from(radix))
+                    .ok_or(CalculatorError::Overflow)?;
+            }
+        } else if ch == '_'
+            && input[end - 1].is_digit(radix)
+            && input.get(end + 1).is_some_and(|next| next.is_digit(radix))
+        {
+            // Digit separator, preserving the existing underscore convention.
+        } else if ch == '.' && !fraction {
+            fraction = true;
+        } else {
+            break;
+        }
+        end += 1;
+    }
+    if matches!(input.get(end), Some('e' | 'E')) {
+        let (negative, exponent, exponent_end) = scan_radix_exponent(input, end + 1, radix)?;
+        end = exponent_end;
+        let factor = u128::from(radix)
+            .checked_pow(exponent)
+            .ok_or(CalculatorError::Overflow)?;
+        if negative {
+            denominator = denominator
+                .checked_mul(factor)
+                .ok_or(CalculatorError::Overflow)?;
+        } else {
+            numerator = numerator
+                .checked_mul(factor)
+                .ok_or(CalculatorError::Overflow)?;
+        }
+    }
+    let mut number = (numerator / denominator).to_string();
+    let mut remainder = numerator % denominator;
+    if remainder != 0 {
+        number.push('.');
+        for _ in 0..28 {
+            remainder = remainder.checked_mul(10).ok_or(CalculatorError::Overflow)?;
+            let digit =
+                u32::try_from(remainder / denominator).map_err(|_| CalculatorError::Overflow)?;
+            number.push(char::from_digit(digit, 10).ok_or(CalculatorError::Overflow)?);
+            remainder %= denominator;
+            if remainder == 0 {
                 break;
             }
         }
-
-        let candidate = &input[start..end];
-        if let Some(normalized) = normalize_number(candidate, locale) {
-            if normalized != candidate {
-                changed = true;
-            }
-            output.push_str(&normalized);
-        } else {
-            output.push_str(candidate);
+        if remainder != 0 {
+            return Err(CalculatorError::Overflow);
         }
     }
-
-    changed.then_some(output)
+    Ok(Some((number, end)))
 }
 
-fn normalize_number(candidate: &str, locale: NumberLocale) -> Option<String> {
-    if !candidate
-        .chars()
-        .any(|ch| ch == locale.decimal_separator || Some(ch) == locale.grouping_separator)
-    {
-        return None;
+/// fend uses exponent digits and powers in the literal's radix, e.g. `0b1e10 = 4`.
+fn scan_radix_exponent(
+    input: &[char],
+    mut end: usize,
+    radix: u32,
+) -> Result<(bool, u32, usize), CalculatorError> {
+    let negative = input.get(end) == Some(&'-');
+    if matches!(input.get(end), Some('+' | '-')) {
+        end += 1;
     }
-
-    let decimal_count = candidate
-        .chars()
-        .filter(|ch| *ch == locale.decimal_separator)
-        .count();
-
-    if decimal_count > 1 {
-        return normalize_grouped_integer(candidate, locale);
+    if !input.get(end).is_some_and(|ch| ch.is_digit(radix)) {
+        return Err(CalculatorError::parse("Invalid radix exponent"));
     }
-
-    if decimal_count == 1 {
-        return normalize_decimal(candidate, locale);
-    }
-
-    normalize_grouped_integer(candidate, locale)
-}
-
-fn normalize_decimal(candidate: &str, locale: NumberLocale) -> Option<String> {
-    let (integer, fraction) = candidate.split_once(locale.decimal_separator)?;
-    if integer.is_empty() || fraction.is_empty() || !fraction.chars().all(|ch| ch.is_ascii_digit())
-    {
-        return None;
-    }
-
-    let integer = normalize_integer_part(integer, locale)?;
-    Some(format!("{integer}.{fraction}"))
-}
-
-fn normalize_grouped_integer(candidate: &str, locale: NumberLocale) -> Option<String> {
-    let group = locale.grouping_separator?;
-    if !candidate.contains(group) {
-        return None;
-    }
-
-    normalize_integer_part(candidate, locale)
-}
-
-fn normalize_integer_part(integer: &str, locale: NumberLocale) -> Option<String> {
-    if integer.is_empty() {
-        return None;
-    }
-
-    let group = locale.grouping_separator;
-    if let Some(group) = group {
-        if integer.contains(group) {
-            let groups: Vec<&str> = integer.split(group).collect();
-            let first = groups.first()?;
-            if first.is_empty() || first.len() > 3 || !first.chars().all(|ch| ch.is_ascii_digit()) {
-                return None;
-            }
-
-            if groups
-                .iter()
-                .skip(1)
-                .any(|part| part.len() != 3 || !part.chars().all(|ch| ch.is_ascii_digit()))
-            {
-                return None;
-            }
-
-            return Some(groups.join(""));
+    let mut exponent = 0u32;
+    while let Some(&ch) = input.get(end) {
+        if let Some(digit) = ch.to_digit(radix) {
+            exponent = exponent
+                .checked_mul(radix)
+                .and_then(|n| n.checked_add(digit))
+                .ok_or(CalculatorError::Overflow)?;
+        } else if ch != '_'
+            || !input[end - 1].is_digit(radix)
+            || !input.get(end + 1).is_some_and(|ch| ch.is_digit(radix))
+        {
+            break;
         }
+        end += 1;
     }
-
-    integer.chars().all(|ch| ch.is_ascii_digit()).then(|| {
-        integer
-            .chars()
-            .filter(|ch| Some(*ch) != group)
-            .collect::<String>()
-    })
-}
-
-fn push_unique(values: &mut Vec<String>, value: String) {
-    if !values.contains(&value) {
-        values.push(value);
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::variants;
-
-    #[test]
-    fn normalizes_decimal_comma() {
-        assert_eq!(variants("82,6172 / 100"), vec!["82.6172 / 100"]);
-    }
-
-    #[test]
-    fn exposes_ambiguous_comma_interpretations() {
-        assert_eq!(variants("1,234 / 100"), vec!["1.234 / 100", "1234 / 100"]);
-    }
-
-    #[test]
-    fn normalizes_grouped_decimal_forms() {
-        assert_eq!(variants("1.234,56"), vec!["1234.56"]);
-        assert_eq!(variants("1,234.56"), vec!["1234.56"]);
-    }
-
-    #[test]
-    fn normalizes_space_grouped_integers() {
-        for separator in [' ', '\u{00a0}', '\u{2007}', '\u{2009}', '\u{202f}'] {
-            let input = format!("1{separator}234{separator}567 + 1");
-            assert_eq!(variants(&input), vec!["1234567 + 1"]);
-        }
-    }
-
-    #[test]
-    fn composes_space_grouping_with_decimal_locales() {
-        assert_eq!(variants("1\u{202f}234,56"), vec!["1234.56", "1234,56"]);
-        assert_eq!(variants("1\u{202f}234.56"), vec!["1234.56"]);
-    }
-
-    #[test]
-    fn leaves_malformed_space_grouping_unchanged() {
-        for input in ["12 34 + 1", "1234 567 + 1", "1\u{202f}23 + 4"] {
-            assert_eq!(variants(input), Vec::<String>::new());
-        }
-    }
-
-    #[test]
-    fn ignores_argument_separator_with_spaces() {
-        assert_eq!(variants("integrate(x^2, x, 0, 3)"), Vec::<String>::new());
-    }
+    Ok((negative, exponent, end))
 }

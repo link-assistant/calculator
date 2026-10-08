@@ -1,12 +1,14 @@
 //! Value type representing typed values with units.
 
+mod display;
 mod duration;
 mod formatting;
 mod kind;
 mod ratio;
+mod uncertainty;
 use duration::{
     add_calendar_months_or_duration, apply_duration_unit, bare_year_datetime, convert_raw_duration,
-    divide_duration_units, divide_raw_duration, format_duration,
+    divide_duration_units, divide_raw_duration,
 };
 pub use kind::{RatioFormat, ValueKind};
 pub use ratio::evaluate_ratio_function;
@@ -572,6 +574,14 @@ impl Value {
                 Ok(result)
             };
         }
+        if self.unit != Unit::None
+            && other.unit != Unit::None
+            && (self.unit.is_opaque_compound() || other.unit.is_opaque_compound())
+        {
+            return Err(CalculatorError::domain(
+                "compound unit multiplication requires a unitless factor",
+            ));
+        }
         match (&self.kind, &other.kind) {
             // Rational * Rational
             (ValueKind::Rational(a), ValueKind::Rational(b)) => {
@@ -626,6 +636,14 @@ impl Value {
     pub fn divide(&self, other: &Self) -> Result<Self, CalculatorError> {
         if self.has_ratio_display() || other.has_ratio_display() {
             return self.scalar().divide(&other.scalar());
+        }
+        if other.unit != Unit::None
+            && self.unit != other.unit
+            && (self.unit.is_opaque_compound() || other.unit.is_opaque_compound())
+        {
+            return Err(CalculatorError::domain(
+                "compound unit division requires matching units or a unitless divisor",
+            ));
         }
         match (&self.kind, &other.kind) {
             // Rational / Rational
@@ -872,6 +890,7 @@ impl Value {
             ValueKind::Percent(r) => Self::percent(-r.clone()),
             ValueKind::Ratio { value, format } => Self::ratio(-value.clone(), *format),
             ValueKind::Duration { seconds } => Value::duration(-seconds),
+            ValueKind::Uncertainty { .. } => self.negate_uncertainty(),
             _ => self.clone(),
         }
     }

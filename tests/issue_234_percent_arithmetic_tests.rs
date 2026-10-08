@@ -107,7 +107,7 @@ fn multilingual_percentage_phrases_are_data_driven() {
         ("6 is what percent of 24", "25%"),
         ("45 + 15% =", "51.75"),
         ("120% 2", "2.4"),
-        ("56.7% of 1,234 participants", "699.678"),
+        ("56.7% of 1,234 participants", "699.678 participants"),
     ] {
         assert_result(expression, expected);
     }
@@ -154,6 +154,21 @@ fn invalid_percentage_queries_report_errors() {
     ] {
         let result = Calculator::new().calculate_internal(expression);
         assert!(!result.success, "{expression:?}: {}", result.result);
+    }
+}
+
+#[test]
+fn percentages_preserve_compound_units_from_number_separator_grammar() {
+    for (expression, expected) in [
+        ("20% of 50 km/h", "10 km/h"),
+        ("50 km/h + 20%", "60 km/h"),
+        ("50 km/h - 20%", "40 km/h"),
+        ("50 km/h * 20%", "10 km/h"),
+    ] {
+        assert_result(expression, expected);
+    }
+    for expression in ["20% * (10 km/h * 3 m/s)", "20% of (10 km/h)^2"] {
+        assert!(!Calculator::new().calculate_internal(expression).success);
     }
 }
 
