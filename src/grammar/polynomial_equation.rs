@@ -72,12 +72,16 @@ impl PolynomialForm {
                     BinaryOp::Modulo => Err(Self::unsupported_equation()),
                 }
             }
-            Expression::FunctionCall { name, args } if name == "percent" && args.len() == 1 => {
+            Expression::FunctionCall { name, args }
+                if name.eq_ignore_ascii_case("percent") && args.len() == 1 =>
+            {
                 Self::from_expression(&args[0])?
                     .divide(&Self::constant(Rational::from_integer(100)))
             }
             Expression::FunctionCall { name, args }
-                if matches!(name.as_str(), "as_percent" | "percent_of") && args.len() == 1 =>
+                if (name.eq_ignore_ascii_case("as_percent")
+                    || name.eq_ignore_ascii_case("percent_of"))
+                    && args.len() == 1 =>
             {
                 Self::from_expression(&args[0])
             }

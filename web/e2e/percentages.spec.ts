@@ -5,6 +5,7 @@ test('percentage values survive calculations in the WASM worker', async ({ page 
   await waitForWasm(page, { ratesMs: 0 });
   for (const [expression, expected] of [
     ['200 + 10%', '220'],
+    ['200 + Percent(10)', '220'],
     ['100 + 10% + 10%', '121'],
     ['10% + 20%', '30%'],
     ['180 is what % off 200', '10%'],

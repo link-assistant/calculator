@@ -36,6 +36,9 @@ Percentage queries are lowered into existing arithmetic expressions and exact
 ratio constructors. Fraction, reciprocal and multiplier conversions retain
 their requested display. Equations also understand percentage constructors
 and relative addition.
+Percentage constructors follow the calculator's case-insensitive function
+convention, including equations and notation round trips. A regression caught
+`200 + Percent(10)` being accepted by parsing but rejected during evaluation.
 
 All added multilingual vocabulary lives in
 [`arithmetic-words.lino`](../../../data/words/arithmetic-words.lino).

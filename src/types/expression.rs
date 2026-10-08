@@ -407,13 +407,13 @@ impl Expression {
                 format!("({value_str} at {time_str})")
             }
             Self::FunctionCall { name, args } => {
-                if name == "percent" && args.len() == 1 {
+                if name.eq_ignore_ascii_case("percent") && args.len() == 1 {
                     if matches!(parent_op, Some(BinaryOp::Multiply | BinaryOp::Divide)) {
                         return format!("({} / 100)", args[0].to_lino_internal(None));
                     }
                     return format!("({}%)", args[0].to_lino_internal(None));
                 }
-                if name == "percent_of" && args.len() == 1 {
+                if name.eq_ignore_ascii_case("percent_of") && args.len() == 1 {
                     return args[0].to_lino_internal(None);
                 }
                 if args.is_empty() {
@@ -602,10 +602,14 @@ impl Expression {
     /// Whether this expression retains percentage display during evaluation.
     pub(crate) fn is_percentage(&self) -> bool {
         match self {
-            Self::FunctionCall { name, args } if name == "percent_of" && args.len() == 1 => {
+            Self::FunctionCall { name, args }
+                if name.eq_ignore_ascii_case("percent_of") && args.len() == 1 =>
+            {
                 args[0].is_percentage()
             }
-            Self::FunctionCall { name, .. } => matches!(name.as_str(), "percent" | "as_percent"),
+            Self::FunctionCall { name, .. } => {
+                name.eq_ignore_ascii_case("percent") || name.eq_ignore_ascii_case("as_percent")
+            }
             Self::Group(inner) | Self::Negate(inner) => inner.is_percentage(),
             Self::Binary {
                 left,

@@ -89,6 +89,8 @@ pub fn evaluate_ratio_function(
     name: &str,
     args: &[Value],
 ) -> Option<Result<Value, CalculatorError>> {
+    let name_lower = name.to_ascii_lowercase();
+    let name = name_lower.as_str();
     if !matches!(
         name,
         "percent"

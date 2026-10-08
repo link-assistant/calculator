@@ -183,7 +183,15 @@ fn percentages_survive_serialization_and_lino_interpretation() {
     let decoded: Value = serde_json::from_str(&serialized).unwrap();
     assert!(matches!(decoded.kind, ValueKind::Percent(_)));
     assert_eq!(decoded, Value::rational(Rational::new(1, 10)));
-    for expression in ["200 + 10%", "10% + 20%", "50%", "20/200 as %", "5% * 5%"] {
+    for expression in [
+        "200 + 10%",
+        "10% + 20%",
+        "50%",
+        "20/200 as %",
+        "5% * 5%",
+        "200 + Percent(10)",
+        "AS_PERCENT(0.1)",
+    ] {
         let result = Calculator::new().calculate_internal(expression);
         let restored = Calculator::new().calculate_internal(&result.lino_interpretation);
         assert!(
@@ -192,5 +200,19 @@ fn percentages_survive_serialization_and_lino_interpretation() {
             result.lino_interpretation, restored.error
         );
         assert_eq!(restored.result, result.result, "{expression}");
+    }
+}
+
+#[test]
+fn percentage_constructors_follow_case_insensitive_function_conventions() {
+    for (expression, expected) in [
+        ("200 + Percent(10)", "220"),
+        ("AS_PERCENT(0.1)", "10%"),
+        ("As_Fraction(0.5)", "1/2"),
+        ("As_Reciprocal(0.5)", "1/2"),
+        ("As_Multiplier(2)", "2x"),
+        ("10 - Percent(x) = 8", "x = 20"),
+    ] {
+        assert_result(expression, expected);
     }
 }
