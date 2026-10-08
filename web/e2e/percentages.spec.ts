@@ -1,0 +1,16 @@
+import { test, expect, waitForWasm } from './fixtures';
+
+test('percentage values survive calculations in the WASM worker', async ({ page }) => {
+  await page.goto('/');
+  await waitForWasm(page, { ratesMs: 0 });
+  for (const [expression, expected] of [
+    ['200 + 10%', '220'],
+    ['100 + 10% + 10%', '121'],
+    ['10% + 20%', '30%'],
+    ['180 is what % off 200', '10%'],
+  ]) {
+    await page.locator('textarea').fill(expression);
+    await page.locator('textarea').press('Enter');
+    await expect(page.locator('.result-value')).toHaveText(expected);
+  }
+});
