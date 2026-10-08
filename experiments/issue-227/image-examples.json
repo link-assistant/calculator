@@ -29,7 +29,8 @@
           "$10,152.00"
         ]
       ],
-      "sha256": "947f45dad6813a29ef19faefe2297ce5ed4e64720d2e73cef37b0629e5c02c19"
+      "sha256": "947f45dad6813a29ef19faefe2297ce5ed4e64720d2e73cef37b0629e5c02c19",
+      "requiresDefinitions": true
     },
     {
       "url": "https://ipcdn-web.apple.com/assets/v2/web/7cb9b1de-fcd1-4bff-8d51-934ddda8b9b0",
@@ -48,7 +49,19 @@
           ""
         ]
       ],
-      "sha256": "5ce5ed7d625f8fad840106849b1ee260a4d454b1cc6307b05f787c97e43a365c"
+      "sha256": "5ce5ed7d625f8fad840106849b1ee260a4d454b1cc6307b05f787c97e43a365c",
+      "requiresDefinitions": true
+    },
+    {
+      "url": "https://ipcdn-web.apple.com/assets/v2/web/203c55da-5b0f-4039-9e59-4d6aa5348ec0",
+      "page": "https://support.apple.com/guide/iphone/use-the-basic-calculator-iph1ac0b5cc/ios",
+      "examples": [
+        [
+          "38,670÷50,000",
+          "0.7734"
+        ]
+      ],
+      "sha256": "0b5a0fdafe89d40530a7271858082c7f3496a827347887d62cf726c9fbdd2c4c"
     }
   ],
   "samsung": [

@@ -58,6 +58,15 @@ test('Frink imports annotated calculator input, excluding launcher commands', ()
   assert.deepEqual(expressions('frink', '<CODE CLASS="input">javaws x</CODE><CODE CLASS="input">10 feet -&gt; cm</CODE>'), ['10 feet -> cm']);
 });
 
+test('inline numeric examples are included while documentation metadata and outputs are excluded', () => {
+  const unicode = String.raw`"\u2764"`;
+  assert.deepEqual(expressions('soulver', '`discount = 20%` and `5pm - 9pm`\n`x-soulver://create?expression=1+1`'), ['discount = 20%', '5pm - 9pm']);
+  assert.deepEqual(expressions('calca', '<code>-1</code>'), ['-1']);
+  assert.deepEqual(expressions('frink', '<code>22/7</code><code>floor[3.14159, 0.001]</code>' +
+    '<code>Ctrl-1</code><code>"UTF-8"</code><code CLASS="output">3.141</code><code>' + unicode + '</code>'),
+  ['22/7', 'floor[3.14159, 0.001]', unicode]);
+});
+
 test('Hurmet uses calculation input attributes, excludes text editing and JavaScript batch integration', () => {
   const input = '<code>**Bold**</code><h2 id="calculation-tutorial">Tutorial</h2>' +
     '<code>2 + 2 = ?</code><span data-entry="sin(π//6) = 0.5"></span>' +
@@ -80,6 +89,13 @@ test('Notion extracts code blocks from both record-map schemas without copying p
       y: { value: { type: 'text', properties: { title: [['Documentation prose']] } } } } } };
     assert.deepEqual(expressions('parsify', JSON.stringify(data)), ['12+5', 'x = 2']);
   }
+});
+
+test('Notion extracts custom-unit definitions regardless of header order or unit spelling', () => {
+  const row = (properties) => ({ value: { type: 'table_row', parent_id: 'units', properties } });
+  const blocks = { example: row({ name: [['custom']], definition: [['100 cm']] }),
+    header: row({ name: [['Name']], definition: [['Definition']] }) };
+  assert.deepEqual(expressions('parsify', JSON.stringify({ recordMap: { block: blocks } })), ['100 cm']);
 });
 
 test('date, live-rate and locale-dependent expectations are blanked; explicit fixed rates stay deterministic', () => {
@@ -106,11 +122,12 @@ test('offline extraction discovers every indexed page, records provenance and re
   const save = (url, text) => writeFileSync(join(cache, sha256(url + 'null') + '.json'), JSON.stringify({ url, text, fetched: '2026-10-08' }));
   try {
     save('https://example.com/index', '[A](https://example.com/a.md)\n[B](https://example.com/b.md)');
-    save('https://example.com/a.md', '1 + 2 | 3');
+    save('https://example.com/a.md', '1 + 2 | 3\n`1 + 2`');
     save('https://example.com/b.md', 'now | noon');
     const result = collectSource({ id: 'fixture', product: 'Fixture', kind: 'soulver',
       index: 'https://example.com/index', include: '\\.md$' }, { cache, offline: true });
     assert.equal(result.rows.length, 2);
+    assert.equal(result.rows[0].expected, '3', 'inline repetition must preserve the documented answer');
     assert.equal(result.rows[1].expected, '');
     assert.equal(result.audit.pages.length, 2);
     assert.equal(result.audit.pages[0].fetched, '2026-10-08');

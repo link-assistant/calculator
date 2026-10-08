@@ -21,6 +21,7 @@ retain their original fetch dates. To reproduce extraction from that snapshot:
 
 ```sh
 node experiments/issue-227/refresh-documentation-corpus.mjs --offline --cache ci-logs/documentation-cache
+node experiments/issue-227/check-offline-reproduction.mjs ci-logs/documentation-cache
 ```
 
 Every product has an `extract-PRODUCT-examples.mjs` entry point in
@@ -42,7 +43,7 @@ Network requests and downloaded code are never evaluated.
 
 - Soulver: every syntax-reference and documentation Markdown page in its
   published `llms.txt`, including HTML/Markdown tables, fenced examples,
-  expression/answer lines and inline worked pairs.
+  expression/answer lines, inline worked pairs and numeric inline examples.
 - Numi: the complete wiki Home document, including tables, indentation examples,
   variables, functions, units and numeric inline snippets. JavaScript extension
   API snippets and installation commands are outside calculator syntax.
@@ -59,7 +60,7 @@ Network requests and downloaded code are never evaluated.
   answer chains use the final answer. Answer-side comments are excluded.
   Syntax fragments, partial input and documented error examples are retained as
   documentation coverage; the current runner cannot distinguish expected errors.
-- Frink: annotated calculator input and code paragraphs throughout its manual.
+- Frink: annotated calculator input, numeric inline examples and code paragraphs throughout its manual.
   Multiline programs are represented by short code lines; comments, launcher
   commands and Java integration scaffolding are excluded. A line can depend on
   definitions or control flow shown elsewhere in its original block.
@@ -72,7 +73,8 @@ Network requests and downloaded code are never evaluated.
   linked Google example queries and Raycast's literal code examples.
 - Apple Math Notes: the linked iPad/iPhone math, graph, conversion and basic
   calculator help pages. Worked travel-budget and caffeine-graph inputs are
-  transcribed from their documentation images. Button-only conversion displays
+  transcribed from their documentation images, along with the basic calculator's
+  displayed division expression. Button-only conversion displays
   are not invented as typed expression syntax.
 
 The four official help references below have no typed calculator examples:

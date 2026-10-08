@@ -42,10 +42,15 @@
           "url": "https://ipcdn-web.apple.com/assets/v2/web/7cb9b1de-fcd1-4bff-8d51-934ddda8b9b0",
           "sha256": "5ce5ed7d625f8fad840106849b1ee260a4d454b1cc6307b05f787c97e43a365c",
           "rows": 3
+        },
+        {
+          "url": "https://ipcdn-web.apple.com/assets/v2/web/203c55da-5b0f-4039-9e59-4d6aa5348ec0",
+          "sha256": "0b5a0fdafe89d40530a7271858082c7f3496a827347887d62cf726c9fbdd2c4c",
+          "rows": 1
         }
       ],
-      "extractedRows": 9,
-      "rows": 14
+      "extractedRows": 10,
+      "rows": 15
     },
     {
       "id": "calca",
@@ -57,18 +62,18 @@
           "url": "https://calca.io/reference",
           "fetched": "2026-10-08",
           "sha256": "e9cc8913bec1da279e2c3180d19795a4f78e762ba9a8c2b4a9015dccf8ae296f",
-          "rows": 196
+          "rows": 198
         },
         {
           "url": "https://calca.io/",
           "fetched": "2026-10-08",
           "sha256": "e68cd159483e0e1883dae300320a2ada3cefabaabf7c7fb2e6bb761abea5f636",
-          "rows": 2
+          "rows": 3
         }
       ],
       "images": [],
-      "extractedRows": 198,
-      "rows": 206
+      "extractedRows": 201,
+      "rows": 209
     },
     {
       "id": "duckduckgo",
@@ -98,12 +103,12 @@
           "url": "https://frinklang.org/frinkdocs.html",
           "fetched": "2026-10-08",
           "sha256": "3ab7ca92016c32c4e077c13b3901d37b75b35e311c80302a6889210c016c8134",
-          "rows": 1081
+          "rows": 1247
         }
       ],
       "images": [],
-      "extractedRows": 1081,
-      "rows": 1086
+      "extractedRows": 1247,
+      "rows": 1252
     },
     {
       "id": "google",
@@ -419,7 +424,7 @@
           "url": "https://documentation.soulver.app/documentation/variables.md",
           "fetched": "2026-10-08",
           "sha256": "d08463801b7bc1fd601a3e8a85e55b11ceaec0e89ed3855d00b16aca612dbd2a",
-          "rows": 6
+          "rows": 7
         },
         {
           "url": "https://documentation.soulver.app/syntax-reference/bases-and-bitwise.md",
@@ -449,7 +454,7 @@
           "url": "https://documentation.soulver.app/syntax-reference/dates/workdays-and-weekdays.md",
           "fetched": "2026-10-08",
           "sha256": "079a0eeeed44650ada71f5e3f4d7fb7511e322269bdfbf54833cebc37e5c1b73",
-          "rows": 8
+          "rows": 9
         },
         {
           "url": "https://documentation.soulver.app/syntax-reference/general.md",
@@ -569,7 +574,7 @@
           "url": "https://documentation.soulver.app/syntax-reference/time/clock-time-calculations.md",
           "fetched": "2026-10-08",
           "sha256": "d51871e7faa0567d3d59976f2060061867999e3eb1b550c91a0aa41bb808cce3",
-          "rows": 9
+          "rows": 11
         },
         {
           "url": "https://documentation.soulver.app/syntax-reference/time/time-zones-and-cities.md",
@@ -635,12 +640,12 @@
           "url": "https://documentation.soulver.app/syntax-reference/units-and-conversions/units.md",
           "fetched": "2026-10-08",
           "sha256": "4aabea6aff035fe82a59e5cb3a9262577b3bd909d6d212fc21df016d7bd90d0b",
-          "rows": 19
+          "rows": 20
         }
       ],
       "images": [],
-      "extractedRows": 380,
-      "rows": 378
+      "extractedRows": 385,
+      "rows": 383
     },
     {
       "id": "speedcrunch",

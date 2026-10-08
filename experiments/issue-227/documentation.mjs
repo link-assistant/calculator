@@ -98,6 +98,11 @@ export function extract(kind, text) {
     for (const match of text.matchAll(/`([^`\n]+)`\s*→\s*\*\*([^*\n]+)\*\*/g)) {
       rows.push({ expression: match[1], expected: match[2], context: '' });
     }
+    for (const match of text.matchAll(/(?<!`)`([^`\n]+)`(?!`)/g)) {
+      if (/\d/.test(match[1]) && !/^\w[\w+-]*:\/\//.test(match[1])) {
+        rows.push({ expression: match[1], expected: '', context: '' });
+      }
+    }
     for (const line of text.split('\n')) {
       if (/^[a-z]+\([^\n]+\) = [\d-]/i.test(line)) {
         const row = pair(line, ' = '); if (row) rows.push(row);
@@ -136,13 +141,22 @@ export function extract(kind, text) {
   } else if (kind === 'calca') {
     for (const block of elements(text, 'pre')) rows.push(...codeLines(block.text, '=>', /#@|culture/.test(block.text) ? 'cultures' : ''));
     for (const block of elements(text.replace(/<pre\b[^>]*>[\s\S]*?<\/pre>/gi, ''), 'code')) {
-      if (block.text.includes('=>')) rows.push(...codeLines(block.text, '=>'));
+      if (block.text.includes('=>') || /\d/.test(block.text)) rows.push(...codeLines(block.text, '=>'));
     }
   } else if (kind === 'frink') {
     // CLASS=input identifies runnable examples; other CODE tags are names/prose.
     for (const code of elements(text, 'code')) {
       if (/class=["']input["']/i.test(code.attrs) && !/^javaws\b|import frink\.parser\.Frink/.test(code.text)) {
         rows.push(...codeLines(code.text, ' ==> '));
+      }
+      // The manual also uses unclassified inline code for worked literals,
+      // unit arithmetic and function examples; output/comment classes are separate.
+      const stringExample = /^"(?:[^"\\]|\\.)*"$/.test(code.text) && !/^"(?:UTF|ISO)-?\d/i.test(code.text);
+      const escapeExample = /^\\u(?:[\da-f]{4}|\{[\da-f]+\})$/i.test(code.text);
+      if (!code.attrs.trim() && /\d/.test(code.text) && !code.text.includes('\n')
+          && (stringExample || escapeExample || /^(?:[+-]?(?:\d|\.\d)|[([]|[a-z_]\w*(?:\[|\(|\s|.*[*/^])|#\s*(?:AD|BC|JD))/i.test(code.text))
+          && !/\(exactly\b|^[1-9A-HJ-NP-Za-km-z]{20,}$/.test(code.text)) {
+        rows.push({ expression: code.text, expected: '', context: '' });
       }
     }
     for (const block of elements(text, 'p')) {
@@ -195,17 +209,25 @@ export function extract(kind, text) {
     walk(data);
   } else if (kind === 'parsify') {
     const data = JSON.parse(text);
-    for (const item of Object.values(data.recordMap.block)) {
-      const block = item.value?.value ?? item.value;
+    const blocks = Object.values(data.recordMap.block).map((item) => item.value?.value ?? item.value);
+    const definitionKeys = new Map();
+    for (const block of blocks.filter((block) => block.type === 'table_row')) {
+      for (const [key, field] of Object.entries(block.properties ?? {})) {
+        if (field.map((item) => item[0]).join('') === 'Definition') definitionKeys.set(block.parent_id, key);
+      }
+    }
+    for (const block of blocks) {
       if (block.type === 'code') {
         const code = (block.properties?.title ?? []).map((item) => item[0]).join('');
         rows.push(...codeLines(code, '|'));
       }
       if (block.type === 'table_row') {
         // Custom-unit definitions are calculator inputs; names and aliases are metadata.
-        for (const field of Object.values(block.properties ?? {})) {
+        for (const [key, field] of Object.entries(block.properties ?? {})) {
           const value = field.map((item) => item[0]).join('');
-          if (/^\d.*\b(?:m\/s|yd)\b/.test(value)) rows.push({ expression: value, expected: '', context: 'custom unit definition' });
+          if (key === definitionKeys.get(block.parent_id) && value.trim() && value !== 'Definition') {
+            rows.push({ expression: value, expected: '', context: 'custom unit definition' });
+          }
         }
       }
     }

@@ -34,7 +34,8 @@ export function collectSource(source, options) {
       const reason = unstable(example.expression, example.expected, context);
       const row = { source: source.product, lang: 'en', expression: example.expression,
         expected: reason ? '' : example.expected, note: `${page.url}${reason ? ` (${reason})` : ''}` };
-      unique.set(row.expression, row);
+      const previous = unique.get(row.expression);
+      unique.set(row.expression, { ...row, expected: reason ? '' : row.expected || previous?.expected || '' });
     }
     rows.push(...unique.values());
     pages.push({ url: page.url, fetchUrl: page.fetchUrl, fetched: fetched.fetched,
@@ -50,7 +51,7 @@ export function collectSource(source, options) {
     images.push(auditImage(reference, options));
     for (const [expression, expected] of reference.examples) {
       rows.push({ source: source.product, lang: 'en', expression, expected,
-        note: `${reference.page} (image transcription: ${reference.url}; preceding definitions required)` });
+        note: `${reference.page} (image transcription: ${reference.url}${reference.requiresDefinitions ? '; preceding definitions required' : ''})` });
     }
   }
   if (!rows.length && !source.zeroExamples) throw new Error(`No examples extracted for ${source.product}`);
