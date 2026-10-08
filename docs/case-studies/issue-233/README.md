@@ -82,14 +82,21 @@ The output directory keeps the previous baseline intact during the check.
 
 ## Validation results
 
-The release binary evaluated all 3,055 corpus expressions with zero timeouts
+Before synchronizing with main, the release binary evaluated all 3,055 corpus expressions with zero timeouts
 and zero regressions against the previous baseline's 640 supported rows.
 The refreshed baseline contains 689 supported, 185 different, and 2,181
 unsupported rows. All seven expressions listed in #233 are supported. The
 uncertainty row now checks its expected value instead of only requiring a
 successful evaluation.
 
-Local validation passed: 999 Rust tests including the doc test, 27 script tests,
+Main then expanded the corpus through #249 and #251. Merge those updates,
+retain all licensed provenance, update the two corrected seed expectations,
+and regenerate the scientific TSV offline. The combined release check passes
+against main's 8,298-case baseline with no regressions: **1,100 supported**
+(previously 1,051), **307 different**, **6,891 unsupported**, and **zero timeouts**.
+All seven issue rows remain supported.
+
+Local validation passed: 999 Rust tests including the doc test, 42 script tests,
 229 web tests, formatting, Clippy with warnings denied, the file-size check,
 the release binary build, WASM build, TypeScript checking, and production web
 build. The changelog fragment requests the next patch release through the

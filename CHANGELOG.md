@@ -70,6 +70,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+
+## [0.23.1] - 2026-10-08
+
+### Added
+- Expand the scientific natural-language benchmark to 23 languages with at least 50 distinct expressions per language, all 12 required constructs, licensed Wikipedia and open-access paper samples, reproducible import scripts, and automated corpus validation (#232).
+
+## [0.23.0] - 2026-10-08
+
+### Added
+- Reproducible open-source calculator corpus refresh with pinned upstream commit dates and licenses, new Insect, kalker, Hurmet and SpeedCrunch extractors, and math.js function/unit assertions.
+- Weekly workflow that proposes upstream corpus updates through a pull request.
+
 ## [0.22.1] - 2026-10-08
 
 ### Added
