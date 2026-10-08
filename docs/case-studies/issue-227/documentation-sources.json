@@ -1,0 +1,2935 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "apple",
+      "product": "Apple Math Notes",
+      "extractor": "experiments/issue-227/extract-apple-examples.mjs",
+      "indexes": [],
+      "pages": [
+        {
+          "url": "https://support.apple.com/guide/ipad/solve-math-with-math-notes-ipadeb38d0f8/ipados",
+          "fetched": "2026-10-08",
+          "sha256": "883c78a04368f9fdcb6a5ec52c1c5f5af1e3d0aa383e1928c2f9260dd6ec0a7c",
+          "rows": 0
+        },
+        {
+          "url": "https://support.apple.com/guide/ipad/convert-units-or-currency-ipadc8aa1771/ipados",
+          "fetched": "2026-10-08",
+          "sha256": "17716a037840a648af4976c6b828afe8c75e804e5868ab3062752101aa33254b",
+          "rows": 0
+        },
+        {
+          "url": "https://support.apple.com/guide/iphone/work-with-graphs-in-math-notes-iph09ad8b507/ios",
+          "fetched": "2026-10-08",
+          "sha256": "2aa979609e4f02201ba3d98695d83653022337d75c83bbd07fc50aae569ecb5a",
+          "rows": 0
+        },
+        {
+          "url": "https://support.apple.com/guide/iphone/use-the-basic-calculator-iph1ac0b5cc/ios",
+          "fetched": "2026-10-08",
+          "sha256": "bb4c96496cd294123354043d6b6f30337be9771d24a902e6e441f904b72e639f",
+          "rows": 0
+        }
+      ],
+      "images": [
+        {
+          "url": "https://ipcdn-web.apple.com/assets/v2/web/13592c32-2c56-4a08-9796-00fdcbb28128",
+          "sha256": "947f45dad6813a29ef19faefe2297ce5ed4e64720d2e73cef37b0629e5c02c19",
+          "rows": 6
+        },
+        {
+          "url": "https://ipcdn-web.apple.com/assets/v2/web/7cb9b1de-fcd1-4bff-8d51-934ddda8b9b0",
+          "sha256": "5ce5ed7d625f8fad840106849b1ee260a4d454b1cc6307b05f787c97e43a365c",
+          "rows": 3
+        },
+        {
+          "url": "https://ipcdn-web.apple.com/assets/v2/web/203c55da-5b0f-4039-9e59-4d6aa5348ec0",
+          "sha256": "0b5a0fdafe89d40530a7271858082c7f3496a827347887d62cf726c9fbdd2c4c",
+          "rows": 1
+        }
+      ],
+      "extractedRows": 10,
+      "rows": 15
+    },
+    {
+      "id": "calca",
+      "product": "Calca",
+      "extractor": "experiments/issue-227/extract-calca-examples.mjs",
+      "indexes": [],
+      "pages": [
+        {
+          "url": "https://calca.io/reference",
+          "fetched": "2026-10-08",
+          "sha256": "e9cc8913bec1da279e2c3180d19795a4f78e762ba9a8c2b4a9015dccf8ae296f",
+          "rows": 198
+        },
+        {
+          "url": "https://calca.io/",
+          "fetched": "2026-10-08",
+          "sha256": "e68cd159483e0e1883dae300320a2ada3cefabaabf7c7fb2e6bb761abea5f636",
+          "rows": 3
+        }
+      ],
+      "images": [],
+      "extractedRows": 201,
+      "rows": 209
+    },
+    {
+      "id": "duckduckgo",
+      "product": "DuckDuckGo",
+      "extractor": "experiments/issue-227/extract-duckduckgo-examples.mjs",
+      "indexes": [],
+      "pages": [
+        {
+          "url": "https://duckduckgo.com/duckduckgo-help-pages/features/instant-answers-and-other-features",
+          "fetched": "2026-10-08",
+          "sha256": "0acf6d979dd6f9913b431b54871685db7ada95990467526f1aaacb40bc60aa8e",
+          "rows": 0
+        }
+      ],
+      "images": [],
+      "extractedRows": 0,
+      "zeroExamples": "The official Instant Answers help mentions calculations but contains no calculator syntax examples.",
+      "rows": 0
+    },
+    {
+      "id": "frink",
+      "product": "Frink",
+      "extractor": "experiments/issue-227/extract-frink-examples.mjs",
+      "indexes": [],
+      "pages": [
+        {
+          "url": "https://frinklang.org/frinkdocs.html",
+          "fetched": "2026-10-08",
+          "sha256": "3ab7ca92016c32c4e077c13b3901d37b75b35e311c80302a6889210c016c8134",
+          "rows": 1278
+        }
+      ],
+      "images": [],
+      "extractedRows": 1278,
+      "rows": 1283
+    },
+    {
+      "id": "google",
+      "product": "Google",
+      "extractor": "experiments/issue-227/extract-google-examples.mjs",
+      "indexes": [],
+      "pages": [
+        {
+          "url": "https://support.google.com/websearch/answer/3284611?hl=en",
+          "fetched": "2026-10-08",
+          "sha256": "face580303b85b47d69c071a38af1f538f37867df9397f8a700cf0713f9e7da0",
+          "rows": 7
+        }
+      ],
+      "images": [],
+      "extractedRows": 7,
+      "rows": 16
+    },
+    {
+      "id": "hurmet",
+      "product": "Hurmet",
+      "extractor": "experiments/issue-227/extract-hurmet-examples.mjs",
+      "indexes": [],
+      "pages": [
+        {
+          "url": "https://hurmet.org/manual.html",
+          "fetched": "2026-10-08",
+          "sha256": "0e476dfb41b598eb315a42a0f7947c74ce0836a101b21b5cc46ec2918634fea9",
+          "rows": 460
+        }
+      ],
+      "images": [],
+      "extractedRows": 460,
+      "rows": 460
+    },
+    {
+      "id": "numi",
+      "product": "Numi",
+      "extractor": "experiments/issue-227/extract-numi-examples.mjs",
+      "indexes": [],
+      "pages": [
+        {
+          "url": "https://github.com/nikolaeu/numi/wiki",
+          "fetchUrl": "https://raw.githubusercontent.com/wiki/nikolaeu/numi/Home.md",
+          "fetched": "2026-10-08",
+          "sha256": "969bc15439071a82378c19ae002336fb94fdd54dc97607e148dfcf6172f6a37d",
+          "rows": 77
+        }
+      ],
+      "images": [],
+      "extractedRows": 77,
+      "rows": 100
+    },
+    {
+      "id": "parsify",
+      "product": "Parsify",
+      "extractor": "experiments/issue-227/extract-parsify-examples.mjs",
+      "indexes": [],
+      "pages": [
+        {
+          "url": "https://parsify.notion.site/Getting-started-be7132e43e844bd88fe2ad48918b43d7",
+          "fetchUrl": "https://parsify.notion.site/api/v3/loadPageChunk",
+          "fetched": "2026-10-08",
+          "sha256": "3d299ae80e1ac54f0d9c693105f050deaafd2ef04d4784ca1b530df064119952",
+          "rows": 34
+        },
+        {
+          "url": "https://parsify.notion.site/Custom-units-aa6b67ab7f4548d8a6aae283701df670",
+          "fetchUrl": "https://parsify.notion.site/api/v3/loadPageChunk",
+          "fetched": "2026-10-08",
+          "sha256": "6b823b5e731165ef5891d55c4a6420ec83c13f712c10e266026ab4a91712b08a",
+          "rows": 2
+        }
+      ],
+      "images": [],
+      "extractedRows": 36,
+      "rows": 36
+    },
+    {
+      "id": "raycast",
+      "product": "Raycast",
+      "extractor": "experiments/issue-227/extract-raycast-examples.mjs",
+      "indexes": [],
+      "pages": [
+        {
+          "url": "https://manual.raycast.com/calculator",
+          "fetched": "2026-10-08",
+          "sha256": "49298a920495496bbfd85e462b0468ae193c5f1f732c9132866aa150fd6547ed",
+          "rows": 51
+        }
+      ],
+      "images": [],
+      "extractedRows": 51,
+      "rows": 58
+    },
+    {
+      "id": "samsung",
+      "product": "Samsung Calculator",
+      "extractor": "experiments/issue-227/extract-samsung-examples.mjs",
+      "indexes": [],
+      "pages": [
+        {
+          "url": "https://www.samsung.com/us/support/answer/ANS10002547/",
+          "fetched": "2026-10-08",
+          "sha256": "463f332c3b369b10be8e25ead872f8c4ce7f21a7b1c3a7ce0f1a7aef11e15af8",
+          "rows": 0
+        }
+      ],
+      "images": [
+        {
+          "url": "https://image-us.samsung.com/SamsungUS/support/mobile/ans10002547/PS_GS_S21_Calculator.jpg",
+          "sha256": "0ae0d46b12f570f8d4adefefa33aa1669946d2f06f6591b7fe86e3119ae863df",
+          "rows": 0
+        }
+      ],
+      "extractedRows": 0,
+      "zeroExamples": "The Calculator section describes buttons, history and conversion. The screenshot shows an empty display.",
+      "rows": 0
+    },
+    {
+      "id": "soulver",
+      "product": "Soulver",
+      "extractor": "experiments/issue-227/extract-soulver-examples.mjs",
+      "indexes": [
+        {
+          "url": "https://documentation.soulver.app/llms.txt",
+          "fetched": "2026-10-08",
+          "sha256": "9e060013d795255949cc4cbbf51e95c541e1d5d3c93e3456fccce24ccde500d7"
+        }
+      ],
+      "pages": [
+        {
+          "url": "https://documentation.soulver.app/documentation/exporting.md",
+          "fetched": "2026-10-08",
+          "sha256": "1f290b2e7f4500ff27e8ca966e9df4647c943b6f231c5aef31f5c3cc775ce663",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/exporting/html-email.md",
+          "fetched": "2026-10-08",
+          "sha256": "9beb1122d44870ab9e192527d338fdbf6c3b9cbca83b9f803abbbaf9bbb00952",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/exporting/sharing-and-printing.md",
+          "fetched": "2026-10-08",
+          "sha256": "4280ad87fd3fb32e50d425c30b56620a22bc4d601168355c214407928467d50a",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/exporting/soulver-studio.md",
+          "fetched": "2026-10-08",
+          "sha256": "edbdc84356e416a3a8d7550d824308acf698fa43b097bec1fcdedfef859aa94b",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/formatting.md",
+          "fetched": "2026-10-08",
+          "sha256": "87081ed24846531dbc710d16c9bbfb2fab5a4181a32481be6f4d9d6a2ee531d8",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/formatting/answer-formatting-options.md",
+          "fetched": "2026-10-08",
+          "sha256": "dcbf33faaed1fc3ba136280a2e7fb66d1dd328fedccdc8cdedfb1f08a255b006",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/formatting/appearance-and-styles.md",
+          "fetched": "2026-10-08",
+          "sha256": "e3d28d96361e58abcef0a9faffb19b27639d635b6b78a290cb5c986f0df0e9d9",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/formatting/region-settings.md",
+          "fetched": "2026-10-08",
+          "sha256": "5f84fe0d652368cdbf90b71ef85dad2758cced2522bdcc067ae09a67cba972ad",
+          "rows": 3
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/getting-started.md",
+          "fetched": "2026-10-08",
+          "sha256": "b2350d3e4ebaa8c8c760ffb8b584caa772f50ab64b761e0329253b1f869931b2",
+          "rows": 9
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/integrations.md",
+          "fetched": "2026-10-08",
+          "sha256": "f013a37de9df3241e48a3726ab14123c8bb23af25815724db32b7a4d2a678908",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/integrations/alfred-and-raycast.md",
+          "fetched": "2026-10-08",
+          "sha256": "e3d37acfba83c91d2cba7135df3200eed591f6309e0fead934c656679ed133bb",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/integrations/command-line-tool-automator-and-services.md",
+          "fetched": "2026-10-08",
+          "sha256": "8ae693cd1665e62c65729f67bd08a2926c3f3c44b60e6db397fed7d1abaffdab",
+          "rows": 4
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/integrations/macos-services.md",
+          "fetched": "2026-10-08",
+          "sha256": "ca5129bcb40afe96d78330ce958c830cf81f60ff62fd26fbdc58d6ef15d66f4c",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/integrations/url-schemes.md",
+          "fetched": "2026-10-08",
+          "sha256": "7669672329319db51e841a3ffdb3f5a0d6b27c97c64431c2f43e7b236138e3a9",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/line-references.md",
+          "fetched": "2026-10-08",
+          "sha256": "0bf0926abc5c9684bbdc88460e027f5d71dbc43b521b4ac62535728cc58722c1",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/live-data.md",
+          "fetched": "2026-10-08",
+          "sha256": "9a23c9c41793d3d5e1cee419c6719302df419dc39599a6541497592b12fe7596",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/live-data/knowledge-assistant.md",
+          "fetched": "2026-10-08",
+          "sha256": "c869847ae26762f4f088b221f2ec14a3d9de44a28be70338156a60853adbfefd",
+          "rows": 2
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/live-data/live-and-historical-stock-prices.md",
+          "fetched": "2026-10-08",
+          "sha256": "bac7f99397195ae3d11923b588c3b1c1dd2b015e9382cc1461368bab87e2a5a2",
+          "rows": 7
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/live-data/weather.md",
+          "fetched": "2026-10-08",
+          "sha256": "a26d490a69818c431a14c4889c856b5ec1935a2947aaf008441b8dc3cad39803",
+          "rows": 6
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/live-data/wolfram-alpha.md",
+          "fetched": "2026-10-08",
+          "sha256": "110132ac87b3914c23d0409cf8ae658d16bc88ca85073203fd14a51ec9a14210",
+          "rows": 2
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/sheets-and-files.md",
+          "fetched": "2026-10-08",
+          "sha256": "30e4ddd793bc85fa97bace04a54529a8d7bbaac9b0ac47464cc75dc63bb42bf6",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/sheets-and-files/sheetbooks-and-syncing.md",
+          "fetched": "2026-10-08",
+          "sha256": "a0cc71029856635aba602be8c516d3914a4b22440e015de4b8c8090e13a3fd09",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/sheets-and-files/soulver-files-.slvr.md",
+          "fetched": "2026-10-08",
+          "sha256": "fe1198b4f9fa0f6bd38e3ba2a706fa5b56cd0a3e6236f67c164d003c3a38d92c",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/sheets-and-files/untitled-1.md",
+          "fetched": "2026-10-08",
+          "sha256": "16dba2f5232f9179c4bdfc8f51318ef50be7110d519fad865f476d3e0ef56591",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/tags.md",
+          "fetched": "2026-10-08",
+          "sha256": "2d57c7c8fa2eb69011c8b3b9d48d4ac40360b78a94f7f2fcc34f39f1c7ef46bd",
+          "rows": 4
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/tips-and-tricks.md",
+          "fetched": "2026-10-08",
+          "sha256": "c12fffe00e77509701ab58bc90a0daa6f2d1398950da7d5e9f335c4020ebdfa2",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/tips-and-tricks/tips-and-tricks-ios.md",
+          "fetched": "2026-10-08",
+          "sha256": "104024ff656a2f2c6f5cf194ba76be795d522ce5a7a779906167dfd15675fcbc",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/tips-and-tricks/tips-and-tricks-mac.md",
+          "fetched": "2026-10-08",
+          "sha256": "2982269b5cbab43700f4df1e56f97151cf2dec1b8cfe14a1520de0e03600654e",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/totals-and-subtotals.md",
+          "fetched": "2026-10-08",
+          "sha256": "33e2b51a7cbdcbbe07365d5ff0ee10719941278183155fa795d82a373745991c",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/trip-planning.md",
+          "fetched": "2026-10-08",
+          "sha256": "26fa02264f25172e0ae7125f84da02996146b4e45d2ea7a0f834e76769cb995d",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/documentation/variables.md",
+          "fetched": "2026-10-08",
+          "sha256": "d08463801b7bc1fd601a3e8a85e55b11ceaec0e89ed3855d00b16aca612dbd2a",
+          "rows": 7
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/bases-and-bitwise.md",
+          "fetched": "2026-10-08",
+          "sha256": "d9548409018a72dbc5dedd6df080a602d416932e5a6577dfbe3a7de0ca227280",
+          "rows": 9
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/dates.md",
+          "fetched": "2026-10-08",
+          "sha256": "ce736cb001cc224097630a74a43630757cad85de1090498026a4ff234c58dcbe",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/dates/dates-and-times.md",
+          "fetched": "2026-10-08",
+          "sha256": "c46450b7b512fb2f29c43c80f276b9ba06ca8b3cc2f7721d7531521174414812",
+          "rows": 34
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/dates/timestamps-and-iso8601.md",
+          "fetched": "2026-10-08",
+          "sha256": "9b09f443b6723e49bf814ca0dcd05211cb940a2f19101b20ce967be5d20eca43",
+          "rows": 6
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/dates/workdays-and-weekdays.md",
+          "fetched": "2026-10-08",
+          "sha256": "079a0eeeed44650ada71f5e3f4d7fb7511e322269bdfbf54833cebc37e5c1b73",
+          "rows": 9
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/general.md",
+          "fetched": "2026-10-08",
+          "sha256": "a60ba7bee3133236cd7b250c1b5c909f46d5a7531323deceab887805d158d931",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/general/averages-and-median.md",
+          "fetched": "2026-10-08",
+          "sha256": "71a79185bbeba52066f58351c35dd7e37df1bdea37daab3bc818fc66af9486a8",
+          "rows": 5
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/general/conditionals-and-comparisons.md",
+          "fetched": "2026-10-08",
+          "sha256": "08e568338bff9768afaed11ce07760027bb1fa16945245c3ee70467850525254",
+          "rows": 18
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/general/general.md",
+          "fetched": "2026-10-08",
+          "sha256": "069f939b72ffe389ce7c80281324a54eb5148f8a9ca9a54c5ce7f0a3b0bbb1cd",
+          "rows": 23
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/general/logarithms-and-roots.md",
+          "fetched": "2026-10-08",
+          "sha256": "3606fd5f289fbd69c5233772a67b9750e0a3ad78e435531374292fbe370618e1",
+          "rows": 8
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/general/number-rounding.md",
+          "fetched": "2026-10-08",
+          "sha256": "d2f8db6801a974008196a85feb07033c311b34321f8cbad57d54a2c98bf1f1f5",
+          "rows": 11
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/general/operators.md",
+          "fetched": "2026-10-08",
+          "sha256": "1143ace186b8374837b9bc3676d5dfc7fc057fe82f19a698da027a835aac00f2",
+          "rows": 6
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/general/trigonometry.md",
+          "fetched": "2026-10-08",
+          "sha256": "bccb021a5571816faf9ff0b9bed5860b277e795993c5852bcfe3715633c18815",
+          "rows": 4
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/geography.md",
+          "fetched": "2026-10-08",
+          "sha256": "241351d2bf0cd21103ab65e981a2c3edaf6b6ebe41032517471ba6e0ea19ab6e",
+          "rows": 1
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/headings-and-comments.md",
+          "fetched": "2026-10-08",
+          "sha256": "10c356709e0f75c06d481b3b060b48d29bfe034424529700e9f09727b67c93e0",
+          "rows": 9
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/large-number-symbols.md",
+          "fetched": "2026-10-08",
+          "sha256": "13301b4439d16af33f0b4edb235df1f8e96d8ceaf743137921c42c2f5024c305",
+          "rows": 10
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/money-and-finance.md",
+          "fetched": "2026-10-08",
+          "sha256": "0db910a3c6bd26d09841e34a448142794aa17dfad1a62a66d14f239c99a4233a",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/money-and-finance/income-tax.md",
+          "fetched": "2026-10-08",
+          "sha256": "51a28cf49377b55e16d5979819a86621e1e28a91860b5218a0bd48abfcc4781d",
+          "rows": 5
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/money-and-finance/inflation-calculations.md",
+          "fetched": "2026-10-08",
+          "sha256": "f21dcdf006f0817b9ccda48b78df232f5ed8e91050a4f6560aa41b5bdef84521",
+          "rows": 17
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/money-and-finance/investments.md",
+          "fetched": "2026-10-08",
+          "sha256": "ad261c9908481cb67b8d3810d292f118bd4054ab3e2fa93548dcb53daf93ceb2",
+          "rows": 9
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/money-and-finance/mortgages.md",
+          "fetched": "2026-10-08",
+          "sha256": "347c0b055dfc41d1a957b2e7f132b5fd64c8063c2c6cd584b605d7b8a3c13893",
+          "rows": 8
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/money-and-finance/sales-tax.md",
+          "fetched": "2026-10-08",
+          "sha256": "41120c5d7237627d867f4fb9d2cc0dae8f0ab64493a5c6e281827ccb7bedaf48",
+          "rows": 7
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/percentages.md",
+          "fetched": "2026-10-08",
+          "sha256": "65a7cbb2003e1b0bd6bb08c2faa188fd49f0d2b3589717dfcc33458de20f929b",
+          "rows": 43
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/time.md",
+          "fetched": "2026-10-08",
+          "sha256": "7903c3c540ef4f97e149d6fdb6867d915a2249347d1e662c1153b1c14689c39f",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/time/clock-time-calculations.md",
+          "fetched": "2026-10-08",
+          "sha256": "d51871e7faa0567d3d59976f2060061867999e3eb1b550c91a0aa41bb808cce3",
+          "rows": 11
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/time/time-zones-and-cities.md",
+          "fetched": "2026-10-08",
+          "sha256": "f29f1ae6250fc11f3ec7a0ca8b3d0ebce94a090542ac53a43f22709af9e40bdb",
+          "rows": 12
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/time/timespans-and-laptimes.md",
+          "fetched": "2026-10-08",
+          "sha256": "5229fa35629d9c2389cb42d113356931a5f1e01ce90ca33a9e653e4212bb7841",
+          "rows": 16
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/time/video-timecode-and-frame-rates.md",
+          "fetched": "2026-10-08",
+          "sha256": "0c647d23e1198ff996f7f94d0a70e073816b5516335f551790e37791e6e57d6f",
+          "rows": 9
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/units-and-conversions.md",
+          "fetched": "2026-10-08",
+          "sha256": "a8363c265373c517913979fb29118cee324ce3924b921b21396eb07f79fbdc89",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/units-and-conversions/cooking-and-volume-calculations.md",
+          "fetched": "2026-10-08",
+          "sha256": "9f7f0a6c52e1a76606f3b3520cb907409b6f6e31e833930207d9c935f656440e",
+          "rows": 3
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/units-and-conversions/currencies.md",
+          "fetched": "2026-10-08",
+          "sha256": "6e3455c0b01be25bbb0b3f483833335c2a9ce8d836d467ba23b524170f20324e",
+          "rows": 7
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/units-and-conversions/currency-reference.md",
+          "fetched": "2026-10-08",
+          "sha256": "087196e462218763ea43ad1bcf13249f72b05404bdbd0ad571b22cfe29b4cf3a",
+          "rows": 0
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/units-and-conversions/growth-and-change.md",
+          "fetched": "2026-10-08",
+          "sha256": "ea32e65074bd636fa0922584b36a395fa78b49bd7e2e1794df7d7cbc70078488",
+          "rows": 4
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/units-and-conversions/rates.md",
+          "fetched": "2026-10-08",
+          "sha256": "f7b005df9505774604eaa602bdebb954e9c651cf2b7cdf5109ab62dc7d576c5e",
+          "rows": 15
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/units-and-conversions/unit-reference.md",
+          "fetched": "2026-10-08",
+          "sha256": "29ba60d98cc031eabc28ffebf4d0c4e138740acc3fba5fdba4bc1f627dd0da12",
+          "rows": 2
+        },
+        {
+          "url": "https://documentation.soulver.app/syntax-reference/units-and-conversions/units.md",
+          "fetched": "2026-10-08",
+          "sha256": "4aabea6aff035fe82a59e5cb3a9262577b3bd909d6d212fc21df016d7bd90d0b",
+          "rows": 20
+        }
+      ],
+      "images": [],
+      "extractedRows": 385,
+      "rows": 383
+    },
+    {
+      "id": "speedcrunch",
+      "product": "SpeedCrunch",
+      "extractor": "experiments/issue-227/extract-speedcrunch-examples.mjs",
+      "indexes": [
+        {
+          "url": "https://www.speedcrunch.org/contents.html",
+          "fetched": "2026-10-08",
+          "sha256": "5560016c7976d2766e3981ba0e6a204e814ed366db8c0e23fb7543df79423cc2"
+        }
+      ],
+      "pages": [
+        {
+          "url": "https://www.speedcrunch.org/reference/basic.html",
+          "fetched": "2026-10-08",
+          "sha256": "643056ccc8399809dec7ede1412f07661611e279ee1f7d8da7199e897fb06ce1",
+          "rows": 41
+        },
+        {
+          "url": "https://www.speedcrunch.org/reference/constants.html",
+          "fetched": "2026-10-08",
+          "sha256": "cc85530ee1ded00b97f4c8ba85e87cb58bbe0a70db6f4787256bef7cbbd47821",
+          "rows": 5
+        },
+        {
+          "url": "https://www.speedcrunch.org/reference/ieee754.html",
+          "fetched": "2026-10-08",
+          "sha256": "5431444142c1f5b8795d95ca9365bc488add2671fcbcc37bfa9de7f6d1a89005",
+          "rows": 16
+        },
+        {
+          "url": "https://www.speedcrunch.org/reference/index.html",
+          "fetched": "2026-10-08",
+          "sha256": "57cfc71b306596de50d88f92a8061e337ddebc19cf2c62a536e7d6feb7a4f6ff",
+          "rows": 0
+        },
+        {
+          "url": "https://www.speedcrunch.org/reference/integer.html",
+          "fetched": "2026-10-08",
+          "sha256": "2913c17421e8ee9a8c6585ae209f21b57eb56bb118652fd33710429fff9f0861",
+          "rows": 28
+        },
+        {
+          "url": "https://www.speedcrunch.org/reference/statistical.html",
+          "fetched": "2026-10-08",
+          "sha256": "d6024c3a5adea1052ae910ce8431ab3c24cac0d3beacde1efdf650c654f19957",
+          "rows": 22
+        },
+        {
+          "url": "https://www.speedcrunch.org/reference/units.html",
+          "fetched": "2026-10-08",
+          "sha256": "69efc36f2f8100fc534756e5bac9a30ff1d9c45bbb90cd56a7a8f06a350b1447",
+          "rows": 49
+        },
+        {
+          "url": "https://www.speedcrunch.org/userguide/advanced.html",
+          "fetched": "2026-10-08",
+          "sha256": "9a2a17d98d572e43203e5e42f30e1ee85252ad028dfa053c362a724846ee9900",
+          "rows": 37
+        },
+        {
+          "url": "https://www.speedcrunch.org/userguide/first_steps.html",
+          "fetched": "2026-10-08",
+          "sha256": "983f8d577e62f4f011a23d0fac94d3837a1f6c0019a29a1ebca812baf4d7d2fc",
+          "rows": 17
+        },
+        {
+          "url": "https://www.speedcrunch.org/userguide/syntax.html",
+          "fetched": "2026-10-08",
+          "sha256": "ef277926f636c9a4235a1e41d36cffc4714f25beadcdc569e9f8b27a125f2eb1",
+          "rows": 170
+        }
+      ],
+      "images": [],
+      "extractedRows": 385,
+      "rows": 372
+    },
+    {
+      "id": "windows",
+      "product": "Windows Calculator",
+      "extractor": "experiments/issue-227/extract-windows-examples.mjs",
+      "indexes": [],
+      "pages": [
+        {
+          "url": "https://support.microsoft.com/en-gb/windows/apps/use-the-calculator-in-windows",
+          "fetched": "2026-10-08",
+          "sha256": "3d2859dac93b4d3005a4d96cefb8f68c367445461c1fa80a805fd1691f31b2b5",
+          "rows": 0
+        }
+      ],
+      "images": [],
+      "extractedRows": 0,
+      "zeroExamples": "The official help describes button modes and converters, with no typed expression/answer examples.",
+      "rows": 0
+    },
+    {
+      "id": "wolfram",
+      "product": "Wolfram|Alpha",
+      "extractor": "experiments/issue-227/extract-wolfram-examples.mjs",
+      "indexes": [],
+      "pages": [
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics",
+          "fetched": "2026-10-08",
+          "sha256": "62b6c763cd128d78a6eeac23e6bc4410e858eb6ea41344dc4be7e7e08b3282c9",
+          "rows": 49
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures",
+          "fetched": "2026-10-08",
+          "sha256": "6093ef6611b77610b97dc6c8c92bdca2b2c2ac5f5ed60ee8a888f581501fa98a",
+          "rows": 22
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/society-and-culture/dates-and-times",
+          "fetched": "2026-10-08",
+          "sha256": "7ab6f2d671edba3290e35334390a1657c38c08d26c43313d344c95f5950a82dd",
+          "rows": 33
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/algebra",
+          "fetched": "2026-10-08",
+          "sha256": "75997dd43dcf4a6531925af8990f9c0869027f2cfa06e1ba1f16df1614dbdc55",
+          "rows": 21
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/applied-mathematics",
+          "fetched": "2026-10-08",
+          "sha256": "59f119353fbbba54669384de1cc3f99c11511e401f09b47145d1059009139736",
+          "rows": 18
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis",
+          "fetched": "2026-10-08",
+          "sha256": "f7969a0c314632dc7d0fc26de03f4eebad3e93a4b6b91e42d8b4cc12dbe84d6f",
+          "rows": 30
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math",
+          "fetched": "2026-10-08",
+          "sha256": "bc5616fa4a8a40eafe391ac95202513ffc826daaf58c1529eba08a293df747eb",
+          "rows": 51
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/complex-analysis",
+          "fetched": "2026-10-08",
+          "sha256": "8e779ad1f4b1c1d573998d27b010ad81a2828e91dcd0d01722e85f2374cff317",
+          "rows": 18
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/continued-fractions",
+          "fetched": "2026-10-08",
+          "sha256": "db03d7ceffd5bc3a4d76d12779e790c2380fc84636e3e99dbda2bfdff7eb1ceb",
+          "rows": 31
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/differential-equations",
+          "fetched": "2026-10-08",
+          "sha256": "ef257658b3376c1362c2cb9a4522e0e3e210f54f437f945c7cb1c411be560615",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/discrete-mathematics",
+          "fetched": "2026-10-08",
+          "sha256": "f5ec82866c39a252b8beb1988b7ad1200ae53ac4c7eb1fe117613098464e761f",
+          "rows": 17
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/elementary-math",
+          "fetched": "2026-10-08",
+          "sha256": "0fed20d8b2f17a2e81ccd95968ad078feb94a1d823ad42aa0c45e1cd2381409a",
+          "rows": 19
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/famous-math-problems",
+          "fetched": "2026-10-08",
+          "sha256": "a70fc855df95c185e28fd6a88f4fd1e3d64229de0154c4910720c54daa8f0fe0",
+          "rows": 12
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry",
+          "fetched": "2026-10-08",
+          "sha256": "001e9a7f4025a2d9bf57e226d229ace222a6bbbb4cc6288b059ae8a0d61e9ae3",
+          "rows": 24
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/linear-algebra",
+          "fetched": "2026-10-08",
+          "sha256": "0ae5b83bd5b2098c4b3996aa7fdccf6e1a94ae76230e4ccfb7c9b53f9f8ab922",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/logic-and-set-theory",
+          "fetched": "2026-10-08",
+          "sha256": "fd646bb1c03fe0b508ea83e1d5463ea08549fedac35177fc63a175682f87de90",
+          "rows": 9
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/mathematical-definitions",
+          "fetched": "2026-10-08",
+          "sha256": "5d53dd67cb259cc7e7657b5258ea32fc55e2c781d5b4bca651d08e50326fd5c1",
+          "rows": 7
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/mathematical-functions",
+          "fetched": "2026-10-08",
+          "sha256": "f70f1d1cc76e9f38e27a7ec8ded51bb8800a4e8512d0d2e477ac3f1ca9f72f51",
+          "rows": 19
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/number-theory",
+          "fetched": "2026-10-08",
+          "sha256": "af303a9ba1ab248e57fde0c0d7177f6be1f8cf09079231d7cd6dd45648986949",
+          "rows": 19
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/numbers",
+          "fetched": "2026-10-08",
+          "sha256": "74dca895b9eaacea159047f9bd822e19b56e32e68f02bea21bce1de1db308774",
+          "rows": 33
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/plotting-and-graphics",
+          "fetched": "2026-10-08",
+          "sha256": "961f3c40b8a42565d92bd353898512047b8383141cbe8b49f7b37dd28a902e2c",
+          "rows": 24
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/probability",
+          "fetched": "2026-10-08",
+          "sha256": "972d92d38989399f1be68aac9cc98927935ad6581f6b5c14574faabb76499ffa",
+          "rows": 20
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/statistics",
+          "fetched": "2026-10-08",
+          "sha256": "dcd2d693b1d93aa9c1c5cb08d26d8ca6da2b6196ba102c317afe47e0ee5127ba",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/trigonometry",
+          "fetched": "2026-10-08",
+          "sha256": "65236d1f7daf3953e575ab6fe405bbcde01cd2ea29aeb0bff98037fd67ad2995",
+          "rows": 20
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/fashion-sizes",
+          "fetched": "2026-10-08",
+          "sha256": "6cbf4187b5f458e24d9cdf464921180468ebaa049e891ed15fc01c3eb7e21024",
+          "rows": 4
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/industrial-measures-and-standards",
+          "fetched": "2026-10-08",
+          "sha256": "9ea444c1973b397b54b558eb4869789b3552500f3881e7caf3b4f2a58432088d",
+          "rows": 36
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/industrial-measures-and-standards/gas-marks",
+          "fetched": "2026-10-08",
+          "sha256": "bf6b074c49d1f34ea3afe6244de5650241e84b6475a754a776470bbb5ab6c229",
+          "rows": 6
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/industrial-measures-and-standards/knitting-needle-sizes",
+          "fetched": "2026-10-08",
+          "sha256": "5951013f9271860d88b4e69eef4586f609baeff1b96693787404b62bd7db0c6c",
+          "rows": 5
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/industrial-measures-and-standards/tire-sizes",
+          "fetched": "2026-10-08",
+          "sha256": "babd85b74693f09e7ba9c8453230abeb35184c0872b07b0e032ff0040e0d33c4",
+          "rows": 17
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/measurement-devices",
+          "fetched": "2026-10-08",
+          "sha256": "03a504b148537513e1825166f45d86e93b9e16c33fa1d7c1675d32b2dff078d9",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/packing-and-covering-of-objects",
+          "fetched": "2026-10-08",
+          "sha256": "e0129d2b26be96be391e0c98071e6ea418800c6b36133e7e032845f758cce324",
+          "rows": 6
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/physical-quantities",
+          "fetched": "2026-10-08",
+          "sha256": "7885a4aa1c6d16915dfbaa29d7f2c3daff51b51874424a9ec50bb11bbb0dbae9",
+          "rows": 17
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/units",
+          "fetched": "2026-10-08",
+          "sha256": "3e553ca974d78e8a9fc969c5948534c1466d341722e6b29de4a75ccc47c31363",
+          "rows": 32
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/units/si-units",
+          "fetched": "2026-10-08",
+          "sha256": "6915c2a3d87370f99d271c321f169cc232736c59a3a9b41fc9287e27b7764c65",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/society-and-culture/dates-and-times/calendars",
+          "fetched": "2026-10-08",
+          "sha256": "9eaeade93ffcf5163689f976cbdc1976d8b27013e9e1b591bcd43d916a49d146",
+          "rows": 10
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/society-and-culture/dates-and-times/date-and-time-computations",
+          "fetched": "2026-10-08",
+          "sha256": "e870f5e5c6f0ee18728b564df471a2ad8b184351f17b21db26756c0b75b22fba",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/society-and-culture/dates-and-times/geologic-time-scale",
+          "fetched": "2026-10-08",
+          "sha256": "e95708f7efa73273c30eed838bce46f5276d56e3709908c72e0545a47af4ceba",
+          "rows": 26
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/society-and-culture/dates-and-times/historical-events",
+          "fetched": "2026-10-08",
+          "sha256": "170f674cc25d557cc241d54414915a6d187b8665c079be97f5664b74b429c732",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/society-and-culture/dates-and-times/holidays",
+          "fetched": "2026-10-08",
+          "sha256": "3a54b2ee95cb528bfa81ac4e3556e41e839d1be9cc865e6895ce615fdeb12fc0",
+          "rows": 8
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/society-and-culture/dates-and-times/time-zones",
+          "fetched": "2026-10-08",
+          "sha256": "294456cd91862d03a86d4d201c302d95e2c0c8b8684872995b5c8cf7c8a979ab",
+          "rows": 10
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/algebra/domain-and-range",
+          "fetched": "2026-10-08",
+          "sha256": "8a6b758025fd3dfc04a3ca3b370b3b8f28a11438e8631ed54648ca053ae14340",
+          "rows": 9
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/algebra/equation-solving",
+          "fetched": "2026-10-08",
+          "sha256": "77eb5caeac3d17b678d6d563145bd331a9e0258b14402dbae5124d7976f1c587",
+          "rows": 16
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/algebra/finite-fields",
+          "fetched": "2026-10-08",
+          "sha256": "3e77c2c168a40066568abcb209e8f5641e4909a1d5980089731bfce953b554bc",
+          "rows": 4
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/algebra/finite-groups",
+          "fetched": "2026-10-08",
+          "sha256": "59988343ec5bfa3c49c8c6bca3a993f44f274bb1b803e51bf3ab9f8c82341663",
+          "rows": 9
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/algebra/matrices",
+          "fetched": "2026-10-08",
+          "sha256": "fb8ea2e227177f89af2b5619ac9d028f51299ffee5e15e2366e18a762c7f1ba3",
+          "rows": 35
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/algebra/polynomials",
+          "fetched": "2026-10-08",
+          "sha256": "e88e7bf2ae7097d31a8c51f50f54a56599e6e1df2c4a650b841437cc2d533a46",
+          "rows": 25
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/algebra/quaternions",
+          "fetched": "2026-10-08",
+          "sha256": "a70a99d3cb042c8e091bfd7133a1bdb3ce82ad2b5f5d15662044ddd3939eb965",
+          "rows": 7
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/algebra/rational-functions",
+          "fetched": "2026-10-08",
+          "sha256": "f1adf6d4230ba3a1080ab4aaf666482e2bbf56818403c997394d6119269bfbe5",
+          "rows": 8
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/algebra/simplification",
+          "fetched": "2026-10-08",
+          "sha256": "eab211dec769e70420f66ebe8ec40a298a95b72b50d7cb2c529696762691402b",
+          "rows": 16
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/elementary-math/arithmetic",
+          "fetched": "2026-10-08",
+          "sha256": "39803b904ca992e1dd5e6b04d87683814b9c0d488cf7b77a7b9dfa8022a2ce0b",
+          "rows": 16
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/applied-mathematics/dynamical-systems",
+          "fetched": "2026-10-08",
+          "sha256": "412ff40b3428fe22832b4c825144485e556338a80f93458187183ce00f3fd986",
+          "rows": 6
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/applied-mathematics/fractals",
+          "fetched": "2026-10-08",
+          "sha256": "c092e5ee2dbc9e68e4ae79058e6368ee5746dd66bdbc7d52cb93e016790fafe7",
+          "rows": 16
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/applied-mathematics/numerical-analysis",
+          "fetched": "2026-10-08",
+          "sha256": "2862cbe737ed6c8198f7caeb341c8d5fd4de23b6ccb3638fb58402889cdcf051",
+          "rows": 9
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/applied-mathematics/optimization",
+          "fetched": "2026-10-08",
+          "sha256": "723d9d4a8a56dec0783d41dbed9316c19162c9bc9826b6553d480fb53881311f",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/applied-mathematics/packing-and-covering-of-objects",
+          "fetched": "2026-10-08",
+          "sha256": "5b232b7d782866a529988306aa1621b5bc60816a8f0deb7e12a8dd8898e8cafd",
+          "rows": 6
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/applications-of-calculus",
+          "fetched": "2026-10-08",
+          "sha256": "290a0c70bea05aa9b9e85c14910d94f87f3e0f89d6d7508059947864fee4341b",
+          "rows": 30
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/continuity",
+          "fetched": "2026-10-08",
+          "sha256": "58dba4b4436f4fb785599dc43b7265c0fc11726d131af1a44ed5231d73c830fe",
+          "rows": 6
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/derivatives",
+          "fetched": "2026-10-08",
+          "sha256": "42da4eb61248c82999ac1d49eb101805cc8e590f06a81c886448f9c8bb997d71",
+          "rows": 26
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/domain-and-range",
+          "fetched": "2026-10-08",
+          "sha256": "9fe20a8f4019bd550ea2ecbeaa3449e3584afda4220381671f41548021104ddb",
+          "rows": 9
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/integral-transforms",
+          "fetched": "2026-10-08",
+          "sha256": "9da2393c5ee8edcd9b47887cb4d8d3f61d8106a8a4bf907e75da18037d9bfe48",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/integrals",
+          "fetched": "2026-10-08",
+          "sha256": "d69b11eaff4d944a553b08226902232524d3247fc320a033a3953fcb2be6b3ce",
+          "rows": 28
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/limits",
+          "fetched": "2026-10-08",
+          "sha256": "4188dc1f0174b1a07af3c48723e70a83e8b19eb70e48ea4b5dcbed0fe636cf06",
+          "rows": 22
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/products",
+          "fetched": "2026-10-08",
+          "sha256": "2df74d76c91060b37d9de47d7b25a8918086a918c4860bb9fbe6228e5cb7f291",
+          "rows": 7
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/sequences",
+          "fetched": "2026-10-08",
+          "sha256": "a86a8ac96fa862f58d619e4b3b944d667d8334e05855a54bf44c41e94236cfde",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/series-expansions",
+          "fetched": "2026-10-08",
+          "sha256": "4efd720372ddb22f45ccd342c983832e20bfe80d2471bbc5ef7cdd33c4427681",
+          "rows": 10
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/sums",
+          "fetched": "2026-10-08",
+          "sha256": "ac696d436e4dd18f57916cfecccf27c65d902ed845117d1a7847d669e2491602",
+          "rows": 20
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/vector-analysis",
+          "fetched": "2026-10-08",
+          "sha256": "bd5b8959dd10adc7deeea2e506da9d0f6e8d43c731c9afc2c6a920cfb15881a2",
+          "rows": 20
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/coordinate-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "6bf6c6c530482d5e524144967cf4cdd0180d573c2352583706cfa0699a5e68f9",
+          "rows": 10
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-algebraic-thinking",
+          "fetched": "2026-10-08",
+          "sha256": "c8d1d5e06e2e804976bfe0a303871be4d5950ef15205aa18514b2ada1f4d4024",
+          "rows": 29
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-counting-and-cardinality",
+          "fetched": "2026-10-08",
+          "sha256": "2c7950bcb99a7eaf3937570431bf31b0e06c1c953aafe424f1c440bb44b8eea3",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-expressions-and-equations",
+          "fetched": "2026-10-08",
+          "sha256": "d1aa6716ca0092bcc8ba34e379b814c5816be33b1bef8d57d3c09b4e9829e626",
+          "rows": 21
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-fractions",
+          "fetched": "2026-10-08",
+          "sha256": "46b8c4eeb3b1d538a40fc2147051482c14ffe6aea1ef47baf880d8746914cd4f",
+          "rows": 17
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-functions",
+          "fetched": "2026-10-08",
+          "sha256": "033a9ea4d5ba156b61e54e52bebd23ddaabdd70b5538a5755c00bf4a7a430768",
+          "rows": 9
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "64ad9a5871cc85cedf358652e4bd1461dcea14b3d4cd9ce93f53f7c571609995",
+          "rows": 37
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-1",
+          "fetched": "2026-10-08",
+          "sha256": "9ca803fc0dd4b8fb7880334a931c841473e2900ce2467195f6d31c0ebafa3922",
+          "rows": 20
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-2",
+          "fetched": "2026-10-08",
+          "sha256": "9399d3b456fe87b51b5d214decc8ff86f7fc12b1fcae1afccffbaa99cab2bcf1",
+          "rows": 20
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-3",
+          "fetched": "2026-10-08",
+          "sha256": "40102bd13c52972726cee8948d9feb6d483162f3c8155968c88b5a313d3d322f",
+          "rows": 24
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-4",
+          "fetched": "2026-10-08",
+          "sha256": "e19dd484a81a0d238dc0a9d24282ca8c6599ae55ac25de64c0f8da665aac3832",
+          "rows": 28
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-5",
+          "fetched": "2026-10-08",
+          "sha256": "147840b2a6b98c5b40ac70ec4461ffc45593fef4e4abee6dc5314321d5e8c5d0",
+          "rows": 25
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-6",
+          "fetched": "2026-10-08",
+          "sha256": "abcb876276768ae1d34bbf4c121a43fadea8cad01c6337ca178784cb04b66f29",
+          "rows": 27
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-7",
+          "fetched": "2026-10-08",
+          "sha256": "00603b71c2c841a1644195689163319836c1bc15dd581f392ad259856726933c",
+          "rows": 29
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-8",
+          "fetched": "2026-10-08",
+          "sha256": "a8dc43415ad2485cb7005a826fe0550efc76a7a4a7153e817cb676911228fc8c",
+          "rows": 23
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school",
+          "fetched": "2026-10-08",
+          "sha256": "2f8816c4319349c60d5d17fa88eeef5eabdb241560ea5798c39425a15b0705e7",
+          "rows": 33
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-algebra",
+          "fetched": "2026-10-08",
+          "sha256": "0d64592d579d18977cf5174568f2c473a7832b4535f72945264eaf7d9b3f9f2d",
+          "rows": 19
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-functions",
+          "fetched": "2026-10-08",
+          "sha256": "1e2beec7c92e7ad9759fbeb76f6bbc0b8a664a1ff9678da20539eb888a8e75e3",
+          "rows": 19
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "51f9e4b06281bbdbb58e058eb1ad96d7c223397d3bdb1ee481db3a588ba48b57",
+          "rows": 27
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-number-and-quantity",
+          "fetched": "2026-10-08",
+          "sha256": "64c20e1717d04543e031047804c09598dbc7574d6a7b41a43f0e02dcd5d78a14",
+          "rows": 18
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-statistics-and-probability",
+          "fetched": "2026-10-08",
+          "sha256": "6052a967d6f38d457587eadebbaade15263a9ff135740437257ffb328e3c36be",
+          "rows": 12
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-kindergarten",
+          "fetched": "2026-10-08",
+          "sha256": "4befe9d006ef352ca81091ca01e96821d82d6cd8dc4b9827ba4a9cc5dbda776f",
+          "rows": 19
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-measurement-and-data",
+          "fetched": "2026-10-08",
+          "sha256": "23ee6ccca7ae6ae41042c85e0c0cf6c2ea089d849e56b6bda3dba673ca43cb20",
+          "rows": 28
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-number-system",
+          "fetched": "2026-10-08",
+          "sha256": "f13faf48a67bf3bb98868439d2b89f66c5f1cf7566556c291aaaa88891b50f78",
+          "rows": 19
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-numbers-in-base-ten",
+          "fetched": "2026-10-08",
+          "sha256": "b23c37b1a766b33f4e1d5dc13a0f4f435b18888234470d98373677ae4ef303a4",
+          "rows": 31
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-ratios-and-proportions",
+          "fetched": "2026-10-08",
+          "sha256": "29d71c817efddc94bd85f15fb6ebce506e79d7779f8919b2fb2bfeb61960851b",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-statistics-and-probability",
+          "fetched": "2026-10-08",
+          "sha256": "650c4ff789bc0d8d997723172c17f09cbe02bbf27322444d31489a1142bacfb0",
+          "rows": 15
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/complex-analysis/complex-numbers",
+          "fetched": "2026-10-08",
+          "sha256": "eb7e16bfa909d17df98cb65256899a4711806d9a24b4e0ddc17cdf882844674c",
+          "rows": 12
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/numbers/irrational-numbers",
+          "fetched": "2026-10-08",
+          "sha256": "bcab0ac3393b75ff8b10e1f33e51d4ca5c7081a081c67d5edae0550c6898f38e",
+          "rows": 3
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/numbers/rational-numbers",
+          "fetched": "2026-10-08",
+          "sha256": "e14e791e2d80050d3bc107b2949abd381d7939a4dff5087e25a0b46bfe94384b",
+          "rows": 6
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/differential-equations/numerical-differential-equation-solving",
+          "fetched": "2026-10-08",
+          "sha256": "75650c9797def3e673df32de9cde9086d2778edabaf612199b9ee88544d657f0",
+          "rows": 9
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/mathematical-functions/special-functions/bessel-and-related-functions",
+          "fetched": "2026-10-08",
+          "sha256": "c7153700eb8ad35035e6215003f4739544284da1b3645a08623253e679f01389",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/mathematical-functions/special-functions/elliptic-functions",
+          "fetched": "2026-10-08",
+          "sha256": "f18ff92e333fd4c06333bec51558bc36dcb11c62ef56a396f994efe9f7f94ddf",
+          "rows": 12
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/discrete-mathematics/combinatorics",
+          "fetched": "2026-10-08",
+          "sha256": "228e517abdef2868cc441f46bfc6d45d16e664d94a893da8b0fe8acb52befd43",
+          "rows": 30
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/discrete-mathematics/graph-theory",
+          "fetched": "2026-10-08",
+          "sha256": "3d901bb06f5dbf0b739bd9e4e6ef09d37188fec9b2cdc0ad0d707bc9e015e6c7",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/discrete-mathematics/point-lattices",
+          "fetched": "2026-10-08",
+          "sha256": "484ddb618a14d7db534cacbbe4ac92cdad715c6c63ceb0b0e1d9855b4a149b20",
+          "rows": 5
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/discrete-mathematics/recurrences",
+          "fetched": "2026-10-08",
+          "sha256": "b2cc922cf2bcb14c455a30b41e980697f26848d077771575aba537cea833695b",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/discrete-mathematics/sequences",
+          "fetched": "2026-10-08",
+          "sha256": "a9300678466f483fbe6cecefab877c49ea83564e47fe4dd76ea5dffc838740c5",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/elementary-math/fractions",
+          "fetched": "2026-10-08",
+          "sha256": "91676bcd8fac91ab8fd4a8013f3441d534ca5c058487d7e64478b626cad902db",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/elementary-math/mathematical-word-problems",
+          "fetched": "2026-10-08",
+          "sha256": "71af7f6ed7f6421023a827066ed12656795a8e2a4876449ce6d2cd434aee6845",
+          "rows": 5
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/elementary-math/number-type-arithmetic",
+          "fetched": "2026-10-08",
+          "sha256": "5f7a691233c697488235a1efd516e5131494315ba67d5f52079011239fde66af",
+          "rows": 12
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/elementary-math/percentages",
+          "fetched": "2026-10-08",
+          "sha256": "6e1f857c3f676d3d7dd595f5b1c89f10f0f847aa84f4d4e351bcc3f9a7a06e9e",
+          "rows": 10
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/elementary-math/place-value",
+          "fetched": "2026-10-08",
+          "sha256": "ee90aa36681b9e66cdee072c1ca0d365b2caa4e062fdd6d5f2d2ae71e0fbdf80",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/mathematical-functions/representation-formulas",
+          "fetched": "2026-10-08",
+          "sha256": "74fe95514f0cb3b12561248885b7694c5a5dd947d5a9543d4f65bd3f9202b56f",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/curves-and-surfaces",
+          "fetched": "2026-10-08",
+          "sha256": "8ad730adc8f6760735ac87712e23066f04fa6ed388d3407262184fbbc47517f5",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/geometric-transformations",
+          "fetched": "2026-10-08",
+          "sha256": "4b3c85843033990a646f2f1e92df2e9b6c589cbeefb5f0df8faeb5e6e75477c6",
+          "rows": 18
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/moire-patterns",
+          "fetched": "2026-10-08",
+          "sha256": "ae849a2e5383c47ceb2f91b6dc5ce7b9d07335b724fe70d839eeb8fa3fdc236c",
+          "rows": 4
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/packing-and-covering-problems",
+          "fetched": "2026-10-08",
+          "sha256": "bd05864ef5948b8febc6b42a0a7f97d14949a312bfba5e13664c81711c078c6b",
+          "rows": 6
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/plane-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "ab6fca52a090a6d84935e6cf88498ddb2c97d8aeeccfe59a09c22f5cafd7381c",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/polyforms",
+          "fetched": "2026-10-08",
+          "sha256": "507535fff35f87c9d264cb1631e93b7eba940360d83ee88db819929a7aca854d",
+          "rows": 6
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/solid-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "59bf1fd04e97d80469e0316202f81956875f574d012ca1a7e82778821f0caff0",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/tilings",
+          "fetched": "2026-10-08",
+          "sha256": "84f1420331f47fad34d660254e1c5d2853ae7c8749f7aac74f3bcea98a937c05",
+          "rows": 12
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/topology",
+          "fetched": "2026-10-08",
+          "sha256": "5c8be6ed9c2f2241a56bee97791f93d19170d5cbec899e6a2a98985848bd1dc5",
+          "rows": 8
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/linear-algebra/matrices",
+          "fetched": "2026-10-08",
+          "sha256": "b86e0656271453170749fbfe50e0e6eb7bd5d28749835ed43a283ba1200a0c82",
+          "rows": 35
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/linear-algebra/vectors",
+          "fetched": "2026-10-08",
+          "sha256": "db17c23c9fe7910c810cc94912ac66608f15cd3a3d48a79bebfee6d2499c3c6e",
+          "rows": 28
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/logic-and-set-theory/boolean-algebra",
+          "fetched": "2026-10-08",
+          "sha256": "4ddc1b53db60fd926f2dab3d2a5a4cca9054f3cf3a3cb14312b7187d4ac300ce",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/logic-and-set-theory/set-theory",
+          "fetched": "2026-10-08",
+          "sha256": "f6e61f6a6181b2e341607c94b96414a51cd6e8728e1f41bc6e67d891ffb743b9",
+          "rows": 9
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/logic-and-set-theory/transfinite-numbers",
+          "fetched": "2026-10-08",
+          "sha256": "35b77be841953a7ca6061cb9776b2c52bf7b21eb79db30328149f7984a8e5dda",
+          "rows": 7
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/number-theory/continued-fractions",
+          "fetched": "2026-10-08",
+          "sha256": "afedacaeccc3ca6c5d5ce00e63c6e34b4a36b34154a3c4b7e1aefc9dafb07409",
+          "rows": 31
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/mathematical-functions/continuity",
+          "fetched": "2026-10-08",
+          "sha256": "374a14041ae18c7171f61fa95998f5573a47a45a8e2e5be207e706cabd2fbd5e",
+          "rows": 6
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/mathematical-functions/domain-and-range",
+          "fetched": "2026-10-08",
+          "sha256": "e92df7947bf4b9520a1dff9b58a2142199f54bbb7adf2b98fae16c99cf74cc63",
+          "rows": 9
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/mathematical-functions/injectivity-and-surjectivity",
+          "fetched": "2026-10-08",
+          "sha256": "d4f20cf80b6b278673183ebdbc432f5a2f145ee7008416eea2cb62ea2363a11e",
+          "rows": 8
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/mathematical-functions/number-theoretic-functions",
+          "fetched": "2026-10-08",
+          "sha256": "20961de734e0c27f9cf15348f177642687e0fb00650837e34246938d08e9303b",
+          "rows": 4
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/mathematical-functions/periodic-functions",
+          "fetched": "2026-10-08",
+          "sha256": "0de8baecca7210155ec36bd3336464c466f346b78862cdc683403352e334d25c",
+          "rows": 6
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/mathematical-functions/special-functions",
+          "fetched": "2026-10-08",
+          "sha256": "10c79cd5841eb13a726bca38b8b6e77a866f4b0aa6668e4f2429b0a85523af92",
+          "rows": 24
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/number-theory/divisors",
+          "fetched": "2026-10-08",
+          "sha256": "ec6be07ba4ad023317e212337a52d52a7ee5e34d5e4108f8b67b12ec8f663446",
+          "rows": 8
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/number-theory/number-type-arithmetic",
+          "fetched": "2026-10-08",
+          "sha256": "50e907e5108f929ae857cb26523c19330b6fb8f31730685225326e637bb4b8b9",
+          "rows": 12
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/number-theory/prime-numbers",
+          "fetched": "2026-10-08",
+          "sha256": "ef76e0fc7658955648a6a4aa511cf61a08903f27641ccda408683491e0f07a69",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/number-theory/special-numbers",
+          "fetched": "2026-10-08",
+          "sha256": "f870d8f8a2c04a93d6d8eaf5a1e51b2566668d3015f6cc649fa1756211496334",
+          "rows": 18
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/numbers/algebraic-numbers",
+          "fetched": "2026-10-08",
+          "sha256": "0d686a6a8483f31e6dd5d0d2febb717d6ecf6def2c01b5277e127fdde78dacf9",
+          "rows": 6
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/topology/real-intervals",
+          "fetched": "2026-10-08",
+          "sha256": "98106793b4315834e5c70fd7c3d980854ee796b662fe6c576353dc93b916df15",
+          "rows": 3
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/numbers/arbitrary-precision",
+          "fetched": "2026-10-08",
+          "sha256": "88a84f898c6ea049d16eca182108d2aacb0b9689e9bf6bfd865137e1afd9c646",
+          "rows": 5
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/numbers/base-conversions",
+          "fetched": "2026-10-08",
+          "sha256": "6c55478e3d6cd94914609cffedf5a628ccc7112f8ff937adc3a3f49f40afabdf",
+          "rows": 19
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/numbers/complex-numbers",
+          "fetched": "2026-10-08",
+          "sha256": "fcb5b6057fb42f515e5877597f68f73426f12386b11ed168dc15f6fa5b89d64e",
+          "rows": 12
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/numbers/historical-numbers",
+          "fetched": "2026-10-08",
+          "sha256": "918e9c1b41ef52c5a65a21a1676e3731a8e08a865d65ec673083e91ccee0149e",
+          "rows": 8
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/numbers/integers",
+          "fetched": "2026-10-08",
+          "sha256": "e39a56cb08c438e416217da11209fcc6109e77a1694336e46782df94c048cbf1",
+          "rows": 6
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/numbers/mathematical-constants",
+          "fetched": "2026-10-08",
+          "sha256": "31b4a90b16c679b5372c93b850591f4e127ffab76fbfa34bc69b7832adb04ba3",
+          "rows": 8
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/numbers/number-names",
+          "fetched": "2026-10-08",
+          "sha256": "268bc7fc83f3cf19ece74e36aee13f8b7584e0b67e6ddceb77b2e41366585792",
+          "rows": 10
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/numbers/number-recognition",
+          "fetched": "2026-10-08",
+          "sha256": "eaf87dcf4abf558e8156f871fe0c6a2b9cc4a960a4b2526137d1b776f9ec599c",
+          "rows": 4
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/numbers/number-type-arithmetic",
+          "fetched": "2026-10-08",
+          "sha256": "996b0339c2c57b4109442c8e43b61ebd753af2bc769b15d09e2990f9378b8d97",
+          "rows": 12
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/numbers/transcendental-numbers",
+          "fetched": "2026-10-08",
+          "sha256": "817f9be64ecf4b882928b98b83803a5a20da77c18e1bac068d9a6accff0f0bcf",
+          "rows": 3
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/plotting-and-graphics/number-lines",
+          "fetched": "2026-10-08",
+          "sha256": "aa8634ea379455c65bbb81e4a5be84bc1caa5f042e9d4199608a0ef81aa261a2",
+          "rows": 6
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/probability/bernoulli-trials",
+          "fetched": "2026-10-08",
+          "sha256": "9219ec1f9a9889d0998028f6d412b1787de884d7dc30749531a1d144dadc42d0",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/probability/games-of-chance",
+          "fetched": "2026-10-08",
+          "sha256": "ddd9dfa37401b29282f24899944a3b88e639acfdfc6c1adc2953125bd557716b",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/probability/probability-distributions",
+          "fetched": "2026-10-08",
+          "sha256": "41f671e2c59b22a3134cc701f3e715b527530a46c4bc7f457950e7517ec9f3bb",
+          "rows": 16
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/statistics/descriptive-statistics",
+          "fetched": "2026-10-08",
+          "sha256": "97c483f2b8bc122f882c68bd62c2de2c95f3b4aab118a3f1d9603b13a8eec9a1",
+          "rows": 12
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/statistics/random-variables",
+          "fetched": "2026-10-08",
+          "sha256": "f066d0719b49aac8c46f209447f279c568f98e011247a834c994fcfd451690f1",
+          "rows": 9
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/statistics/regression-analysis",
+          "fetched": "2026-10-08",
+          "sha256": "ea8f91545b5fb87fa6e08818c9a510e7c79e7826dba9f3ee7c0d6e887aecc5a9",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/statistics/statistical-inference",
+          "fetched": "2026-10-08",
+          "sha256": "b92e5364f046aad5d38f354a2c1495cc88fbb8edb1fb34eec3286f388a2005fe",
+          "rows": 15
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/fashion-sizes/ring-sizes",
+          "fetched": "2026-10-08",
+          "sha256": "d822421ba2e39f9fa3538f0bec6f3822ae5872b28e0888693c9869ebda445808",
+          "rows": 6
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/fashion-sizes/shoe-sizes",
+          "fetched": "2026-10-08",
+          "sha256": "d8e06b3654b45bc93f5b5ea71d136df7dc470918795727e3a19646a9fd5d68af",
+          "rows": 3
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/industrial-measures-and-standards/batteries",
+          "fetched": "2026-10-08",
+          "sha256": "81c5862967849b68e165a4812f63b22f9a432c364ec4ce31370a1b8666e94cdf",
+          "rows": 5
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/industrial-measures-and-standards/bulk-materials",
+          "fetched": "2026-10-08",
+          "sha256": "6dfe6131dc08ee7391b75b22c7ba6e00035010327294657e0f8c4fb6319d41eb",
+          "rows": 10
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/industrial-measures-and-standards/dimensional-lumber",
+          "fetched": "2026-10-08",
+          "sha256": "5592952439570a17c50dec765b2c8e402c29f496421bcbf4e4d7e1a594b63ea8",
+          "rows": 9
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/industrial-measures-and-standards/drill-bits",
+          "fetched": "2026-10-08",
+          "sha256": "d0f0c179b69977b848aa45f37d87fdbb1703eb17f53e6dc614b9e72ebadf93dd",
+          "rows": 5
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/industrial-measures-and-standards/freight-containers",
+          "fetched": "2026-10-08",
+          "sha256": "ca63c6f4f8680b0b14fd6013aeb02f57a1785922439a68793372ecbb5587cda2",
+          "rows": 6
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/industrial-measures-and-standards/hypodermic-needles",
+          "fetched": "2026-10-08",
+          "sha256": "e2ce1dfcd227d96939ebf5fe30cbbce22f841d39bc96d83491bf79a90eb5bbd1",
+          "rows": 3
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/industrial-measures-and-standards/paint",
+          "fetched": "2026-10-08",
+          "sha256": "e2efa59fa839696958fd4298d20801c2645c15202238ba7b94b99293f20f0546",
+          "rows": 2
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/industrial-measures-and-standards/pipes",
+          "fetched": "2026-10-08",
+          "sha256": "b175657ec9914bf3d8557821dfc642ffa9ba560eb97e785656cdcc873c77aadb",
+          "rows": 3
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/industrial-measures-and-standards/resistors",
+          "fetched": "2026-10-08",
+          "sha256": "fd9a9ec74e0d081f1c4bae0c4746e59c0d5d227396cc3f2e1ff40058b4034038",
+          "rows": 4
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/industrial-measures-and-standards/rope",
+          "fetched": "2026-10-08",
+          "sha256": "0fd3998846e6923f7df070b3b39166ce0ea9bcfbddce19c629677d293a1e11d1",
+          "rows": 4
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/industrial-measures-and-standards/sieves-and-meshes",
+          "fetched": "2026-10-08",
+          "sha256": "670c90f3335197f0574fd40f72eb54b80d5cb65e1046275e6eecf083ecdaece3",
+          "rows": 3
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/industrial-measures-and-standards/steel-sheets",
+          "fetched": "2026-10-08",
+          "sha256": "a118be43809ca6a3981cfc11bb68777207989f46016273af594e6068bed28042",
+          "rows": 2
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/industrial-measures-and-standards/threaded-fasteners",
+          "fetched": "2026-10-08",
+          "sha256": "59254d5779936736e43bb3d8c7fbb50456055780bb567b823c5e172d160cf738",
+          "rows": 7
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/industrial-measures-and-standards/wire-gauges",
+          "fetched": "2026-10-08",
+          "sha256": "2eda31645088878c6645920d745067b82ffe881ca40641c2e82e614ca6c150fb",
+          "rows": 12
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/physical-quantities/dimensional-analysis",
+          "fetched": "2026-10-08",
+          "sha256": "f025b4e7ad891dbc7abe9874f074f87adf6a48d886b80ab144a08268f43cc819",
+          "rows": 5
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/physical-quantities/dimensionless-quantities",
+          "fetched": "2026-10-08",
+          "sha256": "d5a4e5081d245dc31f15c1eaf0ab85ef0e59291749919de9e94e4e58def6796b",
+          "rows": 7
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/units/cooking-measures",
+          "fetched": "2026-10-08",
+          "sha256": "3397eb19b6dc9700a693e9d038b0db6e04bbb7063edd03c7de4a53581399705f",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/science-and-technology/units-and-measures/units/us-customary-units",
+          "fetched": "2026-10-08",
+          "sha256": "635d6b967bf2f71116181b8c3e5c69bf2d8defa0c68761ebf677ec739947f8ea",
+          "rows": 8
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/algebra/equation-solving/numerical-root-finding",
+          "fetched": "2026-10-08",
+          "sha256": "736f9cdc4fdeca30e2e817d060d6f3d5a1401e914c82b60067ec07d6b92e0000",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/algebra/finite-groups/permutations",
+          "fetched": "2026-10-08",
+          "sha256": "a4f9b08a70e20eaaced65ac937d7603fc840212a663c981eed05909a74586afd",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/algebra/matrices/geometric-transformations",
+          "fetched": "2026-10-08",
+          "sha256": "64f4480bc699afd2037b2b3b83b69c8fe2d8b65b5ee6db72a1db18cb7f379003",
+          "rows": 18
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/algebra/matrices/matrix-decompositions",
+          "fetched": "2026-10-08",
+          "sha256": "3e1753c2e9825d7680277ebb3e6ef824a179243675f079bf98ba16031e759345",
+          "rows": 24
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/applied-mathematics/dynamical-systems/control-systems",
+          "fetched": "2026-10-08",
+          "sha256": "42a9be3a18b75af79fe98eec9ab6917f227d60bb208ab872abe98dd37b342f58",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/applied-mathematics/fractals/mandelbrot-and-julia-sets",
+          "fetched": "2026-10-08",
+          "sha256": "1354f5a26ed5f5f8d514bfc792b1e20e5eca04c335789ed5602211a0b8c6e232",
+          "rows": 8
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/applied-mathematics/fractals/shape-replacement-fractals",
+          "fetched": "2026-10-08",
+          "sha256": "1a7966f04e16959502d5aebb9380d686eb79b3759b92d87a10f6106fbc40a1fe",
+          "rows": 7
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/applied-mathematics/numerical-analysis/numerical-differential-equation-solving",
+          "fetched": "2026-10-08",
+          "sha256": "e729daee9a61c9ffc3653106a1aab9308c79a26096f7c08eb0f6aded57745085",
+          "rows": 9
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/applied-mathematics/numerical-analysis/numerical-integration",
+          "fetched": "2026-10-08",
+          "sha256": "e7f0384d4b0815387f6d4436ed83cb99a76809508a16ae456cedcb19834496f0",
+          "rows": 9
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/applied-mathematics/numerical-analysis/numerical-root-finding",
+          "fetched": "2026-10-08",
+          "sha256": "3f87eb022c3c3f15c8753109dffc35caa5b364c457191d03b800b33f1e6deb7f",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/applications-of-calculus/stationary-points",
+          "fetched": "2026-10-08",
+          "sha256": "12007abef9298913fa3704ae30fad5e018d4746a1ed6c9a0b7ae3fad7d58ae78",
+          "rows": 6
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/applications-of-calculus/arc-length",
+          "fetched": "2026-10-08",
+          "sha256": "cad280c38389c1865915510f1b60ea543e125c8e1bfd851b38a77f3dc1b7b8e4",
+          "rows": 8
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/applications-of-calculus/area-between-curves",
+          "fetched": "2026-10-08",
+          "sha256": "323e91ea2ed47771296f13d65d4b7d4f6b8792fffb4cc5d579623097b6a889c8",
+          "rows": 6
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/applications-of-calculus/asymptotes",
+          "fetched": "2026-10-08",
+          "sha256": "20ceec38838bd6e4a4d00ce63a89b8b2bf12079946e26712936f36bca5808ae9",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/applications-of-calculus/curvature",
+          "fetched": "2026-10-08",
+          "sha256": "b4847b1ec0b20b191b115d11d8d1cf79a12022e50973d522896843d1fb09a81d",
+          "rows": 8
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/applications-of-calculus/cusps-and-corners",
+          "fetched": "2026-10-08",
+          "sha256": "afba0f0262da2f2bb08a645661c56962cf6617b08a37618a062be4f1072952a6",
+          "rows": 4
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/applications-of-calculus/inflection-points",
+          "fetched": "2026-10-08",
+          "sha256": "6b0802e924e5eaacc3f47e5943e5bbf4b5e4c7072c586e2f74a063c235dbdf8b",
+          "rows": 5
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/applications-of-calculus/optimization",
+          "fetched": "2026-10-08",
+          "sha256": "1d75966bb7a9b976da873d94b8f1951881a7b35ee55f3f77a7e48a68d64a30d9",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/applications-of-calculus/saddle-points",
+          "fetched": "2026-10-08",
+          "sha256": "33265d824ce2fe90363df5ff227afcf47f50dbb64cb90823021db0b2497dc3a8",
+          "rows": 3
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/applications-of-calculus/surfaces-and-solids-of-revolution",
+          "fetched": "2026-10-08",
+          "sha256": "23251dea06fc9d2813cfbc46fe3230ac2889b0c8d6919f0ead2147ff2b45bb2d",
+          "rows": 4
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/applications-of-calculus/tangents-and-normals",
+          "fetched": "2026-10-08",
+          "sha256": "b8acdd87513748edca2fe80da9abe2820c49eb39d76b38f3d41bdaaadf137370",
+          "rows": 12
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/integrals/numerical-integration",
+          "fetched": "2026-10-08",
+          "sha256": "2efe768a980a7b091086066aae04ddddcafe39bedb10d2aac0cf495be3c3e229",
+          "rows": 9
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/calculus-and-analysis/sequences/integer-sequences",
+          "fetched": "2026-10-08",
+          "sha256": "5627d573f512b42c6d3fda5db8feb4c00b944941a4c91f5b03396d35d6a17efd",
+          "rows": 8
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/coordinate-geometry/conic-sections",
+          "fetched": "2026-10-08",
+          "sha256": "c7f67290049e07e02748eadedbac521383371c3e04368f96322b385440cd4826",
+          "rows": 17
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/coordinate-geometry/intercepts",
+          "fetched": "2026-10-08",
+          "sha256": "66700fbadcce3ef887c755e4834936ef6ff6f2fe2d811cf26ec9e6438ba8a3ff",
+          "rows": 4
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-algebraic-thinking/common-core-math-grade-1-algebraic-thinking",
+          "fetched": "2026-10-08",
+          "sha256": "5a501daca80ee257e823b9f45c9bc9c7f2af181aae9fb5c242ecc9e085f67e57",
+          "rows": 17
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-algebraic-thinking/common-core-math-grade-2-algebraic-thinking",
+          "fetched": "2026-10-08",
+          "sha256": "b6edbb5f3c49a263d5b3e227d64a07d1451ec1c993954996a006de30c0607866",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-algebraic-thinking/common-core-math-grade-3-algebraic-thinking",
+          "fetched": "2026-10-08",
+          "sha256": "328066af85cee064e8f9069a6c6b8f593d33d5bbfb7c7ccab72a1461ebccb49b",
+          "rows": 27
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-algebraic-thinking/common-core-math-grade-4-algebraic-thinking",
+          "fetched": "2026-10-08",
+          "sha256": "3b12050e344582e3533d187691d2acdcfe025203924cf4f33f476967de6d26ae",
+          "rows": 23
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-algebraic-thinking/common-core-math-grade-5-algebraic-thinking",
+          "fetched": "2026-10-08",
+          "sha256": "265f18e7a35995d808fc43a8b9ba5ea6452fd2cbf6f4405b491e58b271fc4e25",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-algebraic-thinking/common-core-math-kindergarten-algebraic-thinking",
+          "fetched": "2026-10-08",
+          "sha256": "a22e4ddff56f572b572255a12606f4fb546e476f28c9dccfd2ea2aadc1c95923",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-expressions-and-equations/common-core-math-grade-6-expressions-and-equations",
+          "fetched": "2026-10-08",
+          "sha256": "62e262728af9c77380ed26bd7455b93965063c0aef013a010adb707d3741f479",
+          "rows": 20
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-expressions-and-equations/common-core-math-grade-7-expressions-and-equations",
+          "fetched": "2026-10-08",
+          "sha256": "03a527c76f6c26253cdd31a2fe4c5d07ff75d1c7145f7c8d242f1e967a97616a",
+          "rows": 18
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-expressions-and-equations/common-core-math-grade-8-expressions-and-equations",
+          "fetched": "2026-10-08",
+          "sha256": "a524b19b0bd0c25d5a9464b6fe984ce41df57962142cb0c16fbde3c594e24267",
+          "rows": 28
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-fractions/common-core-math-grade-3-fractions",
+          "fetched": "2026-10-08",
+          "sha256": "aa7eeb44c46dfb25a5180f8d03d5a2bb14d6232227b468d33c8c3197f46a4efb",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-fractions/common-core-math-grade-4-fractions",
+          "fetched": "2026-10-08",
+          "sha256": "bdc124c8f0d875602a0f72644eccc438abb9a83e87eb3ebea181cf62f40f1d03",
+          "rows": 32
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-fractions/common-core-math-grade-5-fractions",
+          "fetched": "2026-10-08",
+          "sha256": "7de33605dffa49ef3b537af777ded4ae8fd3d64392244eb216957c9a27bb0162",
+          "rows": 28
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-geometry/common-core-math-grade-1-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "ce9b8a1eebe5722ea8e6bec7181bf6c02231cc35e2ac3d6df3d54d45f0804c13",
+          "rows": 12
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-geometry/common-core-math-grade-2-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "e8e94a0b4a9b5f64aaaef30241f23a87f9dee654b3bf663de7567a3f530d7c6e",
+          "rows": 10
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-geometry/common-core-math-grade-3-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "95b0d830a9d2a33035caebcd4b0c3df1c622da118bfa59ad080085b782032345",
+          "rows": 10
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-geometry/common-core-math-grade-4-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "db5bc44acc7ea05f0a55c38f81c38b20eb75b25849c49358aafd820c2a3db313",
+          "rows": 15
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-geometry/common-core-math-grade-5-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "c9fba557f33948b70b1956b930ff5f5764f6776757697c3112ad4375017d1355",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-geometry/common-core-math-grade-6-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "a54b119e1b2f2202e899e5d0ee6785ed863dbd3d323b9984743afb5a74928914",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-geometry/common-core-math-grade-7-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "e9dcbeeb75e3d10933aa06b765e7da1118460cf580119d126699cc3b34742174",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-geometry/common-core-math-grade-8-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "a4625bf2190ce671db0403e2f58647139c2e0ef922d5a6455ba0d495ea2493db",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-geometry/common-core-math-high-school-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "b83747d089f8e4cdcabd875cfa70108f05523c033aeea8ec9ebcc5017e4479e4",
+          "rows": 27
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-geometry/common-core-math-kindergarten-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "7822723179422e567f42ce534e7f4f66d61e4ec30d0b4fdfc05018369aeaec38",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-1/common-core-math-grade-1-algebraic-thinking",
+          "fetched": "2026-10-08",
+          "sha256": "2d8cc39b6c900f589986bfdf979cda0a1d1858953fba3e209d6909eb22956491",
+          "rows": 17
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-1/common-core-math-grade-1-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "c25e1bb3dfdf54bcfcdc5a0732a1c9c1cc00691f6faac027406829613b3fcaf9",
+          "rows": 12
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-1/common-core-math-grade-1-measurement-and-data",
+          "fetched": "2026-10-08",
+          "sha256": "75e1e21c88c8f8f8bcb37fb1aa18872749f58d9dd98b8fa34cfc60cc69605c9c",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-1/common-core-math-grade-1-numbers-in-base-ten",
+          "fetched": "2026-10-08",
+          "sha256": "c13fd321b1ff1fa9bb16f872e64c9a683fb3e8632ef1369c0b79027a2b1c91cf",
+          "rows": 24
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-2/common-core-math-grade-2-algebraic-thinking",
+          "fetched": "2026-10-08",
+          "sha256": "b9a374e7407e12ce31b669acaaebd782ac620892090a9d809a87c5b76c6f0dce",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-2/common-core-math-grade-2-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "06703c26c877bd6706d5b99ed16a4f281e5612fc804fe5b29c626c381206af6a",
+          "rows": 10
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-2/common-core-math-grade-2-measurement-and-data",
+          "fetched": "2026-10-08",
+          "sha256": "92723e89f6e3bb143b5165d93c6e65153a99d79219da70047745859ebf6bb3d2",
+          "rows": 24
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-2/common-core-math-grade-2-numbers-in-base-ten",
+          "fetched": "2026-10-08",
+          "sha256": "097e870a41cd43be7fdcca2f01a77e3a41101e8c78e43095a19da3efc08fdad6",
+          "rows": 28
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-3/common-core-math-grade-3-algebraic-thinking",
+          "fetched": "2026-10-08",
+          "sha256": "772dd4eb5c92117d24d718a89e4484a65c61f892788c7bc2e86b66b6751797d5",
+          "rows": 27
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-3/common-core-math-grade-3-fractions",
+          "fetched": "2026-10-08",
+          "sha256": "ea50078a486453f538856c27defe143f5bbe2a3ee2f9d89165cfa5f4877487d6",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-3/common-core-math-grade-3-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "bcf4d73763532519da4e524b2ae521aa7178199e75e0e5d75401fb3cd15dee68",
+          "rows": 10
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-3/common-core-math-grade-3-measurement-and-data",
+          "fetched": "2026-10-08",
+          "sha256": "9b1de73453cd8b213a2e9e716d801449379637c98b598b579014cad9c0d08378",
+          "rows": 19
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-3/common-core-math-grade-3-numbers-in-base-ten",
+          "fetched": "2026-10-08",
+          "sha256": "fb5ca55d7faa09c04a9f972f43df99f554f9925b2ab8c6bcbb782d4699934d2e",
+          "rows": 15
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-4/common-core-math-grade-4-algebraic-thinking",
+          "fetched": "2026-10-08",
+          "sha256": "47643ef51d6a358e1da5a6883cd39a683071d9a4db54ab82f638d6cb662be563",
+          "rows": 23
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-4/common-core-math-grade-4-fractions",
+          "fetched": "2026-10-08",
+          "sha256": "7d6e789e4ba42646ee1bfbec0dd81ec07831c7b011adac7c2ec841a2f29f4c73",
+          "rows": 32
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-4/common-core-math-grade-4-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "77a3b5e3f72fd30f02744670fb74126772db41476733ab42cd65606de2fa777f",
+          "rows": 15
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-4/common-core-math-grade-4-measurement-and-data",
+          "fetched": "2026-10-08",
+          "sha256": "c79031e7bfdb708850d7cfd829bf6f117bac14c49fd13613123f3411d9f102a1",
+          "rows": 21
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-4/common-core-math-grade-4-numbers-in-base-ten",
+          "fetched": "2026-10-08",
+          "sha256": "db86f23d4d1f6913a54aae2940061e122983b77b205a5b75bf249ed33daedeec",
+          "rows": 20
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-5/common-core-math-grade-5-algebraic-thinking",
+          "fetched": "2026-10-08",
+          "sha256": "5f4fb4a38ffd65b0e78a5435ea7375bf57e942cfbed95f207950e36d2f93f834",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-5/common-core-math-grade-5-fractions",
+          "fetched": "2026-10-08",
+          "sha256": "a168c5cccfe9c3f20c15a941ab5099fdd3414ff173884aceb6ad4a3880106827",
+          "rows": 28
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-5/common-core-math-grade-5-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "d625cb1828862c539dd93a178387d6aa0f63387a09b20f4037b3516cef622665",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-5/common-core-math-grade-5-measurement-and-data",
+          "fetched": "2026-10-08",
+          "sha256": "d36e7b0ad1e8871b6e2ad507aa3d915901de7bba24919d8398f7907738117136",
+          "rows": 18
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-5/common-core-math-grade-5-numbers-in-base-ten",
+          "fetched": "2026-10-08",
+          "sha256": "45e7b38ffb6cfeea92c09255e0a99124976709f225a3d3cf4670b23f50f3e3af",
+          "rows": 34
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-6/common-core-math-grade-6-expressions-and-equations",
+          "fetched": "2026-10-08",
+          "sha256": "f5a0a4493048e74d8f2d8bf66c9592a2604d5ec6e84082d1005a7b797706cfdd",
+          "rows": 20
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-6/common-core-math-grade-6-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "14d512b9aea4d2fce1de0396e580203638558d2bf7846837c4e117537805cf96",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-6/common-core-math-grade-6-number-system",
+          "fetched": "2026-10-08",
+          "sha256": "580fe2550d28c358011a646555900a4b3321a66b892c38975d5d361f376f6246",
+          "rows": 34
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-6/common-core-math-grade-6-ratios-and-proportions",
+          "fetched": "2026-10-08",
+          "sha256": "ab49e4882d004175a9a68037cb9a757262b84703378d173de78d7a282a1daf78",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-6/common-core-math-grade-6-statistics-and-probability",
+          "fetched": "2026-10-08",
+          "sha256": "49078faed194866e3238b7989d229da3c98807f3421165b0cced518162463c96",
+          "rows": 15
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-7/common-core-math-grade-7-expressions-and-equations",
+          "fetched": "2026-10-08",
+          "sha256": "d26be26df277b26691913a6f698cf69e1acb3f2738a5d3fd337224ffe45d6887",
+          "rows": 18
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-7/common-core-math-grade-7-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "52850f4f0a11020a296707375514717b5f7590bb892599adec2cbb3c2f7a85c0",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-7/common-core-math-grade-7-number-system",
+          "fetched": "2026-10-08",
+          "sha256": "77e98c2aea832e5230adfc56db34e307cb30b6a1692ce8ca936cf303b7cc06e4",
+          "rows": 25
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-7/common-core-math-grade-7-ratios-and-proportions",
+          "fetched": "2026-10-08",
+          "sha256": "a623eb14c00c7cd1ec674795f5fde46810248c1a94b18137c8b4345cb5f405fa",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-7/common-core-math-grade-7-statistics-and-probability",
+          "fetched": "2026-10-08",
+          "sha256": "5801bf4e43f6ee7bd1ba41c885da835e4b89311778004cb035bc634b9f41e430",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-8/common-core-math-functions",
+          "fetched": "2026-10-08",
+          "sha256": "cb0562c0d4be09c061f7e5f95be4fdc2b65a9e5a3bb5e51dd0e096feec9d37e7",
+          "rows": 9
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-8/common-core-math-grade-8-expressions-and-equations",
+          "fetched": "2026-10-08",
+          "sha256": "3dd93b11b35d31b95fba072554a8272c574a9fd674535551059a649defa093d1",
+          "rows": 28
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-8/common-core-math-grade-8-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "67df9debd0531a6d655429941ff1dc349570861d545f2928472facb1c89a3eab",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-8/common-core-math-grade-8-number-system",
+          "fetched": "2026-10-08",
+          "sha256": "90b29dba74d2ac630c4dd940d72a6d4538053adf8d6487f11cc358877e11cb41",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-grade-8/common-core-math-grade-8-statistics-and-probability",
+          "fetched": "2026-10-08",
+          "sha256": "7f5bc6164f55e8722d2299ae9994398e9288a04a00b48207fc875f8b3447af7a",
+          "rows": 5
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-algebra",
+          "fetched": "2026-10-08",
+          "sha256": "4acc2de1c2f6f92d88733e68d2c261be35a4a46ca1f4eb43e731c501b12d31fa",
+          "rows": 19
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-functions",
+          "fetched": "2026-10-08",
+          "sha256": "9357a8fad920ad6f376b793929da4a476a0335c1e33786dc46771e73de949102",
+          "rows": 19
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "ce764407c6708f453fc0a5371f5ed9dd058d9ac94abc47c0c30c1c191e233718",
+          "rows": 27
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-number-and-quantity",
+          "fetched": "2026-10-08",
+          "sha256": "46b70c3fef1918cd65525f9d3af48ad572b8a3bc151c0f4f4f44d38ef21c918b",
+          "rows": 18
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-statistics-and-probability",
+          "fetched": "2026-10-08",
+          "sha256": "bae193061eefbd5215e1825d678f7e8dbe696343618a7f0a5ee78f606b7b7e6d",
+          "rows": 12
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-algebra/common-core-math-high-school-algebra-creating-equations",
+          "fetched": "2026-10-08",
+          "sha256": "fa632c8d04b818d2919633ac2f7c53ad04fd2d8bba706548d95df666a1cbb801",
+          "rows": 28
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-algebra/common-core-math-high-school-algebra-polynomials-and-rational-expressions",
+          "fetched": "2026-10-08",
+          "sha256": "51da95d4865ecca569aebcd1c04ff43f27b4dfcaafb17ca9757f1e3a0ebf82a8",
+          "rows": 48
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-algebra/common-core-math-high-school-algebra-reasoning-with-equations-and-inequalities",
+          "fetched": "2026-10-08",
+          "sha256": "a27658b308b351f166e8a7b135e6a7d77ee875204c8cd981a84cef3cb3e8fca1",
+          "rows": 54
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-algebra/common-core-math-high-school-algebra-seeing-structure-in-expressions",
+          "fetched": "2026-10-08",
+          "sha256": "d95e7b380e59ab73a3a19581626e95dc7cd95436707f878bc6d2a68e9918ac23",
+          "rows": 31
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-functions/common-core-math-high-school-functions-building-functions",
+          "fetched": "2026-10-08",
+          "sha256": "a0a19198f8f1a4d0572bcfd3576fc480f518263ac6cd60784880e7debcd95783",
+          "rows": 29
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-functions/common-core-math-high-school-functions-interpreting-functions",
+          "fetched": "2026-10-08",
+          "sha256": "81a0e1794556ae083be87027e402fb71456bf058b9534f3c1459ab3be11992e9",
+          "rows": 76
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-functions/common-core-math-high-school-functions-linear-and-exponential-models",
+          "fetched": "2026-10-08",
+          "sha256": "8097a4df3847a20a867f877a872929cb81e458f2e97e5294431a0104b3dc670f",
+          "rows": 29
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-functions/common-core-math-high-school-functions-trigonometric-functions",
+          "fetched": "2026-10-08",
+          "sha256": "2d27d9b54d54e2e7e4bbe5534492cc489a7935d576e9c987aa7fd5fd0bd4ebdf",
+          "rows": 52
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-geometry/common-core-math-high-school-geometry-circles",
+          "fetched": "2026-10-08",
+          "sha256": "6110abc066aa23d4b98c756eb79a6f4b1cc62ea15ce672a87778e66a629cf2b6",
+          "rows": 22
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-geometry/common-core-math-high-school-geometry-congruence",
+          "fetched": "2026-10-08",
+          "sha256": "0c7af3357642cf61ca4852e5857306951a27cc610d05b2432e3aaa0744f7306a",
+          "rows": 40
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-geometry/common-core-math-high-school-geometry-expressing-geometric-properties-with-equations",
+          "fetched": "2026-10-08",
+          "sha256": "82a89a96f0ddfc341ef30e5ae5b2538341edb3fae5726ec2340928ec3679c1b3",
+          "rows": 33
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-geometry/common-core-math-high-school-geometry-measurement-and-dimension",
+          "fetched": "2026-10-08",
+          "sha256": "fc936b56cb32dffb5c686448dc314b0e000b932e505f67dbd88eb1a331330ed1",
+          "rows": 22
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-geometry/common-core-math-high-school-geometry-modeling-with-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "131f04e84bd33d6c61ac531bdfce9c1151e87b14c02b32b3fc52357ab59dbad0",
+          "rows": 20
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-geometry/common-core-math-high-school-geometry-similarity-and-trigonometry",
+          "fetched": "2026-10-08",
+          "sha256": "3e45188464e31099fcbe1e984483672f2c7311590adc31dd3534c2c84aa180e9",
+          "rows": 27
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-number-and-quantity/common-core-math-high-school-number-and-quantity-complex-numbers",
+          "fetched": "2026-10-08",
+          "sha256": "560c1bd6fb9a41d5a0f81054dfccde7f2fe6ad708cb2ce8f24cc2720b8fd2994",
+          "rows": 48
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-number-and-quantity/common-core-math-high-school-number-and-quantity-quantities",
+          "fetched": "2026-10-08",
+          "sha256": "16d9e0f9e47724624fcecda171a7c6687ebdf3549708f6022857ad0f5e169dee",
+          "rows": 21
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-number-and-quantity/common-core-math-high-school-number-and-quantity-real-numbers",
+          "fetched": "2026-10-08",
+          "sha256": "7d2242f152b214a25a59d6db46747cf1cc56c883670de2bc136a40e968cc3e1c",
+          "rows": 12
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-number-and-quantity/common-core-math-high-school-number-and-quantity-vectors-and-matrices",
+          "fetched": "2026-10-08",
+          "sha256": "37a32d0146ce4bbb7fbff1b5b04d8d0997e63a2b027e2fd75ff08c567ce8d0d5",
+          "rows": 44
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-statistics-and-probability/common-core-math-high-school-statistics-and-probability-conditional-probability",
+          "fetched": "2026-10-08",
+          "sha256": "b0cd95b2ee27cceedd463c5b61ab12a9938a80cfa4c1b1ae18d8f71862c91098",
+          "rows": 23
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-statistics-and-probability/common-core-math-high-school-statistics-and-probability-interpreting-data",
+          "fetched": "2026-10-08",
+          "sha256": "a882d70eba214c9bfa790aacdb880a2cacd4f6b8561028388ecf4d215482b959",
+          "rows": 25
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school-statistics-and-probability/common-core-math-high-school-statistics-and-probability-using-probability-to-make-decisions",
+          "fetched": "2026-10-08",
+          "sha256": "c89a3bd003cb91104faa5ad20320e70e209f8ea850bf95ec175dd00be4e6c747",
+          "rows": 26
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-kindergarten/common-core-math-counting-and-cardinality",
+          "fetched": "2026-10-08",
+          "sha256": "bb47233b1904245439e70c9bd70776e27d285886830a9682be5f161907c7b976",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-kindergarten/common-core-math-kindergarten-algebraic-thinking",
+          "fetched": "2026-10-08",
+          "sha256": "b1d28ec6a70043f24d9a227e147eb954df27ed71f72c5046970706f0bb5d82a1",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-kindergarten/common-core-math-kindergarten-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "7fe2309902628cf58c46dbda471605afb14503e92d1aca96c9168de6c48ecbef",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-kindergarten/common-core-math-kindergarten-measurement-and-data",
+          "fetched": "2026-10-08",
+          "sha256": "ca07467c74355f5100dff3338549aa768d57775ebb6577902a1deea806495ada",
+          "rows": 10
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-kindergarten/common-core-math-kindergarten-numbers-in-base-ten",
+          "fetched": "2026-10-08",
+          "sha256": "dcb60be78819cd9e470548d6bb40c07c049ffa7d2c8e2dedc9ec1fb48d8f7bbf",
+          "rows": 8
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-measurement-and-data/common-core-math-grade-1-measurement-and-data",
+          "fetched": "2026-10-08",
+          "sha256": "6d130d008576e667a973edf520154a718b1904d4a0604d4b820ea37910de82bd",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-measurement-and-data/common-core-math-grade-2-measurement-and-data",
+          "fetched": "2026-10-08",
+          "sha256": "27e7834e02ea57f60ced469d09b850d93f2b7aefae5599c9f86409ea210ff2a4",
+          "rows": 24
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-measurement-and-data/common-core-math-grade-3-measurement-and-data",
+          "fetched": "2026-10-08",
+          "sha256": "1101c2bb76aa3be4c648b89cdbb31fa00acd5ae2d8eef564a03212300ba56e48",
+          "rows": 19
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-measurement-and-data/common-core-math-grade-4-measurement-and-data",
+          "fetched": "2026-10-08",
+          "sha256": "876aba7d70f2168a7b3f8a2aa57571c43aba904cd2a8d140a057e333dbb1e19b",
+          "rows": 21
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-measurement-and-data/common-core-math-grade-5-measurement-and-data",
+          "fetched": "2026-10-08",
+          "sha256": "27ca764be28bb3456f73c2c07870e6ed906ab36a7db1f29d2dfe3c575b4ee1b3",
+          "rows": 18
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-measurement-and-data/common-core-math-kindergarten-measurement-and-data",
+          "fetched": "2026-10-08",
+          "sha256": "1655281886619073d7fa677c8c560e6a3e7e5e240f038be9d618b6ebe631f3ef",
+          "rows": 10
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-number-system/common-core-math-grade-6-number-system",
+          "fetched": "2026-10-08",
+          "sha256": "8516070e633565a47b20758dc0e19efa002d11047d03b94ba7171180f0317f1f",
+          "rows": 34
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-number-system/common-core-math-grade-7-number-system",
+          "fetched": "2026-10-08",
+          "sha256": "478ced1709fb1b31091af5693b4331f72ee8400d7e05214cd79266f6eedb7831",
+          "rows": 25
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-number-system/common-core-math-grade-8-number-system",
+          "fetched": "2026-10-08",
+          "sha256": "084189c98a4eabcb226140c3de1f76fb6e3aa1591add258118d05f149cc0679e",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-numbers-in-base-ten/common-core-math-grade-1-numbers-in-base-ten",
+          "fetched": "2026-10-08",
+          "sha256": "2b482df8c5a778f223dc2ff4bf490c54042a47164c969df66863e89d3dd5c065",
+          "rows": 24
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-numbers-in-base-ten/common-core-math-grade-2-numbers-in-base-ten",
+          "fetched": "2026-10-08",
+          "sha256": "b4b897533c6a83e332e18b3329c0964cd40a6fb63e890e9d02e84d66ac92c520",
+          "rows": 28
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-numbers-in-base-ten/common-core-math-grade-3-numbers-in-base-ten",
+          "fetched": "2026-10-08",
+          "sha256": "1c24020d1c2979714fdfe69bad67169fc1dafe27af5f5cdb971e5f2dd959afeb",
+          "rows": 15
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-numbers-in-base-ten/common-core-math-grade-4-numbers-in-base-ten",
+          "fetched": "2026-10-08",
+          "sha256": "d9caa535cfcb2828d5476a2c0f913819e1fda27c4a2deffa01abfacf3d4e37b8",
+          "rows": 20
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-numbers-in-base-ten/common-core-math-grade-5-numbers-in-base-ten",
+          "fetched": "2026-10-08",
+          "sha256": "51747ffdc6c99786b48daadcae441af4f0c312ce0f8351bd053246935ffd0457",
+          "rows": 34
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-numbers-in-base-ten/common-core-math-kindergarten-numbers-in-base-ten",
+          "fetched": "2026-10-08",
+          "sha256": "34f1bcb7ff7b8529475cd88e181919f3059a6404a01c521bac9835d1499ae999",
+          "rows": 8
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-ratios-and-proportions/common-core-math-grade-6-ratios-and-proportions",
+          "fetched": "2026-10-08",
+          "sha256": "34584856a4b61cb49b7746e71a7e627f97f63873b3bba48b1a06885f45c8f2a9",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-ratios-and-proportions/common-core-math-grade-7-ratios-and-proportions",
+          "fetched": "2026-10-08",
+          "sha256": "b08ee2e3265af695eb405923def72058f16685357a1d32e155a3073414feea30",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-statistics-and-probability/common-core-math-grade-6-statistics-and-probability",
+          "fetched": "2026-10-08",
+          "sha256": "2243667f68a295663cf80174390c2a3aa475b9e0dabd6daba5e32aa6643ca20e",
+          "rows": 15
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-statistics-and-probability/common-core-math-grade-7-statistics-and-probability",
+          "fetched": "2026-10-08",
+          "sha256": "da031480567acfadee8b5f334a637b9989bb1b0c51375a63cbe653bea2d9bb36",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-statistics-and-probability/common-core-math-grade-8-statistics-and-probability",
+          "fetched": "2026-10-08",
+          "sha256": "8f490e8a664c6f33b41f779a1260b1ffb5c0cff4e1f9874f176ad9f938c2501b",
+          "rows": 5
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/numbers/rational-numbers/repeating-decimals",
+          "fetched": "2026-10-08",
+          "sha256": "c093d2242cd9cb55d1005104ff7deb737f17d3d45fb8930e868f073aa544fc12",
+          "rows": 9
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/mathematical-functions/special-functions/gamma-and-related-functions",
+          "fetched": "2026-10-08",
+          "sha256": "46fea9064fd2e4e47473310ced7d01ae1e48c11f7833f02c1c83fa937240e3c0",
+          "rows": 8
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/discrete-mathematics/combinatorics/permutations",
+          "fetched": "2026-10-08",
+          "sha256": "45c263546c5a003ce5ff180e80601bdfd6607027e311ddf3235bb4b3b7ee2705",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/discrete-mathematics/graph-theory/regular-trees",
+          "fetched": "2026-10-08",
+          "sha256": "8f91a3ae9c809b71e9b5e6ccefd852231c2e07f38f6fb5556d394c0ff41a8bbe",
+          "rows": 4
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/discrete-mathematics/sequences/integer-sequences",
+          "fetched": "2026-10-08",
+          "sha256": "dfe763351a05dfe30943b9ecffaf1e847dc87bce59aaa7aa3080e44a61f7b326",
+          "rows": 8
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/curves-and-surfaces/popular-curves",
+          "fetched": "2026-10-08",
+          "sha256": "ff8b34b1dcaea8b29fcf6f565f8bee9786e04f4e8fcb7cf498f0dcc4568e3916",
+          "rows": 17
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/packing-and-covering-problems/geometric-packing-in-2d",
+          "fetched": "2026-10-08",
+          "sha256": "ee6105ae2547cfefe688d6fdccc8a23cb5bee5db746fe2c80f46a08cb8f3aac6",
+          "rows": 13
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/packing-and-covering-problems/packing-and-covering-of-objects",
+          "fetched": "2026-10-08",
+          "sha256": "13c0463aa8b8b904071678d8c6c1ce76aae41236b239e443077236c258adf3d7",
+          "rows": 6
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/plane-geometry/polygons",
+          "fetched": "2026-10-08",
+          "sha256": "226fd221e14d847793d3ad99c36d1c4b6da030d7bbb805344bbcd934db7d3836",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/plane-geometry/planar-laminae",
+          "fetched": "2026-10-08",
+          "sha256": "2e7d5002fcb60cd7afc2d9c9c5acd944845296386b2a6ee4f1420e754cf786fd",
+          "rows": 4
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/solid-geometry/polyhedra",
+          "fetched": "2026-10-08",
+          "sha256": "003ee831f5de3e66a94ff0d5089d5174f34179f5945781c811ec1cdba7b3ad80",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/geometry/topology/knot-theory",
+          "fetched": "2026-10-08",
+          "sha256": "c0cbe87e3fd56315b078d34c87307bfff7646baa9abe63d5422d3e9210d7eacc",
+          "rows": 7
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/linear-algebra/matrices/geometric-transformations",
+          "fetched": "2026-10-08",
+          "sha256": "6c24cc714d3efea51b9156cd3db487e15ba78caa4a20ce7b8823457edc94c95a",
+          "rows": 18
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/linear-algebra/matrices/matrix-decompositions",
+          "fetched": "2026-10-08",
+          "sha256": "8e927c3ac33aa4c269446f99d64384b48800be7c05bedc34d7ec3bcb8eaa4ce4",
+          "rows": 24
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/mathematical-functions/special-functions/zeta-functions",
+          "fetched": "2026-10-08",
+          "sha256": "811c473e02f9bd623874126260e248109ad1c7a0b34b7257ee3bde9d504a1366",
+          "rows": 11
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/probability/games-of-chance/card-games",
+          "fetched": "2026-10-08",
+          "sha256": "c4661bb8d54f09ce9b275387750f3a8d660549a8646893f59d3657ac5482fb8d",
+          "rows": 5
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/probability/games-of-chance/dice",
+          "fetched": "2026-10-08",
+          "sha256": "424d2b5e92b802bc50e8d80495f9a3ebc632c51378ac7c2e123955b50b3bd1f1",
+          "rows": 14
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/probability/games-of-chance/gambling",
+          "fetched": "2026-10-08",
+          "sha256": "0c93cf9ec7904cc535ef89852ae982c8afeaaad6e899166f5ae39f077a0a8134",
+          "rows": 5
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/probability/games-of-chance/lotteries",
+          "fetched": "2026-10-08",
+          "sha256": "f34374a6aac89a4968d9bee7c5d5cc272412f7486aa7993ea2a6b4a53ce95e70",
+          "rows": 4
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/probability/games-of-chance/roulette",
+          "fetched": "2026-10-08",
+          "sha256": "b342334de7084075d502e1927e60c4842454037b5d801840d8877f92259da120",
+          "rows": 7
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-geometry/common-core-math-high-school-geometry/common-core-math-high-school-geometry-circles",
+          "fetched": "2026-10-08",
+          "sha256": "8a80c89fdd9929f9180390b9f1091edc37717de25d4a2acffb4b60be7ac8a2a7",
+          "rows": 22
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-geometry/common-core-math-high-school-geometry/common-core-math-high-school-geometry-congruence",
+          "fetched": "2026-10-08",
+          "sha256": "644e5026475b8aff8c8815058db5a54972235234d88b7726a55c9e56295d39dd",
+          "rows": 40
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-geometry/common-core-math-high-school-geometry/common-core-math-high-school-geometry-expressing-geometric-properties-with-equations",
+          "fetched": "2026-10-08",
+          "sha256": "7ef07585fad2a5f8f290c2bff181ea8c26e30284c736a306cea3948133e540f2",
+          "rows": 33
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-geometry/common-core-math-high-school-geometry/common-core-math-high-school-geometry-measurement-and-dimension",
+          "fetched": "2026-10-08",
+          "sha256": "7e59548837cd0aad2b4e3e224da553cbb36a5459bf32b5a6ea3ab2dcedc72094",
+          "rows": 22
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-geometry/common-core-math-high-school-geometry/common-core-math-high-school-geometry-modeling-with-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "ea8335440e25a2a7de448953926515f7f65da179b470206a21e75c580171f752",
+          "rows": 20
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-geometry/common-core-math-high-school-geometry/common-core-math-high-school-geometry-similarity-and-trigonometry",
+          "fetched": "2026-10-08",
+          "sha256": "112b7e0510cc6281aea09424427008d44cb6215c9efccba0219eb419e8bcfb14",
+          "rows": 27
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-algebra/common-core-math-high-school-algebra-creating-equations",
+          "fetched": "2026-10-08",
+          "sha256": "307acb9d77dabbeec803dfe5ba1ef19884d84b942fb19c76adff337166a2398b",
+          "rows": 28
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-algebra/common-core-math-high-school-algebra-polynomials-and-rational-expressions",
+          "fetched": "2026-10-08",
+          "sha256": "a9b7b00eec5ad699f10f5bfcaefc091f90b9bd4bd68516c953154443f75a9f35",
+          "rows": 48
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-algebra/common-core-math-high-school-algebra-reasoning-with-equations-and-inequalities",
+          "fetched": "2026-10-08",
+          "sha256": "528e3496fe5a44a7797577db9cd6e70e6ce00cfd0bc0b0108042a48ee24401c7",
+          "rows": 54
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-algebra/common-core-math-high-school-algebra-seeing-structure-in-expressions",
+          "fetched": "2026-10-08",
+          "sha256": "a37ef2b7b1f21ffbc9bc95c63c04d73a522c806b8d59223f1f4cf23ab6e5ecdf",
+          "rows": 31
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-functions/common-core-math-high-school-functions-building-functions",
+          "fetched": "2026-10-08",
+          "sha256": "92eeaf64b37868315d8783d3250f4b3dbe705804a238bf6dbb5a5df9beb5a3b1",
+          "rows": 29
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-functions/common-core-math-high-school-functions-interpreting-functions",
+          "fetched": "2026-10-08",
+          "sha256": "bae30309f1e6df6641e165d9deb9626b1e38c4d93940acf6be5dafcebe7394b6",
+          "rows": 76
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-functions/common-core-math-high-school-functions-linear-and-exponential-models",
+          "fetched": "2026-10-08",
+          "sha256": "000d4fa17c60e09527ebcced20da79cdad48a469b5b630094321efd59221cc97",
+          "rows": 29
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-functions/common-core-math-high-school-functions-trigonometric-functions",
+          "fetched": "2026-10-08",
+          "sha256": "e2405b78dc64fdc2745a7f316948eb7435ef9e372c4c5719680a9e096e729f03",
+          "rows": 52
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-geometry/common-core-math-high-school-geometry-circles",
+          "fetched": "2026-10-08",
+          "sha256": "def889f16357dec0b6e51101db8b3e19f6d3f3f3bc1363fdff473a0ecebf536d",
+          "rows": 22
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-geometry/common-core-math-high-school-geometry-congruence",
+          "fetched": "2026-10-08",
+          "sha256": "b733f7768c5e7111f3d99d2938e8448a43c9f285d08c5afd75d0d2d0bdca4845",
+          "rows": 40
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-geometry/common-core-math-high-school-geometry-expressing-geometric-properties-with-equations",
+          "fetched": "2026-10-08",
+          "sha256": "5e86d3d4925895e73ee110e0dbf4239bb427c9c26c1e645f1c0eeaf74757a6cd",
+          "rows": 33
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-geometry/common-core-math-high-school-geometry-measurement-and-dimension",
+          "fetched": "2026-10-08",
+          "sha256": "5de03d1933513bff90c5aa5ee8a60d4d211883cd283eb6411780e4e28c40d1df",
+          "rows": 22
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-geometry/common-core-math-high-school-geometry-modeling-with-geometry",
+          "fetched": "2026-10-08",
+          "sha256": "02dd59ec4ad6585245710a277af922e5e77f6cb487807beae47457bd5228b312",
+          "rows": 20
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-geometry/common-core-math-high-school-geometry-similarity-and-trigonometry",
+          "fetched": "2026-10-08",
+          "sha256": "8c69b29b55b49c66be72de42c9e51b2b2a6439b4dea162f5bbf29b42da16e156",
+          "rows": 27
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-number-and-quantity/common-core-math-high-school-number-and-quantity-complex-numbers",
+          "fetched": "2026-10-08",
+          "sha256": "0dfaa897d8a6dfbd7f242d148e4ca5f9413ea033a1a3f894e5584188b0aa9342",
+          "rows": 48
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-number-and-quantity/common-core-math-high-school-number-and-quantity-quantities",
+          "fetched": "2026-10-08",
+          "sha256": "c4fb3b8da26c68ae38607c3117eb144023da4db8fd9d9b31be281297d7b8e8f5",
+          "rows": 21
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-number-and-quantity/common-core-math-high-school-number-and-quantity-real-numbers",
+          "fetched": "2026-10-08",
+          "sha256": "3115db646a1cfbe5a6fe1ea86d63d18c81c5e279bd64a528eccd425eab049789",
+          "rows": 12
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-number-and-quantity/common-core-math-high-school-number-and-quantity-vectors-and-matrices",
+          "fetched": "2026-10-08",
+          "sha256": "b0bc526879798f04e1a10a28d3ca1745adce9eaea12d47e39e28f64e8e21a9b2",
+          "rows": 44
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-statistics-and-probability/common-core-math-high-school-statistics-and-probability-conditional-probability",
+          "fetched": "2026-10-08",
+          "sha256": "ca7ffc717d52502a9f28cc3a25e7ff4ca51692a915fde37b37e50c3abb2e1213",
+          "rows": 23
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-statistics-and-probability/common-core-math-high-school-statistics-and-probability-interpreting-data",
+          "fetched": "2026-10-08",
+          "sha256": "4e5976f42b2d2e8045998a8c231ee53024198922eeddc2f0b063f39a5276964d",
+          "rows": 25
+        },
+        {
+          "url": "https://www.wolframalpha.com/examples/mathematics/common-core-math/common-core-math-high-school/common-core-math-high-school-statistics-and-probability/common-core-math-high-school-statistics-and-probability-using-probability-to-make-decisions",
+          "fetched": "2026-10-08",
+          "sha256": "864626c2b2cf666202b3ff5faae09f220a2fa33a89507a617f977d0bf2bc4995",
+          "rows": 26
+        }
+      ],
+      "images": [],
+      "extractedRows": 6167,
+      "rows": 3087
+    },
+    {
+      "id": "xiaomi",
+      "product": "Xiaomi Calculator",
+      "extractor": "experiments/issue-227/extract-xiaomi-examples.mjs",
+      "indexes": [],
+      "pages": [
+        {
+          "url": "https://www.mi.com/uk/support/article/KA-06518/",
+          "fetched": "2026-10-08",
+          "sha256": "857a7d6b6136aa32e7b3d110832dd885d00bd18e90d7d86d08a1c635f5929cd7",
+          "rows": 0
+        }
+      ],
+      "images": [
+        {
+          "url": "https://xiaomiknowledge.blob.core.windows.net/image/bdce3117-5a4e-ec11-8f8e-000d3ac6fa4a.png",
+          "sha256": "3fb218915dd5af4347191874e02111d55b2ff8577a480918a1b68f7c63b57b6e",
+          "rows": 0
+        }
+      ],
+      "extractedRows": 0,
+      "zeroExamples": "The help page is image-based; the illustrated button workflow is audited separately in documentation-corpus.md.",
+      "rows": 0
+    }
+  ]
+}
