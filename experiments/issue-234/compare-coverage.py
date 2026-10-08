@@ -2,7 +2,8 @@
 
 import argparse
 import json
-from collections import Counter
+from collections import Counter, defaultdict
+from itertools import zip_longest
 from pathlib import Path
 
 parser = argparse.ArgumentParser(description=__doc__)
@@ -17,20 +18,23 @@ def key(row):
     return (row["source"], row["lang"], row["expression"])
 
 
-old = {key(row): row["status"] for row in before["results"]}
-current = {key(row): row["status"] for row in after["results"]}
+old = defaultdict(list)
+current = defaultdict(list)
+for row in before["results"]:
+    old[key(row)].append(row["status"])
+for row in after["results"]:
+    current[key(row)].append(row["status"])
 ranks = {status: rank for rank, status in enumerate(
     ["supported", "different", "unsupported", "timeout", "missing"]
 )}
 transitions = Counter()
 regressions = []
 for identity in old.keys() | current.keys():
-    previous = old.get(identity, "missing")
-    status = current.get(identity, "missing")
-    if previous != status:
-        transitions[f"{previous} -> {status}"] += 1
-        if ranks[status] > ranks[previous]:
-            regressions.append((identity, previous, status))
+    for previous, status in zip_longest(old[identity], current[identity], fillvalue="missing"):
+        if previous != status:
+            transitions[f"{previous} -> {status}"] += 1
+            if ranks[status] > ranks[previous]:
+                regressions.append((identity, previous, status))
 print("Before:", before["total"])
 print("After:", after["total"])
 print("Transitions:", dict(sorted(transitions.items())))

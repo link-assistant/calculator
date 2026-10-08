@@ -6,6 +6,7 @@ to inspect changes without modifying upstream expectations.
 
 import argparse
 import json
+import re
 from collections import Counter
 from pathlib import Path
 
@@ -28,8 +29,12 @@ for path in sorted((base / "corpus").glob("*.tsv")):
             word in text for word in ["%", "percent", "процент", "百分", "パーセント"]
         ):
             continue
-        expression = row[2].replace("\\t", "\t").replace("\\n", "\n")
-        status = statuses.get((row[0], row[1], expression), "missing")
+        expression = re.sub(
+            r"\\(t|n|\\)",
+            lambda match: {"t": "\t", "n": "\n", "\\": "\\"}[match[1]],
+            row[2],
+        )
+        status = statuses.get((row[0].strip(), row[1].strip(), expression), "missing")
         counts[status] += 1
         print("\t".join([status, *row[:4]]))
 print("Counts:", dict(counts))
