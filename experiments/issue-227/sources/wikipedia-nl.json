@@ -1,0 +1,16 @@
+{
+  "lang": "nl",
+  "title": "Lichtsnelheid",
+  "authors": "Wikipedia contributors",
+  "fetched": "2026-10-08",
+  "url": "https://nl.wikipedia.org/wiki/Lichtsnelheid",
+  "revisionUrl": "https://nl.wikipedia.org/w/index.php?oldid=72012151",
+  "license": "CC-BY-SA-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "extract": "c = 299 792 458 m/s\nDe lichtsnelheid wordt vaak afgerond naar 300 000 000 meter per seconde, dus 300 000 kilometer per seconde of 1,079252849 miljard kilometer per uur.\nIn 1676 stelde Ole Rømer de lichtsnelheid vast op 225 000 km/s.",
+  "candidates": [
+    "c = 299 792 458 m/s",
+    "De lichtsnelheid wordt vaak afgerond naar 300 000 000 meter per seconde, dus 300 000 kilometer per seconde of 1,079252849 miljard kilometer per uur.",
+    "In 1676 stelde Ole Rømer de lichtsnelheid vast op 225 000 km/s."
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "lang": "pt",
+  "title": "Velocidade da luz",
+  "authors": "Wikipedia contributors",
+  "fetched": "2026-10-08",
+  "url": "https://pt.wikipedia.org/wiki/Velocidade_da_luz",
+  "revisionUrl": "https://pt.wikipedia.org/w/index.php?oldid=72977300",
+  "license": "CC-BY-SA-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "extract": "A velocidade da luz é a velocidade das ondas eletromagnéticas. A luz viaja a velocidades menores dentro de materiais como vidro ou água; sua velocidade máxima é no vácuo. A velocidade da luz no vácuo é uma constante física universal denotada por c, exatamente igual a 299792458 m⋅s−1.. É exata porque, por acordo internacional, um metro é definido como o comprimento do trajeto percorrido pela luz no vácuo durante um intervalo de tempo de 1⁄299792458 de segundo. O valor 299 792 458 metros por segundoé aproximadamente1 bilhão quilômetros por hora; 700 milhão milhas por hora. Para outras aproximações de c, válidas para várias unidades e escalas de tamanho, veja a infobox. A forma abreviada, velocidade da luz, significa velocidade da luz no vácuo em qualquer contexto onde o vácuo esteja implícito.",
+  "candidates": [
+    "A velocidade da luz no vácuo é uma constante física universal denotada por c, exatamente igual a 299792458 m⋅s−1..",
+    "É exata porque, por acordo internacional, um metro é definido como o comprimento do trajeto percorrido pela luz no vácuo durante um intervalo de tempo de 1⁄299792458 de segundo.",
+    "O valor 299 792 458 metros por segundoé aproximadamente1 bilhão quilômetros por hora; 700 milhão milhas por hora."
+  ]
+}
