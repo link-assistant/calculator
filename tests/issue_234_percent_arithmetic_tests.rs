@@ -196,6 +196,7 @@ fn percentages_survive_serialization_and_lino_interpretation() {
         "AS_PERCENT(0.1)",
         "20% is 500, what is 750",
         "if 20 is 30%, what is 60%",
+        "if $20 is 30%, what is 60%",
     ] {
         let result = Calculator::new().calculate_internal(expression);
         let restored = Calculator::new().calculate_internal(&result.lino_interpretation);
@@ -227,6 +228,8 @@ fn percentage_proportion_questions_from_expanded_documentation() {
     for (expression, expected) in [
         ("20% is 500, what is 750", "30%"),
         ("if 20 is 30%, what is 60%", "40"),
+        ("20% is $500, what is $750", "30%"),
+        ("if $20 is 30%, what is 60%", "40 USD"),
     ] {
         assert_result(expression, expected);
     }
