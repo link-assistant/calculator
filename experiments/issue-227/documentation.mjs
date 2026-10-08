@@ -44,6 +44,8 @@ export function unstable(expression, expected = '', context = '') {
       || /time.zones|timestamps|dates.and.times|workdays|clock.time|calendar|date and time/i.test(context)
       || /\b(January|February|March|April|May|June|July|August|September|October|November|December|sunday|monday|tuesday|wednesday|thursday|friday|saturday)\b|\d+[/.]\d+[/.]\d+/i.test(expression)) return 'date/locale dependent';
   if (/inflation|income.tax|sales.tax|\b(VAT|GST|CPI)\b/i.test(text)) return 'locale/data dependent';
+  // Sexagesimal angle output is selected by a display preference, even for pi.
+  if (/°\s*\d+['′]\s*\d/.test(expected)) return 'angle display mode dependent';
   const codes = expression.match(/\b(?:USD|EUR|GBP|AUD|CAD|RUB|CHF|PLN|DKK|BTC|ETH|JPY|CNY|euros?|dollars?|pounds?|yen)\b|[$€£¥₽]/gi) || [];
   if ((new Set(codes.map((code) => code.toUpperCase())).size > 1 || /currenc/i.test(context))
       && !/\b(?:at|@)\s*\d/i.test(expression)) return 'live rate dependent';
@@ -145,8 +147,12 @@ export function extract(kind, text) {
     }
   } else if (kind === 'frink') {
     // CLASS=input identifies runnable examples; other CODE tags are names/prose.
+    const includeDate = (input) => {
+      if (input.trimStart().startsWith('#')) rows.push({ expression: input, expected: '', context: 'date and time literal' });
+    };
     for (const code of elements(text, 'code')) {
       if (/class=["']input["']/i.test(code.attrs) && !/^javaws\b|import frink\.parser\.Frink/.test(code.text)) {
+        includeDate(code.text);
         rows.push(...codeLines(code.text, ' ==> '));
       }
       // The manual also uses unclassified inline code for worked literals,
@@ -161,6 +167,7 @@ export function extract(kind, text) {
     }
     for (const block of elements(text, 'p')) {
       if (/class=["']code["']/i.test(block.attrs) && !/class=["']input["']/i.test(block.html)) {
+        includeDate(block.text);
         rows.push(...codeLines(block.text, ' ==> '));
       }
     }

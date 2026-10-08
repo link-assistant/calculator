@@ -5,7 +5,7 @@
 # Apple Math Notes: fetched 2026-10-08; 10 extracted page examples; 15 unique corpus rows.
 # Calca: fetched 2026-10-08; 201 extracted page examples; 209 unique corpus rows.
 # DuckDuckGo: fetched 2026-10-08; 0 extracted page examples; 0 unique corpus rows.
-# Frink: fetched 2026-10-08; 1247 extracted page examples; 1252 unique corpus rows.
+# Frink: fetched 2026-10-08; 1278 extracted page examples; 1283 unique corpus rows.
 # Google: fetched 2026-10-08; 7 extracted page examples; 16 unique corpus rows.
 # Hurmet: fetched 2026-10-08; 460 extracted page examples; 460 unique corpus rows.
 # Numi: fetched 2026-10-08; 77 extracted page examples; 100 unique corpus rows.
@@ -364,11 +364,42 @@ Frink	en	\\u20ac		https://frinklang.org/frinkdocs.html
 Frink	en	\\u210e		https://frinklang.org/frinkdocs.html
 Frink	en	\\u210e := h		https://frinklang.org/frinkdocs.html
 Frink	en	&&		https://frinklang.org/frinkdocs.html
+Frink	en	# 2001-08-12 04:00 UTC #		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	# 2001-08-12 04:00 UTC # -> Japan		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	# 2002-01-03 10:00 AM America/New_York #		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	# 2002-01-03 10:00 AM Colorado #		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	# 2002-01-03 10:00 AM Eastern #		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	# 2002-01-03 10:00 AM Europe/Paris #		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	# 2002-01-03 10:00 AM France #		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	# 2002-01-03 10:00 AM Hawaii #		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	# 2002-01-03 10:00 AM New York #		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	# 2002-01-03 10:00 AM Paris #		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	# 2002-01-03 10:00 AM US/Mountain #		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	# 2003-10-10 11:26 PM Mountain # -> TD		https://frinklang.org/frinkdocs.html (date/locale dependent)
 Frink	en	# 2021-03-04 # - # 2020-01-01 #		https://frinklang.org/frinkdocs.html (2026-10-07 hand-curated seed; not verified as verbatim on current page; date subtraction syntax)
+Frink	en	# 6:00 PM # -> Japan		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	# 6:00 PM Bosnia #		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	# 6:00 PM Bosnia # -> "New York"		https://frinklang.org/frinkdocs.html (date/locale dependent)
 Frink	en	# AD 0001-01-01 #		https://frinklang.org/frinkdocs.html
+Frink	en	# August 25, 2019 16:00 # -> "GMT+07:00"		https://frinklang.org/frinkdocs.html (date/locale dependent)
 Frink	en	# BC 0001-12-31 #		https://frinklang.org/frinkdocs.html
+Frink	en	# JD [212263942933679/86400000,\n     70754647644893/28800000] #		https://frinklang.org/frinkdocs.html (date/locale dependent)
 Frink	en	# JD [212263942933679/86400000, 70754647644893/28800000] #		https://frinklang.org/frinkdocs.html
 Frink	en	# JD 212263942857555001/86400000000 #		https://frinklang.org/frinkdocs.html
+Frink	en	# JD 2452163.0 #		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	# JD 24521631/10 #		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	# JDE 2452163.0 #		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	# MJD 52162.5 #		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	# yyyy-MM-dd HH:mm:ss #		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	##		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	### yyyy-MM-dd ###		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	#### G yyyy-MM-dd hh:mm:ss.SSS a (E) zzzz ####		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	#1969-08-19 16:54 Mountain# + 1 billion seconds		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	#1969-08-19# + 12314 days		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	#1969-08-19# + au / (96.74 milliarcsec) / c		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	#2001-06-30# + 41601 thousand dollars /\n    burnrate		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	#2001-09-10#		https://frinklang.org/frinkdocs.html (date/locale dependent)
+Frink	en	#2002-12-25# - now[] -> days		https://frinklang.org/frinkdocs.html (date/random dependent)
 Frink	en	%r/[:digit:]/		https://frinklang.org/frinkdocs.html
 Frink	en	%r/[[:digit:]]/		https://frinklang.org/frinkdocs.html
 Frink	en	%r/[[:word:][:digit:]]/		https://frinklang.org/frinkdocs.html
@@ -2261,7 +2292,7 @@ Soulver	en	12h 30m in degrees	187.5°	https://documentation.soulver.app/syntax-r
 Soulver	en	15.6k frames / 24 fps	650 s	https://documentation.soulver.app/syntax-reference/time/video-timecode-and-frame-rates.md
 Soulver	en	1500 RUB to DKK		https://documentation.soulver.app/syntax-reference/units-and-conversions/currencies.md (live rate dependent)
 Soulver	en	1559740303.48 to date		https://documentation.soulver.app/syntax-reference/dates/timestamps-and-iso8601.md (date/locale dependent)
-Soulver	en	156.742° as DMS	156° 44′ 31.2″	https://documentation.soulver.app/syntax-reference/geography.md
+Soulver	en	156.742° as DMS		https://documentation.soulver.app/syntax-reference/geography.md
 Soulver	en	16:00 + 3 hours 12 minutes		https://documentation.soulver.app/syntax-reference/time/clock-time-calculations.md (date/locale dependent)
 Soulver	en	17 rounded down to nearest 3	15	https://documentation.soulver.app/syntax-reference/general/number-rounding.md
 Soulver	en	1733823083000 to date		https://documentation.soulver.app/syntax-reference/dates/timestamps-and-iso8601.md (date/locale dependent)
@@ -2880,7 +2911,7 @@ SpeedCrunch	en	numval(3 [km/s])	3000	https://www.speedcrunch.org/reference/basic
 SpeedCrunch	en	numval(3 [m/s])	3	https://www.speedcrunch.org/reference/basic.html
 SpeedCrunch	en	numval(3)	3	https://www.speedcrunch.org/reference/basic.html
 SpeedCrunch	en	Pa*m^2 -> N		https://www.speedcrunch.org/reference/units.html
-SpeedCrunch	en	pi	180°00'00	https://www.speedcrunch.org/userguide/syntax.html
+SpeedCrunch	en	pi	3.14159265358979323846	https://www.speedcrunch.org/userguide/syntax.html (angle display mode dependent)
 SpeedCrunch	en	pi*1.2^2	4.52389342116930226339	https://www.speedcrunch.org/userguide/first_steps.html
 SpeedCrunch	en	pi*x/180		https://www.speedcrunch.org/reference/basic.html
 SpeedCrunch	en	poipmf(2; 0.1)	0.0045	https://www.speedcrunch.org/reference/statistical.html

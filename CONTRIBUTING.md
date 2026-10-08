@@ -335,3 +335,12 @@ Releases are managed through GitHub releases. To trigger a release:
 - Show empathy towards other community members
 
 Thank you for contributing!
+
+## Refreshing upstream test suites
+
+Run `make checkout-corpus CORPUS_CHECKOUTS=/path/to/checkouts` to prepare the
+pinned upstream revisions, then `make import-corpus CORPUS_CHECKOUTS=/path/to/checkouts`
+to regenerate the open-source corpus, revision lock and competitor inventory.
+Pass `CORPUS_LATEST=--latest` to the checkout target to refresh to current
+upstream revisions. See [the corpus refresh guide](docs/competitor-corpus.md)
+for extraction limits, provenance and the weekly refresh PR workflow.

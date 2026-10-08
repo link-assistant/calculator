@@ -61,7 +61,8 @@ Network requests and downloaded code are never evaluated.
   Syntax fragments, partial input and documented error examples are retained as
   documentation coverage; the current runner cannot distinguish expected errors.
 - Frink: annotated calculator input, numeric inline examples and code paragraphs throughout its manual.
-  Multiline programs are represented by short code lines; comments, launcher
+  Hash-delimited date literals remain complete inputs, including multiline literals.
+  Other multiline programs are represented by short code lines; comments, launcher
   commands and Java integration scaffolding are excluded. A line can depend on
   definitions or control flow shown elsewhere in its original block.
 - Wolfram|Alpha: all recursively linked example pages under Mathematics,
@@ -98,7 +99,8 @@ kept only in the local cache, outside the committed corpus.
 ## Expected answers and historical rows
 
 Each row has the full reference-page URL in its note. Date, timezone, random,
-live exchange-rate, tax/inflation and locale-sensitive answers are blank:
+live exchange-rate, tax/inflation, locale-sensitive and angle-display-mode
+answers are blank:
 the coverage runner requires evaluation without comparing a stale answer.
 Explicit fixed-rate arithmetic remains deterministic. Missing published answers
 are also blank; the extraction does not calculate replacement answers.

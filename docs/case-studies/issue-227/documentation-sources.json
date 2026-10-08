@@ -103,12 +103,12 @@
           "url": "https://frinklang.org/frinkdocs.html",
           "fetched": "2026-10-08",
           "sha256": "3ab7ca92016c32c4e077c13b3901d37b75b35e311c80302a6889210c016c8134",
-          "rows": 1247
+          "rows": 1278
         }
       ],
       "images": [],
-      "extractedRows": 1247,
-      "rows": 1252
+      "extractedRows": 1278,
+      "rows": 1283
     },
     {
       "id": "google",

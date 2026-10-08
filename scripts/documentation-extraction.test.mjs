@@ -54,8 +54,28 @@ test('Calca and SpeedCrunch decode markup while preserving syntax and answers', 
     .map(({ expression, expected }) => [expression, expected]), [['0b1.01', '1.25'], ['hex(12341)', '0x3035']]);
 });
 
+test('SpeedCrunch angle display settings do not become fixed numeric expectations', () => {
+  const cache = mkdtempSync(join(tmpdir(), 'speedcrunch-angle-mode-'));
+  const url = 'https://example.com/syntax.html';
+  try {
+    const text = "<pre>pi\n= 180°00'00\n1 + 3\n= 4</pre>";
+    writeFileSync(join(cache, sha256(url + 'null') + '.json'), JSON.stringify({ url, text, fetched: '2026-10-08' }));
+    const { rows } = collectSource({ id: 'mode-fixture', product: 'SpeedCrunch', kind: 'speedcrunch', pages: [url] }, { cache, offline: true });
+    assert.equal(rows.find(row => row.expression === 'pi').expected, '');
+    assert.match(rows.find(row => row.expression === 'pi').note, /display mode dependent/);
+    assert.equal(rows.find(row => row.expression === '1 + 3').expected, '4');
+  } finally { rmSync(cache, { recursive: true, force: true }); }
+});
+
 test('Frink imports annotated calculator input, excluding launcher commands', () => {
   assert.deepEqual(expressions('frink', '<CODE CLASS="input">javaws x</CODE><CODE CLASS="input">10 feet -&gt; cm</CODE>'), ['10 feet -> cm']);
+});
+
+test('Frink hash-delimited date inputs remain complete expressions', () => {
+  const date = '# JD [212263942933679/86400000,\n     70754647644893/28800000] #';
+  const rows = expressions('frink', '<CODE CLASS="input">##</CODE><CODE CLASS="input">' + date + '</CODE>');
+  assert.ok(rows.includes('##'));
+  assert.ok(rows.includes(date));
 });
 
 test('inline numeric examples are included while documentation metadata and outputs are excluded', () => {
