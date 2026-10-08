@@ -1,5 +1,6 @@
 //! Tests for the Value type.
 
+use super::duration::format_duration;
 use super::*;
 
 #[test]

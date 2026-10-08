@@ -193,6 +193,33 @@ function splitNumber(text) {
   return { number: Number.parseFloat(match[1]), literal: match[1], rest: match[2].trim() };
 }
 
+/** Expand attached large-number suffixes while preserving unit text and case. */
+function expandCompactNumber(text) {
+  return text.trim().replace(
+    /^([-+]?\d+(?:\.\d+)?)([kMGT])(?=$|\s)/,
+    (_, number, suffix) => String(Number(number) * ({ k: 1e3, M: 1e6, G: 1e9, T: 1e12 })[suffix])
+  );
+}
+
+/** Compare radix output as a number, rather than treating its prefix as a unit. */
+function expandRadixNumber(text) {
+  return text.trim().replace(
+    /^([-+]?)0([box])([0-9a-f]+)(?:\.([0-9a-f]+))?(?=$|\s)/i,
+    (literal, sign, prefix, integer, fraction = '') => {
+      const radix = ({ b: 2, o: 8, x: 16 })[prefix.toLowerCase()];
+      const digits = [...integer, ...fraction].map((digit) => Number.parseInt(digit, 16));
+      if (digits.some((digit) => digit >= radix)) return literal;
+      let value = Number.parseInt(integer, radix);
+      let place = 1 / radix;
+      for (const digit of fraction) {
+        value += Number.parseInt(digit, radix) * place;
+        place /= radix;
+      }
+      return String(sign === '-' ? -value : value);
+    }
+  );
+}
+
 /**
  * Compare actual and expected display strings.
  * Numbers match when equal after rounding to the expected precision or
@@ -202,8 +229,8 @@ function resultsMatch(actual, expected) {
   if (expected === '') {
     return true;
   }
-  const a = normalizeText(actual);
-  const e = normalizeText(expected);
+  const a = normalizeText(expandRadixNumber(expandCompactNumber(actual)));
+  const e = normalizeText(expandRadixNumber(expandCompactNumber(expected)));
   if (a === e) {
     return true;
   }
