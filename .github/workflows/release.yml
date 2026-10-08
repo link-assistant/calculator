@@ -283,6 +283,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs: [test]
+    # Changelog/detection ancestors may be skipped on corpus-only or manual runs.
+    if: always() && !cancelled() && needs.test.result == 'success'
     permissions:
       contents: read
     steps:
