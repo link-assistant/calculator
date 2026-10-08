@@ -5,6 +5,14 @@ use crate::grammar::TokenKind;
 use crate::types::{BinaryOp, Decimal, Expression};
 
 impl TokenParser<'_> {
+    pub(super) fn has_proportion_question(&self) -> bool {
+        self.tokens[self.pos..].windows(3).any(|tokens| {
+            matches!(&tokens[0].kind, TokenKind::Comma)
+                && matches!(&tokens[1].kind, TokenKind::Identifier(word) if word.eq_ignore_ascii_case("what"))
+                && matches!(&tokens[2].kind, TokenKind::Identifier(word) if word.eq_ignore_ascii_case("is"))
+        })
+    }
+
     pub(super) fn ratio_keyword(word: &str) -> bool {
         matches!(
             word.to_ascii_lowercase().as_str(),
@@ -144,6 +152,23 @@ impl TokenParser<'_> {
                 return Ok(Some(self.finish_ratio_format(left.clone(), format)?));
             }
             let amount = self.parse_multiplicative()?;
+            // Proportions: `20% is 500, what is 750` and `if 20 is 30%, what is 60%`.
+            if self.check(&TokenKind::Comma) && (left.is_percentage() || amount.is_percentage()) {
+                self.advance();
+                self.expect_ratio_word("what")?;
+                self.expect_ratio_word("is")?;
+                let target = self.parse_additive()?;
+                let result = Expression::binary(
+                    Expression::binary(left.clone(), BinaryOp::Multiply, target),
+                    BinaryOp::Divide,
+                    amount,
+                );
+                return Ok(Some(if left.is_percentage() {
+                    Expression::function_call("as_percent", vec![result])
+                } else {
+                    result
+                }));
+            }
             // `5% is 1 in what` formats odds without changing the numeric value.
             if self.check(&TokenKind::In) {
                 self.advance();

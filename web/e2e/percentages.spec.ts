@@ -9,6 +9,8 @@ test('percentage values survive calculations in the WASM worker', async ({ page 
     ['100 + 10% + 10%', '121'],
     ['10% + 20%', '30%'],
     ['180 is what % off 200', '10%'],
+    ['20% is 500, what is 750', '30%'],
+    ['if 20 is 30%, what is 60%', '40'],
     ['20% of 50 km/h', '10 km/h'],
     ['56.7% of 1,234 participants', '699.678 participants'],
   ]) {

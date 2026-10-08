@@ -36,9 +36,15 @@ Percentage queries are lowered into existing arithmetic expressions and exact
 ratio constructors. Fraction, reciprocal and multiplier conversions retain
 their requested display. Equations also understand percentage constructors
 and relative addition.
+
 Percentage constructors follow the calculator's case-insensitive function
 convention, including equations and notation round trips. A regression caught
 `200 + Percent(10)` being accepted by parsing but rejected during evaluation.
+
+The expanded documentation corpus merged from #250 adds proportion questions:
+`20% is 500, what is 750` returns `30%`, and
+`if 20 is 30%, what is 60%` returns `40`. Their regression failed before
+extending the existing ratio grammar. Zero denominators remain errors.
 
 All added multilingual vocabulary lives in
 [`arithmetic-words.lino`](../../../data/words/arithmetic-words.lino).
@@ -83,14 +89,19 @@ physical-unit and wrong-value mismatches. It recognizes Rink's explicit
 `(dimensionless)` label. Regression tests prevent precision rounding from
 accepting `0%` as `0.001`.
 
-Across 8,298 corpus rows, supported cases increase from 1,100 on the merged
-`main` to 1,222: 123 newly matching rows and the one intentional fend conflict.
-Four additional rows improve from unsupported to different. Compared with the
-pre-merge percentage implementation, 54 more rows match and none regress.
-Among the 198 rows selected by
-the percentage inspection script, supported cases increase from 60 to 152,
-different results drop from 69 to 18, and unsupported cases drop from 69 to 28.
-All Soulver examples from its percentages syntax page now match.
+The corpus expanded from 8,298 to 13,974 rows while this fix was in progress.
+The original run improved supported cases from 1,100 to 1,222. In the expanded
+corpus, supported cases increase from 1,710 on `main` to 1,856: 147 newly
+matching rows and the one intentional fend conflict. Three additional rows
+improve from unsupported to different. All 43 Soulver examples from its
+percentages syntax page match; no original percentage implementation rows
+regress after the corpus merge. There are no timeouts.
+
+Among 311 rows selected by percent/vocabulary markers (including other uses of
+`%`, such as Frink regex syntax), supported cases increase from 78 to 188,
+different results drop from 75 to 18, and unsupported cases drop from 158 to 105.
+The comparison script counts repeated expression identities as separate rows,
+and the inspection script decodes escaped inputs exactly as the coverage runner.
 
 ## Verification
 
@@ -102,7 +113,7 @@ node --test scripts/*.test.mjs
 node scripts/check-file-size.mjs
 cargo run --example percentage_arithmetic
 cargo build --release --locked --bin link-calculator
-node scripts/competitor-coverage.mjs --baseline docs/case-studies/issue-227/results/coverage-baseline.json --out ci-logs/competitor-coverage --quiet
+node scripts/competitor-coverage.mjs --binary experiments/issue-227/bounded-calculator.sh --baseline docs/case-studies/issue-227/results/coverage-baseline.json --out ci-logs/competitor-coverage --quiet
 ```
 
 The web's `npm test` and `npm run build` and `wasm-pack build --target web`

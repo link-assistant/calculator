@@ -1,6 +1,6 @@
 {
 "generated": "2026-10-08",
-"total": {"total":13974,"supported":1854,"different":246,"unsupported":11874,"timeout":0},
+"total": {"total":13974,"supported":1856,"different":246,"unsupported":11872,"timeout":0},
 "results": [
 {"source":"Apple Math Notes","lang":"en","expression":"(14 + 2) ÷ 4 =","status":"supported"},
 {"source":"Apple Math Notes","lang":"en","expression":"1 cup in tablespoons =","status":"unsupported"},
@@ -2303,7 +2303,7 @@
 {"source":"Soulver","lang":"en","expression":"20/200 as %","status":"supported"},
 {"source":"Soulver","lang":"en","expression":"20/5 as multiplier","status":"supported"},
 {"source":"Soulver","lang":"en","expression":"20% as dec","status":"supported"},
-{"source":"Soulver","lang":"en","expression":"20% is 500, what is 750","status":"unsupported"},
+{"source":"Soulver","lang":"en","expression":"20% is 500, what is 750","status":"supported"},
 {"source":"Soulver","lang":"en","expression":"200 - 10%","status":"supported"},
 {"source":"Soulver","lang":"en","expression":"200 + 10%","status":"supported"},
 {"source":"Soulver","lang":"en","expression":"2019-04-01T15:30:00 to date","status":"unsupported"},
@@ -2463,7 +2463,7 @@
 {"source":"Soulver","lang":"en","expression":"Healthy Weight = BMI >= 18.5 and BMI < 25","status":"unsupported"},
 {"source":"Soulver","lang":"en","expression":"hex(99)","status":"unsupported"},
 {"source":"Soulver","lang":"en","expression":"I spent $128 + $45 on clothes // on 10-02-2019","status":"unsupported"},
-{"source":"Soulver","lang":"en","expression":"if 20 is 30%, what is 60%","status":"unsupported"},
+{"source":"Soulver","lang":"en","expression":"if 20 is 30%, what is 60%","status":"supported"},
 {"source":"Soulver","lang":"en","expression":"if discount then cost = cost - 10%","status":"unsupported"},
 {"source":"Soulver","lang":"en","expression":"if earnings > $30k then tax = 20% else tax = 5%","status":"unsupported"},
 {"source":"Soulver","lang":"en","expression":"income = $35k","status":"unsupported"},

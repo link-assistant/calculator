@@ -6,6 +6,9 @@ use super::TokenParser;
 
 impl TokenParser<'_> {
     pub fn parse_expression(&mut self) -> Result<Expression, CalculatorError> {
+        if self.ratio_word("if") && self.has_proportion_question() {
+            self.advance();
+        }
         if self.ratio_word("what")
             && matches!(self.peek_kind(), Some(TokenKind::Identifier(word)) if word.eq_ignore_ascii_case("is"))
         {

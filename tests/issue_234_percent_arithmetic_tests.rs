@@ -151,6 +151,9 @@ fn invalid_percentage_queries_report_errors() {
         "10% of",
         "50 to 75 is what % junk",
         "3 permutations of 10",
+        "20% is 0, what is 750",
+        "if 20 is 0%, what is 60%",
+        "if 20 is 30, what is 60",
     ] {
         let result = Calculator::new().calculate_internal(expression);
         assert!(!result.success, "{expression:?}: {}", result.result);
@@ -191,6 +194,8 @@ fn percentages_survive_serialization_and_lino_interpretation() {
         "5% * 5%",
         "200 + Percent(10)",
         "AS_PERCENT(0.1)",
+        "20% is 500, what is 750",
+        "if 20 is 30%, what is 60%",
     ] {
         let result = Calculator::new().calculate_internal(expression);
         let restored = Calculator::new().calculate_internal(&result.lino_interpretation);
@@ -212,6 +217,16 @@ fn percentage_constructors_follow_case_insensitive_function_conventions() {
         ("As_Reciprocal(0.5)", "1/2"),
         ("As_Multiplier(2)", "2x"),
         ("10 - Percent(x) = 8", "x = 20"),
+    ] {
+        assert_result(expression, expected);
+    }
+}
+
+#[test]
+fn percentage_proportion_questions_from_expanded_documentation() {
+    for (expression, expected) in [
+        ("20% is 500, what is 750", "30%"),
+        ("if 20 is 30%, what is 60%", "40"),
     ] {
         assert_result(expression, expected);
     }
