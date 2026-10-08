@@ -1,10 +1,12 @@
 //! Value type representing typed values with units.
 
+mod display;
 mod duration;
 mod kind;
+mod uncertainty;
 use duration::{
     add_calendar_months_or_duration, apply_duration_unit, bare_year_datetime, convert_raw_duration,
-    divide_duration_units, divide_raw_duration, format_duration,
+    divide_duration_units, divide_raw_duration,
 };
 pub use kind::ValueKind;
 
@@ -553,6 +555,14 @@ impl Value {
 
     /// Multiplies two values.
     pub fn multiply(&self, other: &Self) -> Result<Self, CalculatorError> {
+        if self.unit != Unit::None
+            && other.unit != Unit::None
+            && (self.unit.is_opaque_compound() || other.unit.is_opaque_compound())
+        {
+            return Err(CalculatorError::domain(
+                "compound unit multiplication requires a unitless factor",
+            ));
+        }
         match (&self.kind, &other.kind) {
             // Rational * Rational
             (ValueKind::Rational(a), ValueKind::Rational(b)) => {
@@ -605,6 +615,14 @@ impl Value {
 
     /// Divides two values.
     pub fn divide(&self, other: &Self) -> Result<Self, CalculatorError> {
+        if other.unit != Unit::None
+            && self.unit != other.unit
+            && (self.unit.is_opaque_compound() || other.unit.is_opaque_compound())
+        {
+            return Err(CalculatorError::domain(
+                "compound unit division requires matching units or a unitless divisor",
+            ));
+        }
         match (&self.kind, &other.kind) {
             // Rational / Rational
             (ValueKind::Rational(a), ValueKind::Rational(b)) => {
@@ -848,6 +866,7 @@ impl Value {
             ValueKind::Number(n) => Value::number_with_unit(-*n, self.unit.clone()),
             ValueKind::Rational(r) => Value::rational_with_unit(-r.clone(), self.unit.clone()),
             ValueKind::Duration { seconds } => Value::duration(-seconds),
+            ValueKind::Uncertainty { .. } => self.negate_uncertainty(),
             _ => self.clone(),
         }
     }
@@ -862,54 +881,10 @@ impl Value {
             ValueKind::Duration { .. } => "duration",
             ValueKind::Boolean(_) => "boolean",
             ValueKind::Comparison { .. } => "comparison result",
+            ValueKind::Uncertainty { .. } => "uncertainty",
             ValueKind::EquationSolution { .. }
             | ValueKind::EquationSolutions { .. }
             | ValueKind::SymbolicEquationSolution { .. } => "equation solution",
-        }
-    }
-
-    /// Converts the value to a display string.
-    #[must_use]
-    pub fn to_display_string(&self) -> String {
-        match &self.kind {
-            ValueKind::Number(n) => {
-                let n_str = n.normalize().to_string();
-                if self.unit == Unit::None {
-                    n_str
-                } else {
-                    format!("{} {}", n_str, self.unit)
-                }
-            }
-            ValueKind::Rational(r) => {
-                let r_str = r.to_display_string();
-                if self.unit == Unit::None {
-                    r_str
-                } else {
-                    format!("{} {}", r_str, self.unit)
-                }
-            }
-            ValueKind::DateTime(dt) => dt.to_string(),
-            ValueKind::Duration { seconds } => format_duration(*seconds),
-            ValueKind::Boolean(b) => b.to_string(),
-            ValueKind::Comparison {
-                left,
-                relation,
-                right,
-            } => format!("{left} {relation} {right}"),
-            ValueKind::EquationSolution { variable, value } => {
-                format!("{variable} = {}", value.to_display_string())
-            }
-            ValueKind::EquationSolutions { variable, values } => values
-                .iter()
-                .map(|value| format!("{variable} = {}", value.to_display_string()))
-                .collect::<Vec<_>>()
-                .join(" or "),
-            ValueKind::SymbolicEquationSolution {
-                variable,
-                expression,
-            } => {
-                format!("{variable} = {expression}")
-            }
         }
     }
 

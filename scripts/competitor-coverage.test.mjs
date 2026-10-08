@@ -65,6 +65,22 @@ test('matches numbers at the expected precision and with units', () => {
   assert.equal(resultsMatch('-2 hours', '2 hours'), false);
 });
 
+test('matches documented compact large-number displays without confusing units', () => {
+  assert.equal(resultsMatch('300000', '300k'), true);
+  assert.equal(resultsMatch('1.5M', '1500000'), true);
+  assert.equal(resultsMatch('2G USD', '2000000000 USD'), true);
+  assert.equal(resultsMatch('300', '300k'), false);
+  assert.equal(resultsMatch('1 km', '1000 m'), false);
+  assert.equal(resultsMatch('1 kg', '1000 g'), false);
+});
+
+test('compares equivalent radix and decimal displays numerically', () => {
+  assert.equal(resultsMatch('16', '0x10'), true);
+  assert.equal(resultsMatch('4.125', '0b100.001'), true);
+  assert.equal(resultsMatch('64.001953125', '0o100.001'), true);
+  assert.equal(resultsMatch('0 X10', '0x10'), false);
+});
+
 function runCoverage(t, previous, rows, { separateOutput = false, rejects = false, sourceFilter = null } = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'coverage-gate-'));
   t.after(() => rmSync(dir, { recursive: true, force: true }));

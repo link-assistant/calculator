@@ -395,6 +395,11 @@ impl std::fmt::Display for MassUnit {
 }
 
 impl Unit {
+    /// Whether this is an opaque compound unit without dimensional algebra.
+    pub(crate) fn is_opaque_compound(&self) -> bool {
+        matches!(self, Self::Custom(name) if name.contains('/'))
+    }
+
     /// Creates a currency unit.
     pub fn currency(code: &str) -> Self {
         Self::Currency(code.to_uppercase())
