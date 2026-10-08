@@ -358,6 +358,13 @@ pub fn is_math_function(name: &str) -> bool {
             | "degrees"
             | "rad"
             | "radians"
+            | "percent"
+            | "as_percent"
+            | "as_fraction"
+            | "as_reciprocal"
+            | "as_multiplier"
+            | "as_decimal"
+            | "percent_of"
     )
 }
 
@@ -372,6 +379,9 @@ pub fn evaluate_function_values(name: &str, args: &[Value]) -> Result<Value, Cal
             return Err(CalculatorError::invalid_args(name, "expected 2 arguments"));
         }
         return args[0].with_uncertainty(&args[1]);
+    }
+    if let Some(result) = crate::types::evaluate_ratio_function(name, args) {
+        return result;
     }
     if args.iter().any(|arg| arg.unit.is_opaque_compound()) {
         return Err(CalculatorError::invalid_args(

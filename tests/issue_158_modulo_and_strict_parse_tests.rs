@@ -61,7 +61,7 @@ fn issue_158_postfix_percent_still_works() {
         "50% should still succeed, got error: {:?}",
         standalone.error
     );
-    assert_eq!(standalone.result, "0.5");
+    assert_eq!(standalone.result, "50%");
 
     let multiplied = calculate("3% * 50");
     assert!(

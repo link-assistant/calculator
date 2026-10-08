@@ -105,9 +105,9 @@ fn test_issue_145_100_percent_of_42() {
 
 // ── Backward compatibility: standalone % still works ─────────────────────────
 
-/// 50% standalone should still evaluate to 0.5.
+/// 50% standalone preserves percentage display (issue #234).
 #[test]
-fn test_issue_145_percent_standalone_unchanged() {
+fn test_issue_145_percent_standalone_display() {
     let mut calc = Calculator::new();
     let result = calc.calculate_internal("50%");
     assert!(
@@ -116,8 +116,8 @@ fn test_issue_145_percent_standalone_unchanged() {
         result.error
     );
     assert_eq!(
-        result.result, "0.5",
-        "50% should equal 0.5, got: {}",
+        result.result, "50%",
+        "50% should preserve its display, got: {}",
         result.result
     );
 }

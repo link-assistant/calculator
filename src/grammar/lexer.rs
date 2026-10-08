@@ -158,6 +158,16 @@ pub enum TokenKind {
     Caret,
     /// The percent operator (e.g., `3%` means `0.03`).
     Percent,
+    /// A word meaning percent (distinct from modulo operator words).
+    PercentWord,
+    /// A percentage written before its amount.
+    PercentPrefix,
+    /// A part of a whole, with the whole on the left (CJK phrasing).
+    Portion,
+    /// A leading percentage increase applied to a following base.
+    IncreaseFrom,
+    /// A leading percentage decrease applied to a following base.
+    DecreaseFrom,
     /// Left parenthesis.
     LeftParen,
     /// Right parenthesis.
@@ -320,6 +330,8 @@ impl Lexer {
         self.previous_token_can_end_value = matches!(
             token.kind,
             TokenKind::Number(_)
+                | TokenKind::Percent
+                | TokenKind::PercentWord
                 | TokenKind::DateLiteral(_)
                 | TokenKind::Identifier(_)
                 | TokenKind::RightParen

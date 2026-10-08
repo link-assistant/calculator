@@ -6,6 +6,15 @@ use super::TokenParser;
 
 impl TokenParser<'_> {
     pub fn parse_expression(&mut self) -> Result<Expression, CalculatorError> {
+        if self.ratio_word("if") && self.has_proportion_question() {
+            self.advance();
+        }
+        if self.ratio_word("what")
+            && matches!(self.peek_kind(), Some(TokenKind::Identifier(word)) if word.eq_ignore_ascii_case("is"))
+        {
+            self.advance();
+            self.advance();
+        }
         self.parse_comparison()
     }
 
@@ -37,6 +46,9 @@ impl TokenParser<'_> {
 
         if self.check(&TokenKind::Equals) {
             self.advance(); // consume '=' or '=='
+            if self.is_at_end() {
+                return Ok(left);
+            }
             let right = self.parse_additive()?;
             return Ok(Expression::equality(left, right));
         }

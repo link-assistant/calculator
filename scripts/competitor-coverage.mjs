@@ -190,7 +190,7 @@ function splitNumber(text) {
   if (!match) {
     return null;
   }
-  return { number: Number.parseFloat(match[1]), literal: match[1], rest: match[2].trim() };
+  return { number: Number.parseFloat(match[1]), literal: match[1], rest: match[2].trim().replace(/^\(dimensionless\)$/, '') };
 }
 
 /** Expand attached large-number suffixes while preserving unit text and case. */
@@ -236,6 +236,16 @@ function resultsMatch(actual, expected) {
   }
   const an = splitNumber(a);
   const en = splitNumber(e);
+  if (an && en && (an.rest === '%' || en.rest === '%')) {
+    if (![an.rest, en.rest].every((rest) => rest === '' || rest === '%')) {
+      return false;
+    }
+    // Engines expose equivalent dimensionless values as fractions or percents.
+    // Strict Rust display regressions separately enforce the percent value type.
+    const av = an.number / (an.rest === '%' ? 100 : 1);
+    const ev = en.number / (en.rest === '%' ? 100 : 1);
+    return Math.abs(av - ev) <= 1e-9 * Math.max(1, Math.abs(ev));
+  }
   if (!an || !en || an.rest !== en.rest) {
     return false;
   }

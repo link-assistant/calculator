@@ -1,5 +1,5 @@
 use super::duration::format_duration;
-use crate::types::{Unit, Value, ValueKind};
+use crate::types::{RatioFormat, Rational, Unit, Value, ValueKind};
 
 impl Value {
     /// Converts the value to a display string.
@@ -22,6 +22,20 @@ impl Value {
                     format!("{} {}", r_str, self.unit)
                 }
             }
+            ValueKind::Percent(r) => format!(
+                "{}%",
+                (r.clone() * Rational::from_integer(100)).to_display_string()
+            ),
+            ValueKind::Ratio { value, format } => match format {
+                RatioFormat::Fraction => value.to_fraction_string(),
+                RatioFormat::Reciprocal => format!(
+                    "1/{}",
+                    Rational::one()
+                        .checked_div(value)
+                        .map_or_else(|| "undefined".into(), |ratio| ratio.to_display_string())
+                ),
+                RatioFormat::Multiplier => format!("{}x", value.to_display_string()),
+            },
             ValueKind::Uncertainty { value, uncertainty } => {
                 let suffix = if self.unit == Unit::None {
                     String::new()

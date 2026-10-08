@@ -14,4 +14,5 @@ pub use decimal::Decimal;
 pub use expression::{BinaryOp, ComparisonOp, Expression};
 pub use rational::{Rational, RepeatingDecimal};
 pub use unit::{DataSizeUnit, DurationUnit, MassUnit, Unit};
-pub use value::{Value, ValueKind};
+pub(crate) use value::evaluate_ratio_function;
+pub use value::{RatioFormat, Value, ValueKind};
