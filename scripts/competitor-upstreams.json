@@ -1,0 +1,47 @@
+{
+  "fend": {
+    "repo": "https://github.com/printfn/fend",
+    "revision": "d9cb764e83cd1fe629bb526fd1cb08777d123014",
+    "date": "2026-08-28T11:40:26+00:00"
+  },
+  "qalculate": {
+    "repo": "https://github.com/Qalculate/libqalculate",
+    "revision": "b245c4194a1a8dc14ba7ecf1e811e6d0b60592aa",
+    "date": "2026-10-06T05:42:07+02:00"
+  },
+  "numbat": {
+    "repo": "https://github.com/sharkdp/numbat",
+    "revision": "49fccb107047e2615c42f09f7c9d81bca1d64b92",
+    "date": "2026-08-25T10:03:29+02:00"
+  },
+  "rink": {
+    "repo": "https://github.com/tiffany352/rink-rs",
+    "revision": "abf3042c05988beee0d61b37b09f85af6beb4c46",
+    "date": "2026-04-24T23:12:10-07:00"
+  },
+  "mathjs": {
+    "repo": "https://github.com/josdejong/mathjs",
+    "revision": "8d214e050a0acb9f132405d55a96b683fa7b6324",
+    "date": "2026-08-10T12:43:23+02:00"
+  },
+  "insect": {
+    "repo": "https://github.com/sharkdp/insect",
+    "revision": "d19e4f15f788a4c1bd277e1ef3bd5a5e3228bdd3",
+    "date": "2024-10-24T08:01:37+02:00"
+  },
+  "kalker": {
+    "repo": "https://github.com/PaddiM8/kalker",
+    "revision": "87cd07855633f4f16c549ede7d7a876e9ab3b910",
+    "date": "2026-09-18T22:06:34+02:00"
+  },
+  "hurmet": {
+    "repo": "https://github.com/ronkok/Hurmet",
+    "revision": "a41258b7372fd6e206446b97ec9259c47862f6d3",
+    "date": "2026-10-06T13:22:42-07:00"
+  },
+  "speedcrunch": {
+    "repo": "https://github.com/heldercorreia/speedcrunch",
+    "revision": "7c9152705ecacaeb6a40d99dcc78da6589a62d56",
+    "date": "2026-10-07T17:52:01+01:00"
+  }
+}
