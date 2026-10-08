@@ -1,0 +1,16 @@
+{
+  "lang": "en",
+  "title": "Speed of light",
+  "authors": "Wikipedia contributors",
+  "fetched": "2026-10-08",
+  "url": "https://en.wikipedia.org/wiki/Speed_of_light",
+  "revisionUrl": "https://en.wikipedia.org/w/index.php?oldid=1377968390",
+  "license": "CC-BY-SA-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "extract": "The speed of light is the speed of electromagnetic waves. Light travels at slower speed inside materials like glass or water; its highest speed is in a vacuum. The speed of light in vacuum is a universal physical constant denoted c, exactly equal to 299792458 m⋅s−1. It is exact because, by international agreement, a metre is defined as the length of the path travelled by light in vacuum during a time interval of 1⁄299792458 second. The value 299,792,458 metres per second is approximately 1 billion kilometres per hour; 700 million miles per hour. For other approximations of c, valid for various units and size scales see the infobox. The shorter form, speed of light, means speed of light in vacuum in any context where the vacuum is implied.",
+  "candidates": [
+    "The speed of light in vacuum is a universal physical constant denoted c, exactly equal to 299792458 m⋅s−1.",
+    "It is exact because, by international agreement, a metre is defined as the length of the path travelled by light in vacuum during a time interval of 1⁄299792458 second.",
+    "The value 299,792,458 metres per second is approximately 1 billion kilometres per hour; 700 million miles per hour."
+  ]
+}

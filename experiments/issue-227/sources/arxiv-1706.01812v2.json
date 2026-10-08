@@ -1,0 +1,10 @@
+{
+  "lang": "en",
+  "title": "GW170104: Observation of a 50-Solar-Mass Binary Black Hole Coalescence at Redshift 0.2",
+  "authors": "LIGO Scientific Collaboration and Virgo Collaboration",
+  "url": "https://arxiv.org/abs/1706.01812v2",
+  "fetched": "2026-10-08",
+  "license": "CC-BY-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "extract": "We describe the observation of GW170104, a gravitational-wave signal produced by the coalescence of a pair of stellar-mass black holes. The signal was measured on January 4, 2017 at 10:11:58.6 UTC by the twin advanced detectors of the Laser Interferometer Gravitational-Wave Observatory during their second observing run, with a network signal-to-noise ratio of 13 and a false alarm rate less than 1 in 70,000 years. The inferred component black hole masses are $31.2^{+8.4}_{-6.0}\\,M_\\odot$ and $19.4^{+5.3}_{-5.9}\\,M_\\odot$ (at the 90% credible level). The black hole spins are best constrained through measurement of the effective inspiral spin parameter, a mass-weighted combination of the spin components perpendicular to the orbital plane, $\\chi_\\mathrm{eff} = -0.12^{+0.21}_{-0.30}.$ This result implies that spin configurations with both component spins positively aligned with the orbital angular momentum are disfavored. The source luminosity distance is $880^{+450}_{-390}~\\mathrm{Mpc}$ corresponding to a redshift of $z = 0.18^{+0.08}_{-0.07}$. We constrain the magnitude of modifications to the gravitational-wave dispersion relation and perform null tests of general relativity. Assuming that gravitons are dispersed in vacuum like massive particles, we bound the graviton mass to $m_g \\le 7.7 \\times 10^{-23}~\\mathrm{eV}/c^2$. In all cases, we find that GW170104 is consistent with general relativity."
+}

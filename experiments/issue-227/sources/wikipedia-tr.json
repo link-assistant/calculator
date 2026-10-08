@@ -1,0 +1,17 @@
+{
+  "lang": "tr",
+  "title": "Işık hızı",
+  "authors": "Wikipedia contributors",
+  "fetched": "2026-10-08",
+  "url": "https://tr.wikipedia.org/wiki/I%C5%9F%C4%B1k_h%C4%B1z%C4%B1",
+  "revisionUrl": "https://tr.wikipedia.org/w/index.php?oldid=37712735",
+  "license": "CC-BY-SA-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "extract": "Işığın boşluktaki hızı, fiziğin birçok alanında kullanılan önemli bir fiziksel sabittir. Genellikle c sembolüyle gösterilir. Tam değeri saniyede 299.792.458 metredir. Metrenin uzunluğu bu sabitten ve uluslararası zaman standardından hesaplanmıştır. Özel göreliliğe göre c, evrendeki bütün madde ve bilgilerin hareket edebileceği maksimum hızdır. Bütün kütlesiz parçacıkların ve ilgili alanlardaki değişimlerin boşluktaki hareket hızıdır. Bu parçacıklar ve dalgalar gözlemcinin eylemsiz referans çerçevesi ya da kaynağın hareketi ne olursa olsun c'de hareket ederler. Görelilik teorisi'nde c, uzay-zaman arasındaki ilişkiyi kurar; aynı zamanda meşhur kütle-enerji eşdeğerliliği formülünde de gözükür E = mc2. Işığın hava veya cam gibi şeffaf maddelerdeki ilerleyiş hızı c'den azdır. Benzer şekilde radyo dalgalarının tel kablolardaki ilerleyişi de c'den yavaştır. Işığın madde içindeki hızı v ile c arasındaki orana o maddenin kırılma endeksi denir. Örneğin, görülebilir ışık için camın kırılma endeksi genellikle 1,5 civarındadır. Yani ışık camın içinde c / 1,5 ≈ 200.000 km/s ile hareket eder. Hangi açıdan bakılırsa bakılsın ışık ve öteki elektromanyetik dalgalar anında yayılıyormuş gibi gözükür ancak, ölçülebilir hızlarının uzun mesafeler ve hassas ölçümlerle ölçülebilir sonuçları vardır. Uzaydaki keşif araçlarıyla iletişim kurarken mesajların Dünya'dan uzay aracına ya da uzay aracından Dünya'ya ulaşması dakikalar ya da saatler alabilir. Yıldızlardan gelen ışık onları yıllar önce terk etmiştir ve bu sayede uzaktaki nesnelere bakarak evrenin tarihini çalışma şansı verir. Işığın ölçülebilir hızı aynı zamanda bilgisayardaki bilgilerin çipler arasında aktarılması gerektiği için bilgisayarların teorik hızını da sınırlar. Işık hızı, uzak mesafeleri yüksek isabetle ölçebilmek için uçuş zamanı ölçümlerinde de kullanılır.",
+  "candidates": [
+    "Tam değeri saniyede 299.792.458 metredir.",
+    "Görelilik teorisi'nde c, uzay-zaman arasındaki ilişkiyi kurar; aynı zamanda meşhur kütle-enerji eşdeğerliliği formülünde de gözükür E = mc2.",
+    "Örneğin, görülebilir ışık için camın kırılma endeksi genellikle 1,5 civarındadır.",
+    "Yani ışık camın içinde c / 1,5 ≈ 200.000 km/s ile hareket eder."
+  ]
+}
