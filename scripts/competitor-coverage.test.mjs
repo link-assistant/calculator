@@ -65,7 +65,7 @@ test('matches numbers at the expected precision and with units', () => {
   assert.equal(resultsMatch('-2 hours', '2 hours'), false);
 });
 
-function runCoverage(t, previous, rows, { separateOutput = false, rejects = false } = {}) {
+function runCoverage(t, previous, rows, { separateOutput = false, rejects = false, sourceFilter = null } = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'coverage-gate-'));
   t.after(() => rmSync(dir, { recursive: true, force: true }));
   const binary = join(dir, 'calculator.mjs');
@@ -81,6 +81,7 @@ function runCoverage(t, previous, rows, { separateOutput = false, rejects = fals
   const run = spawnSync(process.execPath, [
     'scripts/competitor-coverage.mjs', '--binary', binary, '--corpus', corpus,
     '--out', out, '--baseline', baseline, '--quiet', '--timeout', '1000',
+    ...(sourceFilter ? ['--source', sourceFilter] : []),
   ], { encoding: 'utf8', timeout: 10000 });
   assert.ifError(run.error);
   return { ...run, out, baseline };
@@ -119,6 +120,15 @@ test('allows unchanged statuses and improvements', { timeout: 15000 }, (t) => {
     { expression: 'unchanged', expected: '4' },
     { expression: 'improved', expected: '4' },
   ]);
+  assert.equal(run.status, 0, run.stderr);
+  assert.match(run.stdout, /No regressions/);
+});
+
+test('applies the source filter to the baseline when checking for missing expressions', { timeout: 15000 }, (t) => {
+  const run = runCoverage(t, [
+    { expression: '2 + 2', status: 'supported' },
+    { source: 'another engine', expression: 'ignored', status: 'supported' },
+  ], [{ expression: '2 + 2', expected: '4' }], { sourceFilter: 'FIXTURE' });
   assert.equal(run.status, 0, run.stderr);
   assert.match(run.stdout, /No regressions/);
 });

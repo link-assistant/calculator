@@ -391,7 +391,11 @@ function main() {
   const files = collectCorpusFiles(options.corpus);
   let cases = files.flatMap(parseCorpus);
   if (options.source) {
-    cases = cases.filter((c) => c.source.toLowerCase().includes(options.source.toLowerCase()));
+    const matchesSource = (row) => row.source.toLowerCase().includes(options.source.toLowerCase());
+    cases = cases.filter(matchesSource);
+    if (baseline) {
+      baseline.results = baseline.results.filter(matchesSource);
+    }
   }
   if (cases.length === 0) {
     throw new Error('No corpus cases found.');
