@@ -137,7 +137,17 @@ impl ExpressionParser {
     }
 
     pub(super) fn parse_tokenized(&self, input: &str) -> Result<Expression, CalculatorError> {
-        let mut lexer = Lexer::new(input);
+        self.parse_lexer(input, Lexer::new(input))
+    }
+
+    pub(super) fn parse_tokenized_decimal_commas(
+        &self,
+        input: &str,
+    ) -> Result<Expression, CalculatorError> {
+        self.parse_lexer(input, Lexer::with_decimal_commas(input))
+    }
+
+    fn parse_lexer(&self, input: &str, mut lexer: Lexer) -> Result<Expression, CalculatorError> {
         let tokens = lexer.tokenize()?;
         let mut parser = TokenParser::new(&tokens, &self.number_grammar, input);
         let mut expr = parser.parse_complete_expression()?;

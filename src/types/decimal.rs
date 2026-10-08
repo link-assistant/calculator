@@ -85,6 +85,12 @@ impl Decimal {
         Self(self.0.normalize())
     }
 
+    /// Checked multiplication that returns None on overflow.
+    #[must_use]
+    pub fn checked_mul(&self, other: &Self) -> Option<Self> {
+        self.0.checked_mul(other.0).map(Self)
+    }
+
     /// Checked division that returns None on division by zero.
     #[must_use]
     pub fn checked_div(&self, other: &Self) -> Option<Self> {

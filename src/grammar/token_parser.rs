@@ -1,6 +1,7 @@
 //! Token-based expression parser.
 mod comparison;
 mod integral;
+mod numbers;
 mod operators;
 mod units;
 
@@ -279,7 +280,18 @@ impl<'a> TokenParser<'a> {
 
             let mut value = self.number_grammar.parse_number(&num_str)?;
             if let Some(multiplier) = self.consume_adjacent_si_suffix(number_end) {
-                value = value * multiplier;
+                value = value
+                    .checked_mul(&multiplier)
+                    .ok_or(CalculatorError::Overflow)?;
+            }
+
+            if let Some(multiplier) = self.consume_word_scale() {
+                value = value
+                    .checked_mul(&multiplier)
+                    .ok_or(CalculatorError::Overflow)?;
+            }
+            if let Some(unit) = self.consume_speed_unit() {
+                return Ok(Expression::number_with_unit(value, unit));
             }
 
             // Check for unit (identifier following number that is not a function)

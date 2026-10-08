@@ -2,7 +2,7 @@
 
 use std::collections::VecDeque;
 
-use super::arithmetic_words;
+use super::{arithmetic_words, is_math_function, locale_numbers, DateTimeGrammar};
 use crate::error::CalculatorError;
 
 /// Checks if a character is a Unicode combining mark (General Category M).
@@ -164,6 +164,8 @@ pub enum TokenKind {
     RightParen,
     /// A colon (for time).
     Colon,
+    /// A value with an absolute uncertainty (`±`).
+    PlusMinus,
     /// A comma.
     Comma,
     /// The "at" keyword for temporal context.
@@ -247,6 +249,9 @@ pub struct Lexer {
     input: Vec<char>,
     pos: usize,
     previous_token_can_end_value: bool,
+    previous_identifier: Option<String>,
+    parentheses: Vec<bool>,
+    decimal_comma: bool,
     /// Tokens already scanned from number or operator words.
     pending: VecDeque<Token>,
 }
@@ -259,8 +264,17 @@ impl Lexer {
             input: input.chars().collect(),
             pos: 0,
             previous_token_can_end_value: false,
+            previous_identifier: None,
+            parentheses: Vec::new(),
+            decimal_comma: false,
             pending: VecDeque::new(),
         }
+    }
+
+    pub(super) fn with_decimal_commas(input: &str) -> Self {
+        let mut lexer = Self::new(input);
+        lexer.decimal_comma = true;
+        lexer
     }
 
     /// Tokenizes the entire input.
@@ -286,6 +300,23 @@ impl Lexer {
             None => self.scan_token()?,
         };
 
+        match &token.kind {
+            TokenKind::LeftParen => {
+                let function = self
+                    .previous_identifier
+                    .as_deref()
+                    .is_some_and(is_math_function);
+                self.parentheses.push(function);
+            }
+            TokenKind::RightParen => {
+                self.parentheses.pop();
+            }
+            _ => {}
+        }
+        self.previous_identifier = match &token.kind {
+            TokenKind::Identifier(id) => Some(id.clone()),
+            _ => None,
+        };
         self.previous_token_can_end_value = matches!(
             token.kind,
             TokenKind::Number(_)
@@ -316,6 +347,10 @@ impl Lexer {
 
         // Single-character tokens
         let token = match ch {
+            '±' => {
+                self.advance();
+                Token::new(TokenKind::PlusMinus, start, self.pos, ch.to_string())
+            }
             '+' => {
                 self.advance();
                 Token::new(TokenKind::Plus, start, self.pos, "+".to_string())
@@ -496,43 +531,19 @@ impl Lexer {
 
     fn scan_number(&mut self) -> Result<Token, CalculatorError> {
         let start = self.pos;
-        let mut text = String::new();
-        let mut has_dot = false;
-
-        if self.current() == '.' && !self.peek().is_some_and(|c| c.is_ascii_digit()) {
+        if self.current() == '.' && !self.peek().is_some_and(|ch| ch.is_ascii_digit()) {
             return Err(CalculatorError::parse(format!(
                 "Unexpected character '.' at position {start}"
             )));
         }
-
-        while !self.is_at_end() {
-            let ch = self.current();
-            if ch.is_ascii_digit() {
-                text.push(ch);
-                self.advance();
-            } else if ch == '_'
-                && text
-                    .chars()
-                    .last()
-                    .is_some_and(|previous| previous.is_ascii_digit())
-                && self.peek().is_some_and(|next| next.is_ascii_digit())
-            {
-                // `_` is a visual digit separator in Numbat, fend, and many
-                // programming languages. It is not part of the numeric value.
-                self.advance();
-            } else if ch == '.' && !has_dot {
-                // Check if next char is a digit (otherwise it might be something else)
-                if self.peek().is_some_and(|c| c.is_ascii_digit()) {
-                    has_dot = true;
-                    text.push(ch);
-                    self.advance();
-                } else {
-                    break;
-                }
-            } else {
-                break;
-            }
-        }
+        let date_component = self
+            .previous_identifier
+            .as_deref()
+            .is_some_and(DateTimeGrammar::looks_like_datetime);
+        let allow_comma = !self.parentheses.contains(&true) && !date_component;
+        let (mut text, end) =
+            locale_numbers::scan(&self.input, start, allow_comma, self.decimal_comma)?;
+        self.pos = end;
 
         // Scientific notation is consumed only when the exponent is complete,
         // keeping an adjacent constant such as `2e` available for implicit

@@ -89,7 +89,7 @@ Theorem in words	de	2 Ampere mal 5 Ohm	10 V	Ohmsches Gesetz
 Theorem in words	fr	2 ampères fois 5 ohms	10 V	Loi d'Ohm
 
 # Group D: phrasing typical of results sections in papers, with numbers.
-Paper phrasing	en	56.7% of 1,234 participants	699.678	"n = 1,234 participants, of whom 56.7% were women"
+Paper phrasing	en	56.7% of 1,234 participants	699.678 participants	"n = 1,234 participants, of whom 56.7% were women"
 Paper phrasing	en	an increase of 25% from 80	100	
 Paper phrasing	en	80 increased by 25 percent	100	
 Paper phrasing	en	a 2.5-fold increase over 40	100	hyphenated fold phrase
@@ -129,7 +129,7 @@ Paper phrasing	ru	в два раза больше, чем 3.5	7
 Paper phrasing	ru	на три порядка больше, чем 5	5000	
 Paper phrasing	ru	синус тридцати градусов	0.5	
 Paper phrasing	ru	1,5 × 10³	1500	Russian decimal comma
-Paper phrasing	ru	12,3 ± 4,5		uncertainty with decimal commas
+Paper phrasing	ru	12,3 ± 4,5	12.3 ± 4.5	uncertainty with decimal commas
 Paper phrasing	ru	25 °C в кельвинах	298.15 K	
 Paper phrasing	es	la mitad de tres cuartos	0.375	
 Paper phrasing	es	el treinta por ciento de 700	210	

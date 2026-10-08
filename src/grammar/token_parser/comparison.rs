@@ -22,7 +22,12 @@ impl TokenParser<'_> {
             return Ok(Expression::comparison(left, ComparisonOp::Compare, right));
         }
 
-        let left = self.parse_additive()?;
+        let mut left = self.parse_additive()?;
+        if self.check(&TokenKind::PlusMinus) {
+            self.advance();
+            let uncertainty = self.parse_additive()?;
+            left = Expression::function_call("uncertainty", vec![left, uncertainty]);
+        }
 
         if self.check_vs() {
             self.advance(); // consume "vs"
