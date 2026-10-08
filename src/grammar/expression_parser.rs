@@ -30,6 +30,11 @@ mod locale;
 /// This function is exposed so downstream consumers can reproduce the
 /// exact-versus-floating-point fallback used inside the evaluator.
 pub fn evaluate_power(base_val: &Value, exp_val: &Value) -> Result<Value, CalculatorError> {
+    if base_val.unit.is_opaque_compound() || exp_val.unit.is_opaque_compound() {
+        return Err(CalculatorError::domain(
+            "powers of compound units are not supported",
+        ));
+    }
     // Try exact rational exponentiation first
     if let (Some(base_rat), Some(exp_rat)) = (base_val.to_rational(), exp_val.to_rational()) {
         if exp_rat.is_integer() {

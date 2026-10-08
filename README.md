@@ -78,6 +78,8 @@ arithmetic on uncertain values reports an error until propagation is supported.
 German `Mio.` and `Mrd.` scale by one million and one billion, respectively;
 `1,08 Mrd. km/h` produces **1080000000 km/h**. Distance/time spellings such as
 `km/h` are preserved as custom units; this does not add physical unit conversions.
+Matching units can be added or divided, and unitless factors can scale them.
+Powers, mathematical functions, and other unit algebra report an error.
 
 ### DateTime Support
 Supports multiple date and time formats:

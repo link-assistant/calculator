@@ -112,6 +112,28 @@ fn german_billion_abbreviation_and_compound_unit_are_preserved() {
 }
 
 #[test]
+fn compound_units_are_not_silently_discarded_by_unsupported_algebra() {
+    assert_result("2 km/h * 2", "4 km/h");
+    assert_result("2 * 2 km/h", "4 km/h");
+    assert_result("4 km/h / 2", "2 km/h");
+    assert_result("4 km/h / 2 km/h", "2");
+    assert_result("2 km/h + 1 km/h", "3 km/h");
+    for input in [
+        "5 kg * 9.8 m/s^2",
+        "1 kg * (299792458 m/s)^2",
+        "5 kg * 2 km/h",
+        "1 / 2 km/h",
+        "2 km/h / 2 kg",
+        "sqrt(9 km/h)",
+    ] {
+        assert!(
+            !Calculator::new().calculate_internal(input).success,
+            "{input}"
+        );
+    }
+}
+
+#[test]
 fn large_word_scales_report_overflow_without_panicking() {
     assert!(
         !Calculator::new()

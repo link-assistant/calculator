@@ -555,6 +555,14 @@ impl Value {
 
     /// Multiplies two values.
     pub fn multiply(&self, other: &Self) -> Result<Self, CalculatorError> {
+        if self.unit != Unit::None
+            && other.unit != Unit::None
+            && (self.unit.is_opaque_compound() || other.unit.is_opaque_compound())
+        {
+            return Err(CalculatorError::domain(
+                "compound unit multiplication requires a unitless factor",
+            ));
+        }
         match (&self.kind, &other.kind) {
             // Rational * Rational
             (ValueKind::Rational(a), ValueKind::Rational(b)) => {
@@ -607,6 +615,14 @@ impl Value {
 
     /// Divides two values.
     pub fn divide(&self, other: &Self) -> Result<Self, CalculatorError> {
+        if other.unit != Unit::None
+            && self.unit != other.unit
+            && (self.unit.is_opaque_compound() || other.unit.is_opaque_compound())
+        {
+            return Err(CalculatorError::domain(
+                "compound unit division requires matching units or a unitless divisor",
+            ));
+        }
         match (&self.kind, &other.kind) {
             // Rational / Rational
             (ValueKind::Rational(a), ValueKind::Rational(b)) => {
