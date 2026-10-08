@@ -316,7 +316,7 @@ jobs:
         id: competitor-check
         run: |
           rm -f docs/case-studies/issue-227/results/coverage-report.md
-          node scripts/competitor-coverage.mjs --baseline docs/case-studies/issue-227/results/coverage-baseline.json --quiet
+          node scripts/competitor-coverage.mjs --binary experiments/issue-227/bounded-calculator.sh --baseline docs/case-studies/issue-227/results/coverage-baseline.json --quiet
 
       - name: Upload coverage report
         if: always() && steps.competitor-check.outcome != 'skipped'

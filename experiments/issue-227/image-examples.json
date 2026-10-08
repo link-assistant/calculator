@@ -1,0 +1,70 @@
+{
+  "apple": [
+    {
+      "url": "https://ipcdn-web.apple.com/assets/v2/web/13592c32-2c56-4a08-9796-00fdcbb28128",
+      "page": "https://support.apple.com/guide/ipad/solve-math-with-math-notes-ipadeb38d0f8/ipados",
+      "examples": [
+        [
+          "Airfare = $600",
+          ""
+        ],
+        [
+          "Lodging = $223 × Days",
+          "$1,338.00"
+        ],
+        [
+          "Meals = $100 × Days",
+          "$600"
+        ],
+        [
+          "Days = 6",
+          ""
+        ],
+        [
+          "People = 4",
+          ""
+        ],
+        [
+          "Total = (Airfare + Lodging + Meals) × People",
+          "$10,152.00"
+        ]
+      ],
+      "sha256": "947f45dad6813a29ef19faefe2297ce5ed4e64720d2e73cef37b0629e5c02c19"
+    },
+    {
+      "url": "https://ipcdn-web.apple.com/assets/v2/web/7cb9b1de-fcd1-4bff-8d51-934ddda8b9b0",
+      "page": "https://support.apple.com/guide/iphone/work-with-graphs-in-math-notes-iph09ad8b507/ios",
+      "examples": [
+        [
+          "N = 100",
+          ""
+        ],
+        [
+          "X = 15",
+          ""
+        ],
+        [
+          "Y = N((1/2)^(x/5))",
+          ""
+        ]
+      ],
+      "sha256": "5ce5ed7d625f8fad840106849b1ee260a4d454b1cc6307b05f787c97e43a365c"
+    }
+  ],
+  "samsung": [
+    {
+      "url": "https://image-us.samsung.com/SamsungUS/support/mobile/ans10002547/PS_GS_S21_Calculator.jpg",
+      "page": "https://www.samsung.com/us/support/answer/ANS10002547/",
+      "examples": [],
+      "sha256": "0ae0d46b12f570f8d4adefefa33aa1669946d2f06f6591b7fe86e3119ae863df"
+    }
+  ],
+  "xiaomi": [
+    {
+      "url": "https://xiaomiknowledge.blob.core.windows.net/image/bdce3117-5a4e-ec11-8f8e-000d3ac6fa4a.png",
+      "page": "https://www.mi.com/uk/support/article/KA-06518/",
+      "examples": [],
+      "sha256": "3fb218915dd5af4347191874e02111d55b2ff8577a480918a1b68f7c63b57b6e"
+    }
+  ]
+}
