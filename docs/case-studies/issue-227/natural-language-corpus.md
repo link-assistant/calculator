@@ -202,13 +202,29 @@ retains its per-language table for all 23 languages; its English count also
 includes the English competitor corpora. The inventory above counts only
 scientific natural-language rows.
 
+When parallel corpus expansions conflict in these generated files, retain
+both previous baseline snapshots, regenerate from the combined corpus, and
+verify their union before copying the result:
+
+```sh
+node experiments/issue-227/verify-coverage-merge.mjs \
+  ci-logs/coverage-expanded/coverage-baseline.json \
+  ci-logs/pre-merge-pr-baseline.json ci-logs/pre-merge-main-baseline.json
+```
+
+This verifies exact statuses and duplicate assertion counts as well as the
+absence of regressions. The snapshots used to resolve #251 preserved all
+4,249 cases from the scientific expansion and all 7,104 cases from the
+upstream-suite expansion in #249.
+
 ## Measured result and limits
 
-The release CLI evaluates the 4,249-row full corpus with 656 supported,
-268 different, 3,325 unsupported and zero timeouts. No original baseline case
-regressed or disappeared. The larger corpus reduces aggregate coverage from
-20.9% to 15.4% by exposing additional unsupported inputs; the parser has not
-changed. Scientific-only coverage remains small, as expected for the parser
+After incorporating the upstream-suite expansion in #249, the release CLI
+evaluates the combined 8,298-row full corpus with 1,051 supported, 333 different,
+6,914 unsupported and zero timeouts. No baseline case from either expansion
+regressed, disappeared or changed status. Aggregate coverage is 12.7%; the
+larger corpora expose additional unsupported inputs without changing the
+parser. Scientific-only coverage remains small, as expected for the parser
 work tracked by #233–#238.
 
 The inventory now meets the per-language and per-construct requirements. It is
