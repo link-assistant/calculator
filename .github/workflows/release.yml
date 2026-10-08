@@ -12,6 +12,8 @@ on:
       - 'web/**'
       - 'Cargo.toml'
       - 'Cargo.lock'
+      - 'docs/case-studies/issue-227/corpus/**'
+      - 'docs/case-studies/issue-227/results/coverage-baseline.json'
       - '.github/workflows/**'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -23,6 +25,8 @@ on:
       - 'web/**'
       - 'Cargo.toml'
       - 'Cargo.lock'
+      - 'docs/case-studies/issue-227/corpus/**'
+      - 'docs/case-studies/issue-227/results/coverage-baseline.json'
       - '.github/workflows/**'
   workflow_dispatch:
     inputs:
@@ -273,14 +277,63 @@ jobs:
       - name: Run doc tests
         run: cargo test --doc --verbose
 
+  # === COMPETITOR COVERAGE ===
+  coverage:
+    name: Competitor Coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [test]
+    # Changelog/detection ancestors may be skipped on corpus-only or manual runs.
+    if: always() && !cancelled() && needs.test.result == 'success'
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+
+      - name: Cache cargo registry
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-build-
+
+      - name: Build release binary
+        run: cargo build --release --locked --bin link-calculator
+
+      - name: Check competitor coverage
+        id: competitor-check
+        run: |
+          rm -f docs/case-studies/issue-227/results/coverage-report.md
+          node scripts/competitor-coverage.mjs --baseline docs/case-studies/issue-227/results/coverage-baseline.json --quiet
+
+      - name: Upload coverage report
+        if: always() && steps.competitor-check.outcome != 'skipped'
+        uses: actions/upload-artifact@v7
+        with:
+          name: competitor-coverage-report
+          path: docs/case-studies/issue-227/results/coverage-report.md
+          retention-days: 14
+
   # === BUILD ===
-  # Build package - only runs if lint and test pass
+  # Build package - only runs if lint, tests and competitor coverage pass
   build:
     name: Build Package
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    needs: [lint, test]
-    if: always() && !cancelled() && needs.lint.result == 'success' && needs.test.result == 'success'
+    needs: [lint, test, coverage]
+    if: always() && !cancelled() && needs.lint.result == 'success' && needs.test.result == 'success' && needs.coverage.result == 'success'
     steps:
       - uses: actions/checkout@v6
 
@@ -322,8 +375,8 @@ jobs:
     name: WASM Build
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    needs: [lint, test]
-    if: always() && !cancelled() && needs.lint.result == 'success' && needs.test.result == 'success'
+    needs: [lint, test, coverage]
+    if: always() && !cancelled() && needs.lint.result == 'success' && needs.test.result == 'success' && needs.coverage.result == 'success'
     steps:
       - uses: actions/checkout@v6
 

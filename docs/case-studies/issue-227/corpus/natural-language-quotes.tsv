@@ -1,0 +1,177 @@
+# Natural-language scientific statements with numbers, in several languages (issue #227).
+# Columns: source, lang, expression, expected, note. Empty expected = must evaluate to a value.
+# Group A: verbatim numeric fragments quoted from Wikipedia lead sections (fetched 2026-10-07, CC BY-SA 4.0),
+# typed exactly as they appear (thousands separators, unicode minus/superscripts, fraction slash, locale decimals).
+Wikipedia quote	en	299792458 m⋅s−1	299792458 m/s	https://en.wikipedia.org/wiki/Speed_of_light — "exactly equal to 299792458 m⋅s−1" (U+22C5 dot operator, U+2212 minus)
+Wikipedia quote	en	299,792,458 metres per second	299792458 m/s	https://en.wikipedia.org/wiki/Speed_of_light — thousands separators + spelled unit
+Wikipedia quote	en	1⁄299792458 second	3.3356409519815204e-9 s	https://en.wikipedia.org/wiki/Speed_of_light — U+2044 fraction slash
+Wikipedia quote	en	1 billion kilometres per hour	1000000000 km/h	https://en.wikipedia.org/wiki/Speed_of_light — scale word before unit
+Wikipedia quote	en	700 million miles per hour	700000000 mph	https://en.wikipedia.org/wiki/Speed_of_light
+Wikipedia quote	ru	299 792 458 м/с	299792458 м/с	https://ru.wikipedia.org/wiki/Скорость_света — "в точности равная 299 792 458 м/с" (spaces as thousands separators)
+Wikipedia quote	ru	3×10⁸ м/с	300000000 м/с	https://ru.wikipedia.org/wiki/Скорость_света — "приблизительно 3×10⁸ м/с" (superscript exponent)
+Wikipedia quote	de	300 000 km/s	300000 km/s	https://de.wikipedia.org/wiki/Lichtgeschwindigkeit — "ungefähr 300 000 km/s"
+Wikipedia quote	de	1,08 Mrd. km/h	1080000000 km/h	https://de.wikipedia.org/wiki/Lichtgeschwindigkeit — German decimal comma and "Mrd." (Milliarden)
+Wikipedia quote	fr	299 792 458 m/s	299792458 m/s	https://fr.wikipedia.org/wiki/Vitesse_de_la_lumière — "Elle est égale à 299 792 458 m/s" (narrow no-break spaces)
+Wikipedia quote	es	299 792 458 metros por segundo	299792458 m/s	https://es.wikipedia.org/wiki/Velocidad_de_la_luz
+Wikipedia quote	es	3 × 10⁸ m/s	300000000 m/s	https://es.wikipedia.org/wiki/Velocidad_de_la_luz — "suele aproximarse a 3 × 10⁸ m/s"
+Wikipedia quote	es	300 000 kilómetros por segundo	300000 km/s	https://es.wikipedia.org/wiki/Velocidad_de_la_luz — "en lenguaje común 300 000 kilómetros por segundo"
+Wikipedia quote	it	299792458 m/s	299792458 m/s	https://it.wikipedia.org/wiki/Velocità_della_luce — "Ha un valore di 299792458 m/s"
+Wikipedia quote	pt	299 792 458 metros por segundo	299792458 m/s	https://pt.wikipedia.org/wiki/Velocidade_da_luz
+Wikipedia quote	pt	1 bilhão quilômetros por hora	1000000000 km/h	https://pt.wikipedia.org/wiki/Velocidade_da_luz — Portuguese scale word
+Wikipedia quote	pt	700 milhão milhas por hora	700000000 mph	https://pt.wikipedia.org/wiki/Velocidade_da_luz
+Wikipedia quote	hi	299,792,458 मीटर प्रति सेकेण्ड	299792458 m/s	https://hi.wikipedia.org/wiki/प्रकाश_की_गति — "सटीक मान 299,792,458 मीटर प्रति सेकेण्ड"
+Wikipedia quote	hi	3 लाख किमी/सेकंड	300000 km/s	https://hi.wikipedia.org/wiki/प्रकाश_की_गति — Indian scale word lakh (लाख = 100 000)
+Wikipedia quote	zh	299792458m/s	299792458 m/s	https://zh.wikipedia.org/wiki/光速 — "精確值為299792458m/s" (no space before unit)
+Wikipedia quote	zh	3.00×10⁸m/s	300000000 m/s	https://zh.wikipedia.org/wiki/光速
+Wikipedia quote	ja	1/299792458秒	3.3356409519815204e-9 s	https://ja.wikipedia.org/wiki/光速 — "1/299792458秒に進む長さ" (unit written in kanji)
+Wikipedia quote	ja	299792458 m/s	299792458 m/s	https://ja.wikipedia.org/wiki/光速
+Wikipedia quote	ar	299,792,458 متر لكل ثانية	299792458 m/s	https://ar.wikipedia.org/wiki/سرعة_الضوء — "تساوي قيمته 299,792,458 متر لكل ثانية"
+Wikipedia quote	ar	300,000 كيلومتر في الثانية	300000 km/s	https://ar.wikipedia.org/wiki/سرعة_الضوء
+Wikipedia quote	ar	مليار كيلومتر لكل ساعة	1000000000 km/h	https://ar.wikipedia.org/wiki/سرعة_الضوء — "حوالي مليار كيلومتر لكل ساعة" (scale word without digit)
+
+# Group B: the same quoted quantities used in a conversion, i.e. what a reader does with the quote.
+Wikipedia quote (derived)	en	299,792,458 metres per second in kilometres per hour	1079252848.8 km/h	
+Wikipedia quote (derived)	en	700 million miles per hour in metres per second	312928000 m/s	
+Wikipedia quote (derived)	ru	299 792 458 м/с в км/ч	1079252848.8 км/ч	
+Wikipedia quote (derived)	de	300 000 km/s in m/s	300000000 m/s	
+Wikipedia quote (derived)	fr	299 792 458 m/s en km/h	1079252848.8 km/h	
+Wikipedia quote (derived)	es	300 000 kilómetros por segundo en metros por segundo	300000000 m/s	
+Wikipedia quote (derived)	hi	3 लाख किमी/सेकंड को मीटर प्रति सेकंड में	300000000 m/s	
+Wikipedia quote (derived)	zh	299792458m/s 换算成 km/h	1079252848.8 km/h	
+Wikipedia quote (derived)	pt	1 bilhão quilômetros por hora em metros por segundo	277777777.78 m/s	
+Wikipedia quote (derived)	ar	300,000 كيلومتر في الثانية بالمتر في الثانية	300000000 m/s	
+
+# Group C: theorems and laws stated in words with concrete numbers substituted.
+# Pythagoras (en.wikipedia: "the square of the hypotenuse is equal to the sum of the squares of the other two sides")
+Theorem in words	en	the square root of the sum of the squares of 3 and 4	5	Pythagoras, legs 3 and 4
+Theorem in words	en	3 squared plus 4 squared	25	
+Theorem in words	en	the square of 3 plus the square of 4	25	
+Theorem in words	ru	квадратный корень из суммы квадратов 3 и 4	5	Теорема Пифагора: "квадрат гипотенузы равен сумме квадратов катетов"
+Theorem in words	ru	3 в квадрате плюс 4 в квадрате	25	
+Theorem in words	es	la raíz cuadrada de la suma de los cuadrados de 3 y 4	5	es.wikipedia: "la hipotenusa es igual a la raíz cuadrada de la suma ... de los cuadrados ... de los catetos"
+Theorem in words	es	3 al cuadrado más 4 al cuadrado	25	
+Theorem in words	de	die Quadratwurzel aus der Summe der Quadrate von 3 und 4	5	Satz des Pythagoras
+Theorem in words	de	3 zum Quadrat plus 4 zum Quadrat	25	
+Theorem in words	fr	la racine carrée de la somme des carrés de 3 et 4	5	Théorème de Pythagore
+Theorem in words	fr	3 au carré plus 4 au carré	25	
+Theorem in words	zh	3的平方加4的平方的平方根	5	勾股定理 "勾三股四弦五"
+Theorem in words	zh	3的平方加4的平方	25	
+Theorem in words	ja	3の二乗と4の二乗の和の平方根	5	ピタゴラスの定理
+Theorem in words	ja	3の二乗足す4の二乗	25	
+Theorem in words	hi	3 का वर्ग और 4 का वर्ग का योग	25	पाइथागोरस प्रमेय
+Theorem in words	pt	a raiz quadrada da soma dos quadrados de 3 e 4	5	Teorema de Pitágoras
+Theorem in words	it	la radice quadrata della somma dei quadrati di 3 e 4	5	Teorema di Pitagora
+Theorem in words	ar	الجذر التربيعي لمجموع مربعي 3 و 4	5	نظرية فيثاغورس
+# Kepler's third law (en.wikipedia: "The square of a planet's orbital period is proportional to the cube of the length of the semi-major axis")
+Theorem in words	en	the square root of the cube of 4	8	Kepler III with a = 4 AU gives T = 8 years
+Theorem in words	en	4 cubed	64	
+Theorem in words	ru	квадратный корень из куба 4	8	Третий закон Кеплера
+Theorem in words	de	die Quadratwurzel aus 4 hoch 3	8	Drittes Keplersches Gesetz
+Theorem in words	fr	la racine carrée du cube de 4	8	Troisième loi de Kepler
+Theorem in words	es	la raíz cuadrada del cubo de 4	8	Tercera ley de Kepler
+Theorem in words	zh	4的立方的平方根	8	开普勒第三定律
+# Euler's Basel problem: the sum of the reciprocals of the squares equals pi squared over six
+Theorem in words	en	pi squared divided by six	1.644934	Basel problem
+Theorem in words	en	π²/6	1.644934	unicode form
+Theorem in words	ru	пи в квадрате делить на шесть	1.644934	Базельская задача
+Theorem in words	fr	pi au carré divisé par six	1.644934	Problème de Bâle
+# Mass–energy equivalence: energy equals mass times the speed of light squared
+Theorem in words	en	1 kilogram times the square of 299792458 metres per second	89875517873681764 J	E = mc²
+Theorem in words	en	1 kg × (299792458 m/s)²	89875517873681764 J	
+Theorem in words	ru	1 килограмм умножить на квадрат 299792458 метров в секунду	89875517873681764 Дж	E = mc²
+Theorem in words	de	1 Kilogramm mal das Quadrat von 299792458 Metern pro Sekunde	89875517873681764 J	
+Theorem in words	zh	1千克乘以299792458米每秒的平方	89875517873681764 J	
+# Ohm's law: voltage equals current times resistance
+Theorem in words	en	2 amperes times 5 ohms	10 V	Ohm's law
+Theorem in words	ru	2 ампера умножить на 5 ом	10 В	Закон Ома
+Theorem in words	es	2 amperios por 5 ohmios	10 V	Ley de Ohm
+Theorem in words	de	2 Ampere mal 5 Ohm	10 V	Ohmsches Gesetz
+Theorem in words	fr	2 ampères fois 5 ohms	10 V	Loi d'Ohm
+
+# Group D: phrasing typical of results sections in papers, with numbers.
+Paper phrasing	en	56.7% of 1,234 participants	699.678	"n = 1,234 participants, of whom 56.7% were women"
+Paper phrasing	en	an increase of 25% from 80	100	
+Paper phrasing	en	80 increased by 25 percent	100	
+Paper phrasing	en	a 2.5-fold increase over 40	100	hyphenated fold phrase
+Paper phrasing	en	2.5 times 40	100	
+Paper phrasing	en	a factor of two larger than 3.5	7	
+Paper phrasing	en	three orders of magnitude larger than 5	5000	
+Paper phrasing	en	one order of magnitude smaller than 5000	500	
+Paper phrasing	en	the mean of 12, 15 and 18	15	
+Paper phrasing	en	the ratio of 22 to 7	3.142857	
+Paper phrasing	en	half of three quarters	0.375	spelled fractions
+Paper phrasing	en	two thirds of 600	400	
+Paper phrasing	en	seven factorial divided by five factorial	42	
+Paper phrasing	en	the cube root of twenty-seven	3	hyphenated spelled number
+Paper phrasing	en	twenty-five percent of two hundred	50	
+Paper phrasing	en	three point one four times two	6.28	spelled decimal
+Paper phrasing	en	1.5 × 10^3	1500	
+Paper phrasing	en	1.5 × 10³	1500	superscript exponent
+Paper phrasing	en	2.5e-3	0.0025	
+Paper phrasing	en	10⁻³	0.001	superscript negative exponent
+Paper phrasing	en	¼ + ½	0.75	unicode vulgar fractions
+Paper phrasing	en	12.3 ± 4.5		uncertainty notation; must evaluate (interval or value with error)
+Paper phrasing	en	25 °C in K	298.15 K	temperature with degree sign
+Paper phrasing	en	5 µm in nm	5000 nm	micro sign U+00B5
+Paper phrasing	en	5 K/min × 20 minutes	100 K	rate × time unit algebra
+Paper phrasing	en	the sine of thirty degrees	0.5	
+Paper phrasing	en	sin(30°)	0.5	
+Paper phrasing	en	sin(30 deg)	0.5	
+Paper phrasing	en	ln(e^2)	2	
+Paper phrasing	en	log base 2 of 1024	10	
+Paper phrasing	en	2 hours 15 minutes plus 47 minutes	3 hours 2 minutes	
+Paper phrasing	en	the area of a circle with radius 2	12.566371	requires a formula vocabulary
+Paper phrasing	ru	тридцать процентов от 700	210	
+Paper phrasing	ru	700 увеличить на 30 процентов	910	
+Paper phrasing	ru	половина от трёх четвертей	0.375	
+Paper phrasing	ru	десять в кубе	1000	
+Paper phrasing	ru	в два раза больше, чем 3.5	7	
+Paper phrasing	ru	на три порядка больше, чем 5	5000	
+Paper phrasing	ru	синус тридцати градусов	0.5	
+Paper phrasing	ru	1,5 × 10³	1500	Russian decimal comma
+Paper phrasing	ru	12,3 ± 4,5		uncertainty with decimal commas
+Paper phrasing	ru	25 °C в кельвинах	298.15 K	
+Paper phrasing	es	la mitad de tres cuartos	0.375	
+Paper phrasing	es	el treinta por ciento de 700	210	
+Paper phrasing	es	dos veces mayor que 3.5	7	
+Paper phrasing	es	diez al cubo	1000	
+Paper phrasing	es	el seno de treinta grados	0.5	
+Paper phrasing	de	die Hälfte von drei Vierteln	0.375	
+Paper phrasing	de	dreißig Prozent von 700	210	
+Paper phrasing	de	zwei hoch zehn	1024	
+Paper phrasing	de	zehn hoch drei	1000	
+Paper phrasing	de	1,5 · 10³	1500	German decimal comma and middle dot
+Paper phrasing	de	der Sinus von dreißig Grad	0.5	
+Paper phrasing	fr	la moitié de trois quarts	0.375	
+Paper phrasing	fr	trente pour cent de 700	210	
+Paper phrasing	fr	deux puissance dix	1024	
+Paper phrasing	fr	dix au cube	1000	
+Paper phrasing	fr	1,5 × 10³	1500	French decimal comma
+Paper phrasing	fr	le sinus de trente degrés	0.5	
+Paper phrasing	zh	700的百分之三十	210	
+Paper phrasing	zh	二的十次方	1024	
+Paper phrasing	zh	十的三次方	1000	
+Paper phrasing	zh	四分之三的一半	0.375	
+Paper phrasing	zh	三十度的正弦	0.5	
+Paper phrasing	zh	1.5×10³	1500	
+Paper phrasing	ja	700の30パーセント	210	
+Paper phrasing	ja	2の10乗	1024	
+Paper phrasing	ja	十の三乗	1000	
+Paper phrasing	ja	4分の3の半分	0.375	
+Paper phrasing	ja	30度の正弦	0.5	
+Paper phrasing	hi	700 का तीस प्रतिशत	210	
+Paper phrasing	hi	दो की दसवीं घात	1024	
+Paper phrasing	hi	तीन चौथाई का आधा	0.375	
+Paper phrasing	hi	तीस डिग्री की ज्या	0.5	
+Paper phrasing	pt	metade de três quartos	0.375	
+Paper phrasing	pt	trinta por cento de 700	210	
+Paper phrasing	pt	dois elevado a dez	1024	
+Paper phrasing	it	la metà di tre quarti	0.375	
+Paper phrasing	it	il trenta per cento di 700	210	
+Paper phrasing	it	due alla decima	1024	
+Paper phrasing	ar	ثلاثون بالمئة من 700	210	
+Paper phrasing	ar	اثنان أس عشرة	1024	
+Paper phrasing	ko	700의 30퍼센트	210	
+Paper phrasing	ko	2의 10제곱	1024	
+Paper phrasing	tr	700'ün yüzde otuzu	210	
+Paper phrasing	tr	iki üzeri on	1024	
