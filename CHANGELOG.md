@@ -69,6 +69,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.22.1] - 2026-10-08
+
+### Added
+- Gate CI on competitor expression coverage and upload the regenerated report, with a weekly coverage gap issue containing source and language summaries.
+
+### Fixed
+- Read coverage baselines before regenerating them, and detect worsening statuses and removed corpus expressions.
+
+### Changed
+- Refresh web dependencies and Rust lockfile entries to satisfy the existing dependency freshness CI gate.
+
 ## [0.22.0] - 2026-10-03
 
 ### Changed
