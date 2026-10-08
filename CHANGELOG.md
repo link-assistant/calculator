@@ -73,6 +73,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.23.3] - 2026-10-08
+
+### Added
+- Expand calculator documentation coverage with attributed, reproducible examples and source audits for 15 products.
+
+### Fixed
+- Clear date, exchange-rate and locale-dependent documentation answers and bound competitor probes in CI.
+
 ## [0.23.2] - 2026-10-08
 
 ### Fixed
