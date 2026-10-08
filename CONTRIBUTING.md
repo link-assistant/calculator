@@ -215,6 +215,44 @@ mod tests {
 6. Wait for CI checks to pass
 7. Address any review feedback
 
+## Competitor Coverage
+
+CI builds the release CLI and checks all competitor corpus expressions against
+`docs/case-studies/issue-227/results/coverage-baseline.json`. A status becoming
+worse (`supported` → `different` → `unsupported` → `timeout`), or an expression
+disappearing, fails the Competitor Coverage job. The regenerated
+`coverage-report.md` is available in the `competitor-coverage-report` workflow
+artifact, including the individual expressions with different results.
+
+Run the same check locally, keeping generated output separate from the baseline:
+
+```bash
+cargo build --release --locked --bin link-calculator
+node scripts/competitor-coverage.mjs \
+  --baseline docs/case-studies/issue-227/results/coverage-baseline.json \
+  --out ci-logs/competitor-coverage --quiet
+```
+
+When an engine change improves coverage, update the baseline **in the same PR**:
+first run the check above and investigate any regressions, then regenerate the
+committed baseline and report:
+
+```bash
+node scripts/competitor-coverage.mjs --quiet
+git diff -- docs/case-studies/issue-227/results/coverage-baseline.json
+git add docs/case-studies/issue-227/results/coverage-baseline.json \
+  docs/case-studies/issue-227/results/coverage-report.md
+```
+
+Include the coverage improvement and any intentional corpus changes in the PR
+description. Do not refresh the baseline to hide a regression. Corpus and
+baseline changes also trigger the CI pipeline.
+
+The Coverage Gap Report workflow runs every Monday at 06:00 UTC (and can be
+dispatched manually). It regenerates the full report artifact and creates or
+updates one **Coverage gap report** issue with the source and language tables,
+the measured commit, and a link to the workflow run.
+
 ## Changelog Management
 
 This project uses a fragment-based changelog system similar to [Scriv](https://scriv.readthedocs.io/) (Python) and [Changesets](https://github.com/changesets/changesets) (JavaScript).
