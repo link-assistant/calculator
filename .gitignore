@@ -69,3 +69,7 @@ web/public/data/currency/
 # wasm-pack release archives downloaded by CI (never commit them)
 wasm-pack-v*/
 wasm-pack-v*.tar.gz
+
+# Local CI investigation logs and full competitor results
+/ci-logs/
+docs/case-studies/issue-227/results/coverage-results.json
