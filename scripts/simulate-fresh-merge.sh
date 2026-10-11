@@ -96,6 +96,7 @@ DEFAULT_CHECKS='cargo fmt --all -- --check
 cargo clippy --workspace --all-targets --all-features
 cargo test --all-features
 node scripts/check-file-size.mjs
+node scripts/check-required-docs.mjs
 node --test scripts/*.test.mjs'
 
 status=0

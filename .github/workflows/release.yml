@@ -286,6 +286,9 @@ jobs:
       - name: Check file size limit
         run: node scripts/check-file-size.mjs
 
+      - name: Check required documentation
+        run: node scripts/check-required-docs.mjs
+
       - name: Run script tests
         run: node --test scripts/*.test.mjs
 

@@ -12,3 +12,4 @@ bump: patch
 - Markdown and HTML links are checked by lychee, with transient failures re-checked and Web Archive replacements suggested, and checkouts no longer print git's default-branch hint.
 - Pull requests are also checked for committed credentials (secretlint) and re-tested on a fresh merge with the current `main`, so a semantic merge conflict fails the pull request instead of `main`.
 - Releases prove the crates.io token can publish before pushing the version bump to `main`, so a revoked token can no longer leave `main` bumped on a version crates.io never received.
+- Required documents and the sections other files link to (for example `CONTRIBUTING.md#competitor-coverage`) are checked on every pull request.
