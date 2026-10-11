@@ -51,6 +51,11 @@ on:
         required: false
         type: string
 
+# Least-privilege default for every job; jobs that need more escalate
+# explicitly (issue #256).
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
@@ -63,15 +68,16 @@ env:
   RUSTFLAGS: -Dwarnings
   CARGO_NET_RETRY: '10'
   CARGO_HTTP_MULTIPLEXING: 'false'
-  # Support both CARGO_REGISTRY_TOKEN (cargo's native env var) and CARGO_TOKEN (for backwards compatibility)
-  CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN || secrets.CARGO_TOKEN }}
-  CARGO_TOKEN: ${{ secrets.CARGO_TOKEN || secrets.CARGO_REGISTRY_TOKEN }}
+  # The crates.io credentials are deliberately *not* declared here (issue
+  # #256). A workflow-level `env:` is inherited by every job, including the
+  # pull_request jobs that compile and run branch code (build.rs, tests, npm
+  # install scripts), so they are declared on the two publish steps instead.
 
 jobs:
   # === DETECT CHANGES - determines which jobs should run ===
   detect-changes:
     name: Detect Changes
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     if: github.event_name != 'workflow_dispatch'
     outputs:
@@ -82,12 +88,13 @@ jobs:
       workflow-changed: ${{ steps.changes.outputs.workflow-changed }}
       any-code-changed: ${{ steps.changes.outputs.any-code-changed }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '24.x'
 
@@ -103,17 +110,18 @@ jobs:
   # Docs-only PRs (./docs folder, markdown files) don't require changelog fragments
   changelog:
     name: Changelog Fragment Check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     needs: [detect-changes]
     if: github.event_name == 'pull_request' && needs.detect-changes.outputs.any-code-changed == 'true'
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '24.x'
 
@@ -126,16 +134,17 @@ jobs:
   # This ensures versions are only modified by the automated release pipeline
   version-check:
     name: Version Modification Check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     if: github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '24.x'
 
@@ -151,14 +160,16 @@ jobs:
   # See: https://github.com/link-assistant/hive-mind/pull/1024 for why this dependency was removed
   lint:
     name: Lint and Format Check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     needs: [detect-changes]
-    # Note: always() is required because detect-changes is skipped on workflow_dispatch,
-    # and without always(), this job would also be skipped even though its condition includes workflow_dispatch.
+    # Note: a status function is required because detect-changes is skipped on
+    # workflow_dispatch, and without one this job would also be skipped even
+    # though its condition includes workflow_dispatch. `!cancelled()` (unlike
+    # `always()`) still lets a cancelled run stop here (issue #256).
     # See: https://github.com/actions/runner/issues/491
     if: |
-      always() && !cancelled() && (
+      !cancelled() && (
         github.event_name == 'push' ||
         github.event_name == 'workflow_dispatch' ||
         needs.detect-changes.outputs.rs-changed == 'true' ||
@@ -168,20 +179,23 @@ jobs:
         needs.detect-changes.outputs.workflow-changed == 'true'
       )
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master branch @ 2026-10-09
         with:
+          toolchain: stable
           components: rustfmt, clippy
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '24.x'
 
       - name: Cache cargo registry
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cargo/registry
@@ -210,22 +224,26 @@ jobs:
   # runs on every pipeline run.
   dependency-freshness:
     name: Dependency Freshness
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master branch @ 2026-10-09
+        with:
+          toolchain: stable
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '24.x'
 
       - name: Cache cargo-outdated
         id: cargo-outdated-cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cargo/bin/cargo-outdated
           key: ${{ runner.os }}-cargo-outdated-0.19
@@ -254,19 +272,23 @@ jobs:
     timeout-minutes: 30
     needs: [detect-changes, changelog]
     # Run if: push event, OR changelog succeeded, OR changelog was skipped (docs-only PR)
-    if: always() && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || needs.changelog.result == 'success' || needs.changelog.result == 'skipped')
+    if: ${{ !cancelled() && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || needs.changelog.result == 'success' || needs.changelog.result == 'skipped') }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-24.04]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master branch @ 2026-10-09
+        with:
+          toolchain: stable
 
       - name: Cache cargo registry
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cargo/registry
@@ -285,26 +307,30 @@ jobs:
   # === COMPETITOR COVERAGE ===
   coverage:
     name: Competitor Coverage
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     needs: [test]
     # Changelog/detection ancestors may be skipped on corpus-only or manual runs.
-    if: always() && !cancelled() && needs.test.result == 'success'
+    if: ${{ !cancelled() && needs.test.result == 'success' }}
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master branch @ 2026-10-09
+        with:
+          toolchain: stable
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '24.x'
 
       - name: Cache cargo registry
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cargo/registry
@@ -324,7 +350,7 @@ jobs:
           node scripts/competitor-coverage.mjs --binary experiments/issue-227/bounded-calculator.sh --baseline docs/case-studies/issue-227/results/coverage-baseline.json --quiet
 
       - name: Upload coverage report
-        if: always() && steps.competitor-check.outcome != 'skipped'
+        if: ${{ !cancelled() && steps.competitor-check.outcome != 'skipped' }}
         uses: actions/upload-artifact@v7
         with:
           name: competitor-coverage-report
@@ -335,18 +361,22 @@ jobs:
   # Build package - only runs if lint, tests and competitor coverage pass
   build:
     name: Build Package
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     needs: [lint, test, coverage]
-    if: always() && !cancelled() && needs.lint.result == 'success' && needs.test.result == 'success' && needs.coverage.result == 'success'
+    if: ${{ !cancelled() && needs.lint.result == 'success' && needs.test.result == 'success' && needs.coverage.result == 'success' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master branch @ 2026-10-09
+        with:
+          toolchain: stable
 
       - name: Cache cargo registry
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cargo/registry
@@ -378,15 +408,19 @@ jobs:
   # Build WASM package for web deployment
   wasm-build:
     name: WASM Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     needs: [lint, test, coverage]
-    if: always() && !cancelled() && needs.lint.result == 'success' && needs.test.result == 'success' && needs.coverage.result == 'success'
+    if: ${{ !cancelled() && needs.lint.result == 'success' && needs.test.result == 'success' && needs.coverage.result == 'success' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master branch @ 2026-10-09
+        with:
+          toolchain: stable
 
       - name: Install wasm-pack
         uses: ./.github/actions/install-wasm-pack
@@ -398,15 +432,19 @@ jobs:
   # Build web application with WASM package
   web-build:
     name: Web Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 35
     needs: [wasm-build]
-    if: always() && !cancelled() && needs.wasm-build.result == 'success'
+    if: ${{ !cancelled() && needs.wasm-build.result == 'success' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master branch @ 2026-10-09
+        with:
+          toolchain: stable
 
       - name: Install wasm-pack
         uses: ./.github/actions/install-wasm-pack
@@ -415,7 +453,7 @@ jobs:
         run: wasm-pack build --target web --out-dir web/public/pkg
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '24'
           cache: 'npm'
@@ -429,7 +467,8 @@ jobs:
         run: |
           mkdir -p web/public/data/currency
           cp data/currency/*.lino web/public/data/currency/
-          echo "Copied $(ls data/currency/*.lino | wc -l) .lino files to web/public/data/currency/"
+          count=$(find data/currency -maxdepth 1 -name '*.lino' | wc -l)
+          echo "Copied $count .lino files to web/public/data/currency/"
 
       # Issue #256: `npm run lint` called an eslint that was never installed
       # (typescript-eslint does not support TypeScript 7), so the web code was
@@ -479,11 +518,11 @@ jobs:
   # Deploy web application to GitHub Pages (only on push to main)
   deploy-pages:
     name: Deploy to GitHub Pages
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     needs: [web-build]
     if: |
-      always() && !cancelled() &&
+      !cancelled() &&
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main' &&
       needs.web-build.result == 'success'
@@ -496,7 +535,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Download web build artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: web-dist
           path: web/dist
@@ -519,13 +558,13 @@ jobs:
   auto-release:
     name: Auto Release
     needs: [lint, test, build]
-    # Note: always() ensures consistent behavior with other jobs that depend on jobs using always().
+    # Note: `!cancelled()` keeps this job evaluable when an ancestor was skipped.
     if: |
-      always() && !cancelled() &&
+      !cancelled() &&
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main' &&
       needs.build.result == 'success'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     concurrency:
       group: main-writer-main
@@ -536,16 +575,20 @@ jobs:
       version_committed: ${{ steps.version.outputs.version_committed }}
       new_version: ${{ steps.version.outputs.new_version }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
+          # This job pushes with the checkout credentials, so it keeps them.
+          persist-credentials: true
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master branch @ 2026-10-09
+        with:
+          toolchain: stable
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '24.x'
 
@@ -565,9 +608,9 @@ jobs:
       - name: Collect changelog and bump version
         id: version
         if: steps.check.outputs.should_release == 'true' && steps.check.outputs.skip_bump != 'true'
-        run: |
-          node scripts/version-and-commit.mjs \
-            --bump-type "${{ steps.bump_type.outputs.bump_type }}"
+        env:
+          BUMP_TYPE: ${{ steps.bump_type.outputs.bump_type }}
+        run: node scripts/version-and-commit.mjs --bump-type "$BUMP_TYPE"
 
       - name: Get current version
         id: current_version
@@ -590,7 +633,9 @@ jobs:
         if: steps.check.outputs.should_release == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node scripts/create-github-release.mjs --release-version "${{ steps.current_version.outputs.version }}" --repository "${{ github.repository }}"
+          RELEASE_VERSION: ${{ steps.current_version.outputs.version }}
+          REPOSITORY: ${{ github.repository }}
+        run: node scripts/create-github-release.mjs --release-version "$RELEASE_VERSION" --repository "$REPOSITORY"
 
   # === DEPLOY WEB AFTER RELEASE ===
   # Rebuild and redeploy the web app AFTER the auto-release job bumps the version.
@@ -600,7 +645,7 @@ jobs:
   # See: https://github.com/link-assistant/calculator/issues/78
   deploy-after-release:
     name: Deploy Web After Release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     needs: [auto-release, deploy-pages]
     # Only run when auto-release actually committed a new version bump.
@@ -609,7 +654,7 @@ jobs:
     # We also wait for deploy-pages to finish first to avoid concurrent deployments
     # to the same GitHub Pages environment.
     if: |
-      always() && !cancelled() &&
+      !cancelled() &&
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main' &&
       needs.auto-release.result == 'success' &&
@@ -622,14 +667,17 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
+          persist-credentials: false
           # Checkout the latest commit on main, which includes the version bump
           # pushed by the auto-release job
           ref: main
 
       - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master branch @ 2026-10-09
+        with:
+          toolchain: stable
 
       - name: Install wasm-pack
         uses: ./.github/actions/install-wasm-pack
@@ -638,7 +686,7 @@ jobs:
         run: wasm-pack build --target web --out-dir web/public/pkg
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '24'
           cache: 'npm'
@@ -652,7 +700,8 @@ jobs:
         run: |
           mkdir -p web/public/data/currency
           cp data/currency/*.lino web/public/data/currency/
-          echo "Copied $(ls data/currency/*.lino | wc -l) .lino files to web/public/data/currency/"
+          count=$(find data/currency -maxdepth 1 -name '*.lino' | wc -l)
+          echo "Copied $count .lino files to web/public/data/currency/"
 
       - name: Build web app
         working-directory: web
@@ -685,7 +734,7 @@ jobs:
     # Only run when auto-release actually committed a new version bump and
     # the updated web app has been deployed to GitHub Pages.
     if: |
-      always() && !cancelled() &&
+      !cancelled() &&
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main' &&
       needs.auto-release.result == 'success' &&
@@ -700,14 +749,14 @@ jobs:
   manual-release:
     name: Instant Release
     needs: [lint, test, build]
-    # Note: always() is required to evaluate the condition when dependencies use always().
+    # Note: `!cancelled()` is required to evaluate the condition when an ancestor was skipped.
     # The build job ensures lint and test passed before this job runs.
     if: |
-      always() && !cancelled() &&
+      !cancelled() &&
       github.event_name == 'workflow_dispatch' &&
       github.event.inputs.release_mode == 'instant' &&
       needs.build.result == 'success'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     concurrency:
       group: main-writer-main
@@ -715,16 +764,20 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
+          # This job pushes with the checkout credentials, so it keeps them.
+          persist-credentials: true
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master branch @ 2026-10-09
+        with:
+          toolchain: stable
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '24.x'
 
@@ -739,7 +792,7 @@ jobs:
         env:
           BUMP_TYPE: ${{ github.event.inputs.bump_type }}
           DESCRIPTION: ${{ github.event.inputs.description }}
-        run: node scripts/version-and-commit.mjs --bump-type "${{ github.event.inputs.bump_type }}" --description "${{ github.event.inputs.description }}"
+        run: node scripts/version-and-commit.mjs --bump-type "$BUMP_TYPE" --description "$DESCRIPTION"
 
       - name: Build release
         if: steps.version.outputs.version_committed == 'true' || steps.version.outputs.already_released == 'true'
@@ -757,24 +810,29 @@ jobs:
         if: steps.version.outputs.version_committed == 'true' || steps.version.outputs.already_released == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node scripts/create-github-release.mjs --release-version "${{ steps.version.outputs.new_version }}" --repository "${{ github.repository }}"
+          RELEASE_VERSION: ${{ steps.version.outputs.new_version }}
+          REPOSITORY: ${{ github.repository }}
+        run: node scripts/create-github-release.mjs --release-version "$RELEASE_VERSION" --repository "$REPOSITORY"
 
   # === MANUAL CHANGELOG PR ===
   changelog-pr:
     name: Create Changelog PR
     if: github.event_name == 'workflow_dispatch' && github.event.inputs.release_mode == 'changelog-pr'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
+          # create-pull-request authenticates with its own `token` input
+          # (git-config-helper.ts configureToken), so no credential persists.
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '24.x'
 
@@ -782,10 +840,10 @@ jobs:
         env:
           BUMP_TYPE: ${{ github.event.inputs.bump_type }}
           DESCRIPTION: ${{ github.event.inputs.description }}
-        run: node scripts/create-changelog-fragment.mjs --bump-type "${{ github.event.inputs.bump_type }}" --description "${{ github.event.inputs.description }}"
+        run: node scripts/create-changelog-fragment.mjs --bump-type "$BUMP_TYPE" --description "$DESCRIPTION"
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v8
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'chore: add changelog for manual ${{ github.event.inputs.bump_type }} release'
@@ -806,3 +864,44 @@ jobs:
             1. Review the changelog fragment in this PR
             2. Merge this PR to main
             3. The automated release workflow will publish to crates.io and create a GitHub release
+
+  # === PIPELINE STATUS ===
+  # Terminal status gate (issue #256, from the Rust pipeline template). Jobs
+  # skipped by a failed ancestor, or killed by timeout-minutes (reported as
+  # "cancelled"), otherwise leave a run that looks finished without a red
+  # mark. Observing every job here makes one required check that fails closed.
+  pipeline-status:
+    name: Pipeline Status
+    needs:
+      - detect-changes
+      - changelog
+      - version-check
+      - lint
+      - dependency-freshness
+      - test
+      - coverage
+      - build
+      - wasm-build
+      - web-build
+      - deploy-pages
+      - auto-release
+      - deploy-after-release
+      - update-screenshots-after-release
+      - manual-release
+      - changelog-pr
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Check aggregate pipeline status
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          # Used to tell a cancelled-but-superseded run (expected churn) from a
+          # cancelled run that was still the branch head (a hidden timeout).
+          RUN_SHA: ${{ github.sha }}
+          BRANCH_REF: ${{ github.ref_name }}
+        run: bash scripts/check-pipeline-status.sh
