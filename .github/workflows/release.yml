@@ -216,7 +216,8 @@ jobs:
         run: cargo fmt --all -- --check
 
       - name: Run Clippy
-        run: cargo clippy --all-targets --all-features
+        # --workspace keeps the experiments member compiling (issue #256).
+        run: cargo clippy --workspace --all-targets --all-features
 
       - name: Check file size limit
         run: node scripts/check-file-size.mjs

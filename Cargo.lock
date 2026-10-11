@@ -298,6 +298,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "link-calculator-experiments"
+version = "0.0.0"
+dependencies = [
+ "link-calculator",
+]
+
+[[package]]
 name = "log"
 version = "0.4.34"
 source = "registry+https://github.com/rust-lang/crates.io-index"
