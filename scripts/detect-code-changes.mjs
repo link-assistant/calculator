@@ -31,13 +31,26 @@
  *   - toml-changed: 'true' if any .toml files changed
  *   - mjs-changed: 'true' if any .mjs files changed
  *   - docs-changed: 'true' if any .md files changed
- *   - workflow-changed: 'true' if any .github/workflows/ files changed
+ *   - workflow-changed: 'true' if any .github/workflows/ or .github/actions/
+ *     files changed (a composite action runs inside the workflows)
  *   - any-code-changed: 'true' if any code files changed (excludes docs, changelog.d, experiments, examples)
  *     Detects: .rs, .toml, .mjs, .ts, .tsx, .js, .css, .html, .yml, .yaml files and workflow changes
  */
 
 import { execSync } from 'child_process';
 import { appendFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+
+/**
+ * Whether a file configures CI: a workflow or a local composite action.
+ * Issue #256: a PR that only changed .github/actions/ skipped lint and with it
+ * wasm-build, the one job that runs the changed install-wasm-pack action.
+ * @param {string} file - Repository-relative path
+ * @returns {boolean}
+ */
+export function isCiConfigFile(file) {
+  return file.startsWith('.github/workflows/') || file.startsWith('.github/actions/');
+}
 
 /**
  * Execute a shell command and return trimmed output
@@ -165,9 +178,7 @@ function detectChanges() {
   setOutput('docs-changed', docsChanged ? 'true' : 'false');
 
   // Detect workflow changes
-  const workflowChanged = changedFiles.some((file) =>
-    file.startsWith('.github/workflows/')
-  );
+  const workflowChanged = changedFiles.some(isCiConfigFile);
   setOutput('workflow-changed', workflowChanged ? 'true' : 'false');
 
   // Detect code changes (excluding docs, changelog.d, experiments, examples folders, and markdown files)
@@ -184,12 +195,16 @@ function detectChanges() {
   console.log('');
 
   // Check if any code files changed (.rs, .toml, .mjs, .ts, .tsx, .js, .css, .html, .yml, .yaml, or workflow files)
-  const codePattern = /\.(rs|toml|mjs|ts|tsx|js|css|html|yml|yaml)$|\.github\/workflows\//;
-  const codeChanged = codeChangedFiles.some((file) => codePattern.test(file));
+  const codePattern = /\.(rs|toml|mjs|ts|tsx|js|css|html|yml|yaml)$/;
+  const codeChanged = codeChangedFiles.some(
+    (file) => codePattern.test(file) || isCiConfigFile(file)
+  );
   setOutput('any-code-changed', codeChanged ? 'true' : 'false');
 
   console.log('\nChange detection completed.');
 }
 
-// Run the detection
-detectChanges();
+// Run the detection when executed directly (the test imports isCiConfigFile)
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  detectChanges();
+}

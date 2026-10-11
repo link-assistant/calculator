@@ -15,6 +15,7 @@ on:
       - 'docs/case-studies/issue-227/corpus/**'
       - 'docs/case-studies/issue-227/results/coverage-baseline.json'
       - '.github/workflows/**'
+      - '.github/actions/**'
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
@@ -28,9 +29,13 @@ on:
       - 'docs/case-studies/issue-227/corpus/**'
       - 'docs/case-studies/issue-227/results/coverage-baseline.json'
       - '.github/workflows/**'
+      - '.github/actions/**'
   workflow_dispatch:
     inputs:
       release_mode:
+        # `checks` runs the CI jobs without releasing. A bot PR opened with
+        # GITHUB_TOKEN gets a pull_request run only after a maintainer approves
+        # it, so its workflow dispatches this mode on the PR branch (issue #256).
         description: 'Manual release mode'
         required: true
         type: choice
@@ -38,10 +43,12 @@ on:
         options:
           - instant
           - changelog-pr
+          - checks
       bump_type:
         description: 'Version bump type'
         required: true
         type: choice
+        default: 'patch'
         options:
           - patch
           - minor

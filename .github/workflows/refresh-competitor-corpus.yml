@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
+      # actions: write dispatches the CI checks for the refresh PR.
+      actions: write
       contents: write
       pull-requests: write
     steps:
@@ -60,6 +62,7 @@ jobs:
           fi
 
       - name: Open or update refresh PR
+        id: cpr
         if: steps.changes.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
@@ -86,3 +89,26 @@ jobs:
             docs/case-studies/issue-227/competitor-inventory.md
             scripts/competitor-upstreams.json
             changelog.d/competitor_corpus_refresh.md
+
+      # A PR opened with GITHUB_TOKEN gets pull_request runs that wait for a
+      # maintainer to approve them; workflow_dispatch runs start right away.
+      # PR #255's run 38136861895 never started (zero jobs) and was marked
+      # failed when the PR merged untested (issue #256). So without
+      # CORPUS_REFRESH_TOKEN, dispatch the checks on the PR branch; their
+      # check runs attach to the PR head commit.
+      # https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow#triggering-a-workflow-from-a-workflow
+      - name: Run CI checks on the refresh PR
+        if: steps.cpr.outputs.pull-request-operation == 'created' || steps.cpr.outputs.pull-request-operation == 'updated'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HAS_REFRESH_TOKEN: ${{ secrets.CORPUS_REFRESH_TOKEN != '' }}
+          PR_BRANCH: ${{ steps.cpr.outputs.pull-request-branch }}
+          PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
+        run: |
+          if [ "$HAS_REFRESH_TOKEN" = 'true' ]; then
+            echo "CORPUS_REFRESH_TOKEN opened $PR_URL, so its pull_request run is already queued."
+            exit 0
+          fi
+          echo "::warning title=No CORPUS_REFRESH_TOKEN::$PR_URL was opened with GITHUB_TOKEN, so its pull_request run waits for approval; dispatching the CI checks on $PR_BRANCH instead."
+          gh workflow run release.yml --repo "$GITHUB_REPOSITORY" --ref "$PR_BRANCH" -f release_mode=checks
+          echo "Dispatched: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/workflows/release.yml?query=branch%3A$PR_BRANCH"
