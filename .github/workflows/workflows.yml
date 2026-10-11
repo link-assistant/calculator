@@ -1,0 +1,111 @@
+name: Workflows
+
+# Lints the workflows themselves (issue #256). Adapted from
+# link-foundation/rust-ai-driven-development-pipeline-template.
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/**'
+      - 'scripts/check-pipeline-status.sh'
+      - 'scripts/read-job-cancel-in-progress.sh'
+  pull_request:
+    paths:
+      - '.github/**'
+      - 'scripts/check-pipeline-status.sh'
+      - 'scripts/read-job-cancel-in-progress.sh'
+
+# Keep the workflow read-only unless a job explicitly needs an additional scope.
+permissions:
+  contents: read
+
+# Provide Git config to actions/checkout itself; checkout runs git init before
+# any workflow step can configure Git.
+env:
+  GIT_CONFIG_COUNT: '1'
+  GIT_CONFIG_KEY_0: init.defaultBranch
+  GIT_CONFIG_VALUE_0: main
+
+jobs:
+  actionlint:
+    name: Actionlint
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    concurrency:
+      group: check-${{ github.workflow }}-${{ github.ref }}-actionlint
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      # The Docker image bundles shellcheck, so this also lints every `run:`
+      # block; a native actionlint without shellcheck on PATH silently skips
+      # the shell checks. Pinned by digest; re-resolve when bumping:
+      #   docker pull rhysd/actionlint:<tag> &&
+      #   docker inspect --format='{{index .RepoDigests 0}}' rhysd/actionlint:<tag>
+      - uses: docker://rhysd/actionlint@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667 # v1.7.12
+        with:
+          args: -color
+
+  zizmor:
+    name: Zizmor
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    concurrency:
+      group: check-${{ github.workflow }}-${{ github.ref }}-zizmor
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      # actionlint cannot see workflow security defects: unpinned actions,
+      # persisted checkout credentials or template injection; zizmor does.
+      # Only .github is scanned: docs/case-studies keeps inert copies of other
+      # repositories' workflows that never run here. Reproduce locally with
+      #   pipx run zizmor==1.30.1 --config .github/zizmor.yml \
+      #     --min-confidence low --persona regular .github
+      - uses: zizmorcore/zizmor-action@v0.6.4
+        with:
+          inputs: .github
+          advanced-security: false
+          annotations: true
+          config: .github/zizmor.yml
+          min-confidence: low
+          version: 1.30.1
+
+      # Container image pinning audits (unpinned-images) exist only in the
+      # pedantic persona; high severity and confidence keeps them without the
+      # stylistic noise.
+      - name: Audit for pedantic-only high-severity findings
+        timeout-minutes: 10
+        run: |
+          pipx run zizmor==1.30.1 --config .github/zizmor.yml \
+            --persona pedantic --min-severity high --min-confidence high \
+            .github
+
+  # Terminal status gate: a job killed by timeout-minutes reports cancelled,
+  # which the gate turns into a visible failure.
+  pipeline-status:
+    name: Pipeline Status
+    needs:
+      - actionlint
+      - zizmor
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Check aggregate pipeline status
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          # On pull_request, github.sha is the synthetic merge commit and ref_name
+          # is <n>/merge, neither of which a superseding push moves; compare
+          # the PR head instead so superseded PR runs are recognised.
+          RUN_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          BRANCH_REF: ${{ github.head_ref || github.ref_name }}
+        run: bash scripts/check-pipeline-status.sh

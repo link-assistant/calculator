@@ -1,0 +1,10 @@
+rust-template-gate-pr-ref.md https://github.com/link-foundation/rust-ai-driven-development-pipeline-template/issues/200
+rust-template-changelog-pr-token.md https://github.com/link-foundation/rust-ai-driven-development-pipeline-template/issues/201
+rust-template-stale-pins.md https://github.com/link-foundation/rust-ai-driven-development-pipeline-template/issues/202
+js-template-stale-pins.md https://github.com/link-foundation/js-ai-driven-development-pipeline-template/issues/234
+python-template-links-glob-and-pins.md https://github.com/link-foundation/python-ai-driven-development-pipeline-template/issues/106
+browser-commander-has-text-scope.md https://github.com/link-foundation/browser-commander/issues/170
+rust-template-fresh-merge-checks-split.md https://github.com/link-foundation/rust-ai-driven-development-pipeline-template/issues/203
+rust-template-sh-not-code.md https://github.com/link-foundation/rust-ai-driven-development-pipeline-template/issues/204
+js-template-sh-not-code.md https://github.com/link-foundation/js-ai-driven-development-pipeline-template/issues/235
+python-template-sh-not-code.md https://github.com/link-foundation/python-ai-driven-development-pipeline-template/issues/107

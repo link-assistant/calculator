@@ -15,7 +15,7 @@ function translateStepKey(
   fallback: string
 ): string {
   const translated = t(key, {
-    ...(params || {}),
+    ...params,
     defaultValue: fallback,
   });
 

@@ -10,11 +10,16 @@ concurrency:
   group: coverage-gap-report
   cancel-in-progress: false
 
+# Least-privilege default; the job below escalates to what it needs.
 permissions:
   contents: read
-  issues: write
 
 env:
+  # Provide Git config to actions/checkout itself; checkout runs git init
+  # before any workflow step can configure Git.
+  GIT_CONFIG_COUNT: '1'
+  GIT_CONFIG_KEY_0: init.defaultBranch
+  GIT_CONFIG_VALUE_0: main
   CARGO_TERM_COLOR: always
   RUSTFLAGS: -Dwarnings
   CARGO_NET_RETRY: '10'
@@ -23,21 +28,28 @@ env:
 jobs:
   coverage-gap-report:
     name: Refresh Coverage Gap Report
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master branch @ 2026-10-09
+        with:
+          toolchain: stable
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '24.x'
 
       - name: Cache cargo registry
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cargo/registry

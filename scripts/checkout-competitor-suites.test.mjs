@@ -4,6 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { checkoutSuites } from './checkout-competitor-suites.mjs';
 
 // Use a local upstream with two revisions: no network or upstream tools needed.
@@ -23,7 +24,9 @@ test('checks out the pin, refreshes to HEAD on request, and preserves dirty work
   const revision = commit('first');
   const newest = commit('second');
   const lock = join(dir, 'lock.json');
-  writeFileSync(lock, JSON.stringify({ fixture: { repo, revision } }));
+  // A file:// URL keeps the clone shallow like a real upstream; a plain path
+  // makes git ignore --depth and warn about it (issue #256).
+  writeFileSync(lock, JSON.stringify({ fixture: { repo: pathToFileURL(repo).href, revision } }));
   const checkouts = join(dir, 'checkouts');
   const root = join(checkouts, 'fixture');
   const head = () => execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();

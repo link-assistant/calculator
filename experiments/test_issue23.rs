@@ -1,6 +1,6 @@
 //! Test issue #23: until with 'on' keyword and natural date expressions
 //!
-//! Run with: `cargo run --example test_issue23`
+//! Run with: `cargo run -p link-calculator-experiments --example test_issue23`
 
 use link_calculator::Calculator;
 

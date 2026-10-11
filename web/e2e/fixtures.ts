@@ -52,9 +52,31 @@ export async function waitForWasm(page: Page, { ratesMs = 2000 } = {}) {
 }
 
 /**
- * Fill the calculator input and trigger calculation.
+ * Replace the calculator input with `text` without triggering calculation.
+ *
+ * browser-commander's `fillTextArea` defaults to `checkEmpty: true` (silently
+ * skips a non-empty textarea) and `simulateTyping: true` (appends, and a `\n`
+ * presses Enter, which submits instead of inserting a newline), so tests that
+ * change the input must opt out of both. It also rejects empty text, so
+ * clearing goes through Playwright directly (issue #256).
  */
-export async function calculate(commander: BrowserCommander, expression: string) {
-  await commander.fillTextArea({ selector: 'textarea', text: expression });
+export async function setInput(page: Page, commander: BrowserCommander, text: string) {
+  if (text === '') {
+    await page.locator('textarea').fill('');
+    return;
+  }
+  await commander.fillTextArea({
+    selector: 'textarea',
+    text,
+    checkEmpty: false,
+    simulateTyping: false,
+  });
+}
+
+/**
+ * Replace the calculator input with `expression` and trigger calculation.
+ */
+export async function calculate(page: Page, commander: BrowserCommander, expression: string) {
+  await setInput(page, commander, expression);
   await commander.pressKey({ key: 'Enter' });
 }
