@@ -162,6 +162,69 @@ jobs:
           GITHUB_BASE_REF: ${{ github.base_ref }}
         run: node scripts/check-version-modification.mjs
 
+  # === SECRETS SCAN ===
+  # Language-agnostic credential scan (issue #256, from the Rust pipeline
+  # template); runs via npx so no Node dependency is committed.
+  secrets-scan:
+    name: Secrets Scan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+
+      - name: Run secretlint
+        run: npx --yes -p secretlint@13.0.7 -p @secretlint/secretlint-rule-preset-recommend@13.0.7 secretlint --secretlintignore .gitignore "**/*"
+
+  # === FRESH MERGE SIMULATION ===
+  # Catches semantic merge conflicts: a pull request that is green in isolation
+  # but breaks main once merged into its current tip (issue #256, from the Rust
+  # pipeline template). FRESH_MERGE_VERBOSE=1 traces the script.
+  fresh-merge:
+    name: Fresh Merge Simulation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    needs: [detect-changes]
+    if: github.event_name == 'pull_request' && needs.detect-changes.outputs.any-code-changed == 'true'
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master branch @ 2026-10-09
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+
+      - name: Cache cargo registry
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-fresh-merge-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-fresh-merge-
+
+      - name: Simulate fresh merge with base branch
+        env:
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+        run: bash scripts/simulate-fresh-merge.sh
+
   # === LINT AND FORMAT CHECK ===
   # Lint runs independently of changelog check - it's a fast check that should always run
   # See: https://github.com/link-assistant/hive-mind/pull/1024 for why this dependency was removed
@@ -884,6 +947,8 @@ jobs:
       - detect-changes
       - changelog
       - version-check
+      - secrets-scan
+      - fresh-merge
       - lint
       - dependency-freshness
       - test
