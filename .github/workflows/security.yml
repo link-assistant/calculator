@@ -101,7 +101,33 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: actions/dependency-review-action@v5
+      # The action fails with "Dependency review is not supported on this
+      # repository" while the repository's Dependency graph setting is off
+      # (run 38166546592). That is a setting, not a defect in the PR, and
+      # cargo audit and npm audit above still gate known vulnerabilities, so
+      # warn until it is enabled. The SBOM endpoint answers 404 exactly then;
+      # any other unexpected status fails closed.
+      - name: Check that the dependency graph is enabled
+        id: graph
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          status=$(curl --silent --output /dev/null --write-out '%{http_code}' \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header 'Accept: application/vnd.github+json' \
+            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/dependency-graph/sbom")
+          echo "dependency-graph/sbom answered HTTP $status"
+          case "$status" in
+            200) echo 'enabled=true' >> "$GITHUB_OUTPUT" ;;
+            404)
+              echo 'enabled=false' >> "$GITHUB_OUTPUT"
+              echo "::warning title=Dependency review skipped::Enable the Dependency graph at $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/settings/security_analysis to review dependency changes."
+              ;;
+            *) echo "::error title=Dependency graph probe::Unexpected HTTP $status"; exit 1 ;;
+          esac
+
+      - if: steps.graph.outputs.enabled == 'true'
+        uses: actions/dependency-review-action@v5
         with:
           fail-on-severity: high
           comment-summary-in-pr: on-failure
