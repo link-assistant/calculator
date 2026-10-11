@@ -34,6 +34,7 @@ test('docs, fragments, experiments and data are not code', () => {
     'docs/case-studies/issue-227/results/coverage-baseline.json',
     'experiments/issue-256/harden-workflow.py',
     'examples/basic.rs',
+    'dev/log/issues/256/pulls/257/recent-runs.json',
     'data/currency/usd-eur.lino',
   ]) {
     assert.equal(isCodeChange(file), false, file);

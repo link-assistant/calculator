@@ -14,6 +14,7 @@
  * Excluded from code changes (don't require changelog fragments):
  * - Markdown files (*.md) in any folder
  * - changelog.d/ folder (changelog fragments)
+ * - dev/log/ folder (collected CI evidence, e.g. run JSON)
  * - docs/ folder (documentation)
  * - experiments/ folder (experimental scripts)
  * - examples/ folder (example scripts)
@@ -134,7 +135,7 @@ function isExcludedFromCodeChanges(filePath) {
   }
 
   // Exclude specific folders from code changes
-  const excludedFolders = ['changelog.d/', 'docs/', 'experiments/', 'examples/'];
+  const excludedFolders = ['changelog.d/', 'dev/log/', 'docs/', 'experiments/', 'examples/'];
 
   for (const folder of excludedFolders) {
     if (filePath.startsWith(folder)) {
