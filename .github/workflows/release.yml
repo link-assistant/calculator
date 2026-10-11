@@ -431,6 +431,13 @@ jobs:
           cp data/currency/*.lino web/public/data/currency/
           echo "Copied $(ls data/currency/*.lino | wc -l) .lino files to web/public/data/currency/"
 
+      # Issue #256: `npm run lint` called an eslint that was never installed
+      # (typescript-eslint does not support TypeScript 7), so the web code was
+      # never linted. oxlint parses TypeScript natively.
+      - name: Lint
+        working-directory: web
+        run: npm run lint
+
       - name: Type check
         working-directory: web
         run: npx tsc --noEmit
