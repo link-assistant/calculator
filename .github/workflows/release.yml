@@ -922,6 +922,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
+      # actions: write dispatches the CI checks for the release PR.
+      actions: write
       contents: write
       pull-requests: write
     steps:
@@ -944,6 +946,7 @@ jobs:
         run: node scripts/create-changelog-fragment.mjs --bump-type "$BUMP_TYPE" --description "$DESCRIPTION"
 
       - name: Create Pull Request
+        id: cpr
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -965,6 +968,21 @@ jobs:
             1. Review the changelog fragment in this PR
             2. Merge this PR to main
             3. The automated release workflow will publish to crates.io and create a GitHub release
+
+      # A PR opened with GITHUB_TOKEN gets pull_request runs that wait for a
+      # maintainer to approve them, and a merge without approval concludes the
+      # zero-job run as failed (PR #255, issue #256). workflow_dispatch runs
+      # start right away, and their check runs attach to the PR head commit.
+      - name: Run CI checks on the release PR
+        if: steps.cpr.outputs.pull-request-operation == 'created' || steps.cpr.outputs.pull-request-operation == 'updated'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_BRANCH: ${{ steps.cpr.outputs.pull-request-branch }}
+          PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
+        run: |
+          echo "$PR_URL was opened with GITHUB_TOKEN, so its pull_request run waits for approval; dispatching the CI checks on $PR_BRANCH."
+          gh workflow run release.yml --repo "$GITHUB_REPOSITORY" --ref "$PR_BRANCH" -f release_mode=checks
+          echo "Dispatched: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/workflows/release.yml?query=branch%3A$PR_BRANCH"
 
   # === PIPELINE STATUS ===
   # Terminal status gate (issue #256, from the Rust pipeline template). Jobs
