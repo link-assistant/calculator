@@ -34,7 +34,7 @@
  *   - workflow-changed: 'true' if any .github/workflows/ or .github/actions/
  *     files changed (a composite action runs inside the workflows)
  *   - any-code-changed: 'true' if any code files changed (excludes docs, changelog.d, experiments, examples)
- *     Detects: .rs, .toml, .mjs, .ts, .tsx, .js, .css, .html, .yml, .yaml files and workflow changes
+ *     Detects: .rs, .toml, .mjs, .ts, .tsx, .js, .css, .html, .yml, .yaml, .py, .sh, .json files and workflow changes
  */
 
 import { execSync } from 'child_process';
@@ -145,6 +145,20 @@ function isExcludedFromCodeChanges(filePath) {
   return false;
 }
 
+// .py, .sh and .json joined in issue #256: CI runs scripts/*.py and *.sh, and
+// web/package.json pins the web dependencies, yet a PR touching only those
+// needed no changelog fragment and skipped the fresh-merge simulation.
+const CODE_PATTERN = /\.(rs|toml|mjs|ts|tsx|js|css|html|yml|yaml|py|sh|json)$/;
+
+/**
+ * Whether a changed file is code: it needs a changelog fragment and the checks.
+ * @param {string} file - Repository-relative path
+ * @returns {boolean}
+ */
+export function isCodeChange(file) {
+  return !isExcludedFromCodeChanges(file) && (CODE_PATTERN.test(file) || isCiConfigFile(file));
+}
+
 /**
  * Main function to detect changes
  */
@@ -194,17 +208,13 @@ function detectChanges() {
   }
   console.log('');
 
-  // Check if any code files changed (.rs, .toml, .mjs, .ts, .tsx, .js, .css, .html, .yml, .yaml, or workflow files)
-  const codePattern = /\.(rs|toml|mjs|ts|tsx|js|css|html|yml|yaml)$/;
-  const codeChanged = codeChangedFiles.some(
-    (file) => codePattern.test(file) || isCiConfigFile(file)
-  );
+  const codeChanged = changedFiles.some(isCodeChange);
   setOutput('any-code-changed', codeChanged ? 'true' : 'false');
 
   console.log('\nChange detection completed.');
 }
 
-// Run the detection when executed directly (the test imports isCiConfigFile)
+// Run the detection when executed directly (the test imports the classifiers)
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   detectChanges();
 }

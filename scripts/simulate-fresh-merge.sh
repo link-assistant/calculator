@@ -97,6 +97,7 @@ cargo clippy --workspace --all-targets --all-features
 cargo test --all-features
 node scripts/check-file-size.mjs
 node scripts/check-required-docs.mjs
+pipx run ruff==0.17.0 check .
 node --test scripts/*.test.mjs'
 
 status=0

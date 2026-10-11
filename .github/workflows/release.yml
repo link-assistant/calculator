@@ -243,6 +243,7 @@ jobs:
       !cancelled() && (
         github.event_name == 'push' ||
         github.event_name == 'workflow_dispatch' ||
+        needs.detect-changes.outputs.any-code-changed == 'true' ||
         needs.detect-changes.outputs.rs-changed == 'true' ||
         needs.detect-changes.outputs.toml-changed == 'true' ||
         needs.detect-changes.outputs.mjs-changed == 'true' ||
@@ -288,6 +289,12 @@ jobs:
 
       - name: Check required documentation
         run: node scripts/check-required-docs.mjs
+
+      # The Python scripts the currency workflow runs (ruff.toml pins the rules).
+      - name: Lint Python scripts
+        run: |
+          pipx run ruff==0.17.0 check .
+          pipx run ruff==0.17.0 format --check .
 
       - name: Run script tests
         run: node --test scripts/*.test.mjs
