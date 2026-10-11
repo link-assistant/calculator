@@ -80,7 +80,10 @@ jobs:
         id: lychee
         uses: lycheeverse/lychee-action@v2.9.0
         with:
-          # Check all Markdown and HTML files
+          # Check all Markdown and HTML files. A directory input with
+          # --extensions, not a './**/*.html' glob: the glob matches no file
+          # once web/index.html is excluded, and lychee warns "No files found
+          # for this input source" on every run (js template #219).
           # Exclude case-studies directory - these are research documents from
           # external repos with references to files and issues that don't exist
           # in this repository.
@@ -93,11 +96,12 @@ jobs:
             --max-cache-age 1d
             --max-retries 3
             --timeout 30
+            --hidden
+            --extensions md,html
             --exclude-path docs/case-studies
             --exclude-path scripts/fixtures
             --exclude-path web/index.html
-            './**/*.md'
-            './**/*.html'
+            .
           # Don't fail the workflow immediately - we want to check web archive first
           fail: false
           # Output file for broken links report (used by check-web-archive.mjs)
