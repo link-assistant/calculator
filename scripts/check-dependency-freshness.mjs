@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Fail when a direct dependency is behind its latest release (issue #223).
+ * Report when a direct dependency is behind its latest release (issue #223).
  *
  * Checks:
  * - Rust: `cargo outdated --root-deps-only --format json` (direct dependencies
@@ -16,7 +16,11 @@
  * - package.json (JSON has no comments): a `dependencyBlockers` object mapping
  *   the package name to the issue URL.
  *
- * Usage: node scripts/check-dependency-freshness.mjs [--skip-cargo] [--skip-npm]
+ * Stale dependencies fail pull requests (and local runs) but only produce
+ * `::warning::` annotations on other events such as a push to `main`
+ * (issue #256); `--warn-only` forces the warning mode.
+ *
+ * Usage: node scripts/check-dependency-freshness.mjs [--skip-cargo] [--skip-npm] [--warn-only]
  */
 
 import { readFileSync, existsSync } from 'fs';
@@ -151,43 +155,85 @@ function run(command, args, cwd) {
   return result;
 }
 
-function report(label, { failures, blocked }) {
+/**
+ * Whether stale dependencies fail the run or only warn.
+ *
+ * Freshness is external state: a new upstream release can turn a green commit
+ * red without any change in this repository. Blocking pull requests keeps the
+ * tree current, while a push to `main` (or a scheduled/manual run) only warns
+ * so it cannot fail the pipeline for code that already passed the gate
+ * (issue #256).
+ * @param {string | undefined} eventName - `GITHUB_EVENT_NAME`
+ * @returns {'fail' | 'warn'}
+ */
+export function freshnessEnforcement(eventName) {
+  return !eventName || eventName === 'pull_request' || eventName === 'merge_group'
+    ? 'fail'
+    : 'warn';
+}
+
+/**
+ * Render the collected problems for the given enforcement mode.
+ * @param {string[]} problems - one human readable line per stale dependency
+ * @param {'fail' | 'warn'} mode
+ * @returns {{ exitCode: number, lines: string[] }}
+ */
+export function formatFreshnessReport(problems, mode) {
+  if (problems.length === 0) {
+    return { exitCode: 0, lines: ['All direct dependencies are at their latest releases.'] };
+  }
+  const hint =
+    'Update them, or document the blocker with an issue URL ' +
+    '(a Cargo.toml comment, or `dependencyBlockers` in package.json).';
+  if (mode === 'warn') {
+    return {
+      exitCode: 0,
+      lines: [
+        ...problems.map((problem) => `::warning title=Stale dependency::${problem}`),
+        `${problems.length} dependency problem(s); only pull requests are blocked. ${hint}`,
+      ],
+    };
+  }
+  return {
+    exitCode: 1,
+    lines: [
+      ...problems.map((problem) => `::error title=Stale dependency::${problem}`),
+      `${problems.length} dependency problem(s). ${hint}`,
+    ],
+  };
+}
+
+function collect(label, { failures, blocked }, problems) {
   for (const dependency of blocked) {
     console.log(
       `  ${label}: ${dependency.name} ${dependency.current} -> ${dependency.latest} (blocked: ${dependency.blocker})`
     );
   }
   for (const dependency of failures) {
-    console.error(
-      `  ${label}: ${dependency.name} ${dependency.current} is behind ${dependency.latest}`
-    );
+    problems.push(`${label}: ${dependency.name} ${dependency.current} is behind ${dependency.latest}`);
   }
-  return failures.length;
 }
 
-function checkCargo() {
-  let problems = 0;
+function checkCargo(problems) {
   const outdated = run('cargo', ['outdated', '--root-deps-only', '--format', 'json'], '.');
   if (outdated.status !== 0) {
     console.error(outdated.stderr);
     throw new Error('cargo outdated failed (install it with `cargo install cargo-outdated`)');
   }
   const manifest = readFileSync('Cargo.toml', 'utf8');
-  problems += report(
+  collect(
     'Cargo.toml',
-    classify(parseCargoOutdated(outdated.stdout), (name) => findCargoBlocker(manifest, name))
+    classify(parseCargoOutdated(outdated.stdout), (name) => findCargoBlocker(manifest, name)),
+    problems
   );
 
   const update = run('cargo', ['update', '--dry-run'], '.');
   for (const line of pendingLockfileUpdates(update.stderr)) {
-    console.error(`  Cargo.lock: ${line} (run \`cargo update\`)`);
-    problems++;
+    problems.push(`Cargo.lock: ${line} (run \`cargo update\`)`);
   }
-  return problems;
 }
 
-function checkNpm() {
-  let problems = 0;
+function checkNpm(problems) {
   for (const directory of NPM_DIRS) {
     const manifestPath = join(directory, 'package.json');
     if (!existsSync(manifestPath)) {
@@ -196,33 +242,33 @@ function checkNpm() {
     const packageJson = JSON.parse(readFileSync(manifestPath, 'utf8'));
     // `npm outdated` exits 1 when anything is outdated; the JSON is what counts.
     const outdated = run('npm', ['outdated', '--json'], directory);
-    problems += report(
+    collect(
       manifestPath,
-      classify(parseNpmOutdated(outdated.stdout), (name) => findNpmBlocker(packageJson, name))
+      classify(parseNpmOutdated(outdated.stdout), (name) => findNpmBlocker(packageJson, name)),
+      problems
     );
   }
-  return problems;
 }
 
 function main() {
   const args = process.argv.slice(2);
-  let problems = 0;
+  const problems = [];
   if (!args.includes('--skip-cargo')) {
     console.log('Checking Rust dependencies...');
-    problems += checkCargo();
+    checkCargo(problems);
   }
   if (!args.includes('--skip-npm')) {
     console.log('Checking JavaScript dependencies...');
-    problems += checkNpm();
+    checkNpm(problems);
   }
-  if (problems > 0) {
-    console.error(
-      `\n${problems} dependency problem(s). Update them, or document the blocker with an issue URL ` +
-        '(a Cargo.toml comment, or `dependencyBlockers` in package.json).'
-    );
-    process.exit(1);
+  const mode = args.includes('--warn-only')
+    ? 'warn'
+    : freshnessEnforcement(process.env.GITHUB_EVENT_NAME);
+  const { exitCode, lines } = formatFreshnessReport(problems, mode);
+  for (const line of lines) {
+    (exitCode === 0 ? console.log : console.error)(line);
   }
-  console.log('All direct dependencies are at their latest releases.');
+  process.exitCode = exitCode;
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

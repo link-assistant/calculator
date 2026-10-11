@@ -238,7 +238,12 @@ jobs:
         working-directory: web
         run: npm ci
 
+      # Issue #256: freshness is external state, so it blocks pull requests
+      # only; on push to main (or schedule/dispatch) it emits warnings instead
+      # of failing a pipeline whose code already passed the gate.
       - name: Check dependency freshness
+        env:
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
         run: node scripts/check-dependency-freshness.mjs
 
   # === TEST ===
