@@ -78,7 +78,8 @@ env:
   # The crates.io credentials are deliberately *not* declared here (issue
   # #256). A workflow-level `env:` is inherited by every job, including the
   # pull_request jobs that compile and run branch code (build.rs, tests, npm
-  # install scripts), so they are declared on the two publish steps instead.
+  # install scripts), so they are declared only on the publish steps and
+  # the publish-token preflight steps instead.
 
 jobs:
   # === DETECT CHANGES - determines which jobs should run ===
@@ -676,6 +677,16 @@ jobs:
           HAS_FRAGMENTS: ${{ steps.bump_type.outputs.has_fragments }}
         run: node scripts/check-release-needed.mjs
 
+      # Principle 16: the bump below is pushed to main before cargo publish
+      # runs, so prove the token can publish first (issue #223 left main
+      # bumped and tagged on versions crates.io never received).
+      - name: Preflight crates.io publish token
+        if: steps.check.outputs.should_release == 'true'
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN || secrets.CARGO_TOKEN }}
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN || secrets.CARGO_REGISTRY_TOKEN }}
+        run: node scripts/preflight-crates-token.mjs
+
       - name: Collect changelog and bump version
         id: version
         if: steps.check.outputs.should_release == 'true' && steps.check.outputs.skip_bump != 'true'
@@ -854,6 +865,15 @@ jobs:
 
       - name: Configure git
         run: node scripts/git-config.mjs
+
+      # Principle 16: the bump below is pushed to main before cargo publish
+      # runs, so prove the token can publish first (issue #223 left main
+      # bumped and tagged on versions crates.io never received).
+      - name: Preflight crates.io publish token
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN || secrets.CARGO_TOKEN }}
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN || secrets.CARGO_REGISTRY_TOKEN }}
+        run: node scripts/preflight-crates-token.mjs
 
       - name: Collect changelog fragments
         run: node scripts/collect-changelog.mjs
