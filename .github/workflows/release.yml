@@ -399,7 +399,7 @@ jobs:
   web-build:
     name: Web Build
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     needs: [wasm-build]
     if: always() && !cancelled() && needs.wasm-build.result == 'success'
     steps:
@@ -442,6 +442,24 @@ jobs:
       - name: Build
         working-directory: web
         run: npm run build
+
+      # Issue #256: the Playwright suite in web/e2e was never run by CI, so 8 of
+      # its 50 tests had silently rotted (false negative). Run it on the build.
+      - name: Install Playwright browsers
+        working-directory: web
+        run: npx playwright install chromium --with-deps
+
+      - name: Run end-to-end tests
+        working-directory: web
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report-${{ github.run_id }}
+          path: web/playwright-report
+          retention-days: 7
 
       - name: Upload web build artifact
         uses: actions/upload-artifact@v7
