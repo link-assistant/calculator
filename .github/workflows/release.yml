@@ -909,6 +909,9 @@ jobs:
           NEEDS_JSON: ${{ toJSON(needs) }}
           # Used to tell a cancelled-but-superseded run (expected churn) from a
           # cancelled run that was still the branch head (a hidden timeout).
-          RUN_SHA: ${{ github.sha }}
-          BRANCH_REF: ${{ github.ref_name }}
+          # On pull_request, github.sha is the synthetic merge commit and ref_name
+          # is <n>/merge, neither of which a superseding push moves; compare
+          # the PR head instead so superseded PR runs are recognised.
+          RUN_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          BRANCH_REF: ${{ github.head_ref || github.ref_name }}
         run: bash scripts/check-pipeline-status.sh
