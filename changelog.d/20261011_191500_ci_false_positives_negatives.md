@@ -9,3 +9,4 @@ bump: patch
 - Corpus refresh pull requests opened without `CORPUS_REFRESH_TOKEN` now get CI through a dispatched `checks` run instead of an approval-pending run that never started, and changes to `.github/actions/` trigger the jobs that use them.
 - Workflows are hardened (read-only default permissions, pinned runners and third-party actions, no persisted checkout credentials, no template injection) and linted by actionlint and zizmor; a new security workflow runs cargo audit, npm audit, CodeQL and dependency review.
 - `cargo package` no longer warns about experiment examples that are not part of the published crate.
+- Markdown and HTML links are checked by lychee, with transient failures re-checked and Web Archive replacements suggested, and checkouts no longer print git's default-branch hint.

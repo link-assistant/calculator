@@ -14,6 +14,13 @@ concurrency:
 permissions:
   contents: read
 
+# Provide Git config to actions/checkout itself; checkout runs git init before
+# any workflow step can configure Git.
+env:
+  GIT_CONFIG_COUNT: '1'
+  GIT_CONFIG_KEY_0: init.defaultBranch
+  GIT_CONFIG_VALUE_0: main
+
 jobs:
   refresh:
     name: Import Upstream Calculator Suites
