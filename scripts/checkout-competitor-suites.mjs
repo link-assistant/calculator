@@ -22,7 +22,9 @@ export function checkoutSuites({ checkouts, lock = 'scripts/competitor-upstreams
     }
     // HEAD follows the upstream default branch even if that branch is renamed.
     git('fetch', '--depth', '1', 'origin', latest ? 'HEAD' : revision);
-    git('checkout', '--detach', 'FETCH_HEAD');
+    // Quiet: moving a pin always orphans the old detached commit; the new
+    // revision is logged below instead of git's advice (issue #256).
+    git('checkout', '--quiet', '--detach', 'FETCH_HEAD');
     console.log(`${name}: ${git('rev-parse', 'HEAD')}`);
   }
 }
