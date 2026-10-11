@@ -1,0 +1,134 @@
+name: Security
+
+# Supply-chain and static analysis checks (issue #256). Adapted from
+# link-foundation/rust-ai-driven-development-pipeline-template and the
+# js template's npm audit job.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # Advisories are published against code that did not change, so audit
+  # weekly as well.
+  schedule:
+    - cron: '0 6 * * 1'
+
+# Keep the workflow read-only unless a job explicitly needs an additional scope.
+permissions:
+  contents: read
+
+jobs:
+  cargo-audit:
+    name: Cargo audit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    concurrency:
+      group: check-${{ github.workflow }}-${{ github.ref }}-cargo-audit
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: taiki-e/install-action@ab6895351a88b908e96a4697860d4ffea5e57dbe # v2.87.27
+        with:
+          tool: cargo-audit@0.22.2
+
+      - name: Audit committed Cargo.lock
+        # unmaintained, unsound and yanked advisories are warnings, which leave
+        # cargo audit's exit status at 0 while it prints them.
+        run: cargo audit --file Cargo.lock --deny warnings
+
+  npm-audit:
+    name: npm audit (web)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    concurrency:
+      group: check-${{ github.workflow }}-${{ github.ref }}-npm-audit
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+
+      - name: Audit committed package-lock.json
+        working-directory: web
+        run: npm audit --package-lock-only --audit-level=high
+
+  codeql:
+    name: CodeQL (${{ matrix.language }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    concurrency:
+      group: check-${{ github.workflow }}-${{ github.ref }}-codeql-${{ matrix.language }}
+      cancel-in-progress: true
+    permissions:
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [actions, javascript-typescript, python, rust]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: none
+          config-file: ./.github/codeql/codeql-config.yml
+
+      - uses: github/codeql-action/analyze@v4
+
+  dependency-review:
+    name: Dependency Review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    concurrency:
+      group: check-${{ github.workflow }}-${{ github.ref }}-dependency-review
+      cancel-in-progress: true
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/dependency-review-action@v5
+        with:
+          fail-on-severity: high
+          comment-summary-in-pr: on-failure
+
+  # Terminal status gate: a job killed by timeout-minutes reports cancelled,
+  # which the gate turns into a visible failure.
+  pipeline-status:
+    name: Pipeline Status
+    needs:
+      - cargo-audit
+      - npm-audit
+      - codeql
+      - dependency-review
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Check aggregate pipeline status
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          # On pull_request, github.sha is the synthetic merge commit and ref_name
+          # is <n>/merge, neither of which a superseding push moves; compare
+          # the PR head instead so superseded PR runs are recognised.
+          RUN_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          BRANCH_REF: ${{ github.head_ref || github.ref_name }}
+        run: bash scripts/check-pipeline-status.sh
