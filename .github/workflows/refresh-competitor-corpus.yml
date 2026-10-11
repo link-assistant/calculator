@@ -10,19 +10,26 @@ concurrency:
   group: refresh-competitor-corpus
   cancel-in-progress: false
 
+# Least-privilege default; the job below escalates to what it needs.
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
   refresh:
     name: Import Upstream Calculator Suites
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+        with:
+          # create-pull-request authenticates with its own `token` input
+          # (git-config-helper.ts configureToken), so no credential persists.
+          persist-credentials: false
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: '24.x'
 
@@ -54,7 +61,7 @@ jobs:
 
       - name: Open or update refresh PR
         if: steps.changes.outputs.changed == 'true'
-        uses: peter-evans/create-pull-request@v8
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           # A dedicated token allows the new PR to trigger the normal CI checks.
           token: ${{ secrets.CORPUS_REFRESH_TOKEN || secrets.GITHUB_TOKEN }}
