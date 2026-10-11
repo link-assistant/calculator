@@ -75,6 +75,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [0.23.5] - 2026-10-11
+
+### Changed
+- Refresh imported open-source calculator assertions and their upstream revision provenance.
+
 ## [0.23.4] - 2026-10-08
 
 ### Fixed
