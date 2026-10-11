@@ -1,0 +1,171 @@
+Changelog Fragment Check	Check for changelog fragments	﻿2026-10-11T19:05:48.8739010Z ##[group]Run node scripts/check-changelog-fragment.mjs
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.8741026Z ^[[36;1mnode scripts/check-changelog-fragment.mjs^[[0m
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9015895Z shell: /usr/bin/bash -e {0}
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9017041Z env:
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9017951Z   GIT_CONFIG_COUNT: 1
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9019010Z   GIT_CONFIG_KEY_0: init.defaultBranch
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9020227Z   GIT_CONFIG_VALUE_0: main
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9021702Z   CARGO_TERM_COLOR: always
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9022789Z   RUSTFLAGS: -Dwarnings
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9023812Z   CARGO_NET_RETRY: 10
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9025157Z   CARGO_HTTP_MULTIPLEXING: false
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9026335Z   GITHUB_BASE_REF: main
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9027342Z ##[endgroup]
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9409585Z Checking for changelog fragment in PR diff...
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9410899Z 
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9411777Z Comparing against origin/main...HEAD
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9461037Z Changed files:
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9462533Z   .github/actions/install-wasm-pack/action.yml
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9491411Z ##[error]No changelog fragment found in this PR. Please add a changelog entry in changelog.d/
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9501199Z 
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9502277Z To create a changelog fragment:
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9504871Z   Create a new .md file in changelog.d/ with your changes
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9506378Z 
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9507295Z See changelog.d/README.md for more information.
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9508862Z   .github/codeql/codeql-config.yml
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9510327Z   .github/workflows/coverage-gap-report.yml
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9513232Z   .github/workflows/refresh-competitor-corpus.yml
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9514802Z   .github/workflows/release.yml
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9516123Z   .github/workflows/security.yml
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9517561Z   .github/workflows/update-currency-rates.yml
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9519103Z   .github/workflows/update-screenshots.yml
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9520785Z   .github/workflows/workflows.yml
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9522267Z   .github/zizmor.yml
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9523367Z   .gitkeep
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9524424Z   Cargo.lock
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9526151Z   dev/log/issues/256/pulls/257/pr-255/github-docs-actions-do-not-trigger-workflows.md
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9528165Z   dev/log/issues/256/pulls/257/pr-255/pr-255.json
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9529854Z   dev/log/issues/256/pulls/257/pr-255/run-38136861895-jobs.json
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9531891Z   dev/log/issues/256/pulls/257/pr-255/run-38136861895.json
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9533627Z   experiments/browser-commander-has-text-selector.mjs
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9535277Z   experiments/e2e-currency-result-probe.mjs
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9536782Z   experiments/issue-256/harden-workflow.py
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9538249Z   scripts/check-dependency-freshness.mjs
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9539784Z   scripts/check-dependency-freshness.test.mjs
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9541527Z   scripts/check-pipeline-status.sh
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9542934Z   scripts/check-pipeline-status.test.mjs
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9544403Z   scripts/checkout-competitor-suites.mjs
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9545924Z   scripts/checkout-competitor-suites.test.mjs
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9547416Z   scripts/detect-code-changes.mjs
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9548777Z   scripts/detect-code-changes.test.mjs
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9550197Z   scripts/read-job-cancel-in-progress.sh
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9552030Z   web/e2e/calculator.spec.ts
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9553256Z   web/e2e/fixtures.ts
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9554414Z   web/e2e/screenshots.spec.ts
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9555769Z   web/package-lock.json
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9556940Z   web/package.json
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9558054Z   web/playwright.config.ts
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9559360Z   web/src/utils/localizeCalculation.ts
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9560105Z 
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9560938Z Source files changed: 16
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9562264Z   scripts/check-dependency-freshness.mjs
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9563782Z   scripts/check-dependency-freshness.test.mjs
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9565263Z   scripts/check-pipeline-status.sh
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9566663Z   scripts/check-pipeline-status.test.mjs
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9568448Z   scripts/checkout-competitor-suites.mjs
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9569952Z   scripts/checkout-competitor-suites.test.mjs
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9571787Z   scripts/detect-code-changes.mjs
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9573178Z   scripts/detect-code-changes.test.mjs
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9574599Z   scripts/read-job-cancel-in-progress.sh
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9575954Z   web/e2e/calculator.spec.ts
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9577142Z   web/e2e/fixtures.ts
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9578282Z   web/e2e/screenshots.spec.ts
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9579492Z   web/package-lock.json
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9581059Z   web/package.json
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9582228Z   web/playwright.config.ts
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9583516Z   web/src/utils/localizeCalculation.ts
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9584242Z 
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9584890Z Changelog fragments added: 0
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9585529Z 
+Changelog Fragment Check	Check for changelog fragments	2026-10-11T19:05:48.9592101Z ##[error]Process completed with exit code 1.
+Pipeline Status	Check aggregate pipeline status	﻿2026-10-11T19:06:13.5258524Z ##[group]Run bash scripts/check-pipeline-status.sh
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:06:13.5260280Z ^[[36;1mbash scripts/check-pipeline-status.sh^[[0m
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:06:13.5473506Z shell: /usr/bin/bash -e {0}
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:06:13.5474783Z env:
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:06:13.5475989Z   GIT_CONFIG_COUNT: 1
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:06:13.5477361Z   GIT_CONFIG_KEY_0: init.defaultBranch
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:06:13.5478653Z   GIT_CONFIG_VALUE_0: main
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:06:13.5479776Z   CARGO_TERM_COLOR: always
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:06:13.5480884Z   RUSTFLAGS: -Dwarnings
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:06:13.5482008Z   CARGO_NET_RETRY: 10
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:06:13.5483096Z   CARGO_HTTP_MULTIPLEXING: false
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:06:13.5494527Z   NEEDS_JSON: {
+Pipeline Status	Check aggregate pipeline status	  "detect-changes": {
+Pipeline Status	Check aggregate pipeline status	    "result": "success",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {
+Pipeline Status	Check aggregate pipeline status	      "docs-changed": "true",
+Pipeline Status	Check aggregate pipeline status	      "workflow-changed": "true",
+Pipeline Status	Check aggregate pipeline status	      "any-code-changed": "true",
+Pipeline Status	Check aggregate pipeline status	      "rs-changed": "false",
+Pipeline Status	Check aggregate pipeline status	      "toml-changed": "false",
+Pipeline Status	Check aggregate pipeline status	      "mjs-changed": "true"
+Pipeline Status	Check aggregate pipeline status	    }
+Pipeline Status	Check aggregate pipeline status	  },
+Pipeline Status	Check aggregate pipeline status	  "changelog": {
+Pipeline Status	Check aggregate pipeline status	    "result": "failure",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  },
+Pipeline Status	Check aggregate pipeline status	  "version-check": {
+Pipeline Status	Check aggregate pipeline status	    "result": "success",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  },
+Pipeline Status	Check aggregate pipeline status	  "lint": {
+Pipeline Status	Check aggregate pipeline status	    "result": "success",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  },
+Pipeline Status	Check aggregate pipeline status	  "dependency-freshness": {
+Pipeline Status	Check aggregate pipeline status	    "result": "success",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  },
+Pipeline Status	Check aggregate pipeline status	  "test": {
+Pipeline Status	Check aggregate pipeline status	    "result": "skipped",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  },
+Pipeline Status	Check aggregate pipeline status	  "coverage": {
+Pipeline Status	Check aggregate pipeline status	    "result": "skipped",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  },
+Pipeline Status	Check aggregate pipeline status	  "build": {
+Pipeline Status	Check aggregate pipeline status	    "result": "skipped",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  },
+Pipeline Status	Check aggregate pipeline status	  "wasm-build": {
+Pipeline Status	Check aggregate pipeline status	    "result": "skipped",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  },
+Pipeline Status	Check aggregate pipeline status	  "web-build": {
+Pipeline Status	Check aggregate pipeline status	    "result": "skipped",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  },
+Pipeline Status	Check aggregate pipeline status	  "deploy-pages": {
+Pipeline Status	Check aggregate pipeline status	    "result": "skipped",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  },
+Pipeline Status	Check aggregate pipeline status	  "auto-release": {
+Pipeline Status	Check aggregate pipeline status	    "result": "skipped",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  },
+Pipeline Status	Check aggregate pipeline status	  "deploy-after-release": {
+Pipeline Status	Check aggregate pipeline status	    "result": "skipped",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  },
+Pipeline Status	Check aggregate pipeline status	  "update-screenshots-after-release": {
+Pipeline Status	Check aggregate pipeline status	    "result": "skipped",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  },
+Pipeline Status	Check aggregate pipeline status	  "manual-release": {
+Pipeline Status	Check aggregate pipeline status	    "result": "skipped",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  },
+Pipeline Status	Check aggregate pipeline status	  "changelog-pr": {
+Pipeline Status	Check aggregate pipeline status	    "result": "skipped",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  }
+Pipeline Status	Check aggregate pipeline status	}
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:06:13.5507153Z   RUN_SHA: e81aad757a1cc3e1812393f6c9ded323a709881b
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:06:13.5508586Z   BRANCH_REF: issue-256-9c021bdb8c9d
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:06:13.5509727Z ##[endgroup]
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:06:13.6093215Z Failed jobs:    changelog
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:06:13.6095246Z Cancelled jobs: <none>
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:06:13.6117285Z ##[error]Failing jobs: changelog
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:06:13.6131470Z ##[error]Process completed with exit code 1.

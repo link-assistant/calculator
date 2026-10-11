@@ -1,0 +1,3 @@
+Web Build | notice |   50 passed (1.7m)
+Dependency Review | warning | Enable the Dependency graph at https://github.com/link-assistant/calculator/settings/security_analysis to review dependency changes.
+Check Links | notice | Summary report available at: https://github.com/link-assistant/calculator/actions/runs/38167541508#summary-114553126535

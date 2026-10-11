@@ -1,0 +1,214 @@
+
+Running 50 tests using 3 workers
+
+[1/50] [chromium] › e2e/calculator.spec.ts:41:3 › Calculator › should calculate simple expression
+[2/50] [chromium] › e2e/calculator.spec.ts:46:3 › Calculator › should show calculation steps
+[3/50] [chromium] › e2e/calculator.spec.ts:36:3 › Calculator › should display the calculator UI
+[4/50] [chromium] › e2e/calculator.spec.ts:52:3 › Calculator › should handle empty input gracefully
+[5/50] [chromium] › e2e/calculator.spec.ts:58:3 › Calculator › should display error for invalid expression
+[6/50] [chromium] › e2e/calculator.spec.ts:63:3 › Calculator › should handle multiline input
+[7/50] [chromium] › e2e/calculator.spec.ts:79:3 › Theme › should toggle theme when clicking theme button
+[8/50] [chromium] › e2e/calculator.spec.ts:86:3 › Theme › should persist theme preference in localStorage
+[9/50] [chromium] › e2e/calculator.spec.ts:106:3 › Language › should have language selector
+[10/50] [chromium] › e2e/calculator.spec.ts:112:3 › Language › should change language when selected
+  1) [chromium] › e2e/calculator.spec.ts:86:3 › Theme › should persist theme preference in localStorage 
+
+    Error: expect(received).toContain(expected) // indexOf
+
+    Expected substring: "dark"
+    Received string:    "(preferences (theme: light))"
+
+      90 |
+      91 |     const storage = await page.evaluate(() => localStorage.getItem('link-calculator-preferences'));
+    > 92 |     expect(storage).toContain('dark');
+         |                     ^
+      93 |   });
+      94 | });
+      95 |
+        at /tmp/gh-issue-solver-1791742833156/web/e2e/calculator.spec.ts:92:21
+
+    Error Context: test-results/calculator-Theme-should-pe-176ae--preference-in-localStorage-chromium/error-context.md
+
+
+[11/50] [chromium] › e2e/calculator.spec.ts:135:3 › URL Sharing › should load expression from URL
+[12/50] [chromium] › e2e/calculator.spec.ts:125:3 › URL Sharing › should update URL when expression changes
+[13/50] [chromium] › e2e/calculator.spec.ts:152:3 › URL Sharing › should add each new expression to browser history
+[14/50] [chromium] › e2e/calculator.spec.ts:200:3 › Report Issue › should have report issue button in footer
+  2) [chromium] › e2e/calculator.spec.ts:79:3 › Theme › should toggle theme when clicking theme button 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('html')
+    Expected: "dark"
+    Received: "light"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('html') with timeout 5000ms
+      - waiting for locator('html')
+        13 × locator resolved to <html lang="en" data-theme="light">…</html>
+           - unexpected value "light"
+
+
+      81 |     await expect(page.locator('.settings-dropdown')).toBeVisible();
+      82 |     await commander.clickButton({ selector: '.settings-buttons button:has-text("Dark")' });
+    > 83 |     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+         |                                        ^
+      84 |   });
+      85 |
+      86 |   test('should persist theme preference in localStorage', async ({ page, commander }) => {
+        at /tmp/gh-issue-solver-1791742833156/web/e2e/calculator.spec.ts:83:40
+
+    Error Context: test-results/calculator-Theme-should-to-fb137--when-clicking-theme-button-chromium/error-context.md
+
+
+[15/50] [chromium] › e2e/calculator.spec.ts:219:3 › Responsive Design › should be mobile-friendly
+[16/50] [chromium] › e2e/calculator.spec.ts:226:3 › Responsive Design › should have fixed width on desktop
+[17/50] [chromium] › e2e/calculator.spec.ts:204:3 › Report Issue › should open GitHub issue when clicking report
+[18/50] [chromium] › e2e/calculator.spec.ts:244:3 › Busy Indicator › should show loading indicator when WASM is loading
+[19/50] [chromium] › e2e/calculator.spec.ts:249:3 › Busy Indicator › should show spinner during calculation
+[20/50] [chromium] › e2e/calculator.spec.ts:262:3 › Examples › should show example buttons
+[21/50] [chromium] › e2e/calculator.spec.ts:268:3 › Examples › should fill input when clicking example
+[22/50] [chromium] › e2e/calculator.spec.ts:296:3 › Textarea Auto-Resize › should auto-resize textarea when content becomes multiline
+[23/50] [chromium] › e2e/calculator.spec.ts:308:3 › Textarea Auto-Resize › should shrink textarea when content is reduced
+  3) [chromium] › e2e/calculator.spec.ts:152:3 › URL Sharing › should add each new expression to browser history 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('.result-value')
+    Expected substring: "4"
+    Received string:    "2"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" locator('.result-value') with timeout 5000ms
+      - waiting for locator('.result-value')
+        14 × locator resolved to <div class="result-value">2</div>
+           - unexpected value "2"
+
+
+      162 |     await calculate(commander, '2 + 2');
+      163 |     await page.waitForTimeout(600);
+    > 164 |     await expect(page.locator('.result-value')).toContainText('4', { timeout: 5000 });
+          |                                                 ^
+      165 |
+      166 |     await calculate(commander, '3 + 3');
+      167 |     await page.waitForTimeout(600);
+        at /tmp/gh-issue-solver-1791742833156/web/e2e/calculator.spec.ts:164:49
+
+    Error Context: test-results/calculator-URL-Sharing-sho-66baf-pression-to-browser-history-chromium/error-context.md
+
+
+[24/50] [chromium] › e2e/calculator.spec.ts:325:3 › Textarea Auto-Resize › should maintain minimum height for empty content
+  4) [chromium] › e2e/calculator.spec.ts:325:3 › Textarea Auto-Resize › should maintain minimum height for empty content 
+
+    Error: fillTextArea: selector and text are required in options
+
+      324 |
+      325 |   test('should maintain minimum height for empty content', async ({ page, commander }) => {
+    > 326 |     await commander.fillTextArea({ selector: 'textarea', text: '' });
+          |     ^
+      327 |     await page.waitForTimeout(100);
+      328 |     const box = await page.locator('textarea').boundingBox();
+      329 |     expect(box?.height ?? 0).toBeGreaterThan(30);
+        at fillTextArea (/tmp/gh-issue-solver-1791742833156/web/node_modules/browser-commander/src/interactions/fill.js:275:11)
+        at fillTextAreaBound (/tmp/gh-issue-solver-1791742833156/web/node_modules/browser-commander/src/bindings.js:236:5)
+        at /tmp/gh-issue-solver-1791742833156/web/node_modules/browser-commander/src/elements/selectors.js:320:12
+        at Object.commander.<computed> (/tmp/gh-issue-solver-1791742833156/web/node_modules/browser-commander/src/core/commander-features.js:75:14)
+        at /tmp/gh-issue-solver-1791742833156/web/e2e/calculator.spec.ts:326:5
+
+    Error Context: test-results/calculator-Textarea-Auto-R-ecbf9-um-height-for-empty-content-chromium/error-context.md
+
+
+[25/50] [chromium] › e2e/calculator.spec.ts:332:3 › Textarea Auto-Resize › should handle long single-line content with word wrap
+  5) [chromium] › e2e/calculator.spec.ts:296:3 › Textarea Auto-Resize › should auto-resize textarea when content becomes multiline 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 90
+    Received:   90
+
+      303 |
+      304 |     const newBox = await textarea.boundingBox();
+    > 305 |     expect(newBox?.height ?? 0).toBeGreaterThan(initialHeight);
+          |                                 ^
+      306 |   });
+      307 |
+      308 |   test('should shrink textarea when content is reduced', async ({ page, commander }) => {
+        at /tmp/gh-issue-solver-1791742833156/web/e2e/calculator.spec.ts:305:33
+
+    Error Context: test-results/calculator-Textarea-Auto-R-1289b-n-content-becomes-multiline-chromium/error-context.md
+
+
+  6) [chromium] › e2e/calculator.spec.ts:308:3 › Textarea Auto-Resize › should shrink textarea when content is reduced 
+
+    Error: expect(received).toBeLessThan(expected)
+
+    Expected: < 90
+    Received:   90
+
+      320 |     const singleLineHeight = (await textarea.boundingBox())?.height ?? 0;
+      321 |
+    > 322 |     expect(singleLineHeight).toBeLessThan(multilineHeight);
+          |                              ^
+      323 |   });
+      324 |
+      325 |   test('should maintain minimum height for empty content', async ({ page, commander }) => {
+        at /tmp/gh-issue-solver-1791742833156/web/e2e/calculator.spec.ts:322:30
+
+    Error Context: test-results/calculator-Textarea-Auto-R-2bda8-rea-when-content-is-reduced-chromium/error-context.md
+
+
+[26/50] [chromium] › e2e/calculator.spec.ts:339:3 › Textarea Auto-Resize › should resize in discrete line-height steps
+[27/50] [chromium] › e2e/calculator.spec.ts:361:3 › Textarea Auto-Resize › should not allow resize smaller than content height
+[28/50] [chromium] › e2e/calculator.spec.ts:388:3 › Currency Conversion with Real Rates › should show rates loading status in footer
+[29/50] [chromium] › e2e/calculator.spec.ts:392:3 › Currency Conversion with Real Rates › should calculate currency conversion
+[30/50] [chromium] › e2e/calculator.spec.ts:401:3 › Currency Conversion with Real Rates › should show exchange rate info in calculation steps
+[31/50] [chromium] › e2e/calculator.spec.ts:409:3 › Currency Conversion with Real Rates › should handle multiple currency conversions
+  7) [chromium] › e2e/calculator.spec.ts:392:3 › Currency Conversion with Real Rates › should calculate currency conversion 
+
+    Error: expect(received).toMatch(expected)
+
+    Expected pattern: /EUR|\d+/i
+    Received string:  ""
+
+      396 |     });
+      397 |     const resultText = await page.locator('.result-value').textContent();
+    > 398 |     expect(resultText).toMatch(/EUR|\d+/i);
+          |                        ^
+      399 |   });
+      400 |
+      401 |   test('should show exchange rate info in calculation steps', async ({ page, commander }) => {
+        at /tmp/gh-issue-solver-1791742833156/web/e2e/calculator.spec.ts:398:24
+
+    Error Context: test-results/calculator-Currency-Conver-fec0b-lculate-currency-conversion-chromium/error-context.md
+
+
+[32/50] [chromium] › e2e/calculator.spec.ts:423:3 › Currency Conversion with Real Rates › should handle currency symbols
+[33/50] [chromium] › e2e/calculator.spec.ts:430:3 › Currency Conversion with Real Rates › should gracefully handle rates when offline
+[34/50] [chromium] › e2e/calculator.spec.ts:415:3 › Currency Conversion with Real Rates › should display rate source information
+[35/50] [chromium] › e2e/calculator.spec.ts:446:3 › Textarea Resize Visual Regression › textarea should display all content without clipping
+[36/50] [chromium] › e2e/calculator.spec.ts:455:3 › Textarea Resize Visual Regression › textarea content should never be partially visible
+[37/50] [chromium] › e2e/calculator.spec.ts:492:3 › Mathematical Operations › should compute definite integral
+[38/50] [chromium] › e2e/calculator.spec.ts:497:3 › Mathematical Operations › should compute sqrt and pow
+[39/50] [chromium] › e2e/calculator.spec.ts:502:3 › Mathematical Operations › should compute date/time difference
+[40/50] [chromium] › e2e/calculator.spec.ts:507:3 › Mathematical Operations › should respect parentheses in expressions
+[41/50] [chromium] › e2e/percentages.spec.ts:3:1 › percentage values survive calculations in the WASM worker
+[42/50] [chromium] › e2e/screenshots.spec.ts:37:3 › Screenshot Generation › 01-initial-state
+[43/50] [chromium] › e2e/screenshots.spec.ts:41:3 › Screenshot Generation › 02-simple-arithmetic
+[44/50] [chromium] › e2e/screenshots.spec.ts:47:3 › Screenshot Generation › 03-currency-conversion
+[45/50] [chromium] › e2e/screenshots.spec.ts:55:3 › Screenshot Generation › 04-integration
+[46/50] [chromium] › e2e/screenshots.spec.ts:62:3 › Screenshot Generation › 05-dark-theme
+[47/50] [chromium] › e2e/screenshots.spec.ts:75:3 › Screenshot Generation › 06-definite-integral
+[48/50] [chromium] › e2e/screenshots.spec.ts:86:3 › Screenshot Generation › 07-math-functions
+[49/50] [chromium] › e2e/screenshots.spec.ts:97:3 › Screenshot Generation › 08-datetime
+[50/50] [chromium] › e2e/screenshots.spec.ts:103:3 › Screenshot Generation › 09-parentheses
+  7 failed
+    [chromium] › e2e/calculator.spec.ts:79:3 › Theme › should toggle theme when clicking theme button 
+    [chromium] › e2e/calculator.spec.ts:86:3 › Theme › should persist theme preference in localStorage 
+    [chromium] › e2e/calculator.spec.ts:152:3 › URL Sharing › should add each new expression to browser history 
+    [chromium] › e2e/calculator.spec.ts:296:3 › Textarea Auto-Resize › should auto-resize textarea when content becomes multiline 
+    [chromium] › e2e/calculator.spec.ts:308:3 › Textarea Auto-Resize › should shrink textarea when content is reduced 
+    [chromium] › e2e/calculator.spec.ts:325:3 › Textarea Auto-Resize › should maintain minimum height for empty content 
+    [chromium] › e2e/calculator.spec.ts:392:3 › Currency Conversion with Real Rates › should calculate currency conversion 
+  43 passed (1.2m)
