@@ -1,7 +1,7 @@
 //! Expression parser that combines all grammars.
 
 use crate::error::CalculatorError;
-use crate::grammar::dimensional_functions::{dimensional_power, number_literal};
+use crate::grammar::dimensional_functions::{dimensional_power, kelvin_result};
 use crate::grammar::linear_equation;
 use crate::grammar::polynomial_equation;
 use crate::grammar::token_parser::TokenParser;
@@ -168,7 +168,7 @@ impl ExpressionParser {
 
     /// Evaluates an expression.
     pub fn evaluate(&mut self, expr: &Expression) -> Result<Value, CalculatorError> {
-        self.evaluate_expr(expr)
+        Ok(kelvin_result(expr, self.evaluate_expr(expr)?))
     }
 
     fn expression_contains_variable(expr: &Expression) -> bool {
@@ -229,7 +229,7 @@ impl ExpressionParser {
 
         steps.push(format!("Input expression: {expr}"));
 
-        let result = self.evaluate_expr_with_steps(expr, &mut steps)?;
+        let result = kelvin_result(expr, self.evaluate_expr_with_steps(expr, &mut steps)?);
 
         steps.push(format!("Final result: {}", result.to_display_string()));
 
@@ -245,7 +245,8 @@ impl ExpressionParser {
         match expr {
             Expression::Number { value, unit, .. } => {
                 // Convert to Rational for exact arithmetic
-                Ok(number_literal(Rational::from_decimal(*value), unit))
+                let rational = Rational::from_decimal(*value);
+                Ok(Value::rational_with_unit(rational, unit.clone()))
             }
             Expression::DateTime(dt) => Ok(Value::datetime(dt.clone())),
             Expression::Now | Expression::Today => Ok(Value::datetime(self.current_date(expr))),
@@ -367,7 +368,8 @@ impl ExpressionParser {
         match expr {
             Expression::Number { value, unit, .. } => {
                 // Convert to Rational for exact arithmetic
-                let val = number_literal(Rational::from_decimal(*value), unit);
+                let rational = Rational::from_decimal(*value);
+                let val = Value::rational_with_unit(rational, unit.clone());
                 steps.push(format!("Literal value: {}", val.to_display_string()));
                 Ok(val)
             }
@@ -905,7 +907,8 @@ impl ExpressionParser {
     ) -> Result<Value, CalculatorError> {
         match expr {
             Expression::Number { value, unit, .. } => {
-                Ok(number_literal(Rational::from_decimal(*value), unit))
+                let rational = Rational::from_decimal(*value);
+                Ok(Value::rational_with_unit(rational, unit.clone()))
             }
             Expression::DateTime(dt) => Ok(Value::datetime(dt.clone())),
             Expression::Now | Expression::Today => Ok(Value::datetime(self.current_date(expr))),

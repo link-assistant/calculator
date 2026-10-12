@@ -148,7 +148,7 @@ impl DataSizeUnit {
     #[must_use]
     pub const fn abbreviation(self) -> &'static str {
         match self {
-            Self::Bit => "b",
+            Self::Bit => "bit",
             Self::Kilobit => "Kb",
             Self::Megabit => "Mb",
             Self::Gigabit => "Gb",

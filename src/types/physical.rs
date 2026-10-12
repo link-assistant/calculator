@@ -159,8 +159,9 @@ impl PhysicalUnit {
             unit = expanded;
             scale = scale * expanded_scale;
         }
-        if let Some(named) = unit.named_collapse() {
+        if let Some((named, named_scale)) = unit.named_collapse() {
             unit = named;
+            scale = scale * named_scale;
         }
         (unit, scale)
     }
@@ -220,24 +221,31 @@ impl PhysicalUnit {
         None
     }
 
-    /// Collapses a coherent product containing a named derived unit (`V/Ω`).
-    fn named_collapse(&self) -> Option<Self> {
+    /// Collapses a product of SI-prefixed coherent units containing a named
+    /// derived unit (`V/Ω` → `A`, `mA·kΩ` → `V`), folding prefixes into the
+    /// returned scale.
+    fn named_collapse(&self) -> Option<(Self, Rational)> {
         if self.terms.len() < 2 {
             return None;
         }
         let coherent = self.terms.iter().all(|term| {
             let resolved = term.resolved();
-            resolved.factor == Rational::one() && !resolved.def.is_affine()
+            (resolved.factor == Rational::one() || resolved.def.factor == Rational::one())
+                && !resolved.def.is_affine()
         });
         let has_derived = self.terms.iter().any(|term| {
-            named_unit_for(&term.resolved().dimension()) == Some(term.symbol.as_str())
-                && !is_base_dimension(&term.resolved().dimension())
+            let resolved = term.resolved();
+            named_unit_for(&resolved.dimension()) == Some(resolved.def.symbol.as_str())
+                && !is_base_dimension(&resolved.dimension())
         });
         if !(coherent && has_derived) {
             return None;
         }
         let named = named_unit_for(&self.dimension())?;
-        Some(Self::from_terms(vec![(named.to_string(), 1)]))
+        Some((
+            Self::from_terms(vec![(named.to_string(), 1)]),
+            self.factor(),
+        ))
     }
 
     /// The unit as a legacy duration, data-size or mass unit, when it is one.

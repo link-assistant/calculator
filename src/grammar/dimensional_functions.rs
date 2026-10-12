@@ -5,14 +5,28 @@
 //! accept angles (`sin(30°)`), and other functions need plain numbers.
 
 use crate::error::CalculatorError;
-use crate::types::{normalize_affine, Dimension, Rational, Unit, Value};
+use crate::types::{normalize_affine, Dimension, Expression, Rational, Unit, Value};
 
 use super::math_functions::evaluate_function_values;
 
-/// Builds the value of a number literal with a unit, reading affine
-/// temperatures as kelvin (`20 °C` → `293.15 K`, as in Numbat).
-pub fn number_literal(amount: Rational, unit: &Unit) -> Value {
-    let (amount, unit) = normalize_affine(amount, unit);
+/// Reads a temperature result in kelvin unless it was converted explicitly:
+/// `20 °C` is `293.15 K` as in Numbat, while `25 °C in °F` stays `77 °F`.
+/// Inside expressions `°C` keeps its offset, so `25 °C * 2` is rejected.
+pub fn kelvin_result(expr: &Expression, value: Value) -> Value {
+    let mut inner = expr;
+    while let Expression::Group(group) = inner {
+        inner = group;
+    }
+    if matches!(inner, Expression::UnitConversion { .. }) {
+        return value;
+    }
+    let Some(amount) = value.to_rational() else {
+        return value;
+    };
+    let (amount, unit) = normalize_affine(amount, &value.unit);
+    if unit == value.unit {
+        return value;
+    }
     Value::rational_with_unit(amount, unit)
 }
 

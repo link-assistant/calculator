@@ -19,7 +19,7 @@ fn percentage_increases_and_decreases_compound() {
         ("100 + (10 + 10)%", "120"),
         ("0.1 + 5%", "0.105"),
         ("$200 + 10%", "220 USD"),
-        ("10 meters + 20%", "12 meters"),
+        ("10 meters + 20%", "12 m"),
         ("1000 + (-12%)", "880"),
         ("200 + (10% * 2)", "200.2"),
     ] {
@@ -170,9 +170,9 @@ fn percentages_preserve_compound_units_from_number_separator_grammar() {
     ] {
         assert_result(expression, expected);
     }
-    for expression in ["20% * (10 km/h * 3 m/s)", "20% of (10 km/h)^2"] {
-        assert!(!Calculator::new().calculate_internal(expression).success);
-    }
+    // Issue #235 multiplies dimensions instead of rejecting unit products.
+    assert_result("20% * (10 km/h * 3 m/s)", "21.6 km^2/h^2");
+    assert_result("20% of (10 km/h)^2", "20 km^2/h^2");
 }
 
 #[test]

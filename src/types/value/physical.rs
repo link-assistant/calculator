@@ -175,6 +175,33 @@ impl Value {
         Ok(Self::rational_with_unit(amount, self.unit.clone()))
     }
 
+    /// Reads a value in metres as minutes next to a duration or a date
+    /// (`1h + 5m`, `now - 5m`): `m` is metre unless the time context is
+    /// explicit. `None` when neither side is a bare metre in such a context.
+    pub(super) fn metres_in_time_context(&self, other: &Self) -> Option<(Self, Self)> {
+        let is_time = |value: &Self| {
+            matches!(value.unit, Unit::Duration(_))
+                || matches!(
+                    value.kind,
+                    ValueKind::DateTime(_) | ValueKind::Duration { .. }
+                )
+        };
+        let as_minutes = |value: &Self| match &value.unit {
+            Unit::Physical(unit) if is_metre(unit) => Some(Self {
+                kind: value.kind.clone(),
+                unit: Unit::Duration(crate::types::DurationUnit::Minutes),
+            }),
+            _ => None,
+        };
+        if is_time(other) {
+            return as_minutes(self).map(|left| (left, other.clone()));
+        }
+        if is_time(self) {
+            return as_minutes(other).map(|right| (self.clone(), right));
+        }
+        None
+    }
+
     /// Raises a dimensional value to an integer power (`(2 m)^2` → `4 m^2`).
     pub(crate) fn physical_power(&self, power: i32) -> Option<Result<Self, CalculatorError>> {
         if !is_dimensional(&self.unit) {

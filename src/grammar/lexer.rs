@@ -495,6 +495,9 @@ impl Lexer {
                 Some(token) => token,
                 None => self.scan_identifier(),
             },
+            // Degree signs, `℃`/`℉`, and the foot/inch primes of `6'2"` are
+            // unit symbols (issue #235); `°C` and `°F` stay one identifier.
+            '°' | '℃' | '℉' | '\'' | '′' | '"' | '″' => self.scan_unit_symbol(),
             // Currency symbols used as prefix notation (e.g., $10, €5, £3)
             // These are recognized as single-character identifiers and mapped to ISO codes
             // by CurrencyDatabase::parse_currency().
@@ -607,6 +610,23 @@ impl Lexer {
         ))
     }
 
+    /// Scans a unit symbol that is not a word: `°`, `°C`, `°F`, `℃`, `℉`,
+    /// and the primes `'`/`′` (foot) and `"`/`″` (inch).
+    fn scan_unit_symbol(&mut self) -> Token {
+        let start = self.pos;
+        let ch = self.current();
+        self.advance();
+        let mut text = ch.to_string();
+        if ch == '°'
+            && matches!(self.current(), 'C' | 'F')
+            && !self.peek().is_some_and(is_word_char)
+        {
+            text.push(self.current());
+            self.advance();
+        }
+        Token::new(TokenKind::Identifier(text.clone()), start, self.pos, text)
+    }
+
     fn scan_superscript(&mut self) -> Token {
         let start = self.pos;
         let mut normalized = String::new();
@@ -715,7 +735,10 @@ impl Lexer {
             // Combining marks are needed for scripts like Devanagari (Hindi) where
             // virama (्, U+094D) and dependent vowels (ा, ि, etc.) are part of words
             // but not classified as alphabetic.
-            if ch.is_alphanumeric() || ch == '_' || is_unicode_mark(ch) {
+            // Superscripts end a word so that `m²` is `m` squared.
+            if (ch.is_alphanumeric() || ch == '_' || is_unicode_mark(ch))
+                && superscript_value(ch).is_none()
+            {
                 text.push(ch);
                 self.advance();
             } else {

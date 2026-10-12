@@ -196,6 +196,9 @@ impl Value {
         if let Some(result) = self.additive_ratio(other, false) {
             return result;
         }
+        if let Some((left, right)) = self.metres_in_time_context(other) {
+            return left.add_at_date(&right, currency_db, date);
+        }
         if let Some(result) = self.physical_sum(other, false) {
             return result;
         }
@@ -410,6 +413,9 @@ impl Value {
 
         if let Some(result) = self.additive_ratio(other, true) {
             return result;
+        }
+        if let Some((left, right)) = self.metres_in_time_context(other) {
+            return left.subtract_at_date(&right, currency_db, date);
         }
         if let Some(result) = self.physical_sum(other, true) {
             return result;
