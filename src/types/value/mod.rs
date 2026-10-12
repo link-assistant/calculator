@@ -4,6 +4,7 @@ mod display;
 mod duration;
 mod formatting;
 mod kind;
+mod physical;
 mod ratio;
 mod uncertainty;
 use duration::{
@@ -11,6 +12,7 @@ use duration::{
     divide_duration_units, divide_raw_duration,
 };
 pub use kind::{RatioFormat, ValueKind};
+pub use physical::normalize_affine;
 pub use ratio::evaluate_ratio_function;
 
 use serde::{Deserialize, Serialize};
@@ -192,6 +194,9 @@ impl Value {
         date: Option<&DateTime>,
     ) -> Result<Self, CalculatorError> {
         if let Some(result) = self.additive_ratio(other, false) {
+            return result;
+        }
+        if let Some(result) = self.physical_sum(other, false) {
             return result;
         }
         match (&self.kind, &other.kind) {
@@ -406,6 +411,9 @@ impl Value {
         if let Some(result) = self.additive_ratio(other, true) {
             return result;
         }
+        if let Some(result) = self.physical_sum(other, true) {
+            return result;
+        }
         match (&self.kind, &other.kind) {
             // Rational - Rational
             (ValueKind::Rational(a), ValueKind::Rational(b)) => {
@@ -574,6 +582,9 @@ impl Value {
                 Ok(result)
             };
         }
+        if let Some(result) = self.physical_product(other, false)? {
+            return Ok(result);
+        }
         if self.unit != Unit::None
             && other.unit != Unit::None
             && (self.unit.is_opaque_compound() || other.unit.is_opaque_compound())
@@ -636,6 +647,9 @@ impl Value {
     pub fn divide(&self, other: &Self) -> Result<Self, CalculatorError> {
         if self.has_ratio_display() || other.has_ratio_display() {
             return self.scalar().divide(&other.scalar());
+        }
+        if let Some(result) = self.physical_product(other, true)? {
+            return Ok(result);
         }
         if other.unit != Unit::None
             && self.unit != other.unit
@@ -772,6 +786,11 @@ impl Value {
     ) -> Result<Self, CalculatorError> {
         if let ValueKind::Duration { seconds } = &self.kind {
             return convert_raw_duration(*seconds, target_unit);
+        }
+        if *target_unit != Unit::None {
+            if let Some(result) = self.physical_conversion(target_unit) {
+                return result;
+            }
         }
 
         match (&self.unit, target_unit) {
@@ -910,6 +929,9 @@ impl PartialEq for Value {
                     .to_rational()
                     .zip(other.to_rational())
                     .is_some_and(|(a, b)| a == b);
+        }
+        if let Some(equal) = self.physical_eq(other) {
+            return equal;
         }
         match (&self.kind, &other.kind) {
             (ValueKind::Number(a), ValueKind::Number(b)) => a == b && self.unit == other.unit,

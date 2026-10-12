@@ -20,4 +20,5 @@ pub use physical::{PhysicalUnit, UnitTerm};
 pub use rational::{Rational, RepeatingDecimal};
 pub use unit::{DataSizeUnit, DurationUnit, MassUnit, Unit};
 pub(crate) use value::evaluate_ratio_function;
+pub use value::normalize_affine;
 pub use value::{RatioFormat, Value, ValueKind};

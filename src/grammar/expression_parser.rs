@@ -1,6 +1,7 @@
 //! Expression parser that combines all grammars.
 
 use crate::error::CalculatorError;
+use crate::grammar::dimensional_functions::{dimensional_power, number_literal};
 use crate::grammar::linear_equation;
 use crate::grammar::polynomial_equation;
 use crate::grammar::token_parser::TokenParser;
@@ -34,6 +35,9 @@ pub fn evaluate_power(base_val: &Value, exp_val: &Value) -> Result<Value, Calcul
         return Err(CalculatorError::domain(
             "powers of compound units are not supported",
         ));
+    }
+    if let Some(result) = dimensional_power(base_val, exp_val) {
+        return result;
     }
     // Try exact rational exponentiation first
     if let (Some(base_rat), Some(exp_rat)) = (base_val.to_rational(), exp_val.to_rational()) {
@@ -241,8 +245,7 @@ impl ExpressionParser {
         match expr {
             Expression::Number { value, unit, .. } => {
                 // Convert to Rational for exact arithmetic
-                let rational = Rational::from_decimal(*value);
-                Ok(Value::rational_with_unit(rational, unit.clone()))
+                Ok(number_literal(Rational::from_decimal(*value), unit))
             }
             Expression::DateTime(dt) => Ok(Value::datetime(dt.clone())),
             Expression::Now | Expression::Today => Ok(Value::datetime(self.current_date(expr))),
@@ -364,8 +367,7 @@ impl ExpressionParser {
         match expr {
             Expression::Number { value, unit, .. } => {
                 // Convert to Rational for exact arithmetic
-                let rational = Rational::from_decimal(*value);
-                let val = Value::rational_with_unit(rational, unit.clone());
+                let val = number_literal(Rational::from_decimal(*value), unit);
                 steps.push(format!("Literal value: {}", val.to_display_string()));
                 Ok(val)
             }
@@ -903,8 +905,7 @@ impl ExpressionParser {
     ) -> Result<Value, CalculatorError> {
         match expr {
             Expression::Number { value, unit, .. } => {
-                let rational = Rational::from_decimal(*value);
-                Ok(Value::rational_with_unit(rational, unit.clone()))
+                Ok(number_literal(Rational::from_decimal(*value), unit))
             }
             Expression::DateTime(dt) => Ok(Value::datetime(dt.clone())),
             Expression::Now | Expression::Today => Ok(Value::datetime(self.current_date(expr))),
