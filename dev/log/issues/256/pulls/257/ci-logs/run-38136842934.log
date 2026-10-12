@@ -1,0 +1,433 @@
+Import Upstream Calculator Suites	UNKNOWN STEP	﻿2026-10-11T11:47:22.9962526Z Current runner version: '2.337.0'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:22.9989662Z ##[group]Runner Image Provisioner
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:22.9990888Z Hosted Compute Agent
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:22.9991475Z Version: 20261002.596
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:22.9992193Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:22.9993138Z Build Date: 2026-10-02T22:28:27Z
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:22.9993808Z Worker ID: {fd34e4fd-86e2-4404-8bb6-aad578b0741f}
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:22.9994621Z Region: eastus
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:22.9995172Z Cloud: Azure
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:22.9995735Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:22.9997276Z ##[group]Operating System
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:22.9997912Z Ubuntu
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:22.9998557Z 24.04.5
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:22.9999071Z LTS
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:22.9999612Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.0000213Z ##[group]Runner Image
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.0000816Z Image: ubuntu-24.04
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.0001517Z Version: 20261004.327.1
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.0002974Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.0004645Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.0005637Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.0006952Z ##[group]GITHUB_TOKEN Permissions
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.0009670Z Contents: write
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.0010326Z Metadata: read
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.0010899Z PullRequests: write
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.0011549Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.0014182Z Secret source: Actions
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.0015237Z Cache mode: write
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.0016211Z Prepare workflow directory
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.0354003Z Prepare all required actions
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.0403592Z Getting action download info
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.2441917Z Download action repository 'actions/checkout@v6' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.3354713Z Download action repository 'actions/setup-node@v6' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.4573754Z Download action repository 'peter-evans/create-pull-request@v8' (SHA:5f6978faf089d4d20b00c7766989d076bb2fc7f1)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.7188125Z Complete job name: Import Upstream Calculator Suites
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.7990713Z ##[group]Run actions/checkout@v6
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.7991610Z with:
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.7992074Z   repository: link-assistant/calculator
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.7996372Z   token: ***
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.7996803Z   ssh-strict: true
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.7997229Z   ssh-user: git
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.7997665Z   persist-credentials: true
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.7998146Z   clean: true
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.7998584Z   sparse-checkout-cone-mode: true
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.7999094Z   fetch-depth: 1
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.7999513Z   fetch-tags: false
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.7999951Z   show-progress: true
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.8000379Z   lfs: false
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.8000832Z   submodules: false
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.8001268Z   set-safe-directory: true
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.8001767Z   allow-unsafe-pr-checkout: false
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.8002708Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9019545Z Syncing repository: link-assistant/calculator
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9022197Z ##[group]Getting Git version info
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9023764Z Working directory is '/home/runner/work/calculator/calculator'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9025450Z [command]/usr/bin/git version
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9103436Z git version 2.55.0
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9128321Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9169116Z Temporarily overriding HOME='/home/runner/work/_temp/50765c71-ad0b-40ed-9162-0158bfc89a3c' before making global git config changes
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9171597Z Adding repository directory to the temporary git global config as a safe directory
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9175888Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/calculator/calculator
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9235811Z Deleting the contents of '/home/runner/work/calculator/calculator'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9241831Z ##[group]Determining repository object format
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9244591Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9245890Z ##[group]Initializing the repository
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9249369Z [command]/usr/bin/git init /home/runner/work/calculator/calculator
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9392395Z hint: Using 'master' as the name for the initial branch. This default branch name
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9394510Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9397019Z hint: to use in all of your new repositories, which will suppress this warning,
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9399032Z hint: call:
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9399969Z hint:
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9400972Z hint: 	git config --global init.defaultBranch <name>
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9402367Z hint:
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9403837Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9405562Z hint: 'development'. The just-created branch can be renamed via this command:
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9408453Z hint:
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9409402Z hint: 	git branch -m <name>
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9410361Z hint:
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9411572Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9413566Z Initialized empty Git repository in /home/runner/work/calculator/calculator/.git/
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9418514Z [command]/usr/bin/git remote add origin https://github.com/link-assistant/calculator
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9516863Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9518095Z ##[group]Disabling automatic garbage collection
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9533846Z [command]/usr/bin/git config --local gc.auto 0
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9577403Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9579046Z ##[group]Setting up auth
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9580409Z Removing SSH command configuration
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9594923Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:23.9644206Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.0078294Z Removing HTTP extra header
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.0085325Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.0134534Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.0395662Z Removing includeIf entries pointing to credentials config files
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.0404077Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.0447896Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.0697602Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-3e8ce1a3-aa84-4be2-b962-54be8b87e562.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.0748291Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/calculator/calculator/.git.path /home/runner/work/_temp/git-credentials-3e8ce1a3-aa84-4be2-b962-54be8b87e562.config
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.0788924Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/calculator/calculator/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-3e8ce1a3-aa84-4be2-b962-54be8b87e562.config
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.0839405Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-3e8ce1a3-aa84-4be2-b962-54be8b87e562.config
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.0883774Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-3e8ce1a3-aa84-4be2-b962-54be8b87e562.config
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.0942781Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.0944190Z ##[group]Fetching the repository
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.0954664Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +cc31f84b303141a40f91fcc0cdd2d53d9209b2a2:refs/remotes/origin/main
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.8505946Z From https://github.com/link-assistant/calculator
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.8507877Z  * [new ref]         cc31f84b303141a40f91fcc0cdd2d53d9209b2a2 -> origin/main
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.8517832Z [command]/usr/bin/git branch --list --remote origin/main
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.8549126Z   origin/main
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.8560469Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.8588929Z cc31f84b303141a40f91fcc0cdd2d53d9209b2a2
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.8595657Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.8597045Z ##[group]Determining the checkout info
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.8598542Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.8602031Z [command]/usr/bin/git sparse-checkout disable
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.8666392Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.8701607Z ##[group]Checking out the ref
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.8706364Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.9778082Z Switched to a new branch 'main'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.9783825Z branch 'main' set up to track 'origin/main'.
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.9794729Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.9844695Z [command]/usr/bin/git log -1 --format=%H
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:24.9873227Z cc31f84b303141a40f91fcc0cdd2d53d9209b2a2
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.0298204Z ##[group]Run actions/setup-node@v6
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.0299025Z with:
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.0299489Z   node-version: 24.x
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.0300071Z   check-latest: false
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.0310025Z   token: ***
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.0310580Z   package-manager-cache: true
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.0311243Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.1755418Z Found in cache @ /opt/hostedtoolcache/node/24.21.0/x64
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.1760828Z ##[group]Environment details
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.6061270Z node: v24.21.0
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.6062969Z npm: 11.19.0
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.6064135Z yarn: 1.22.22
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.6066216Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.6246205Z ##[group]Run make checkout-corpus CORPUS_CHECKOUTS="$RUNNER_TEMP/calculator-upstreams" CORPUS_LATEST=--latest
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.6249330Z ^[[36;1mmake checkout-corpus CORPUS_CHECKOUTS="$RUNNER_TEMP/calculator-upstreams" CORPUS_LATEST=--latest^[[0m
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.6538339Z shell: /usr/bin/bash -e {0}
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.6539575Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.6701530Z node scripts/checkout-competitor-suites.mjs --checkouts "/home/runner/work/_temp/calculator-upstreams" --latest
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:25.7003953Z Cloning into '/home/runner/work/_temp/calculator-upstreams/fend'...
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:26.0691563Z From https://github.com/printfn/fend
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:26.0693472Z  * branch            HEAD       -> FETCH_HEAD
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:26.0854558Z HEAD is now at d9cb764 Bump dependencies
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:26.0906571Z fend: d9cb764e83cd1fe629bb526fd1cb08777d123014
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:26.0937371Z Cloning into '/home/runner/work/_temp/calculator-upstreams/qalculate'...
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:27.1164669Z From https://github.com/Qalculate/libqalculate
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:27.1165251Z  * branch            HEAD       -> FETCH_HEAD
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:27.1586230Z HEAD is now at d3672af Fix some warnings, errors, and crashes (with very deep recursive evaluation) when compiled with clang and libc on Windows (MSYS2/CLANG64); Fix default abortion timer in qalc on Windows; Avoid crash with factorial of integer > 50000000 on Windows; Fix (partly) input of Unicode characters with calculate-as-you-type in qalc on Windows
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:27.1625291Z qalculate: d3672af9cf6e05a39bd4206b7b7d6b1e0d194caa
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:27.1648518Z Cloning into '/home/runner/work/_temp/calculator-upstreams/numbat'...
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:27.5618298Z From https://github.com/sharkdp/numbat
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:27.5618817Z  * branch            HEAD       -> FETCH_HEAD
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:27.6095407Z HEAD is now at a5e70bf Preserve the interactive introductory web article
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:27.6133817Z numbat: a5e70bf1d121e0be6f9e38bc254d59f0474dc496
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:27.6161734Z Cloning into '/home/runner/work/_temp/calculator-upstreams/rink'...
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:27.9584231Z From https://github.com/tiffany352/rink-rs
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:27.9584997Z  * branch            HEAD       -> FETCH_HEAD
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:27.9771087Z HEAD is now at abf3042 add publish date to 0.9.0 release
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:27.9807352Z rink: abf3042c05988beee0d61b37b09f85af6beb4c46
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:27.9830759Z Cloning into '/home/runner/work/_temp/calculator-upstreams/mathjs'...
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:28.6132892Z From https://github.com/josdejong/mathjs
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:28.6133837Z  * branch            HEAD       -> FETCH_HEAD
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:28.6863262Z HEAD is now at 8d214e0 chore: fix TestMu AI logo name (has spaces, markdown doesn't like that)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:28.6898109Z mathjs: 8d214e050a0acb9f132405d55a96b683fa7b6324
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:28.6917779Z Cloning into '/home/runner/work/_temp/calculator-upstreams/insect'...
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:28.9751576Z From https://github.com/sharkdp/insect
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:28.9752319Z  * branch            HEAD       -> FETCH_HEAD
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:28.9850963Z HEAD is now at d19e4f1 Remove link to old website
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:28.9883076Z insect: d19e4f15f788a4c1bd277e1ef3bd5a5e3228bdd3
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:28.9906151Z Cloning into '/home/runner/work/_temp/calculator-upstreams/kalker'...
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:29.3388866Z From https://github.com/PaddiM8/kalker
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:29.3389363Z  * branch            HEAD       -> FETCH_HEAD
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:29.3629078Z HEAD is now at 87cd078 Fix engineering notation when the exponent is smaller than 1 and add new tests for test_eng_mode, ensurring everything works as expected
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:29.3662682Z kalker: 87cd07855633f4f16c549ede7d7a876e9ab3b910
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:29.3683981Z Cloning into '/home/runner/work/_temp/calculator-upstreams/hurmet'...
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:30.1488918Z From https://github.com/ronkok/Hurmet
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:30.1489384Z  * branch            HEAD       -> FETCH_HEAD
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:30.2072137Z HEAD is now at 8e82ede Update Temml
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:30.2112890Z hurmet: 8e82edefe91f1fff5d79df046880fcb5375ed1c4
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:30.2133489Z Cloning into '/home/runner/work/_temp/calculator-upstreams/speedcrunch'...
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:30.8708386Z From https://github.com/heldercorreia/speedcrunch
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:30.8709037Z  * branch            HEAD       -> FETCH_HEAD
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:30.9671564Z HEAD is now at 4cb502c Session: add Rename Session to Session menu
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:30.9716208Z speedcrunch: 4cb502ce9ad774dcc7ed3044cab232df65d4596f
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:30.9816636Z ##[group]Run make import-corpus CORPUS_CHECKOUTS="$RUNNER_TEMP/calculator-upstreams"
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:30.9817285Z ^[[36;1mmake import-corpus CORPUS_CHECKOUTS="$RUNNER_TEMP/calculator-upstreams"^[[0m
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:30.9884343Z shell: /usr/bin/bash -e {0}
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:30.9884607Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:30.9994484Z node scripts/import-competitor-corpus.mjs --checkouts "/home/runner/work/_temp/calculator-upstreams"
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:31.0539304Z fend: 1098 cases (d9cb764e83cd1fe629bb526fd1cb08777d123014)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:31.1016976Z qalculate: 656 cases (d3672af9cf6e05a39bd4206b7b7d6b1e0d194caa)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:31.1376278Z numbat: 289 cases (a5e70bf1d121e0be6f9e38bc254d59f0474dc496)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:31.1563531Z rink: 210 cases (abf3042c05988beee0d61b37b09f85af6beb4c46)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:31.8101406Z mathjs: 3286 cases (8d214e050a0acb9f132405d55a96b683fa7b6324)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:31.8302381Z insect: 73 cases (d19e4f15f788a4c1bd277e1ef3bd5a5e3228bdd3)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:31.8568455Z kalker: 8 cases (87cd07855633f4f16c549ede7d7a876e9ab3b910)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:31.9631933Z hurmet: 52 cases (8e82edefe91f1fff5d79df046880fcb5375ed1c4)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.2484322Z speedcrunch: 928 cases (4cb502ce9ad774dcc7ed3044cab232df65d4596f)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.2513707Z written: docs/case-studies/issue-227/corpus/open-source-tests.tsv, docs/case-studies/issue-227/competitor-inventory.md, scripts/competitor-upstreams.json
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.2659520Z ##[group]Run node --test scripts/import-competitor-corpus.test.mjs scripts/corpus-literals.test.mjs scripts/checkout-competitor-suites.test.mjs
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.2660796Z ^[[36;1mnode --test scripts/import-competitor-corpus.test.mjs scripts/corpus-literals.test.mjs scripts/checkout-competitor-suites.test.mjs^[[0m
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.2725423Z shell: /usr/bin/bash -e {0}
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.2725688Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.4205457Z Cloning into '/tmp/checkout-corpus-JHZgVC/checkouts/fixture'...
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.4225714Z warning: --depth is ignored in local clones; use file:// instead.
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.4278465Z done.
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.4436235Z From /tmp/checkout-corpus-JHZgVC/upstream
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.4437444Z  * branch            caba811d0684c918a3210ca1857ad76165efb2d6 -> FETCH_HEAD
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.4494899Z HEAD is now at caba811 first
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.4530253Z fixture: caba811d0684c918a3210ca1857ad76165efb2d6
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.4954655Z From /tmp/checkout-corpus-JHZgVC/upstream
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.4957922Z  * branch            HEAD       -> FETCH_HEAD
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.5003766Z Warning: you are leaving 1 commit behind, not connected to
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.5009339Z any of your branches:
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.5009966Z 
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.5010387Z   caba811 first
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.5010891Z 
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.5011631Z If you want to keep it by creating a new branch, this may be a good time
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.5012830Z to do so with:
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.5013270Z 
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.5013724Z  git branch <new-branch-name> caba811
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.5014287Z 
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.5014732Z HEAD is now at c7a96c7 second
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.5062139Z fixture: c7a96c721f832365a0280a7ef50c299943068afa
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.5311147Z ✔ checks out the pin, refreshes to HEAD on request, and preserves dirty work (152.086949ms)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.5443938Z ✔ decodes text literals and rejects executable templates or expressions (2.444616ms)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.5446119Z ✔ skips comments, regexes and quoted assertion examples without changing source line numbers (1.57415ms)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.5448023Z ✔ separates nested literal arguments and excludes multiline/control inputs (0.271037ms)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:32.5449997Z ✔ validates required command arguments without running an import on module load (0.649773ms)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7122374Z ✔ imports all nine suites with pinned provenance and literal expectations (504.909966ms)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7127475Z ✔ rejects dirty checkouts before overwriting generated artifacts (215.170321ms)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7133836Z ✔ rejects a missing or unrecognized suite without deleting the previous corpus (314.21601ms)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7144849Z ✔ fails on an empty extractor and preserves all previous outputs (291.180753ms)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7233870Z ℹ tests 9
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7234364Z ℹ suites 0
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7234785Z ℹ pass 9
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7235186Z ℹ fail 0
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7235577Z ℹ cancelled 0
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7236056Z ℹ skipped 0
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7236497Z ℹ todo 0
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7236958Z ℹ duration_ms 1411.102097
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7332373Z ##[group]Run if git diff --quiet -- docs/case-studies/issue-227/corpus/open-source-tests.tsv docs/case-studies/issue-227/competitor-inventory.md scripts/competitor-upstreams.json; then
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7334008Z ^[[36;1mif git diff --quiet -- docs/case-studies/issue-227/corpus/open-source-tests.tsv docs/case-studies/issue-227/competitor-inventory.md scripts/competitor-upstreams.json; then^[[0m
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7334814Z ^[[36;1m  echo 'changed=false' >> "$GITHUB_OUTPUT"^[[0m
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7335105Z ^[[36;1melse^[[0m
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7335351Z ^[[36;1m  echo 'changed=true' >> "$GITHUB_OUTPUT"^[[0m
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7335732Z ^[[36;1m  cat > changelog.d/competitor_corpus_refresh.md <<'FRAGMENT'^[[0m
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7336086Z ^[[36;1m---^[[0m
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7336286Z ^[[36;1mbump: patch^[[0m
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7336490Z ^[[36;1m---^[[0m
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7336670Z ^[[36;1m^[[0m
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7336849Z ^[[36;1m### Changed^[[0m
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7337307Z ^[[36;1m- Refresh imported open-source calculator assertions and their upstream revision provenance.^[[0m
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7338008Z ^[[36;1mFRAGMENT^[[0m
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7338204Z ^[[36;1mfi^[[0m
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7402417Z shell: /usr/bin/bash -e {0}
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7402923Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7674283Z ##[group]Run peter-evans/create-pull-request@v8
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7674626Z with:
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7677597Z   token: ***
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7677852Z   branch: automation/competitor-corpus
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7678142Z   delete-branch: true
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7678413Z   title: chore: refresh upstream calculator test corpus
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7678813Z   commit-message: chore: refresh upstream calculator test corpus
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7681175Z   body: Refresh all nine suites using their upstream default branches.
+Import Upstream Calculator Suites	UNKNOWN STEP	The corpus headers, revision lock and competitor inventory record
+Import Upstream Calculator Suites	UNKNOWN STEP	the exact commit SHA, date, original license and source URLs.
+Import Upstream Calculator Suites	UNKNOWN STEP	
+Import Upstream Calculator Suites	UNKNOWN STEP	Validation: importer, literal extraction and checkout tests passed.
+Import Upstream Calculator Suites	UNKNOWN STEP	Review the corpus diff for changed expectations or retired cases.
+Import Upstream Calculator Suites	UNKNOWN STEP	The coverage baseline is preserved so the normal CI coverage gate
+Import Upstream Calculator Suites	UNKNOWN STEP	can flag regressions and removals for review.
+Import Upstream Calculator Suites	UNKNOWN STEP	
+Import Upstream Calculator Suites	UNKNOWN STEP	Reproduce with `make checkout-corpus` followed by `make import-corpus`.
+Import Upstream Calculator Suites	UNKNOWN STEP	See [the refresh guide](https://github.com/link-assistant/calculator/blob/main/docs/competitor-corpus.md).
+Import Upstream Calculator Suites	UNKNOWN STEP	
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7684283Z   add-paths: docs/case-studies/issue-227/corpus/open-source-tests.tsv
+Import Upstream Calculator Suites	UNKNOWN STEP	docs/case-studies/issue-227/competitor-inventory.md
+Import Upstream Calculator Suites	UNKNOWN STEP	scripts/competitor-upstreams.json
+Import Upstream Calculator Suites	UNKNOWN STEP	changelog.d/competitor_corpus_refresh.md
+Import Upstream Calculator Suites	UNKNOWN STEP	
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7685331Z   committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7685846Z   author: konard <1431904+konard@users.noreply.github.com>
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7686166Z   signoff: false
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7686371Z   sign-commits: false
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7686581Z   draft: false
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7686791Z   maintainer-can-modify: true
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.7687031Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.8856908Z ##[group]Prepare git configuration
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.8918531Z [command]/usr/bin/git config --global --name-only --get-regexp safe.directory /home/runner/work/calculator/calculator
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.8992276Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/calculator/calculator
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9034813Z [command]/usr/bin/git config --local --get remote.origin.url
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9067014Z https://github.com/link-assistant/calculator
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9087785Z Temporarily hiding checkout credential file: git-credentials-3e8ce1a3-aa84-4be2-b962-54be8b87e562.config (will be restored after)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9093762Z [command]/usr/bin/git config --local --name-only --get-regexp http.https://github.com/.extraheader ^AUTHORIZATION:
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9128702Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9129481Z ##[group]Determining the base and head repositories
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9160060Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9160855Z Pull request branch target repository set to link-assistant/calculator
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9161914Z ##[group]Configuring credential for HTTPS authentication
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9168888Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9212929Z [command]/usr/bin/git rev-parse --git-dir
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9237255Z .git
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9275052Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9275777Z ##[group]Checking the base repository state
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9283252Z [command]/usr/bin/git symbolic-ref HEAD --short
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9311423Z main
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9316358Z Working base is branch 'main'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9317132Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9317896Z Pull request branch to create or update set to 'automation/competitor-corpus'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9318892Z ##[group]Configuring the committer and author
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9320059Z Configured git committer as 'github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9321623Z Configured git author as 'konard <1431904+konard@users.noreply.github.com>'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9322533Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9323403Z ##[group]Create or update the pull request branch
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9330669Z [command]/usr/bin/git symbolic-ref HEAD --short
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9356694Z main
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9361467Z Working base is branch 'main'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:33.9373555Z [command]/usr/bin/git checkout --progress -B 51cf0e9e-2348-48e4-8fc9-1445d5b09979 HEAD --
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0121086Z Switched to a new branch '51cf0e9e-2348-48e4-8fc9-1445d5b09979'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0121793Z M	docs/case-studies/issue-227/competitor-inventory.md
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0122945Z M	docs/case-studies/issue-227/corpus/open-source-tests.tsv
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0123739Z M	scripts/competitor-upstreams.json
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0136101Z [command]/usr/bin/git status --porcelain -unormal -- docs/case-studies/issue-227/corpus/open-source-tests.tsv docs/case-studies/issue-227/competitor-inventory.md scripts/competitor-upstreams.json changelog.d/competitor_corpus_refresh.md
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0175212Z  M docs/case-studies/issue-227/competitor-inventory.md
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0176121Z  M docs/case-studies/issue-227/corpus/open-source-tests.tsv
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0176845Z  M scripts/competitor-upstreams.json
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0177707Z ?? changelog.d/competitor_corpus_refresh.md
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0179936Z Uncommitted changes found. Adding a commit.
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0185096Z [command]/usr/bin/git add -- docs/case-studies/issue-227/corpus/open-source-tests.tsv docs/case-studies/issue-227/competitor-inventory.md scripts/competitor-upstreams.json changelog.d/competitor_corpus_refresh.md
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0301459Z [command]/usr/bin/git -c author.name=konard -c author.email=1431904+konard@users.noreply.github.com -c committer.name=github-actions[bot] -c committer.email=41898282+github-actions[bot]@users.noreply.github.com commit -m chore: refresh upstream calculator test corpus
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0416638Z [51cf0e9e-2348-48e4-8fc9-1445d5b09979 b1d742e] chore: refresh upstream calculator test corpus
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0418195Z  Author: konard <1431904+konard@users.noreply.github.com>
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0419024Z  4 files changed, 398 insertions(+), 391 deletions(-)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0419828Z  create mode 100644 changelog.d/competitor_corpus_refresh.md
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0428179Z [command]/usr/bin/git stash push --include-untracked
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0506478Z No local changes to save
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0510903Z Resetting working base branch 'main'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0518892Z [command]/usr/bin/git checkout --progress main --
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0611375Z Switched to branch 'main'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0612937Z Your branch is up to date with 'origin/main'.
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0630517Z [command]/usr/bin/git reset --hard origin/main
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0734313Z HEAD is now at cc31f84 chore: update currency rates from Central Banks [skip ci]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0750682Z [command]/usr/bin/git rev-list --right-only --count main...51cf0e9e-2348-48e4-8fc9-1445d5b09979
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0787828Z 1
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.0806546Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --progress --no-recurse-submodules --force --depth=11 origin automation/competitor-corpus:refs/remotes/origin/automation/competitor-corpus
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.2861465Z fatal: couldn't find remote ref automation/competitor-corpus
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.2890849Z Pull request branch 'automation/competitor-corpus' does not exist yet.
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.2896752Z [command]/usr/bin/git checkout --progress -B automation/competitor-corpus 51cf0e9e-2348-48e4-8fc9-1445d5b09979 --
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3013809Z Switched to a new branch 'automation/competitor-corpus'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3027477Z [command]/usr/bin/git rev-list --right-only --count main...automation/competitor-corpus
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3060838Z 1
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3065505Z Created branch 'automation/competitor-corpus'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3069709Z [command]/usr/bin/git rev-parse main
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3108144Z cc31f84b303141a40f91fcc0cdd2d53d9209b2a2
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3118067Z [command]/usr/bin/git -c core.quotePath=false show --raw --cc --no-renames --no-abbrev --format=%H%n%T%n%P%n%G?%n%s%n%b%n###EOB### cc31f84b303141a40f91fcc0cdd2d53d9209b2a2
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3202045Z [command]/usr/bin/git rev-parse automation/competitor-corpus
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3227384Z b1d742e55d05e610ca9dbf05bc50d417cf99d8fd
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3237233Z [command]/usr/bin/git log --format=%H main..automation/competitor-corpus
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3265135Z b1d742e55d05e610ca9dbf05bc50d417cf99d8fd
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3275078Z [command]/usr/bin/git -c core.quotePath=false show --raw --cc --no-renames --no-abbrev --format=%H%n%T%n%P%n%G?%n%s%n%b%n###EOB### b1d742e55d05e610ca9dbf05bc50d417cf99d8fd
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3322995Z [command]/usr/bin/git branch --delete --force 51cf0e9e-2348-48e4-8fc9-1445d5b09979
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3355493Z Deleted branch 51cf0e9e-2348-48e4-8fc9-1445d5b09979 (was b1d742e).
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3363010Z [command]/usr/bin/git checkout --progress main --
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3459396Z Switched to branch 'main'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3462454Z Your branch is up to date with 'origin/main'.
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3468237Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3469181Z ##[group]Pushing pull request branch to 'origin/automation/competitor-corpus'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:34.3474682Z [command]/usr/bin/git push --force-with-lease origin automation/competitor-corpus:refs/heads/automation/competitor-corpus
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:35.4934325Z remote: 
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:35.4935489Z remote: Create a pull request for 'automation/competitor-corpus' on GitHub by visiting:        
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:35.4936570Z remote:      https://github.com/link-assistant/calculator/pull/new/automation/competitor-corpus        
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:35.4937423Z remote: 
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:35.4944650Z To https://github.com/link-assistant/calculator
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:35.4945583Z  * [new branch]      automation/competitor-corpus -> automation/competitor-corpus
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:35.4989124Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:35.4989671Z ##[group]Create or update the pull request
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:35.4993701Z Attempting creation of pull request
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8186218Z Created pull request #255 (link-assistant:automation/competitor-corpus => main)
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8187759Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8188504Z ##[group]Setting outputs
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8189269Z pull-request-branch = automation/competitor-corpus
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8195048Z pull-request-operation = created
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8195815Z pull-request-head-sha = b1d742e55d05e610ca9dbf05bc50d417cf99d8fd
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8197554Z pull-request-number = 255
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8198342Z pull-request-url = https://github.com/link-assistant/calculator/pull/255
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8199167Z pull-request-commits-verified = false
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8199943Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8200529Z ##[group]Restore git configuration
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8206056Z [command]/usr/bin/git config --local --name-only --get-regexp http.https://github.com/.extraheader ^AUTHORIZATION:
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8243579Z http.https://github.com/.extraheader
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8257182Z [command]/usr/bin/git config --local --get-regexp http.https://github.com/.extraheader ^AUTHORIZATION:
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8300542Z http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8307713Z [command]/usr/bin/git config --local --unset http.https://github.com/.extraheader ^AUTHORIZATION:
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8359866Z Unset config key 'http.https://github.com/.extraheader'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8365737Z Restored checkout credential file: git-credentials-3e8ce1a3-aa84-4be2-b962-54be8b87e562.config
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8370719Z [command]/usr/bin/git config --global --unset safe.directory /home/runner/work/calculator/calculator
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8411012Z ##[endgroup]
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:36.8726444Z Post job cleanup.
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.0084555Z Post job cleanup.
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.0980731Z [command]/usr/bin/git version
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1026413Z git version 2.55.0
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1063351Z Copying '/home/runner/.gitconfig' to '/home/runner/work/_temp/e365bcd8-3e54-4e75-bb53-f7a949d32521/.gitconfig'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1074187Z Temporarily overriding HOME='/home/runner/work/_temp/e365bcd8-3e54-4e75-bb53-f7a949d32521' before making global git config changes
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1075757Z Adding repository directory to the temporary git global config as a safe directory
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1081307Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/calculator/calculator
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1117045Z Removing SSH command configuration
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1125089Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1174416Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1420956Z Removing HTTP extra header
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1427559Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1466476Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1746078Z Removing includeIf entries pointing to credentials config files
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1756962Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1794696Z includeif.gitdir:/home/runner/work/calculator/calculator/.git.path
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1795822Z includeif.gitdir:/home/runner/work/calculator/calculator/.git/worktrees/*.path
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1796673Z includeif.gitdir:/github/workspace/.git.path
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1797444Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1810421Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/calculator/calculator/.git.path
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1850282Z /home/runner/work/_temp/git-credentials-3e8ce1a3-aa84-4be2-b962-54be8b87e562.config
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1868411Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/calculator/calculator/.git.path /home/runner/work/_temp/git-credentials-3e8ce1a3-aa84-4be2-b962-54be8b87e562.config
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1935073Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/calculator/calculator/.git/worktrees/*.path
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1984955Z /home/runner/work/_temp/git-credentials-3e8ce1a3-aa84-4be2-b962-54be8b87e562.config
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.1988206Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/calculator/calculator/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-3e8ce1a3-aa84-4be2-b962-54be8b87e562.config
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.2070000Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.2090309Z /github/runner_temp/git-credentials-3e8ce1a3-aa84-4be2-b962-54be8b87e562.config
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.2106525Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-3e8ce1a3-aa84-4be2-b962-54be8b87e562.config
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.2154928Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.2184652Z /github/runner_temp/git-credentials-3e8ce1a3-aa84-4be2-b962-54be8b87e562.config
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.2198776Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-3e8ce1a3-aa84-4be2-b962-54be8b87e562.config
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.2245936Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.2509014Z Removing credentials config '/home/runner/work/_temp/git-credentials-3e8ce1a3-aa84-4be2-b962-54be8b87e562.config'
+Import Upstream Calculator Suites	UNKNOWN STEP	2026-10-11T11:47:37.2705589Z Cleaning up orphan processes

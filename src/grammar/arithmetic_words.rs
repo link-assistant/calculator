@@ -60,6 +60,11 @@ fn operator_kind(symbol: &str) -> Option<TokenKind> {
         "/" => TokenKind::Slash,
         "%" => TokenKind::Percent,
         "^" => TokenKind::Caret,
+        "percent" => TokenKind::PercentWord,
+        "percent-prefix" => TokenKind::PercentPrefix,
+        "portion" => TokenKind::Portion,
+        "increase-from" => TokenKind::IncreaseFrom,
+        "decrease-from" => TokenKind::DecreaseFrom,
         _ => return None,
     })
 }
@@ -130,6 +135,26 @@ pub(super) type WordToken = (TokenKind, usize, usize, String);
 /// Returns the tokens (at least one) in input order, or `None` when the word
 /// at `pos` is not arithmetic vocabulary.
 pub(super) fn scan(input: &[char], pos: usize) -> Option<Vec<WordToken>> {
+    let longest = vocabulary().longest_word.min(input.len() - pos);
+    for len in (1..=longest).rev() {
+        if let Some(Word {
+            meaning: Meaning::Operator(op),
+            ..
+        }) = lookup(input, pos, pos + len)
+        {
+            if matches!(op, TokenKind::Portion | TokenKind::PercentPrefix)
+                && (*op != TokenKind::Portion || portion_has_percent(input, pos + len))
+                && (pos + len == input.len() || !input[pos + len].is_ascii_alphabetic())
+            {
+                return Some(vec![(
+                    op.clone(),
+                    pos,
+                    pos + len,
+                    text(input, pos, pos + len),
+                )]);
+            }
+        }
+    }
     if is_cjk(input[pos]) {
         return scan_cjk(input, pos);
     }
@@ -137,6 +162,32 @@ pub(super) fn scan(input: &[char], pos: usize) -> Option<Vec<WordToken>> {
         return Some(vec![token]);
     }
     scan_spaced_number(input, pos).map(|token| vec![token])
+}
+
+// A possession word also occurs in dates, units, and powers. Recognize the
+// whole-before-part form only when the following text contains percent vocabulary.
+fn portion_has_percent(input: &[char], start: usize) -> bool {
+    for pos in start..input.len() {
+        if input[pos] == '%' {
+            return true;
+        }
+        let longest = vocabulary().longest_word.min(input.len() - pos);
+        for len in (1..=longest).rev() {
+            if matches!(
+                lookup(input, pos, pos + len),
+                Some(Word {
+                    meaning: Meaning::Operator(TokenKind::PercentPrefix | TokenKind::PercentWord),
+                    ..
+                })
+            ) {
+                return true;
+            }
+        }
+        if matches!(input[pos], '+' | '-' | '*' | '/' | '(' | ')') {
+            break;
+        }
+    }
+    false
 }
 
 fn is_cjk(ch: char) -> bool {
@@ -216,7 +267,7 @@ fn scan_phrase(input: &[char], pos: usize) -> Option<WordToken> {
 
     let (op, end) = matched?;
     // `mod(17, 5)` is the function, not the operator.
-    if op == TokenKind::Percent && input.get(end) == Some(&'(') {
+    if matches!(op, TokenKind::Percent | TokenKind::PercentWord) && input.get(end) == Some(&'(') {
         return None;
     }
     Some((op, pos, end, text(input, pos, end)))

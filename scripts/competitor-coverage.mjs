@@ -28,7 +28,8 @@
  *     --timeout <ms>       per-expression timeout (default: 5000)
  *     --source <name>      only run cases whose source contains <name>
  *     --baseline <json>    previous coverage-baseline.json; exit 1 when a case
- *                          that was `supported` there is not supported now
+ *                          disappears or its status gets worse (in order:
+ *                          supported, different, unsupported, timeout)
  *     --quiet              do not print the per-source table
  */
 
@@ -189,7 +190,34 @@ function splitNumber(text) {
   if (!match) {
     return null;
   }
-  return { number: Number.parseFloat(match[1]), literal: match[1], rest: match[2].trim() };
+  return { number: Number.parseFloat(match[1]), literal: match[1], rest: match[2].trim().replace(/^\(dimensionless\)$/, '') };
+}
+
+/** Expand attached large-number suffixes while preserving unit text and case. */
+function expandCompactNumber(text) {
+  return text.trim().replace(
+    /^([-+]?\d+(?:\.\d+)?)([kMGT])(?=$|\s)/,
+    (_, number, suffix) => String(Number(number) * ({ k: 1e3, M: 1e6, G: 1e9, T: 1e12 })[suffix])
+  );
+}
+
+/** Compare radix output as a number, rather than treating its prefix as a unit. */
+function expandRadixNumber(text) {
+  return text.trim().replace(
+    /^([-+]?)0([box])([0-9a-f]+)(?:\.([0-9a-f]+))?(?=$|\s)/i,
+    (literal, sign, prefix, integer, fraction = '') => {
+      const radix = ({ b: 2, o: 8, x: 16 })[prefix.toLowerCase()];
+      const digits = [...integer, ...fraction].map((digit) => Number.parseInt(digit, 16));
+      if (digits.some((digit) => digit >= radix)) return literal;
+      let value = Number.parseInt(integer, radix);
+      let place = 1 / radix;
+      for (const digit of fraction) {
+        value += Number.parseInt(digit, radix) * place;
+        place /= radix;
+      }
+      return String(sign === '-' ? -value : value);
+    }
+  );
 }
 
 /**
@@ -201,13 +229,23 @@ function resultsMatch(actual, expected) {
   if (expected === '') {
     return true;
   }
-  const a = normalizeText(actual);
-  const e = normalizeText(expected);
+  const a = normalizeText(expandRadixNumber(expandCompactNumber(actual)));
+  const e = normalizeText(expandRadixNumber(expandCompactNumber(expected)));
   if (a === e) {
     return true;
   }
   const an = splitNumber(a);
   const en = splitNumber(e);
+  if (an && en && (an.rest === '%' || en.rest === '%')) {
+    if (![an.rest, en.rest].every((rest) => rest === '' || rest === '%')) {
+      return false;
+    }
+    // Engines expose equivalent dimensionless values as fractions or percents.
+    // Strict Rust display regressions separately enforce the percent value type.
+    const av = an.number / (an.rest === '%' ? 100 : 1);
+    const ev = en.number / (en.rest === '%' ? 100 : 1);
+    return Math.abs(av - ev) <= 1e-9 * Math.max(1, Math.abs(ev));
+  }
   if (!an || !en || an.rest !== en.rest) {
     return false;
   }
@@ -356,23 +394,45 @@ function renderReport(results, summary, options, binary) {
   return `${sections.join('\n')}\n`;
 }
 
-function compareWithBaseline(results, baselinePath) {
-  const baseline = JSON.parse(readFileSync(baselinePath, 'utf8'));
-  const previouslySupported = new Set(
-    baseline.results.filter((r) => r.status === 'supported').map((r) => `${r.source}\u0000${r.expression}`)
-  );
-  return results.filter(
-    (r) => r.status !== 'supported' && previouslySupported.has(`${r.source}\u0000${r.expression}`)
-  );
+function compareWithBaseline(results, baseline) {
+  const key = (row) => JSON.stringify([row.source, row.lang, row.expression]);
+  const previous = new Map();
+  for (const row of baseline.results) {
+    const rank = STATUSES.indexOf(row.status);
+    if (rank === -1) {
+      throw new Error(`Unknown baseline status: ${row.status}`);
+    }
+    const existing = previous.get(key(row));
+    if (!existing || rank < STATUSES.indexOf(existing.status)) {
+      previous.set(key(row), row);
+    }
+  }
+  const regressions = results.filter((row) => {
+    const old = previous.get(key(row));
+    return old && STATUSES.indexOf(row.status) > STATUSES.indexOf(old.status);
+  });
+  const current = new Set(results.map(key));
+  for (const [id, row] of previous) {
+    if (!current.has(id)) {
+      regressions.push({ ...row, status: 'missing', error: 'expression missing from corpus' });
+    }
+  }
+  return regressions;
 }
 
 function main() {
   const options = parseArgs(process.argv.slice(2));
+  // Read before writing reports: --baseline may be in the output directory.
+  const baseline = options.baseline ? JSON.parse(readFileSync(options.baseline, 'utf8')) : null;
   const binary = findBinary(options.binary);
   const files = collectCorpusFiles(options.corpus);
   let cases = files.flatMap(parseCorpus);
   if (options.source) {
-    cases = cases.filter((c) => c.source.toLowerCase().includes(options.source.toLowerCase()));
+    const matchesSource = (row) => row.source.toLowerCase().includes(options.source.toLowerCase());
+    cases = cases.filter(matchesSource);
+    if (baseline) {
+      baseline.results = baseline.results.filter(matchesSource);
+    }
   }
   if (cases.length === 0) {
     throw new Error('No corpus cases found.');
@@ -381,6 +441,7 @@ function main() {
   const started = Date.now();
   const results = cases.map((c) => classify(binary, c, options.timeout));
   const summary = summarize(results);
+  const regressions = baseline ? compareWithBaseline(results, baseline) : [];
 
   mkdirSync(options.out, { recursive: true });
   writeFileSync(join(options.out, 'coverage-report.md'), renderReport(results, summary, options, binary));
@@ -415,7 +476,6 @@ function main() {
   }
 
   if (options.baseline) {
-    const regressions = compareWithBaseline(results, options.baseline);
     if (regressions.length > 0) {
       console.error(`\n${regressions.length} regression(s) against ${options.baseline}:`);
       for (const r of regressions) {
@@ -436,4 +496,4 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   }
 }
 
-export { resultsMatch, normalizeText, parseCorpus, decodeEscapes, STATUSES };
+export { resultsMatch, normalizeText, parseCorpus, decodeEscapes, STATUSES, compareWithBaseline };

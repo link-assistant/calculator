@@ -1,0 +1,15 @@
+{
+  "lang": "zh",
+  "title": "光速",
+  "authors": "Wikipedia contributors",
+  "fetched": "2026-10-08",
+  "url": "https://zh.wikipedia.org/wiki/%E5%85%89%E9%80%9F",
+  "revisionUrl": "https://zh.wikipedia.org/w/index.php?oldid=93548196",
+  "license": "CC-BY-SA-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "extract": "光速，指光在真空中的速率，是一個物理常數，一般記作c，精確值為299792458m/s（有时会取为3.00×108m/s）。這一數值之所以是精確值，是因為公尺的定義本身就是基於光速和國際時間標準的，任何对光速更精确的测定，都不会改变光速的精确值，相反地，将会使得人们对1公尺的定义更为精确。\n",
+  "candidates": [
+    "光速，指光在真空中的速率，是一個物理常數，一般記作c，精確值為299792458m/s（有时会取为3.00×108m/s）。",
+    "這一數值之所以是精確值，是因為公尺的定義本身就是基於光速和國際時間標準的，任何对光速更精确的测定，都不会改变光速的精确值，相反地，将会使得人们对1公尺的定义更为精确。"
+  ]
+}

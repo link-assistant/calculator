@@ -11,8 +11,11 @@ concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
 
+# Least-privilege default; the job below escalates to what it needs.
+permissions:
+  contents: read
+
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   GIT_CONFIG_COUNT: 1
   GIT_CONFIG_KEY_0: init.defaultBranch
   GIT_CONFIG_VALUE_0: main
@@ -20,20 +23,25 @@ env:
 jobs:
   update-rates:
     name: Update Currency Rates from Central Banks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    # Without a limit a hung central-bank download holds the shared
+    # main-writer-main group for GitHub's 6-hour default (issue #256).
+    timeout-minutes: 15
     concurrency:
       group: main-writer-main
       cancel-in-progress: false
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
+          # This job pushes with the checkout credentials, so it keeps them.
+          persist-credentials: true
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: '3.11'
 
@@ -53,10 +61,10 @@ jobs:
         id: check_changes
         run: |
           if git diff --quiet data/currency/; then
-            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
             echo "No changes in currency rates"
           else
-            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
             echo "Currency rates have been updated"
             git diff --stat data/currency/
           fi

@@ -14,6 +14,7 @@
  * Excluded from code changes (don't require changelog fragments):
  * - Markdown files (*.md) in any folder
  * - changelog.d/ folder (changelog fragments)
+ * - dev/log/ folder (collected CI evidence, e.g. run JSON)
  * - docs/ folder (documentation)
  * - experiments/ folder (experimental scripts)
  * - examples/ folder (example scripts)
@@ -31,13 +32,26 @@
  *   - toml-changed: 'true' if any .toml files changed
  *   - mjs-changed: 'true' if any .mjs files changed
  *   - docs-changed: 'true' if any .md files changed
- *   - workflow-changed: 'true' if any .github/workflows/ files changed
+ *   - workflow-changed: 'true' if any .github/workflows/ or .github/actions/
+ *     files changed (a composite action runs inside the workflows)
  *   - any-code-changed: 'true' if any code files changed (excludes docs, changelog.d, experiments, examples)
- *     Detects: .rs, .toml, .mjs, .ts, .tsx, .js, .css, .html, .yml, .yaml files and workflow changes
+ *     Detects: .rs, .toml, .mjs, .ts, .tsx, .js, .css, .html, .yml, .yaml, .py, .sh, .json files and workflow changes
  */
 
 import { execSync } from 'child_process';
 import { appendFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+
+/**
+ * Whether a file configures CI: a workflow or a local composite action.
+ * Issue #256: a PR that only changed .github/actions/ skipped lint and with it
+ * wasm-build, the one job that runs the changed install-wasm-pack action.
+ * @param {string} file - Repository-relative path
+ * @returns {boolean}
+ */
+export function isCiConfigFile(file) {
+  return file.startsWith('.github/workflows/') || file.startsWith('.github/actions/');
+}
 
 /**
  * Execute a shell command and return trimmed output
@@ -121,7 +135,7 @@ function isExcludedFromCodeChanges(filePath) {
   }
 
   // Exclude specific folders from code changes
-  const excludedFolders = ['changelog.d/', 'docs/', 'experiments/', 'examples/'];
+  const excludedFolders = ['changelog.d/', 'dev/log/', 'docs/', 'experiments/', 'examples/'];
 
   for (const folder of excludedFolders) {
     if (filePath.startsWith(folder)) {
@@ -130,6 +144,20 @@ function isExcludedFromCodeChanges(filePath) {
   }
 
   return false;
+}
+
+// .py, .sh and .json joined in issue #256: CI runs scripts/*.py and *.sh, and
+// web/package.json pins the web dependencies, yet a PR touching only those
+// needed no changelog fragment and skipped the fresh-merge simulation.
+const CODE_PATTERN = /\.(rs|toml|mjs|ts|tsx|js|css|html|yml|yaml|py|sh|json)$/;
+
+/**
+ * Whether a changed file is code: it needs a changelog fragment and the checks.
+ * @param {string} file - Repository-relative path
+ * @returns {boolean}
+ */
+export function isCodeChange(file) {
+  return !isExcludedFromCodeChanges(file) && (CODE_PATTERN.test(file) || isCiConfigFile(file));
 }
 
 /**
@@ -165,9 +193,7 @@ function detectChanges() {
   setOutput('docs-changed', docsChanged ? 'true' : 'false');
 
   // Detect workflow changes
-  const workflowChanged = changedFiles.some((file) =>
-    file.startsWith('.github/workflows/')
-  );
+  const workflowChanged = changedFiles.some(isCiConfigFile);
   setOutput('workflow-changed', workflowChanged ? 'true' : 'false');
 
   // Detect code changes (excluding docs, changelog.d, experiments, examples folders, and markdown files)
@@ -183,13 +209,13 @@ function detectChanges() {
   }
   console.log('');
 
-  // Check if any code files changed (.rs, .toml, .mjs, .ts, .tsx, .js, .css, .html, .yml, .yaml, or workflow files)
-  const codePattern = /\.(rs|toml|mjs|ts|tsx|js|css|html|yml|yaml)$|\.github\/workflows\//;
-  const codeChanged = codeChangedFiles.some((file) => codePattern.test(file));
+  const codeChanged = changedFiles.some(isCodeChange);
   setOutput('any-code-changed', codeChanged ? 'true' : 'false');
 
   console.log('\nChange detection completed.');
 }
 
-// Run the detection
-detectChanges();
+// Run the detection when executed directly (the test imports the classifiers)
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  detectChanges();
+}

@@ -1,6 +1,6 @@
 [package]
 name = "link-calculator"
-version = "0.22.0"
+version = "0.24.0"
 edition = "2021"
 description = "A Rust WebAssembly calculator with grammar-based expression parsing using links-notation"
 readme = "README.md"
@@ -19,6 +19,7 @@ include = [
     "/examples/**",
     "/data/currency/*.lino",
     "/data/words/*.lino",
+    "/data/units/*.lino",
     "/build.rs",
     "/Cargo.toml",
     "/Cargo.lock",
@@ -26,6 +27,11 @@ include = [
     "/CHANGELOG.md",
     "/LICENSE",
 ]
+
+# experiments/ holds runnable experiment scripts outside the published crate;
+# only the root package is built by default.
+[workspace]
+members = ["experiments"]
 
 [lib]
 name = "link_calculator"
@@ -39,18 +45,6 @@ path = "src/main.rs"
 [[example]]
 name = "library_consumer"
 path = "examples/library_consumer.rs"
-
-[[example]]
-name = "issue_222_probe"
-path = "experiments/issue_222_probe.rs"
-
-[[example]]
-name = "test_advanced_math"
-path = "experiments/test_advanced_math.rs"
-
-[[example]]
-name = "test_issue84_lino"
-path = "experiments/test_issue84_lino.rs"
 
 [dependencies]
 wasm-bindgen = "0.2"
@@ -103,15 +97,3 @@ opt-level = "s"
 
 [profile.release.package."*"]
 opt-level = "s"
-
-[[example]]
-name = "test_issue23"
-path = "experiments/test_issue23.rs"
-
-[[example]]
-name = "test_issue104_ton_ambiguity"
-path = "experiments/test_issue104_ton_ambiguity.rs"
-
-[[example]]
-name = "test_issue128_year"
-path = "experiments/test_issue128_year.rs"

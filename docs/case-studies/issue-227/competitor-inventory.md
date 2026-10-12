@@ -1,80 +1,67 @@
 # Competitor inventory for issue #227
 
-Checked on 2026-10-07. Open-source projects were cloned and their published
-test suites were imported; closed-source products were sampled from their
-documentation. The issue-220 [competitor audit](../issue-220/competitor-audit.md)
-describes each product's published feature surface; this file records exactly
-which artifacts were turned into executable corpus rows and what the current
-build does with them. Coverage numbers come from
-[results/coverage-report.md](results/coverage-report.md).
+<!-- upstream-tests:start -->
+| Engine | Upstream commit | Commit date | Original license | Imported artifact | Rows |
+| --- | --- | --- | --- | --- | ---: |
+| [fend](https://github.com/printfn/fend) | [d9cb764e83cd1fe629bb526fd1cb08777d123014](https://github.com/printfn/fend/commit/d9cb764e83cd1fe629bb526fd1cb08777d123014) | 2026-08-28T11:40:26Z | MIT | [fend core/tests/integration_tests.rs](https://github.com/printfn/fend/blob/d9cb764e83cd1fe629bb526fd1cb08777d123014/core/tests/integration_tests.rs) | 1098 |
+| [qalculate](https://github.com/Qalculate/libqalculate) | [d3672af9cf6e05a39bd4206b7b7d6b1e0d194caa](https://github.com/Qalculate/libqalculate/commit/d3672af9cf6e05a39bd4206b7b7d6b1e0d194caa) | 2026-10-09T19:12:49+02:00 | GPL-2.0-or-later | [libqalculate tests/*.batch](https://github.com/Qalculate/libqalculate/tree/d3672af9cf6e05a39bd4206b7b7d6b1e0d194caa/tests) | 656 |
+| [numbat](https://github.com/sharkdp/numbat) | [a5e70bf1d121e0be6f9e38bc254d59f0474dc496](https://github.com/sharkdp/numbat/commit/a5e70bf1d121e0be6f9e38bc254d59f0474dc496) | 2026-10-10T12:22:14+02:00 | MIT OR Apache-2.0 | [numbat numbat/tests/interpreter.rs](https://github.com/sharkdp/numbat/blob/a5e70bf1d121e0be6f9e38bc254d59f0474dc496/numbat/tests/interpreter.rs) | 289 |
+| [rink](https://github.com/tiffany352/rink-rs) | [abf3042c05988beee0d61b37b09f85af6beb4c46](https://github.com/tiffany352/rink-rs/commit/abf3042c05988beee0d61b37b09f85af6beb4c46) | 2026-04-24T23:12:10-07:00 | MPL-2.0 | [rink-rs core/tests/query.rs](https://github.com/tiffany352/rink-rs/blob/abf3042c05988beee0d61b37b09f85af6beb4c46/core/tests/query.rs) | 210 |
+| [mathjs](https://github.com/josdejong/mathjs) | [8d214e050a0acb9f132405d55a96b683fa7b6324](https://github.com/josdejong/mathjs/commit/8d214e050a0acb9f132405d55a96b683fa7b6324) | 2026-08-10T12:43:23+02:00 | Apache-2.0 | [mathjs test/unit-tests/{expression,function,type/unit}/**/*.test.js](https://github.com/josdejong/mathjs/blob/8d214e050a0acb9f132405d55a96b683fa7b6324/test/unit-tests/expression/parse.test.js) | 3286 |
+| [insect](https://github.com/sharkdp/insect) | [d19e4f15f788a4c1bd277e1ef3bd5a5e3228bdd3](https://github.com/sharkdp/insect/commit/d19e4f15f788a4c1bd277e1ef3bd5a5e3228bdd3) | 2024-10-24T08:01:37+02:00 | MIT | [Insect test/Main.purs (initialEnvironment assertions)](https://github.com/sharkdp/insect/blob/d19e4f15f788a4c1bd277e1ef3bd5a5e3228bdd3/test/Main.purs) | 73 |
+| [kalker](https://github.com/PaddiM8/kalker) | [87cd07855633f4f16c549ede7d7a876e9ab3b910](https://github.com/PaddiM8/kalker/commit/87cd07855633f4f16c549ede7d7a876e9ab3b910) | 2026-09-18T22:06:34+02:00 | MIT | [kalker kalk/src/integration_testing.rs and tests/*.kalker](https://github.com/PaddiM8/kalker/tree/87cd07855633f4f16c549ede7d7a876e9ab3b910/tests) | 8 |
+| [hurmet](https://github.com/ronkok/Hurmet) | [8e82edefe91f1fff5d79df046880fcb5375ed1c4](https://github.com/ronkok/Hurmet/commit/8e82edefe91f1fff5d79df046880fcb5375ed1c4) | 2026-10-09T13:03:36-07:00 | MIT | [Hurmet test/test.cjs (calcTests)](https://github.com/ronkok/Hurmet/blob/8e82edefe91f1fff5d79df046880fcb5375ed1c4/test/test.cjs) | 52 |
+| [speedcrunch](https://github.com/heldercorreia/speedcrunch) | [4cb502ce9ad774dcc7ed3044cab232df65d4596f](https://github.com/heldercorreia/speedcrunch/commit/4cb502ce9ad774dcc7ed3044cab232df65d4596f) | 2026-10-11T01:08:04+01:00 | GPL-2.0-or-later | [SpeedCrunch src/tests/*.cpp (literal CHECK_EVAL assertions)](https://github.com/heldercorreia/speedcrunch/tree/4cb502ce9ad774dcc7ed3044cab232df65d4596f/src/tests) | 928 |
+<!-- upstream-tests:end -->
 
-## Open-source engines (tests and code)
+Generated from clean upstream checkouts by the corpus importer. Dates are Git
+commit dates, not refresh times. The lock file, TSV headers and commit links
+identify the exact revisions. Test data retains each upstream license.
 
-| Project | Language, license | Revision used | Imported artifact | Rows | Supported | Different | Unsupported |
-| --- | --- | --- | --- | ---: | ---: | ---: | ---: |
-| [fend](https://github.com/printfn/fend) | Rust, MIT | d9cb764 (2026-08-28) | `core/tests/integration_tests.rs` (`test_eval`, `test_eval_simple`) | 1098 | 369 (33.6%) | 67 | 662 |
-| [libqalculate](https://github.com/Qalculate/libqalculate) | C++, GPL-2.0-or-later | b245c41 (2026-10-06) | `tests/*.batch` (bitwise, calculus, dates, explog, geometry, limits, matrixvector, numberbase, operators, parser, percentages, polynomial, solver, stats, strings, units, variables) | 656 | 61 (9.3%) | 14 | 581 |
-| [Numbat](https://github.com/sharkdp/numbat) | Rust, MIT OR Apache-2.0 | 49fccb1 (2026-08-25) | `numbat/tests/interpreter.rs` (`expect_output`) | 289 | 65 (22.5%) | 22 | 202 |
-| [Rink](https://github.com/tiffany352/rink-rs) | Rust, MPL-2.0 (GPL data file) | abf3042 (2026-04-24) | `core/tests/query.rs` (`test`) | 210 | 0 (0.0%) | 33 | 177 |
-| [math.js](https://github.com/josdejong/mathjs) | JavaScript, Apache-2.0 | 8d214e0 (2026-08-10) | `test/unit-tests/expression/parse.test.js` (`parseAndEval` with literal result) | 297 | 80 (26.9%) | 22 | 195 |
+Coverage is measured separately in [results/coverage-report.md](results/coverage-report.md).
+See [the refresh guide](../../competitor-corpus.md) for commands and extraction limits.
 
-Not yet imported (tracked by the open-source import sub-issue): Insect
-(PureScript, MIT, d19e4f1), kalker (Rust, MIT, 87cd078), Hurmet (JavaScript,
-MIT, a41258b), Numara (Electron over math.js, MIT, 21d486f), Mathics (Python,
-GPL-3.0, 9586a89), GNU Units (manual examples only), SpeedCrunch.
+GNU Units (manual examples), Numara (uses math.js) and Mathics are outside this
+suite import. Closed-source documentation and multilingual quotes remain in
+separate corpus files and are not changed by the importer.
 
-Unit database sizes, for the dimensional-units sub-issue: Numbat defines 201
-units in `numbat/modules/units/*.nbt`, fend's `core/src/units/builtin.rs` is
-1003 lines of definitions, and Rink's `core/definitions.units` (derived from
-GNU Units) is 7431 lines. This project's `Unit` enum has five families
-(currency, duration, data size, mass, timezone) plus an untyped `Custom`.
+<!-- documentation-corpus:start -->
+## Calculator documentation (issues #227 and #231)
 
-## Closed-source and documentation-only products
+Fetched on 2026-10-08. This table inventories the documentation portion of
+issue #227, including the additional products named in #231. Machine-readable
+page URLs, fetch dates, content hashes, image audits and extraction counts are in
+[documentation-sources.json](documentation-sources.json).
 
-| Product | Source used | Rows | Supported | Different | Unsupported |
-| --- | --- | ---: | ---: | ---: | ---: |
-| [Soulver 5](https://documentation.soulver.app/) | 40 syntax-reference pages fetched as Markdown (`llms.txt` index), verbatim `expression | answer` pairs | 266 | 25 (9.4%) | 32 | 209 |
-| [Numi](https://github.com/nikolaeu/numi/wiki) | wiki examples (hand-picked) | 23 | 10 (43.5%) | 1 | 12 |
-| [Wolfram\|Alpha](https://www.wolframalpha.com/examples/mathematics) | example gallery (hand-picked, deterministic) | 20 | 11 (55.0%) | 0 | 9 |
-| Google Search calculator | public help examples | 9 | 2 (22.2%) | 1 | 6 |
-| [Calca](http://calca.io/) | manual examples | 8 | 4 (50.0%) | 0 | 4 |
-| [Raycast](https://manual.raycast.com/calculator) | manual examples | 7 | 3 (42.9%) | 1 | 3 |
-| Apple Math Notes | Apple support examples | 5 | 0 (0.0%) | 0 | 5 |
-| [Frink](https://frinklang.org/) | documentation examples | 5 | 0 (0.0%) | 0 | 5 |
+| Product | Reference pages | Extracted page examples | Unique corpus rows | Extractor or audit |
+| --- | ---: | ---: | ---: | --- |
+| [Apple Math Notes](https://support.apple.com/guide/ipad/solve-math-with-math-notes-ipadeb38d0f8/ipados) | 4 | 10 | 15 | [apple](../../../experiments/issue-227/extract-apple-examples.mjs) |
+| [Calca](https://calca.io/reference) | 2 | 201 | 209 | [calca](../../../experiments/issue-227/extract-calca-examples.mjs) |
+| [DuckDuckGo](https://duckduckgo.com/duckduckgo-help-pages/features/instant-answers-and-other-features) | 1 | 0 | 0 | No typed examples in official help |
+| [Frink](https://frinklang.org/frinkdocs.html) | 1 | 1278 | 1283 | [frink](../../../experiments/issue-227/extract-frink-examples.mjs) |
+| [Google](https://support.google.com/websearch/answer/3284611?hl=en) | 1 | 7 | 16 | [google](../../../experiments/issue-227/extract-google-examples.mjs) |
+| [Hurmet](https://hurmet.org/manual.html) | 1 | 460 | 460 | [hurmet](../../../experiments/issue-227/extract-hurmet-examples.mjs) |
+| [Numi](https://github.com/nikolaeu/numi/wiki) | 1 | 77 | 100 | [numi](../../../experiments/issue-227/extract-numi-examples.mjs) |
+| [Parsify](https://parsify.notion.site/Getting-started-be7132e43e844bd88fe2ad48918b43d7) | 2 | 36 | 36 | [parsify](../../../experiments/issue-227/extract-parsify-examples.mjs) |
+| [Raycast](https://manual.raycast.com/calculator) | 1 | 51 | 58 | [raycast](../../../experiments/issue-227/extract-raycast-examples.mjs) |
+| [Samsung Calculator](https://www.samsung.com/us/support/answer/ANS10002547/) | 1 | 0 | 0 | No typed examples in official help |
+| [Soulver](https://documentation.soulver.app/documentation/exporting.md) | 67 | 385 | 383 | [soulver](../../../experiments/issue-227/extract-soulver-examples.mjs) |
+| [SpeedCrunch](https://www.speedcrunch.org/reference/basic.html) | 10 | 385 | 372 | [speedcrunch](../../../experiments/issue-227/extract-speedcrunch-examples.mjs) |
+| [Windows Calculator](https://support.microsoft.com/en-gb/windows/apps/use-the-calculator-in-windows) | 1 | 0 | 0 | No typed examples in official help |
+| [Wolfram\|Alpha](https://www.wolframalpha.com/examples/mathematics) | 359 | 6167 | 3087 | [wolfram](../../../experiments/issue-227/extract-wolfram-examples.mjs) |
+| [Xiaomi Calculator](https://www.mi.com/uk/support/article/KA-06518/) | 1 | 0 | 0 | No typed examples in official help |
 
-Soulver's documentation is the most complete public specification of a
-natural-language calculator and is therefore the main closed-source reference
-(percentages, dates, time zones, units, rates, finance, bases, rounding,
-averages, large-number symbols, timecode). Examples whose answers depend on the
-current date, live exchange rates or CPI data keep an empty expected value and
-only have to evaluate.
+The extracted count includes an expression repeated on different pages. Unique
+corpus rows also include preserved historical seed examples, so either count can
+be larger. Zero means that the audited official help contains no typed examples;
+see [documentation-corpus.md](documentation-corpus.md) for evidence and boundaries.
 
-## Reference components that are not calculators
+Hurmet and SpeedCrunch publish open-source implementations, but their manuals
+belong to this documentation corpus. The existing
+[open-source-tests.tsv](corpus/open-source-tests.tsv) separately imports test
+cases from the nine engines listed above. The natural-language
+references remain in [natural-language-quotes.tsv](corpus/natural-language-quotes.tsv).
 
-These were cloned to evaluate reuse for the natural-language requirements.
-
-| Component | What it offers | Finding |
-| --- | --- | --- |
-| [text2num](https://github.com/allo-media/text2num) (Rust crate 2.8.0, MIT, 56k downloads) | Spelled cardinals, ordinals and decimals to digits for en, da, nl, es, fr, de, it, pt, ru, ca; token-stream API | Best data source for spelled numbers. No operator or unit phrases, so it cannot replace the LINO vocabulary; port its tables or depend on it behind a feature. |
-| [Duckling](https://github.com/facebook/duckling) (Haskell, BSD-3) | Numeral, ordinal, quantity, distance, volume, temperature, duration, time and amount-of-money rules for 49 languages | Not embeddable in Rust/WASM. Its per-language rule files are a checklist for which surface forms each language needs. |
-| [Microsoft Recognizers-Text](https://github.com/microsoft/Recognizers-Text) (C#/JS/Python/Java, MIT) | YAML pattern definitions for numbers, units, dates and currencies in 14 languages (`Patterns/*.yaml`) | Patterns are data and MIT; a generator could translate the number and unit YAML into LINO entries. |
-| [quantulum3](https://github.com/nielstron/quantulum3) (Python, MIT) | Quantity extraction from English prose with a unit database (`_lang/en_US`) | English only; its unit alias list is a useful cross-check for aliases. |
-| [MathCAT](https://github.com/NSoiffer/MathCAT) (Rust, MIT) | MathML to semantic tree with 16 language rule sets | Candidate parser for MathML input in the LaTeX/MathML sub-issue. |
-| [Speech Rule Engine](https://github.com/Speech-Rule-Engine/speech-rule-engine) (JavaScript, Apache-2.0) | MathML semantic parsing, 15 locales | Same role as MathCAT for a JavaScript front end. |
-| [Mathics](https://github.com/Mathics3/mathics-core) (Python, GPL-3.0) | Wolfram-language CAS | Oracle for symbolic expectations only; license and runtime rule out embedding. |
-
-## Rust crates evaluated (crates.io, 2026-10-07)
-
-| Crate | Version | Role in the plan |
-| --- | --- | --- |
-| `chrono-tz` | 0.10.4 | IANA zones for the dates sub-issue, behind a feature flag for WASM size. |
-| `icu_decimal` / `icu` | 2.3.0 / 2.3.1 | Locale grouping and decimal patterns if a locale profile API is added. |
-| `uom` | 0.38.0 | Compile-time dimensions; rejected because calculator dimensions are dynamic. |
-| `fend-core` | 1.5.8 | Test oracle for units and bases in `experiments/`; not a backend. |
-| `rink-core` | 0.9.0 | Same; its definitions file is GPL-derived and needs a license review before data generation. |
-| `numbat` | 1.24.0 | Design reference for the dimension type system. |
-| `kalk` | 3.2.3 | Reference for complex numbers and user functions. |
-| `num-rational` / `rust_decimal` | 0.4.2 / 1.43.0 | Already dependencies; exact fractions and decimal display. |
-| `unicode-normalization` | 0.1.25 | Only for targeted normalization; NFKC would destroy superscripts. |
-| `latex2mathml` | 0.2.3 | Size reference for a hand-written LaTeX tokenizer. |
-| `chumsky` / `nom` | 0.13.0 / 8.0.0 | Not needed; the existing hand-written lexer and token parser are kept. |
+The earlier inventory and research are in [parent PR #228](https://github.com/link-assistant/calculator/pull/228).
+Current executable classifications are in [coverage-report.md](results/coverage-report.md).
+<!-- documentation-corpus:end -->

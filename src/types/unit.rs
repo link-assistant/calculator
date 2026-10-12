@@ -3,6 +3,8 @@
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
+use super::PhysicalUnit;
+
 /// Represents a unit of measurement.
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, Default)]
 pub enum Unit {
@@ -21,6 +23,8 @@ pub enum Unit {
     Timezone(String),
     /// Custom unit.
     Custom(String),
+    /// Product of database units with integer powers (`m`, `km/h`, `kg m/s^2`).
+    Physical(PhysicalUnit),
 }
 
 /// Duration units for time calculations.
@@ -144,7 +148,7 @@ impl DataSizeUnit {
     #[must_use]
     pub const fn abbreviation(self) -> &'static str {
         match self {
-            Self::Bit => "b",
+            Self::Bit => "bit",
             Self::Kilobit => "Kb",
             Self::Megabit => "Mb",
             Self::Gigabit => "Gb",
@@ -395,6 +399,11 @@ impl std::fmt::Display for MassUnit {
 }
 
 impl Unit {
+    /// Whether this is an opaque compound unit without dimensional algebra.
+    pub(crate) fn is_opaque_compound(&self) -> bool {
+        matches!(self, Self::Custom(name) if name.contains('/'))
+    }
+
     /// Creates a currency unit.
     pub fn currency(code: &str) -> Self {
         Self::Currency(code.to_uppercase())
@@ -447,6 +456,9 @@ impl Unit {
     /// `Unit::None` is treated as compatible with any category.
     #[must_use]
     pub fn is_same_category(&self, other: &Self) -> bool {
+        if matches!(self, Self::Physical(_)) || matches!(other, Self::Physical(_)) {
+            return self.same_dimension(other);
+        }
         matches!(
             (self, other),
             (Self::None, _)
@@ -458,6 +470,18 @@ impl Unit {
                 | (Self::Timezone(_), Self::Timezone(_))
                 | (Self::Custom(_), Self::Custom(_))
         )
+    }
+
+    /// Whether both units are physical and share a dimension (`m` and `ft`).
+    #[must_use]
+    pub fn same_dimension(&self, other: &Self) -> bool {
+        match (
+            PhysicalUnit::from_unit(self),
+            PhysicalUnit::from_unit(other),
+        ) {
+            (Some(a), Some(b)) => a.dimension() == b.dimension(),
+            _ => false,
+        }
     }
 
     /// Checks if two units are compatible for the given operation.
@@ -505,6 +529,7 @@ impl Unit {
             Self::Mass(m) => m.abbreviation().to_string(),
             Self::Timezone(tz) => tz.clone(),
             Self::Custom(name) => name.clone(),
+            Self::Physical(unit) => unit.to_string(),
         }
     }
 
@@ -528,6 +553,7 @@ impl fmt::Display for Unit {
             Self::Mass(m) => write!(f, "{m}"),
             Self::Timezone(tz) => write!(f, "{tz}"),
             Self::Custom(name) => write!(f, "{name}"),
+            Self::Physical(unit) => write!(f, "{unit}"),
         }
     }
 }

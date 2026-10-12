@@ -1,0 +1,16 @@
+{
+  "lang": "sv",
+  "title": "Ljusets hastighet",
+  "authors": "Wikipedia contributors",
+  "fetched": "2026-10-08",
+  "url": "https://sv.wikipedia.org/wiki/Ljusets_hastighet",
+  "revisionUrl": "https://sv.wikipedia.org/w/index.php?oldid=59746680",
+  "license": "CC-BY-SA-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "extract": "Dess värde är 299 792 458 m/s (värdet är exakt eftersom det används för att definiera längden på en meter).\nGalilei anger att han preliminärprövat förfarandet på mindre än en mils avstånd (förmodligen en romersk mil \"mille passus\" det vill säga tusen dubbelsteg ≈ 1,5 km).\nUr ett större antal sådana observationer beräknade Rømer ljushastigheten till ungefär 200 000 000 m/s.",
+  "candidates": [
+    "Dess värde är 299 792 458 m/s (värdet är exakt eftersom det används för att definiera längden på en meter).",
+    "Galilei anger att han preliminärprövat förfarandet på mindre än en mils avstånd (förmodligen en romersk mil \"mille passus\" det vill säga tusen dubbelsteg ≈ 1,5 km).",
+    "Ur ett större antal sådana observationer beräknade Rømer ljushastigheten till ungefär 200 000 000 m/s."
+  ]
+}

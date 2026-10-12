@@ -1,0 +1,37 @@
+# Experiment scripts that need the calculator, run with e.g.
+#   cargo run -p link-calculator-experiments --example test_issue23
+# They live in their own unpublished workspace member: as examples of the
+# published crate, `cargo package` dropped each with "ignoring example ... not
+# included in the published package" (issue #256).
+[package]
+name = "link-calculator-experiments"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+link-calculator = { path = ".." }
+
+[[example]]
+name = "issue_222_probe"
+path = "issue_222_probe.rs"
+
+[[example]]
+name = "test_advanced_math"
+path = "test_advanced_math.rs"
+
+[[example]]
+name = "test_issue84_lino"
+path = "test_issue84_lino.rs"
+
+[[example]]
+name = "test_issue23"
+path = "test_issue23.rs"
+
+[[example]]
+name = "test_issue104_ton_ambiguity"
+path = "test_issue104_ton_ambiguity.rs"
+
+[[example]]
+name = "test_issue128_year"
+path = "test_issue128_year.rs"

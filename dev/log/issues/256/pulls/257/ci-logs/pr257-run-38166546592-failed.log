@@ -1,0 +1,36 @@
+Dependency Review	Run actions/dependency-review-action@v5	﻿2026-10-11T19:05:39.7518145Z ##[group]Run actions/dependency-review-action@v5
+Dependency Review	Run actions/dependency-review-action@v5	2026-10-11T19:05:39.7519540Z with:
+Dependency Review	Run actions/dependency-review-action@v5	2026-10-11T19:05:39.7520399Z   fail-on-severity: high
+Dependency Review	Run actions/dependency-review-action@v5	2026-10-11T19:05:39.7521449Z   comment-summary-in-pr: on-failure
+Dependency Review	Run actions/dependency-review-action@v5	2026-10-11T19:05:39.7531554Z   repo-token: ***
+Dependency Review	Run actions/dependency-review-action@v5	2026-10-11T19:05:39.7533081Z ##[endgroup]
+Dependency Review	Run actions/dependency-review-action@v5	2026-10-11T19:05:40.2603824Z ##[error]Dependency review is not supported on this repository. Please ensure that Dependency graph is enabled, see https://github.com/link-assistant/calculator/settings/security_analysis
+Pipeline Status	Check aggregate pipeline status	﻿2026-10-11T19:09:17.5033334Z ##[group]Run bash scripts/check-pipeline-status.sh
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:09:17.5034870Z ^[[36;1mbash scripts/check-pipeline-status.sh^[[0m
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:09:17.5297081Z shell: /usr/bin/bash -e {0}
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:09:17.5298152Z env:
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:09:17.5301242Z   NEEDS_JSON: {
+Pipeline Status	Check aggregate pipeline status	  "cargo-audit": {
+Pipeline Status	Check aggregate pipeline status	    "result": "success",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  },
+Pipeline Status	Check aggregate pipeline status	  "npm-audit": {
+Pipeline Status	Check aggregate pipeline status	    "result": "success",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  },
+Pipeline Status	Check aggregate pipeline status	  "codeql": {
+Pipeline Status	Check aggregate pipeline status	    "result": "success",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  },
+Pipeline Status	Check aggregate pipeline status	  "dependency-review": {
+Pipeline Status	Check aggregate pipeline status	    "result": "failure",
+Pipeline Status	Check aggregate pipeline status	    "outputs": {}
+Pipeline Status	Check aggregate pipeline status	  }
+Pipeline Status	Check aggregate pipeline status	}
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:09:17.5304977Z   RUN_SHA: e81aad757a1cc3e1812393f6c9ded323a709881b
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:09:17.5306315Z   BRANCH_REF: issue-256-9c021bdb8c9d
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:09:17.5307405Z ##[endgroup]
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:09:17.5889295Z Failed jobs:    dependency-review
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:09:17.5890614Z Cancelled jobs: <none>
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:09:17.5910547Z ##[error]Failing jobs: dependency-review
+Pipeline Status	Check aggregate pipeline status	2026-10-11T19:09:17.5925404Z ##[error]Process completed with exit code 1.

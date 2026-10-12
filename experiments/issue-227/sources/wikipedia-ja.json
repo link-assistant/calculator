@@ -1,0 +1,14 @@
+{
+  "lang": "ja",
+  "title": "光速",
+  "authors": "Wikipedia contributors",
+  "fetched": "2026-10-08",
+  "url": "https://ja.wikipedia.org/wiki/%E5%85%89%E9%80%9F",
+  "revisionUrl": "https://ja.wikipedia.org/w/index.php?oldid=109991925",
+  "license": "CC-BY-SA-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "extract": "光速 とは、光の速さである。真空中の光速は普遍物理定数の一つで、通常 c の記号で表される。1983年の国際合意によって真空中を光が1/299792458秒に進む長さとして単位メートルが定義されたため、正確に299792458 m/sが光速の定義値である。特殊相対性理論において c は、通常の物質ないしエネルギーが（ひいては情報を伝える信号が）空間を進む速さの上限値とされる。",
+  "candidates": [
+    "1983年の国際合意によって真空中を光が1/299792458秒に進む長さとして単位メートルが定義されたため、正確に299792458 m/sが光速の定義値である。"
+  ]
+}

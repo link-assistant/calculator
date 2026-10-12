@@ -2,6 +2,7 @@
 
 mod arithmetic_words;
 mod datetime_grammar;
+mod dimensional_functions;
 mod expression_parser;
 mod integral;
 mod lexer;

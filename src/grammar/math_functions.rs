@@ -351,12 +351,20 @@ pub fn is_math_function(name: &str) -> bool {
             | "factorial"
             | "mod"
             | "modulo"
+            | "uncertainty"
             | "pi"
             | "e"
             | "deg"
             | "degrees"
             | "rad"
             | "radians"
+            | "percent"
+            | "as_percent"
+            | "as_fraction"
+            | "as_reciprocal"
+            | "as_multiplier"
+            | "as_decimal"
+            | "percent_of"
     )
 }
 
@@ -366,6 +374,24 @@ pub fn is_math_function(name: &str) -> bool {
 /// precision (e.g. `30!` = `265252859812191058636308480000000`); everything
 /// else goes through [`evaluate_function`] on `Decimal` arguments.
 pub fn evaluate_function_values(name: &str, args: &[Value]) -> Result<Value, CalculatorError> {
+    if name.eq_ignore_ascii_case("uncertainty") {
+        if args.len() != 2 {
+            return Err(CalculatorError::invalid_args(name, "expected 2 arguments"));
+        }
+        return args[0].with_uncertainty(&args[1]);
+    }
+    if let Some(result) = crate::types::evaluate_ratio_function(name, args) {
+        return result;
+    }
+    if args.iter().any(|arg| arg.unit.is_opaque_compound()) {
+        return Err(CalculatorError::invalid_args(
+            name,
+            "functions of compound units are not supported",
+        ));
+    }
+    if let Some(result) = super::dimensional_functions::dimensional_function(name, args) {
+        return result;
+    }
     if let Some(result) = evaluate_exact_function(name, args) {
         return result;
     }

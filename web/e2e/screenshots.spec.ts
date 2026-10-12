@@ -39,13 +39,13 @@ test.describe('Screenshot Generation', () => {
   });
 
   test('02-simple-arithmetic', async ({ page, commander }) => {
-    await calculate(commander, '2 + 3');
+    await calculate(page, commander, '2 + 3');
     await expect(page.locator('.result-value')).toContainText('5', { timeout: 5000 });
     await screenshot(commander, '02-simple-arithmetic.png');
   });
 
   test('03-currency-conversion', async ({ page, commander }) => {
-    await calculate(commander, '84 USD - 34 EUR');
+    await calculate(page, commander, '84 USD - 34 EUR');
     await expect(page.locator('.result-value')).not.toContainText('Enter an expression', {
       timeout: 10000,
     });
@@ -53,14 +53,14 @@ test.describe('Screenshot Generation', () => {
   });
 
   test('04-integration', async ({ page, commander }) => {
-    await calculate(commander, 'integrate sin(x)/x dx');
+    await calculate(page, commander, 'integrate sin(x)/x dx');
     await expect(page.locator('.result-value')).toBeVisible({ timeout: 10000 });
     await page.waitForTimeout(1000);
     await screenshot(commander, '04-integration.png');
   });
 
   test('05-dark-theme', async ({ page, commander }) => {
-    await calculate(commander, 'integrate sin(x)/x dx');
+    await calculate(page, commander, 'integrate sin(x)/x dx');
     await expect(page.locator('.result-value')).toBeVisible({ timeout: 10000 });
     await page.waitForTimeout(500);
 
@@ -78,7 +78,7 @@ test.describe('Screenshot Generation', () => {
     await commander.clickButton({ selector: '[data-testid="theme-dark"]' });
     await commander.pressKey({ key: 'Escape' });
 
-    await calculate(commander, 'integrate(x^2, x, 0, 3)');
+    await calculate(page, commander, 'integrate(x^2, x, 0, 3)');
     await expect(page.locator('.result-value')).toContainText('9', { timeout: 5000 });
     await screenshot(commander, '06-definite-integral.png');
   });
@@ -89,19 +89,19 @@ test.describe('Screenshot Generation', () => {
     await commander.clickButton({ selector: '[data-testid="theme-dark"]' });
     await commander.pressKey({ key: 'Escape' });
 
-    await calculate(commander, 'sqrt(16) + pow(2, 3)');
+    await calculate(page, commander, 'sqrt(16) + pow(2, 3)');
     await expect(page.locator('.result-value')).toContainText('12', { timeout: 5000 });
     await screenshot(commander, '07-math-functions.png');
   });
 
   test('08-datetime', async ({ page, commander }) => {
-    await calculate(commander, '(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)');
+    await calculate(page, commander, '(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)');
     await expect(page.locator('.result-value')).toContainText('day', { timeout: 5000 });
     await screenshot(commander, '08-datetime.png');
   });
 
   test('09-parentheses', async ({ page, commander }) => {
-    await calculate(commander, '(2 + 3) * 4');
+    await calculate(page, commander, '(2 + 3) * 4');
     await expect(page.locator('.result-value')).toContainText('20', { timeout: 5000 });
     await screenshot(commander, '09-parentheses.png');
   });

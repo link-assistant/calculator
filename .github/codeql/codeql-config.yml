@@ -1,0 +1,8 @@
+name: Production source
+# Research notes, experiments and archived copies of other repositories are
+# not shipped code.
+paths-ignore:
+  - dev
+  - docs
+  - examples
+  - experiments

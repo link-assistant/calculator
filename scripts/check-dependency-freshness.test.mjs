@@ -5,6 +5,8 @@ import {
   classify,
   findCargoBlocker,
   findNpmBlocker,
+  formatFreshnessReport,
+  freshnessEnforcement,
   parseCargoOutdated,
   parseNpmOutdated,
   pendingLockfileUpdates,
@@ -117,4 +119,33 @@ warning: aborting update due to dry run`;
     pendingLockfileUpdates('    Updating crates.io index\nwarning: aborting update due to dry run'),
     []
   );
+});
+
+test('freshnessEnforcement blocks pull requests and warns on other events', () => {
+  assert.equal(freshnessEnforcement('pull_request'), 'fail');
+  assert.equal(freshnessEnforcement('merge_group'), 'fail');
+  assert.equal(freshnessEnforcement(undefined), 'fail');
+  assert.equal(freshnessEnforcement('push'), 'warn');
+  assert.equal(freshnessEnforcement('schedule'), 'warn');
+  assert.equal(freshnessEnforcement('workflow_dispatch'), 'warn');
+});
+
+test('formatFreshnessReport passes when nothing is stale', () => {
+  const { exitCode, lines } = formatFreshnessReport([], 'fail');
+  assert.equal(exitCode, 0);
+  assert.deepEqual(lines, ['All direct dependencies are at their latest releases.']);
+});
+
+test('formatFreshnessReport fails with error annotations in fail mode', () => {
+  const { exitCode, lines } = formatFreshnessReport(['web/package.json: vite 8.3.3 is behind 8.3.4'], 'fail');
+  assert.equal(exitCode, 1);
+  assert.equal(lines[0], '::error title=Stale dependency::web/package.json: vite 8.3.3 is behind 8.3.4');
+  assert.match(lines[1], /^1 dependency problem\(s\)\./);
+});
+
+test('formatFreshnessReport only warns in warn mode (push to main, issue #256)', () => {
+  const { exitCode, lines } = formatFreshnessReport(['Cargo.toml: serde_json 1.0.151 is behind 1.0.152'], 'warn');
+  assert.equal(exitCode, 0);
+  assert.equal(lines[0], '::warning title=Stale dependency::Cargo.toml: serde_json 1.0.151 is behind 1.0.152');
+  assert.match(lines[1], /only pull requests are blocked/);
 });

@@ -22,8 +22,16 @@ fn ambiguous_comma_number_exposes_locale_interpretations() {
     let plan = calc.plan_internal("1,234 / 100");
 
     assert!(plan.success, "plan failed: {:?}", plan.error);
-    assert_eq!(plan.lino_interpretation, "(1.234 / 100)");
+    assert_eq!(plan.lino_interpretation, "(1234 / 100)");
 
     let alternatives = plan.alternative_lino.expect("missing alternatives");
-    assert_eq!(alternatives, vec!["(1.234 / 100)", "(1234 / 100)"]);
+    assert_eq!(alternatives, vec!["(1234 / 100)", "(1.234 / 100)"]);
+}
+
+#[test]
+fn fend_outlier_retains_decimal_alternative() {
+    let plan = Calculator::new().plan_internal("1,1");
+    assert!(plan.success, "plan failed: {:?}", plan.error);
+    assert_eq!(plan.lino_interpretation, "11");
+    assert_eq!(plan.alternative_lino.unwrap(), vec!["11", "1.1"]);
 }

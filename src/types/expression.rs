@@ -353,7 +353,7 @@ impl Expression {
     /// Internal helper for to_lino.
     /// `parent_op` is the parent operator's precedence (if any) to determine
     /// if we need parentheses for this subexpression.
-    fn to_lino_internal(&self, _parent_op: Option<&BinaryOp>) -> String {
+    fn to_lino_internal(&self, parent_op: Option<&BinaryOp>) -> String {
         match self {
             Self::Number { value, unit, .. } => {
                 let num_str = value.to_string();
@@ -371,8 +371,14 @@ impl Expression {
                 format!("(until {inner_str})")
             }
             Self::Binary { left, op, right } => {
-                let left_str = left.to_lino_internal(Some(op));
-                let right_str = right.to_lino_internal(Some(op));
+                let context =
+                    if *op == BinaryOp::Multiply && left.is_percentage() && right.is_percentage() {
+                        None
+                    } else {
+                        Some(op)
+                    };
+                let left_str = left.to_lino_internal(context);
+                let right_str = right.to_lino_internal(context);
                 let expr_str = format!("{left_str} {op} {right_str}");
                 format!("({expr_str})")
             }
@@ -401,6 +407,15 @@ impl Expression {
                 format!("({value_str} at {time_str})")
             }
             Self::FunctionCall { name, args } => {
+                if name.eq_ignore_ascii_case("percent") && args.len() == 1 {
+                    if matches!(parent_op, Some(BinaryOp::Multiply | BinaryOp::Divide)) {
+                        return format!("({} / 100)", args[0].to_lino_internal(None));
+                    }
+                    return format!("({}%)", args[0].to_lino_internal(None));
+                }
+                if name.eq_ignore_ascii_case("percent_of") && args.len() == 1 {
+                    return args[0].to_lino_internal(None);
+                }
                 if args.is_empty() {
                     format!("({name})")
                 } else {
@@ -581,6 +596,32 @@ impl Expression {
                 None
             }
             _ => None,
+        }
+    }
+
+    /// Whether this expression retains percentage display during evaluation.
+    pub(crate) fn is_percentage(&self) -> bool {
+        match self {
+            Self::FunctionCall { name, args }
+                if name.eq_ignore_ascii_case("percent_of") && args.len() == 1 =>
+            {
+                args[0].is_percentage()
+            }
+            Self::FunctionCall { name, .. } => {
+                name.eq_ignore_ascii_case("percent") || name.eq_ignore_ascii_case("as_percent")
+            }
+            Self::Group(inner) | Self::Negate(inner) => inner.is_percentage(),
+            Self::Binary {
+                left,
+                op: BinaryOp::Add | BinaryOp::Subtract,
+                ..
+            } => left.is_percentage(),
+            Self::Binary {
+                left,
+                op: BinaryOp::Multiply,
+                right,
+            } => left.is_percentage() && right.is_percentage(),
+            _ => false,
         }
     }
 
@@ -766,6 +807,8 @@ impl Expression {
             Self::FunctionCall { name, args } => {
                 let name_lower = name.to_lowercase();
                 match name_lower.as_str() {
+                    "percent" if args.len() == 1 => format!("{}\\%", args[0].to_latex()),
+                    "percent_of" if args.len() == 1 => args[0].to_latex(),
                     "sin" | "cos" | "tan" | "cot" | "sec" | "csc" | "sinh" | "cosh" | "tanh"
                     | "coth" | "sech" | "csch" | "arcsin" | "arccos" | "arctan" | "ln" | "log"
                     | "exp" => {
@@ -944,53 +987,5 @@ impl fmt::Display for Expression {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_number_expression() {
-        let expr = Expression::number(Decimal::new(42));
-        assert_eq!(expr.to_string(), "42");
-        assert_eq!(expr.to_lino(), "42");
-    }
-
-    #[test]
-    fn test_binary_expression() {
-        let left = Expression::number(Decimal::new(2));
-        let right = Expression::number(Decimal::new(3));
-        let expr = Expression::binary(left, BinaryOp::Add, right);
-        assert_eq!(expr.to_string(), "2 + 3");
-        assert_eq!(expr.to_lino(), "(2 + 3)");
-    }
-
-    #[test]
-    fn test_complex_expression() {
-        let usd = Expression::currency(Decimal::new(84), "USD");
-        let eur = Expression::currency(Decimal::new(34), "EUR");
-        let expr = Expression::binary(usd, BinaryOp::Subtract, eur);
-        assert!(expr.to_lino().contains("84 USD"));
-        assert!(expr.to_lino().contains("34 EUR"));
-    }
-
-    #[test]
-    fn test_binary_op_precedence() {
-        assert!(BinaryOp::Multiply.precedence() > BinaryOp::Add.precedence());
-        assert_eq!(
-            BinaryOp::Modulo.precedence(),
-            BinaryOp::Multiply.precedence()
-        );
-        assert_eq!(BinaryOp::Add.precedence(), BinaryOp::Subtract.precedence());
-    }
-
-    #[test]
-    fn test_depth() {
-        let simple = Expression::number(Decimal::new(1));
-        assert_eq!(simple.depth(), 1);
-        let binary = Expression::binary(
-            Expression::number(Decimal::new(1)),
-            BinaryOp::Add,
-            Expression::number(Decimal::new(2)),
-        );
-        assert_eq!(binary.depth(), 2);
-    }
-}
+#[path = "expression_tests.rs"]
+mod tests;

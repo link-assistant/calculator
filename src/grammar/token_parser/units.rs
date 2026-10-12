@@ -14,11 +14,14 @@ impl TokenParser<'_> {
         };
 
         let unit_str = id.clone();
-        self.advance();
-
         if is_number_conversion_target(&unit_str) {
+            self.advance();
             return Ok(Unit::None);
         }
+        if let Some(unit) = self.parse_physical_conversion_target() {
+            return Ok(unit);
+        }
+        self.advance();
 
         if let Some(data_size) = DataSizeUnit::parse(&unit_str) {
             return Ok(Unit::DataSize(data_size));

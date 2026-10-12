@@ -17,11 +17,8 @@ rates:
     ...
 """
 
-import os
-import re
 import sys
 from pathlib import Path
-from collections import defaultdict
 from typing import Dict, List, Tuple
 
 
@@ -38,20 +35,20 @@ def parse_lino_file(file_path: Path) -> Tuple[str, str, str, float, str]:
     value = None
     source = None
 
-    for line in content.strip().split('\n'):
+    for line in content.strip().split("\n"):
         line = line.strip()
-        if line.startswith('from '):
+        if line.startswith("from "):
             from_curr = line[5:].strip().upper()
-        elif line.startswith('to '):
+        elif line.startswith("to "):
             to_curr = line[3:].strip().upper()
-        elif line.startswith('date '):
+        elif line.startswith("date "):
             date = line[5:].strip()
-        elif line.startswith('value '):
+        elif line.startswith("value "):
             try:
                 value = float(line[6:].strip())
             except ValueError:
                 pass
-        elif line.startswith('source '):
+        elif line.startswith("source "):
             # Extract source, removing quotes
             src = line[7:].strip()
             src = src.strip("'\"")
@@ -65,7 +62,7 @@ def consolidate_currency_pair(pair_dir: Path) -> Dict[str, List[Tuple[str, float
 
     Returns: dict with 'from', 'to', 'source', 'rates' (list of (date, value) tuples)
     """
-    lino_files = list(pair_dir.glob('*.lino'))
+    lino_files = list(pair_dir.glob("*.lino"))
     if not lino_files:
         return None
 
@@ -93,10 +90,10 @@ def consolidate_currency_pair(pair_dir: Path) -> Dict[str, List[Tuple[str, float
     rates.sort(key=lambda x: x[0])
 
     return {
-        'from': from_curr,
-        'to': to_curr,
-        'source': source or 'unknown',
-        'rates': rates
+        "from": from_curr,
+        "to": to_curr,
+        "source": source or "unknown",
+        "rates": rates,
     }
 
 
@@ -107,13 +104,13 @@ def write_consolidated_lino(output_path: Path, data: dict):
         f"  from {data['from']}",
         f"  to {data['to']}",
         f"  source '{data['source']}'",
-        "  data:"
+        "  data:",
     ]
 
-    for date, value in data['rates']:
+    for date, value in data["rates"]:
         lines.append(f"    {date} {value}")
 
-    output_path.write_text('\n'.join(lines) + '\n')
+    output_path.write_text("\n".join(lines) + "\n")
 
 
 def main():
@@ -145,17 +142,23 @@ def main():
             to_curr = target_dir.name.upper()
 
             # Count .lino files
-            lino_files = list(target_dir.glob('*.lino'))
+            lino_files = list(target_dir.glob("*.lino"))
             if not lino_files:
                 continue
 
-            print(f"  {from_curr}/{to_curr}: {len(lino_files)} files...", end=" ", flush=True)
+            print(
+                f"  {from_curr}/{to_curr}: {len(lino_files)} files...",
+                end=" ",
+                flush=True,
+            )
 
             # Consolidate
             data = consolidate_currency_pair(target_dir)
             if data:
                 # Write consolidated file at currency_dir level
-                output_file = currency_dir / f"{from_curr.lower()}-{to_curr.lower()}.lino"
+                output_file = (
+                    currency_dir / f"{from_curr.lower()}-{to_curr.lower()}.lino"
+                )
                 write_consolidated_lino(output_file, data)
 
                 # Remove old files and directory
@@ -186,12 +189,12 @@ def main():
                 except OSError:
                     pass
 
-    print(f"\nConsolidation complete:")
+    print("\nConsolidation complete:")
     print(f"  Currency pairs consolidated: {consolidated_count}")
     print(f"  Individual files removed: {total_files_removed}")
 
     # Count final .lino files
-    final_files = list(currency_dir.glob('*.lino'))
+    final_files = list(currency_dir.glob("*.lino"))
     print(f"  Final consolidated files: {len(final_files)}")
 
 

@@ -1,6 +1,7 @@
 //! Expression parser that combines all grammars.
 
 use crate::error::CalculatorError;
+use crate::grammar::dimensional_functions::{dimensional_power, kelvin_result};
 use crate::grammar::linear_equation;
 use crate::grammar::polynomial_equation;
 use crate::grammar::token_parser::TokenParser;
@@ -30,6 +31,14 @@ mod locale;
 /// This function is exposed so downstream consumers can reproduce the
 /// exact-versus-floating-point fallback used inside the evaluator.
 pub fn evaluate_power(base_val: &Value, exp_val: &Value) -> Result<Value, CalculatorError> {
+    if base_val.unit.is_opaque_compound() || exp_val.unit.is_opaque_compound() {
+        return Err(CalculatorError::domain(
+            "powers of compound units are not supported",
+        ));
+    }
+    if let Some(result) = dimensional_power(base_val, exp_val) {
+        return result;
+    }
     // Try exact rational exponentiation first
     if let (Some(base_rat), Some(exp_rat)) = (base_val.to_rational(), exp_val.to_rational()) {
         if exp_rat.is_integer() {
@@ -137,7 +146,17 @@ impl ExpressionParser {
     }
 
     pub(super) fn parse_tokenized(&self, input: &str) -> Result<Expression, CalculatorError> {
-        let mut lexer = Lexer::new(input);
+        self.parse_lexer(input, Lexer::new(input))
+    }
+
+    pub(super) fn parse_tokenized_decimal_commas(
+        &self,
+        input: &str,
+    ) -> Result<Expression, CalculatorError> {
+        self.parse_lexer(input, Lexer::with_decimal_commas(input))
+    }
+
+    fn parse_lexer(&self, input: &str, mut lexer: Lexer) -> Result<Expression, CalculatorError> {
         let tokens = lexer.tokenize()?;
         let mut parser = TokenParser::new(&tokens, &self.number_grammar, input);
         let mut expr = parser.parse_complete_expression()?;
@@ -149,7 +168,7 @@ impl ExpressionParser {
 
     /// Evaluates an expression.
     pub fn evaluate(&mut self, expr: &Expression) -> Result<Value, CalculatorError> {
-        self.evaluate_expr(expr)
+        Ok(kelvin_result(expr, self.evaluate_expr(expr)?))
     }
 
     fn expression_contains_variable(expr: &Expression) -> bool {
@@ -210,7 +229,7 @@ impl ExpressionParser {
 
         steps.push(format!("Input expression: {expr}"));
 
-        let result = self.evaluate_expr_with_steps(expr, &mut steps)?;
+        let result = kelvin_result(expr, self.evaluate_expr_with_steps(expr, &mut steps)?);
 
         steps.push(format!("Final result: {}", result.to_display_string()));
 

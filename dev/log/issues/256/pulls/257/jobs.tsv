@@ -1,0 +1,35 @@
+114468624381	Dependency Freshness
+114468624560	Detect Changes
+114468625162	Version Modification Check
+114468625185	Create Changelog PR
+114468658074	Lint and Format Check
+114468658347	Test (ubuntu-latest)
+114468659162	Changelog Fragment Check
+114468865710	Competitor Coverage
+114469179345	WASM Build
+114469179394	Build Package
+114469317806	Auto Release
+114469318846	Instant Release
+114469323433	Web Build
+114469571759	Deploy to GitHub Pages
+114469621891	Deploy Web After Release
+114469854864	Update Screenshots After Release / Update Screenshots
+113263443529	Detect Changes
+113263444107	Dependency Freshness
+113263445003	Create Changelog PR
+113263445617	Version Modification Check
+113263500729	Lint and Format Check
+113263501425	Test (ubuntu-latest)
+113263502491	Changelog Fragment Check
+113263852007	Competitor Coverage
+113264595934	Build Package
+113264596021	WASM Build
+113264829745	Auto Release
+113264831927	Instant Release
+113264946432	Web Build
+113265454261	Deploy to GitHub Pages
+113265558528	Deploy Web After Release
+113266063180	Update Screenshots After Release / Update Screenshots
+114462344551	Import Upstream Calculator Suites
+114034347675	Update Currency Rates from Central Banks
+113263442579	Update Screenshots

@@ -21,7 +21,7 @@
  *    symbols ($, €), graceful offline fallback
  */
 
-import { test, expect, waitForWasm, calculate } from './fixtures';
+import { test, expect, waitForWasm, calculate, setInput } from './fixtures';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Basic UI
@@ -39,12 +39,12 @@ test.describe('Calculator', () => {
   });
 
   test('should calculate simple expression', async ({ page, commander }) => {
-    await calculate(commander, '2 + 3');
+    await calculate(page, commander, '2 + 3');
     await expect(page.locator('.result-value')).toContainText('5', { timeout: 5000 });
   });
 
   test('should show calculation steps', async ({ page, commander }) => {
-    await calculate(commander, '2 + 3 * 4');
+    await calculate(page, commander, '2 + 3 * 4');
     await expect(page.locator('.result-value')).toBeVisible({ timeout: 5000 });
     await expect(page.locator('.steps-section')).toBeVisible();
   });
@@ -56,12 +56,12 @@ test.describe('Calculator', () => {
   });
 
   test('should display error for invalid expression', async ({ page, commander }) => {
-    await calculate(commander, 'invalid expression +++');
+    await calculate(page, commander, 'invalid expression +++');
     await expect(page.locator('.result-value.error')).toBeVisible({ timeout: 5000 });
   });
 
   test('should handle multiline input', async ({ page, commander }) => {
-    await calculate(commander, '1 + 1');
+    await calculate(page, commander, '1 + 1');
     await expect(page.locator('.result-value')).toContainText('2', { timeout: 5000 });
   });
 });
@@ -79,14 +79,14 @@ test.describe('Theme', () => {
   test('should toggle theme when clicking theme button', async ({ page, commander }) => {
     await commander.clickButton({ selector: '.settings-button' });
     await expect(page.locator('.settings-dropdown')).toBeVisible();
-    await commander.clickButton({ selector: '.settings-buttons button:has-text("Dark")' });
+    await commander.clickButton({ selector: '[data-testid="theme-dark"]' });
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   });
 
   test('should persist theme preference in localStorage', async ({ page, commander }) => {
     await commander.clickButton({ selector: '.settings-button' });
     await expect(page.locator('.settings-dropdown')).toBeVisible();
-    await commander.clickButton({ selector: '.settings-buttons button:has-text("Dark")' });
+    await commander.clickButton({ selector: '[data-testid="theme-dark"]' });
 
     const storage = await page.evaluate(() => localStorage.getItem('link-calculator-preferences'));
     expect(storage).toContain('dark');
@@ -126,7 +126,7 @@ test.describe('URL Sharing', () => {
     await page.goto('/');
     await waitForWasm(page, { ratesMs: 0 });
 
-    await commander.fillTextArea({ selector: 'textarea', text: '1 + 2' });
+    await setInput(page, commander, '1 + 2');
     await page.waitForTimeout(600);
 
     expect(page.url()).toContain('?q=');
@@ -155,15 +155,15 @@ test.describe('URL Sharing', () => {
 
     const input = page.locator('textarea');
 
-    await calculate(commander, '1 + 1');
+    await calculate(page, commander, '1 + 1');
     await page.waitForTimeout(600);
     await expect(page.locator('.result-value')).toContainText('2', { timeout: 5000 });
 
-    await calculate(commander, '2 + 2');
+    await calculate(page, commander, '2 + 2');
     await page.waitForTimeout(600);
     await expect(page.locator('.result-value')).toContainText('4', { timeout: 5000 });
 
-    await calculate(commander, '3 + 3');
+    await calculate(page, commander, '3 + 3');
     await page.waitForTimeout(600);
     await expect(page.locator('.result-value')).toContainText('6', { timeout: 5000 });
 
@@ -249,7 +249,7 @@ test.describe('Busy Indicator', () => {
   test('should show spinner during calculation', async ({ page, commander }) => {
     await page.goto('/');
     await waitForWasm(page, { ratesMs: 0 });
-    await calculate(commander, '123456789 * 987654321');
+    await calculate(page, commander, '123456789 * 987654321');
     await expect(page.locator('.result-value')).toBeVisible({ timeout: 10000 });
   });
 });
@@ -298,7 +298,7 @@ test.describe('Textarea Auto-Resize', () => {
     const initialBox = await textarea.boundingBox();
     const initialHeight = initialBox?.height ?? 0;
 
-    await commander.fillTextArea({ selector: 'textarea', text: 'Line 1\nLine 2\nLine 3\nLine 4' });
+    await setInput(page, commander, 'Line 1\nLine 2\nLine 3\nLine 4');
     await page.waitForTimeout(100);
 
     const newBox = await textarea.boundingBox();
@@ -308,14 +308,11 @@ test.describe('Textarea Auto-Resize', () => {
   test('should shrink textarea when content is reduced', async ({ page, commander }) => {
     const textarea = page.locator('textarea');
 
-    await commander.fillTextArea({
-      selector: 'textarea',
-      text: 'Line 1\nLine 2\nLine 3\nLine 4\nLine 5',
-    });
+    await setInput(page, commander, 'Line 1\nLine 2\nLine 3\nLine 4\nLine 5');
     await page.waitForTimeout(100);
     const multilineHeight = (await textarea.boundingBox())?.height ?? 0;
 
-    await commander.fillTextArea({ selector: 'textarea', text: 'Single line' });
+    await setInput(page, commander, 'Single line');
     await page.waitForTimeout(100);
     const singleLineHeight = (await textarea.boundingBox())?.height ?? 0;
 
@@ -323,7 +320,7 @@ test.describe('Textarea Auto-Resize', () => {
   });
 
   test('should maintain minimum height for empty content', async ({ page, commander }) => {
-    await commander.fillTextArea({ selector: 'textarea', text: '' });
+    await setInput(page, commander, '');
     await page.waitForTimeout(100);
     const box = await page.locator('textarea').boundingBox();
     expect(box?.height ?? 0).toBeGreaterThan(30);
@@ -331,14 +328,14 @@ test.describe('Textarea Auto-Resize', () => {
 
   test('should handle long single-line content with word wrap', async ({ page, commander }) => {
     const longExpression = '(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC) + (Jan 25, 12:51pm UTC)';
-    await commander.fillTextArea({ selector: 'textarea', text: longExpression });
+    await setInput(page, commander, longExpression);
     await page.waitForTimeout(100);
     expect(await page.locator('textarea').boundingBox()).not.toBeNull();
   });
 
   test('should resize in discrete line-height steps', async ({ page, commander }) => {
     const textarea = page.locator('textarea');
-    await commander.fillTextArea({ selector: 'textarea', text: 'Line 1\nLine 2' });
+    await setInput(page, commander, 'Line 1\nLine 2');
     await page.waitForTimeout(100);
 
     const box = await textarea.boundingBox();
@@ -360,7 +357,7 @@ test.describe('Textarea Auto-Resize', () => {
 
   test('should not allow resize smaller than content height', async ({ page, commander }) => {
     const textarea = page.locator('textarea');
-    await commander.fillTextArea({ selector: 'textarea', text: 'Line 1\nLine 2\nLine 3' });
+    await setInput(page, commander, 'Line 1\nLine 2\nLine 3');
     await page.waitForTimeout(100);
 
     const contentHeight = (await textarea.boundingBox())?.height ?? 0;
@@ -390,45 +387,38 @@ test.describe('Currency Conversion with Real Rates', () => {
   });
 
   test('should calculate currency conversion', async ({ page, commander }) => {
-    await calculate(commander, '100 USD in EUR');
-    await expect(page.locator('.result-value')).not.toContainText('Enter an expression', {
+    await calculate(page, commander, '100 USD in EUR');
+    // Retrying assertion: right after Enter the result is briefly empty, so a
+    // one-shot textContent() read raced the calculation (issue #256).
+    await expect(page.locator('.result-value')).toHaveText(/\d+(\.\d+)?\s*EUR/, {
       timeout: 10000,
     });
-    const resultText = await page.locator('.result-value').textContent();
-    expect(resultText).toMatch(/EUR|\d+/i);
   });
 
   test('should show exchange rate info in calculation steps', async ({ page, commander }) => {
-    await calculate(commander, '0 RUB + 1 USD');
+    await calculate(page, commander, '0 RUB + 1 USD');
     await expect(page.locator('.result-value')).toBeVisible({ timeout: 10000 });
-    await expect(page.locator('.steps-section')).toBeVisible();
-    const stepsText = await page.locator('.steps-section').textContent();
-    expect(stepsText?.toLowerCase()).toMatch(/exchange|rate|convert/i);
+    await expect(page.locator('.steps-section')).toContainText(/exchange|rate|convert/i);
   });
 
   test('should handle multiple currency conversions', async ({ page, commander }) => {
-    await calculate(commander, '1 USD + 1 EUR + 1 GBP');
-    await expect(page.locator('.result-value')).toBeVisible({ timeout: 10000 });
-    expect(await page.locator('.result-value').textContent()).toBeTruthy();
+    await calculate(page, commander, '1 USD + 1 EUR + 1 GBP');
+    await expect(page.locator('.result-value')).toHaveText(/\d/, { timeout: 10000 });
   });
 
   test('should display rate source information', async ({ page, commander }) => {
-    await calculate(commander, '100 JPY in USD');
-    await expect(page.locator('.result-value')).toBeVisible({ timeout: 10000 });
-    if (await page.locator('.steps-section').isVisible()) {
-      expect(await page.locator('.steps-section').textContent()).toBeTruthy();
-    }
+    await calculate(page, commander, '100 JPY in USD');
+    await expect(page.locator('.result-value')).toHaveText(/USD/, { timeout: 10000 });
+    await expect(page.locator('.steps-section')).toContainText(/source/i);
   });
 
   test('should handle currency symbols', async ({ page, commander }) => {
-    await calculate(commander, '$100 + €50');
-    await expect(page.locator('.result-value')).toBeVisible({ timeout: 10000 });
-    const resultText = await page.locator('.result-value').textContent();
-    expect(resultText).toMatch(/[$€]|\w{3}/);
+    await calculate(page, commander, '$100 + €50');
+    await expect(page.locator('.result-value')).toHaveText(/[$€]|[A-Z]{3}/, { timeout: 10000 });
   });
 
   test('should gracefully handle rates when offline', async ({ page, commander }) => {
-    await calculate(commander, '2 + 2');
+    await calculate(page, commander, '2 + 2');
     await expect(page.locator('.result-value')).toContainText('4', { timeout: 5000 });
   });
 });
@@ -445,7 +435,7 @@ test.describe('Textarea Resize Visual Regression', () => {
 
   test('textarea should display all content without clipping', async ({ page, commander }) => {
     const bugContent = '(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC) + (Jan 25, 12:51nm UTC)';
-    await commander.fillTextArea({ selector: 'textarea', text: bugContent });
+    await setInput(page, commander, bugContent);
     await page.waitForTimeout(100);
 
     const overflow = await page.locator('textarea').evaluate((el) => el.scrollHeight > el.clientHeight);
@@ -453,7 +443,7 @@ test.describe('Textarea Resize Visual Regression', () => {
   });
 
   test('textarea content should never be partially visible', async ({ page, commander }) => {
-    await commander.fillTextArea({ selector: 'textarea', text: 'Line 1\nLine 2\nLine 3' });
+    await setInput(page, commander, 'Line 1\nLine 2\nLine 3');
     await page.waitForTimeout(100);
 
     const textarea = page.locator('textarea');
@@ -490,22 +480,22 @@ test.describe('Mathematical Operations', () => {
   });
 
   test('should compute definite integral', async ({ page, commander }) => {
-    await calculate(commander, 'integrate(x^2, x, 0, 3)');
+    await calculate(page, commander, 'integrate(x^2, x, 0, 3)');
     await expect(page.locator('.result-value')).toContainText('9', { timeout: 5000 });
   });
 
   test('should compute sqrt and pow', async ({ page, commander }) => {
-    await calculate(commander, 'sqrt(16) + pow(2, 3)');
+    await calculate(page, commander, 'sqrt(16) + pow(2, 3)');
     await expect(page.locator('.result-value')).toContainText('12', { timeout: 5000 });
   });
 
   test('should compute date/time difference', async ({ page, commander }) => {
-    await calculate(commander, '(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)');
+    await calculate(page, commander, '(Jan 27, 8:59am UTC) - (Jan 25, 12:51pm UTC)');
     await expect(page.locator('.result-value')).toContainText('day', { timeout: 5000 });
   });
 
   test('should respect parentheses in expressions', async ({ page, commander }) => {
-    await calculate(commander, '(2 + 3) * 4');
+    await calculate(page, commander, '(2 + 3) * 4');
     await expect(page.locator('.result-value')).toContainText('20', { timeout: 5000 });
   });
 });

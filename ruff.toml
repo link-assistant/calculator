@@ -1,0 +1,8 @@
+# Lint for the Python scripts CI runs (issue #256, from the python template's
+# ruff check and ruff format --check). The rule set is pinned because ruff
+# 0.17 widened its defaults; extend it as the scripts are cleaned up.
+target-version = "py311"
+extend-exclude = ["docs/case-studies", "experiments"]
+
+[lint]
+select = ["E4", "E7", "E9", "F"]

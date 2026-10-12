@@ -43,7 +43,73 @@ A grammar-based expression calculator with DateTime and Currency support, built 
 - Comparisons: `=`, `==`, `!=`, `≠`, `<`, `<=`, `≤`, `>`, `>=`, `≥`
 - Parentheses for explicit grouping: `(2 + 3) * 4`
 - Negative numbers: `-5 + 3`
+- Percentages retain their type: `200 + 10% = 220`,
+  `100 + 10% + 10% = 121`, and `10% + 20% = 30%`
+- Percentage questions and conversions: `180 is what % off 200`,
+  `50 to 75 is what %`, `20/200 as %`, and `50% as fraction`
+- Percentage phrases: `ten percent of fifty`,
+  `700 увеличить на 30 процентов`, `700的百分之三十`, and `700の30パーセント`
 - Decimal precision using `rust_decimal`
+
+### Number separators
+
+Number conventions are resolved in the lexer before parsing or evaluation:
+
+- `1,234` means **1234**: a comma followed by exactly three digits groups
+  thousands when the leading group has one to three digits. Other single
+  commas are decimal separators: `12,3` means **12.3**, `1,2` means **1.2**.
+  The exact spelling `1,1` is a documented fend compatibility exception and
+  means **11**; use `1.1` for the decimal value.
+- When both `.` and `,` occur in a number, the rightmost mark is decimal:
+  `1,234.5` and `1.234,5` both mean **1234.5**.
+- Valid groups separated by spaces (including Unicode grouping spaces) or
+  Swiss apostrophes work with either decimal convention: `1 234,5`,
+  `1'234.5`, and `1’234.5` all mean **1234.5**.
+- Indian grouping is supported: `12,34,567` means **1234567**.
+- Inside function calls every comma separates arguments, regardless of spacing:
+  `max(1,2)` means **2**, `max(1,234)` means **234**, and `round(1,234)`
+  supplies two arguments and reports an argument-count error. Use decimal dots
+  and space/apostrophe grouping in arguments, e.g. `round(1'234.5)`.
+- Planning still exposes the decimal-comma alternative for ambiguous grouped
+  numbers; the primary interpretation of `1,234 / 100` is **12.34**.
+
+These rules apply independently to each numeric literal and do not depend on
+browser language. The `1,1` exception also exposes **1.1** as an alternative
+interpretation in planning. Binary, octal, and hexadecimal literals (including
+fractions such as `0b100.001`) retain their numeric meaning.
+
+Measured values such as `12,3 ± 4,5` produce **12.3 ± 4.5** with a non-negative
+absolute uncertainty. Central value and uncertainty must have matching units;
+arithmetic on uncertain values reports an error until propagation is supported.
+German `Mio.` and `Mrd.` scale by one million and one billion, respectively;
+`1,08 Mrd. km/h` produces **1080000000 km/h**, a physical speed (see below).
+
+### Physical units
+
+Values carry a dimension vector (length, mass, time, current, temperature,
+amount, luminosity, information, angle, currency) and an exact scale. Units
+come from [`data/units/units.lino`](data/units/units.lino): SI base and derived
+units with all prefixes (`µm`, `μm`, `um`, `kΩ`), binary prefixes (`KiB`),
+Imperial/US, electrical, information, angle and temperature units, with
+aliases such as `feet`, `metres`, `м`, `км` and `ч`.
+
+- `*`, `/`, powers and roots combine dimensions: `10m × 10m` = **100 m^2**,
+  `(5 volts) / (2 ohms)` = **2.5 A**, `1 mph * 1 hour` = **1 mi**;
+  `sqrt(2m)` is an error. Addition and comparison require equal dimensions:
+  `2m == 200cm` is **true**.
+- Unit expressions: `299792458 m⋅s−1`, `m·s⁻¹`, `m s^-1`, `km/h`,
+  `km per hour`, `kg·m²/s²`; conversions with `in`/`to`/`as`:
+  `1 ft to cm` = **30.48 cm**, `9.81 m/s² * 70 kg in N` = **686.7 N**.
+- Compound quantities: `5 feet 10 inches in cm` = **177.8 cm**, `6'2"`,
+  `1 meter 20 cm`.
+- Temperatures follow Numbat: `20 celsius` = **293.15 K**,
+  `25 °C in °F` = **77 °F**, and arithmetic on `°C`/`°F` such as `25 °C * 2`
+  is rejected (convert to `K` first).
+- `m` after a number is the metre and `min` the minute; `5m` means minutes
+  only in an explicit time context (`5m in s`, `1h + 5m`, `now + 5m`).
+
+See the [issue #235 case study](docs/case-studies/issue-235/README.md) for the
+design and its documented decisions.
 
 ### DateTime Support
 Supports multiple date and time formats:

@@ -1,7 +1,10 @@
 //! Token-based expression parser.
 mod comparison;
 mod integral;
+mod numbers;
 mod operators;
+mod percentage;
+mod quantities;
 mod units;
 
 use crate::error::CalculatorError;
@@ -60,6 +63,10 @@ impl<'a> TokenParser<'a> {
             left = Expression::at_time(left, time);
         }
 
+        if let Some(ratio) = self.parse_ratio_suffix(&left)? {
+            return Ok(ratio);
+        }
+
         // Check for "as", "in", or "to" keyword (unit conversion, e.g. "741 KB as MB", "19 TON in USD")
         if self.check_as() || self.check_in() || self.check_to() {
             self.advance(); // consume "as"/"in"/"to"
@@ -90,7 +97,24 @@ impl<'a> TokenParser<'a> {
         loop {
             if let Some(op) = self.match_multiplicative_op() {
                 let right = self.parse_power()?;
-                left = Expression::binary(left, op, right);
+                left = self.combine_ratio_product(left, op, right);
+            } else if self.check(&TokenKind::Of)
+                && !matches!(&left, Expression::Number { unit, .. } if *unit != Unit::None)
+                && !matches!(self.peek_kind(), Some(TokenKind::Identifier(word)) if word.eq_ignore_ascii_case("what"))
+            {
+                self.advance();
+                let right = self.parse_power()?;
+                left = Expression::function_call(
+                    "percent_of",
+                    vec![Expression::binary(left, BinaryOp::Multiply, right)],
+                );
+            } else if self.check(&TokenKind::Portion) {
+                self.advance();
+                let part = self.parse_power()?;
+                left = Expression::function_call(
+                    "percent_of",
+                    vec![Expression::binary(left, BinaryOp::Multiply, part)],
+                );
             } else if self.implicit_multiplication_starts(&left) {
                 let right = self.parse_power()?;
                 left = Expression::binary(left, BinaryOp::Multiply, right);
@@ -136,25 +160,7 @@ impl<'a> TokenParser<'a> {
         }
 
         let expr = self.parse_primary()?;
-
-        // Handle postfix percent operator: expr% → expr / 100
-        // With optional "of <rhs>": expr% of rhs → (expr / 100) * rhs
-        if matches!(self.current_kind(), Some(TokenKind::Percent))
-            && !self.percent_starts_binary_expression()
-        {
-            self.advance();
-            let percent_expr = Expression::binary(
-                expr,
-                BinaryOp::Divide,
-                Expression::number(Decimal::new(100)),
-            );
-            if matches!(self.current_kind(), Some(TokenKind::Of)) {
-                self.advance(); // consume "of"
-                let rhs = self.parse_primary()?;
-                return Ok(Expression::binary(percent_expr, BinaryOp::Multiply, rhs));
-            }
-            return Ok(percent_expr);
-        }
+        let expr = self.parse_percent_postfix(expr)?;
 
         // Handle postfix factorial operator: expr! → factorial(expr)
         if matches!(self.current_kind(), Some(TokenKind::Bang)) {
@@ -166,6 +172,23 @@ impl<'a> TokenParser<'a> {
     }
 
     fn parse_primary(&mut self) -> Result<Expression, CalculatorError> {
+        if self.check(&TokenKind::PercentPrefix) || self.check(&TokenKind::Percent) {
+            self.advance();
+            let amount = self.parse_power()?;
+            return Ok(Expression::function_call("percent", vec![amount]));
+        }
+        if self.check(&TokenKind::IncreaseFrom) || self.check(&TokenKind::DecreaseFrom) {
+            let op = if self.check(&TokenKind::IncreaseFrom) {
+                BinaryOp::Add
+            } else {
+                BinaryOp::Subtract
+            };
+            self.advance();
+            let amount = self.parse_multiplicative()?;
+            self.expect_ratio_word("from")?;
+            let base = self.parse_multiplicative()?;
+            return Ok(Expression::binary(base, op, amount));
+        }
         // Handle "until" keyword: "until <datetime>"
         if self.check_until() {
             self.advance(); // consume "until"
@@ -279,40 +302,25 @@ impl<'a> TokenParser<'a> {
 
             let mut value = self.number_grammar.parse_number(&num_str)?;
             if let Some(multiplier) = self.consume_adjacent_si_suffix(number_end) {
-                value = value * multiplier;
+                value = value
+                    .checked_mul(&multiplier)
+                    .ok_or(CalculatorError::Overflow)?;
             }
 
-            // Check for unit (identifier following number that is not a function)
-            let (unit, alternative_units) = if let Some(TokenKind::Identifier(id)) =
-                self.current_kind()
-            {
-                // An unknown single-letter identifier is a conventional
-                // coefficient (`2x` or `2 x`). Established short units
-                // (`2h`) and multi-letter custom units retain their meaning.
-                let coefficient_variable =
-                    Self::is_single_letter_variable(id) && !self.identifier_is_known_unit(id);
-                if !is_math_function(id) && !self.peek_is_left_paren() && !coefficient_variable {
-                    let (unit, alts) = self
-                        .number_grammar
-                        .parse_unit_with_alternatives(id)
-                        .unwrap_or_else(|_| (Unit::Custom(id.clone()), Vec::new()));
-                    self.advance();
-                    (unit, alts)
-                } else {
-                    (Unit::None, Vec::new())
-                }
+            if let Some(multiplier) = self.consume_word_scale() {
+                value = value
+                    .checked_mul(&multiplier)
+                    .ok_or(CalculatorError::Overflow)?;
+            }
+            let (unit, alternative_units) = self
+                .parse_quantity_unit(number_end)
+                .unwrap_or((Unit::None, Vec::new()));
+            let quantity = if alternative_units.is_empty() {
+                Expression::number_with_unit(value, unit)
             } else {
-                (Unit::None, Vec::new())
+                Expression::number_with_unit_alternatives(value, unit, alternative_units)
             };
-
-            if alternative_units.is_empty() {
-                return Ok(Expression::number_with_unit(value, unit));
-            }
-            return Ok(Expression::number_with_unit_alternatives(
-                value,
-                unit,
-                alternative_units,
-            ));
+            return self.parse_compound_quantity(quantity);
         }
 
         // Standalone identifier (could be a function call, unit, variable, or datetime part)
@@ -441,7 +449,10 @@ impl<'a> TokenParser<'a> {
 
         // Preserve established adjacent unit abbreviations like `2h in minutes`.
         // They become SI suffixes only in suffix-before-unit forms like `5h USD`.
-        if self.identifier_is_known_unit(&suffix) && !self.peek_identifier_is_known_unit() {
+        // Of the physical units only metre (`5m`) wins over its prefix (issue
+        // #235), so `5T` and `5G` keep meaning tera and giga.
+        let suffix_is_unit = suffix == "m" || self.identifier_is_legacy_unit(&suffix);
+        if suffix_is_unit && !self.peek_identifier_is_known_unit() {
             return None;
         }
 
@@ -453,6 +464,13 @@ impl<'a> TokenParser<'a> {
         matches!(
             self.number_grammar.parse_unit_with_alternatives(id),
             Ok((unit, _)) if !matches!(unit, Unit::Custom(_) | Unit::None)
+        )
+    }
+
+    fn identifier_is_legacy_unit(&self, id: &str) -> bool {
+        matches!(
+            self.number_grammar.parse_unit_with_alternatives(id),
+            Ok((unit, _)) if !matches!(unit, Unit::Custom(_) | Unit::None | Unit::Physical(_))
         )
     }
 

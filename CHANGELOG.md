@@ -69,6 +69,95 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+
+
+
+
+
+
+
+
+## [0.24.0] - 2026-10-12
+
+### Added
+- General dimensional unit algebra: values carry a dimension vector (length, mass, time, current, temperature, amount, luminosity, information, angle, currency) and an exact scale; `*`, `/`, powers and roots combine dimensions, addition and comparison require equal dimensions (`10m × 10m` = `100 m^2`, `(5 volts) / (2 ohms)` = `2.5 A`, `1 mph * 1 hour` = `1 mi`, `sqrt(2m)` is an error).
+- A data-driven unit database in `data/units/` with SI base and derived units, all SI prefixes (including `µ`/`μ`/`u`), binary prefixes, Imperial/US, electrical, information, angle and temperature units, plus English and Russian aliases (`feet`, `metres`, `м`, `км`, `ч`).
+- Unit expressions such as `m/s`, `m⋅s−1`, `m·s⁻¹`, `m s^-1`, `km per hour`, `kg·m²/s²` and `kg / (m^-2 s^2)`, as quantities and as conversion targets.
+- Compound quantities `5 feet 10 inches`, `1 meter 20 cm` and `6'2"`.
+- Affine temperatures: `20 celsius` is `293.15 K`, `25 °C in °F` is `77 °F`, and arithmetic on `°C`/`°F` is rejected as in Numbat.
+
+### Changed
+- `m` after a number is the metre and `min` the minute; `5m` reads as minutes only in an explicit time context (`5m in s`, `1h + 5m`, `now + 5m`).
+- Products of compound units that were previously rejected (`5 kg * 9.8 m/s^2`) now evaluate, and `meters` is displayed as `m`.
+
+## [0.23.6] - 2026-10-11
+
+### Fixed
+- CI no longer fails pushes to `main` because an upstream dependency released after the pull request merged; dependency freshness now blocks pull requests only and warns on push. Updated the stale dependencies and the audit findings.
+- The Playwright end-to-end suite runs in CI again, with its eight broken tests fixed, and the web lint script runs `oxlint` instead of a missing ESLint setup.
+- A failed job can no longer hide behind skipped dependants: every workflow ends with a pipeline-status gate that also fails on jobs killed by their timeout.
+- Corpus refresh pull requests opened without `CORPUS_REFRESH_TOKEN`, and manual release pull requests, now get CI through a dispatched `checks` run instead of an approval-pending run that never started, and changes to `.github/actions/` trigger the jobs that use them.
+- Workflows are hardened (read-only default permissions, pinned runners and third-party actions, no persisted checkout credentials, no template injection) and linted by actionlint and zizmor; a new security workflow runs cargo audit, npm audit, CodeQL and dependency review.
+- `cargo package` no longer warns about experiment examples that are not part of the published crate.
+- Markdown and HTML links are checked by lychee, with transient failures re-checked and Web Archive replacements suggested, and checkouts no longer print git's default-branch hint.
+- Pull requests are also checked for committed credentials (secretlint) and re-tested on a fresh merge with the current `main`, so a semantic merge conflict fails the pull request instead of `main`.
+- Releases prove the crates.io token can publish before pushing the version bump to `main`, so a revoked token can no longer leave `main` bumped on a version crates.io never received.
+- Required documents and the sections other files link to (for example `CONTRIBUTING.md#competitor-coverage`) are checked on every pull request.
+- Pull requests that change only Python or shell scripts or `web/package.json` now count as code changes, so they need a changelog fragment and run lint, build and the web tests; the CI Python scripts are linted with ruff.
+
+## [0.23.5] - 2026-10-11
+
+### Changed
+- Refresh imported open-source calculator assertions and their upstream revision provenance.
+
+## [0.23.4] - 2026-10-08
+
+### Fixed
+- Keep exact percentage values and percentage display; adding or subtracting a percentage adjusts the left amount and repeated adjustments compound.
+- Support percentage questions, increases, discounts, ratios, fraction and multiplier conversions, and English, Russian, Chinese, and Japanese percentage phrases from the arithmetic vocabulary.
+- Preserve percent-of calculations, modulo words, and comma grouping in mixed decimal/grouped percentage quantities; compare equivalent percent and decimal displays in competitor coverage.
+- Support proportional percentage questions such as `20% is 500, what is 750` and `if 20 is 30%, what is 60%`.
+
+## [0.23.3] - 2026-10-08
+
+### Added
+- Expand calculator documentation coverage with attributed, reproducible examples and source audits for 15 products.
+
+### Fixed
+- Clear date, exchange-rate and locale-dependent documentation answers and bound competitor probes in CI.
+
+## [0.23.2] - 2026-10-08
+
+### Fixed
+- Resolve thousands grouping and decimal commas in the lexer before a successfully parsed expression can return a silently wrong result. Support mixed decimal/grouping conventions, Swiss apostrophes, and Indian grouping while retaining function argument commas and numeric-date parsing.
+- Preserve measured values with absolute uncertainty (`12,3 ± 4,5`) and German million/billion abbreviations (`1,08 Mrd. km/h`).
+- Compare compact competitor result displays such as `300k` numerically and retain the participant-count unit in the corpus expectation.
+- Preserve space-grouped fractions and underscore/space grouping, parse radix literals numerically, and report scale overflow without panicking. Document the required fend `1,1` compatibility exception.
+- Reject unsupported compound-unit powers, functions, and mixed-unit algebra instead of silently discarding their units.
+
+## [0.23.1] - 2026-10-08
+
+### Added
+- Expand the scientific natural-language benchmark to 23 languages with at least 50 distinct expressions per language, all 12 required constructs, licensed Wikipedia and open-access paper samples, reproducible import scripts, and automated corpus validation (#232).
+
+## [0.23.0] - 2026-10-08
+
+### Added
+- Reproducible open-source calculator corpus refresh with pinned upstream commit dates and licenses, new Insect, kalker, Hurmet and SpeedCrunch extractors, and math.js function/unit assertions.
+- Weekly workflow that proposes upstream corpus updates through a pull request.
+
+## [0.22.1] - 2026-10-08
+
+### Added
+- Gate CI on competitor expression coverage and upload the regenerated report, with a weekly coverage gap issue containing source and language summaries.
+
+### Fixed
+- Read coverage baselines before regenerating them, and detect worsening statuses and removed corpus expressions.
+
+### Changed
+- Refresh web dependencies and Rust lockfile entries to satisfy the existing dependency freshness CI gate.
+
 ## [0.22.0] - 2026-10-03
 
 ### Changed
