@@ -90,6 +90,9 @@ pub struct UnitDef {
     pub factor: Rational,
     /// Offset of an affine unit (`°C`, `°F`): base = (value + offset) × factor.
     pub offset: Option<Rational>,
+    /// Canonical unit terms of a definition made only of other units
+    /// (`mph` = `mi h^-1`), used to simplify products such as `mph·h`.
+    pub expansion: Option<Vec<(String, i32)>>,
     prefixes: Prefixes,
 }
 
@@ -293,10 +296,12 @@ impl UnitDatabase {
     }
 
     /// Evaluates a definition such as `kg m s^-2` or `1/1000 m^3`.
-    fn evaluate_definition(&self, definition: &str) -> Result<(Dimension, Rational), String> {
+    fn evaluate_definition(&self, definition: &str) -> Result<Evaluated, String> {
         let mut dimension = Dimension::NONE;
         let mut factor = Rational::one();
         let mut sign = 1;
+        let mut terms = Vec::new();
+        let mut pure = true;
         for part in definition.split_whitespace() {
             if part == "/" {
                 sign = -1;
@@ -304,11 +309,14 @@ impl UnitDatabase {
             }
             if let Some(number) = parse_number(part) {
                 factor = factor * number.pow_i32(sign);
+                pure = false;
                 continue;
             }
             if let Some(base) = part.strip_prefix('[').and_then(|p| p.strip_suffix(']')) {
-                let base = Dimension::base(base).ok_or(format!("unknown dimension '{base}'"))?;
+                let base =
+                    Dimension::base(base).ok_or_else(|| format!("unknown dimension '{base}'"))?;
                 dimension = dimension.mul(&base.pow(sign));
+                pure = false;
                 continue;
             }
             let (name, power) = match part.split_once('^') {
@@ -320,15 +328,21 @@ impl UnitDatabase {
                 ),
                 None => (part, 1),
             };
-            let (index, _, unit_factor) =
-                self.resolve(name).ok_or(format!("unknown unit '{name}'"))?;
+            let (index, symbol, unit_factor) = self
+                .resolve(name)
+                .ok_or_else(|| format!("unknown unit '{name}'"))?;
             let power = power * sign;
             dimension = dimension.mul(&self.units[index].dimension.pow(power));
             factor = factor * unit_factor.pow_i32(power);
+            terms.push((symbol, power));
         }
-        Ok((dimension, factor))
+        let expansion = (pure && !matches!(terms.as_slice(), [(_, 1)])).then_some(terms);
+        Ok((dimension, factor, expansion))
     }
 }
+
+/// Dimension, factor and optional expansion of a definition.
+type Evaluated = (Dimension, Rational, Option<Vec<(String, i32)>>);
 
 /// Parses `1000`, `0.3048`, `1.602176634e-19` or `5/9` exactly.
 fn parse_number(text: &str) -> Option<Rational> {
@@ -398,7 +412,7 @@ fn parse_prefixes(text: &str) -> Result<Prefixes, String> {
         other => {
             let list = other
                 .strip_prefix("si:")
-                .ok_or(format!("unknown prefix class '{other}'"))?;
+                .ok_or_else(|| format!("unknown prefix class '{other}'"))?;
             Prefixes::Si(Some(list.split(',').map(str::to_string).collect()))
         }
     })
@@ -411,31 +425,36 @@ fn parse_database(content: &str) -> Result<UnitDatabase, String> {
         if line.is_empty() || line.starts_with("//") {
             continue;
         }
-        let context = |message: String| format!("line {}: {message}", line_index + 1);
-        let parts = split_link(line).map_err(|e| context(e))?;
+        let at_line = |message: String| format!("line {}: {message}", line_index + 1);
+        let parts = split_link(line).map_err(at_line)?;
         let (kind, rest) = parts
             .split_first()
-            .ok_or_else(|| context("empty link".to_string()))?;
+            .ok_or_else(|| at_line("empty link".to_string()))?;
         match kind.as_str() {
             "unit" | "affine" => {
                 let (prefixes, definition, offset, names) = if kind == "unit" {
                     let [prefixes, definition, names @ ..] = rest else {
-                        return Err(context("expected prefixes and a definition".into()));
+                        return Err(at_line("expected prefixes and a definition".into()));
                     };
-                    (parse_prefixes(prefixes).map_err(context)?, definition, None, names)
+                    (
+                        parse_prefixes(prefixes).map_err(at_line)?,
+                        definition,
+                        None,
+                        names,
+                    )
                 } else {
                     let [definition, offset, names @ ..] = rest else {
-                        return Err(context("expected a definition and an offset".into()));
+                        return Err(at_line("expected a definition and an offset".into()));
                     };
                     let offset = parse_number(offset)
-                        .ok_or_else(|| context(format!("invalid offset '{offset}'")))?;
+                        .ok_or_else(|| at_line(format!("invalid offset '{offset}'")))?;
                     (Prefixes::None, definition, Some(offset), names)
                 };
                 let symbol = names
                     .first()
-                    .ok_or_else(|| context("expected a symbol".to_string()))?;
-                let (dimension, factor) =
-                    database.evaluate_definition(definition).map_err(context)?;
+                    .ok_or_else(|| at_line("expected a symbol".to_string()))?;
+                let (dimension, factor, expansion) =
+                    database.evaluate_definition(definition).map_err(at_line)?;
                 database
                     .add(UnitDef {
                         symbol: symbol.clone(),
@@ -443,21 +462,22 @@ fn parse_database(content: &str) -> Result<UnitDatabase, String> {
                         dimension,
                         factor,
                         offset,
+                        expansion,
                         prefixes,
                     })
-                    .map_err(context)?;
+                    .map_err(at_line)?;
             }
             "named" => {
                 for symbol in rest {
                     let index = *database
                         .exact
                         .get(symbol)
-                        .ok_or_else(|| context(format!("unknown unit '{symbol}'")))?;
+                        .ok_or_else(|| at_line(format!("unknown unit '{symbol}'")))?;
                     database.named.push(index);
                 }
             }
             "reserved" => database.reserved.extend(rest.iter().cloned()),
-            other => return Err(context(format!("unknown link kind '{other}'"))),
+            other => return Err(at_line(format!("unknown link kind '{other}'"))),
         }
     }
     Ok(database)

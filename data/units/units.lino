@@ -69,7 +69,7 @@
 // ── Time ────────────────────────────────────────────────────────────────────
 (unit none '60 s' 'min' 'mins' 'minute' 'minutes')
 (unit none '60 min' 'h' 'hr' 'hrs' 'hour' 'hours')
-(unit none '24 h' 'd' 'day' 'days')
+(unit none '24 h' 'day' 'd' 'days')
 (unit none '7 d' 'week' 'weeks' 'wk' 'wks')
 (unit none '30 d' 'month' 'months')
 (unit none '365 d' 'year' 'years' 'yr' 'yrs')
