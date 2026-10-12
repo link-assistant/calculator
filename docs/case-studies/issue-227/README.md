@@ -1,14 +1,19 @@
 # Issue 227 case study: parity with every calculator for natural-language math
 
-Research and measurements were done on 2026-10-07 against link-calculator
-v0.22.0 (`target/release/link-calculator`). The issue body was read in full
-(`issue.json`); it had no comments. Companion files:
+Research and the initial measurement were done on 2026-10-07 against
+link-calculator v0.22.0 (`target/release/link-calculator`). The issue body was
+read in full (`issue.json`); it had no comments. The plan was re-checked on
+2026-10-12 against v0.24.0 after the first seven sub-issues were merged; see
+[Progress since the plan was filed](#progress-since-the-plan-was-filed).
+Companion files:
 
 | File | Content |
 | --- | --- |
 | [competitor-inventory.md](competitor-inventory.md) | Every engine and product checked, the artifact imported, revision, license, measured coverage, and the reusable components evaluated |
 | [natural-language-corpus.md](natural-language-corpus.md) | The multilingual scientific-quote corpus: groups, sources, failure causes, conventions |
-| [corpus/](corpus/) | Three executable TSV corpora (3055 rows) |
+| [documentation-corpus.md](documentation-corpus.md), [documentation-sources.json](documentation-sources.json) | How the closed-source documentation corpus is fetched and extracted (#231) |
+| [../../competitor-corpus.md](../../competitor-corpus.md) | How the pinned open-source test suites are checked out and re-imported (#230) |
+| [corpus/](corpus/) | Three executable TSV corpora (3055 rows when filed, 13975 rows on 2026-10-12) |
 | [results/coverage-report.md](results/coverage-report.md) | Generated report: per-source and per-language tables plus every `different` and `unsupported` row with the actual output |
 | [results/coverage-baseline.json](results/coverage-baseline.json) | Compact per-row status used by the regression gate |
 | [sub-issues/](sub-issues/) | The 18 sub-issue specifications exactly as filed, and `issues.json` with numbers, ids and blockers |
@@ -24,6 +29,48 @@ v0.22.0 (`target/release/link-calculator`). The issue body was read in full
 | R5 | Plan all required work as sub-issues of #227 with dependencies marked as blockers. | 18 sub-issues (#229 to #246) were created from the specifications in `sub-issues/`, attached with the GitHub sub-issues API, and every "Blocked by" relation was registered with the issue-dependencies API (37 edges). See the dependency graph below. |
 | R6 | The result is a pull request with the deep analysis and all issues created. | PR #228 carries this case study, the scripts, the corpora and the measured report. |
 | R7 | Collect the data in `docs/case-studies/issue-227`, search online for additional facts, list every requirement, propose solution options and plans per requirement, and check existing components and libraries. | This directory. Online sources: upstream repositories (revisions in the inventory), Soulver documentation (`documentation.soulver.app/llms.txt` index), Wikipedia REST summaries in 13 languages, crates.io metadata for 17 crates, and the Duckling, Recognizers-Text, text2num, quantulum3, MathCAT, Speech Rule Engine and Mathics repositories. Options and component decisions are in each sub-issue and summarized below. |
+
+## Progress since the plan was filed
+
+Re-checked on 2026-10-12 against v0.24.0 (main at `23f5f415`). Seven of the 18
+sub-issues are closed by their own pull requests; the other eleven are open and
+their GitHub blockers are unchanged (37 edges, verified through the GraphQL
+`blockedBy` field).
+
+| Sub-issue | Closed by | What changed for #227 |
+| --- | --- | --- |
+| #229 coverage gate | #248 | `Competitor Coverage` job in `release.yml` fails on any status regression; weekly `coverage-gap-report.yml` refreshes a tracking issue; process in [CONTRIBUTING.md](../../../CONTRIBUTING.md#competitor-coverage) |
+| #230 open-source suites | #249 | Pinned upstream revisions (`scripts/competitor-upstreams.json`), scheduled refresh PRs, four more engines (Insect, kalker, Hurmet, SpeedCrunch) |
+| #231 documentation corpus | #250 | 5187 attributed rows from Apple, Calca, Frink, Google, Numi, Parsify, Raycast, Soulver and Wolfram\|Alpha references |
+| #232 scientific-quote corpus | #251 | 1356 rows in 23 languages with 12 constructs each |
+| #233 separators | #252 | `3,000 minus 12` now gives 2988 |
+| #234 percent arithmetic | #253 | `200 + 10%` now gives 220 |
+| #235 dimensional units | #259 | `10m × 10m` gives 100 m², `2 amperes times 5 ohms` gives 10 V |
+
+Coverage of the grown corpus (from the committed
+[coverage-baseline.json](results/coverage-baseline.json)):
+
+| Corpus | Rows | Supported | Different | Unsupported |
+| --- | ---: | ---: | ---: | ---: |
+| Open-source test suites (fend, Qalculate!, math.js, Numbat, Rink, Insect, kalker, Hurmet, SpeedCrunch) | 7432 | 1294 (17.4%) | 212 | 5926 |
+| Closed-source documentation (Apple, Calca, Frink, Google, Numi, Parsify, Raycast, Soulver, Wolfram\|Alpha) | 5187 | 654 (12.6%) | 25 | 4508 |
+| Multilingual scientific statements (23 languages) | 1356 | 62 (4.6%) | 70 | 1224 |
+| **All** | **13975** | **2010 (14.4%)** | **307** | **11658** |
+
+The overall percentage is lower than in 2026-10-07 because the corpus grew 4.6
+times, mostly with features that are still open (#236 to #245). On the original
+3055 rows the same engine now supports 891 rows (29.2%, up from 640) and returns
+195 silently different values (down from 213). Five of those rows changed from a
+better to a worse status, and each change is deliberate and documented in the
+sub-issue that caused it:
+`0.1 + 5%` (fend adds 5 percentage points; #234 adds 5% of 0.1, see
+[issue-234](../issue-234/README.md)), `4 Metres` and `4 mEtRes` (shown as `4 m`),
+and `cbrt (1kg)` and `sqrt(2m)` (non-integer dimensions are rejected, see
+[issue-235](../issue-235/README.md)).
+
+Every requirement of this issue is therefore covered either by an artifact in
+this directory or by a sub-issue; what remains is the feature work in #236 to
+#245 and the acceptance gate #246.
 
 ## Method
 
@@ -45,12 +92,17 @@ v0.22.0 (`target/release/link-calculator`). The issue body was read in full
 Reproduce:
 
 ```sh
-cargo build --release --bin link-calculator
-node scripts/competitor-coverage.mjs --baseline docs/case-studies/issue-227/results/coverage-baseline.json
-node --test scripts/competitor-coverage.test.mjs
+cargo build --release --locked --bin link-calculator
+node scripts/competitor-coverage.mjs \
+  --baseline docs/case-studies/issue-227/results/coverage-baseline.json \
+  --out ci-logs/competitor-coverage --quiet
+node --test scripts/*.test.mjs
 ```
 
-## Measured state (3055 rows)
+## Initial measurement (2026-10-07, v0.22.0, 3055 rows)
+
+This section records the state the sub-issues were planned from. The current
+numbers are in [Progress since the plan was filed](#progress-since-the-plan-was-filed).
 
 | Source | Rows | Supported | Different | Unsupported |
 | --- | ---: | ---: | ---: | ---: |
