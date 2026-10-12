@@ -31,6 +31,11 @@ pub(super) fn scan(
         } else if (matches!(ch, '.' | '\'' | '’') || (ch == ',' && allow_comma) || is_space(ch))
             && input.get(end + 1).is_some_and(char::is_ascii_digit)
         {
+            // `'` groups exactly three digits; otherwise it is the foot mark
+            // of `6'2"` (issue #235).
+            if matches!(ch, '\'' | '’') && !is_three_digit_group(input, end + 1) {
+                break;
+            }
             if is_space(ch) {
                 // Bound lookahead to four digits. Invalid groups leave a token
                 // boundary, also preserving date parts such as `Jan 17 2027`.
@@ -60,6 +65,15 @@ pub(super) fn scan(
         ))
     })?;
     Ok((normalized, end))
+}
+
+fn is_three_digit_group(input: &[char], start: usize) -> bool {
+    input[start..]
+        .iter()
+        .take(4)
+        .take_while(|ch| ch.is_ascii_digit())
+        .count()
+        == 3
 }
 
 fn is_space(ch: char) -> bool {

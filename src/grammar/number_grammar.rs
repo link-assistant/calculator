@@ -2,7 +2,9 @@
 
 use crate::crypto_api;
 use crate::error::CalculatorError;
-use crate::types::{CurrencyDatabase, DataSizeUnit, Decimal, DurationUnit, MassUnit, Unit};
+use crate::types::{
+    CurrencyDatabase, DataSizeUnit, Decimal, Dimension, DurationUnit, MassUnit, PhysicalUnit, Unit,
+};
 
 /// Grammar for parsing numbers with optional units.
 #[derive(Debug, Default)]
@@ -132,6 +134,18 @@ impl NumberGrammar {
             return Ok((primary, alternatives));
         }
 
+        // Physical units from data/units (issue #235). An uppercase symbol such
+        // as `W`, `H` or `S` is watt, henry or siemens rather than the week,
+        // hour or second the case-insensitive duration names would read.
+        let physical = PhysicalUnit::parse(s);
+        if let Some(unit) = &physical {
+            if s.chars().any(char::is_uppercase)
+                && Some(unit.dimension()) != Dimension::base("time")
+            {
+                return Ok(Self::physical_with_currency(s, unit.clone()));
+            }
+        }
+
         // Try to parse as duration unit (before currency, to avoid e.g. "h" being treated as a currency)
         if let Some(dur) = DurationUnit::parse(s) {
             let duration = Unit::Duration(dur);
@@ -148,6 +162,10 @@ impl NumberGrammar {
                 }
             }
             return Ok((duration, alternatives));
+        }
+
+        if let Some(unit) = physical {
+            return Ok(Self::physical_with_currency(s, unit));
         }
 
         // Try to parse as cryptocurrency or fiat currency alias
@@ -170,6 +188,23 @@ impl NumberGrammar {
             Ok((Unit::None, alternatives))
         } else {
             Ok((Unit::Custom(s.to_string()), alternatives))
+        }
+    }
+
+    /// A physical unit that may also spell a well-known currency: the
+    /// uppercase spelling is the currency, any other spelling the unit.
+    fn physical_with_currency(s: &str, unit: PhysicalUnit) -> (Unit, Vec<Unit>) {
+        let physical = unit.into_unit();
+        let Some(code) =
+            CurrencyDatabase::parse_currency(s).filter(|code| Self::is_well_known_currency(code))
+        else {
+            return (physical, Vec::new());
+        };
+        let currency = Unit::currency(&code);
+        if s.chars().all(|ch| !ch.is_lowercase()) {
+            (currency, vec![physical])
+        } else {
+            (physical, vec![currency])
         }
     }
 

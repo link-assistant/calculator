@@ -1,6 +1,7 @@
 //! Expression parser that combines all grammars.
 
 use crate::error::CalculatorError;
+use crate::grammar::dimensional_functions::{dimensional_power, kelvin_result};
 use crate::grammar::linear_equation;
 use crate::grammar::polynomial_equation;
 use crate::grammar::token_parser::TokenParser;
@@ -34,6 +35,9 @@ pub fn evaluate_power(base_val: &Value, exp_val: &Value) -> Result<Value, Calcul
         return Err(CalculatorError::domain(
             "powers of compound units are not supported",
         ));
+    }
+    if let Some(result) = dimensional_power(base_val, exp_val) {
+        return result;
     }
     // Try exact rational exponentiation first
     if let (Some(base_rat), Some(exp_rat)) = (base_val.to_rational(), exp_val.to_rational()) {
@@ -164,7 +168,7 @@ impl ExpressionParser {
 
     /// Evaluates an expression.
     pub fn evaluate(&mut self, expr: &Expression) -> Result<Value, CalculatorError> {
-        self.evaluate_expr(expr)
+        Ok(kelvin_result(expr, self.evaluate_expr(expr)?))
     }
 
     fn expression_contains_variable(expr: &Expression) -> bool {
@@ -225,7 +229,7 @@ impl ExpressionParser {
 
         steps.push(format!("Input expression: {expr}"));
 
-        let result = self.evaluate_expr_with_steps(expr, &mut steps)?;
+        let result = kelvin_result(expr, self.evaluate_expr_with_steps(expr, &mut steps)?);
 
         steps.push(format!("Final result: {}", result.to_display_string()));
 

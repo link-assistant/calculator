@@ -389,6 +389,9 @@ pub fn evaluate_function_values(name: &str, args: &[Value]) -> Result<Value, Cal
             "functions of compound units are not supported",
         ));
     }
+    if let Some(result) = super::dimensional_functions::dimensional_function(name, args) {
+        return result;
+    }
     if let Some(result) = evaluate_exact_function(name, args) {
         return result;
     }

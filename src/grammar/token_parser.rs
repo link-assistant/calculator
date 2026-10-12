@@ -4,6 +4,7 @@ mod integral;
 mod numbers;
 mod operators;
 mod percentage;
+mod quantities;
 mod units;
 
 use crate::error::CalculatorError;
@@ -311,46 +312,15 @@ impl<'a> TokenParser<'a> {
                     .checked_mul(&multiplier)
                     .ok_or(CalculatorError::Overflow)?;
             }
-            if let Some(unit) = self.consume_speed_unit() {
-                return Ok(Expression::number_with_unit(value, unit));
-            }
-
-            // Check for unit (identifier following number that is not a function)
-            let (unit, alternative_units) =
-                if let Some(TokenKind::Identifier(id)) = self.current_kind() {
-                    // An unknown single-letter identifier is a conventional
-                    // coefficient (`2x` or `2 x`). Established short units
-                    // (`2h`) and multi-letter custom units retain their meaning.
-                    let coefficient_variable =
-                        Self::is_single_letter_variable(id) && !self.identifier_is_known_unit(id);
-                    let ratio_keyword = Self::ratio_keyword(id)
-                        && self.current().is_some_and(|token| token.start > number_end);
-                    if !(is_math_function(id)
-                        || self.peek_is_left_paren()
-                        || coefficient_variable
-                        || ratio_keyword)
-                    {
-                        let (unit, alts) = self
-                            .number_grammar
-                            .parse_unit_with_alternatives(id)
-                            .unwrap_or_else(|_| (Unit::Custom(id.clone()), Vec::new()));
-                        self.advance();
-                        (unit, alts)
-                    } else {
-                        (Unit::None, Vec::new())
-                    }
-                } else {
-                    (Unit::None, Vec::new())
-                };
-
-            if alternative_units.is_empty() {
-                return Ok(Expression::number_with_unit(value, unit));
-            }
-            return Ok(Expression::number_with_unit_alternatives(
-                value,
-                unit,
-                alternative_units,
-            ));
+            let (unit, alternative_units) = self
+                .parse_quantity_unit(number_end)
+                .unwrap_or((Unit::None, Vec::new()));
+            let quantity = if alternative_units.is_empty() {
+                Expression::number_with_unit(value, unit)
+            } else {
+                Expression::number_with_unit_alternatives(value, unit, alternative_units)
+            };
+            return self.parse_compound_quantity(quantity);
         }
 
         // Standalone identifier (could be a function call, unit, variable, or datetime part)
@@ -479,7 +449,10 @@ impl<'a> TokenParser<'a> {
 
         // Preserve established adjacent unit abbreviations like `2h in minutes`.
         // They become SI suffixes only in suffix-before-unit forms like `5h USD`.
-        if self.identifier_is_known_unit(&suffix) && !self.peek_identifier_is_known_unit() {
+        // Of the physical units only metre (`5m`) wins over its prefix (issue
+        // #235), so `5T` and `5G` keep meaning tera and giga.
+        let suffix_is_unit = suffix == "m" || self.identifier_is_legacy_unit(&suffix);
+        if suffix_is_unit && !self.peek_identifier_is_known_unit() {
             return None;
         }
 
@@ -491,6 +464,13 @@ impl<'a> TokenParser<'a> {
         matches!(
             self.number_grammar.parse_unit_with_alternatives(id),
             Ok((unit, _)) if !matches!(unit, Unit::Custom(_) | Unit::None)
+        )
+    }
+
+    fn identifier_is_legacy_unit(&self, id: &str) -> bool {
+        matches!(
+            self.number_grammar.parse_unit_with_alternatives(id),
+            Ok((unit, _)) if !matches!(unit, Unit::Custom(_) | Unit::None | Unit::Physical(_))
         )
     }
 

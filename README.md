@@ -82,10 +82,34 @@ Measured values such as `12,3 ± 4,5` produce **12.3 ± 4.5** with a non-negativ
 absolute uncertainty. Central value and uncertainty must have matching units;
 arithmetic on uncertain values reports an error until propagation is supported.
 German `Mio.` and `Mrd.` scale by one million and one billion, respectively;
-`1,08 Mrd. km/h` produces **1080000000 km/h**. Distance/time spellings such as
-`km/h` are preserved as custom units; this does not add physical unit conversions.
-Matching units can be added or divided, and unitless factors can scale them.
-Powers, mathematical functions, and other unit algebra report an error.
+`1,08 Mrd. km/h` produces **1080000000 km/h**, a physical speed (see below).
+
+### Physical units
+
+Values carry a dimension vector (length, mass, time, current, temperature,
+amount, luminosity, information, angle, currency) and an exact scale. Units
+come from [`data/units/units.lino`](data/units/units.lino): SI base and derived
+units with all prefixes (`µm`, `μm`, `um`, `kΩ`), binary prefixes (`KiB`),
+Imperial/US, electrical, information, angle and temperature units, with
+aliases such as `feet`, `metres`, `м`, `км` and `ч`.
+
+- `*`, `/`, powers and roots combine dimensions: `10m × 10m` = **100 m^2**,
+  `(5 volts) / (2 ohms)` = **2.5 A**, `1 mph * 1 hour` = **1 mi**;
+  `sqrt(2m)` is an error. Addition and comparison require equal dimensions:
+  `2m == 200cm` is **true**.
+- Unit expressions: `299792458 m⋅s−1`, `m·s⁻¹`, `m s^-1`, `km/h`,
+  `km per hour`, `kg·m²/s²`; conversions with `in`/`to`/`as`:
+  `1 ft to cm` = **30.48 cm**, `9.81 m/s² * 70 kg in N` = **686.7 N**.
+- Compound quantities: `5 feet 10 inches in cm` = **177.8 cm**, `6'2"`,
+  `1 meter 20 cm`.
+- Temperatures follow Numbat: `20 celsius` = **293.15 K**,
+  `25 °C in °F` = **77 °F**, and arithmetic on `°C`/`°F` such as `25 °C * 2`
+  is rejected (convert to `K` first).
+- `m` after a number is the metre and `min` the minute; `5m` means minutes
+  only in an explicit time context (`5m in s`, `1h + 5m`, `now + 5m`).
+
+See the [issue #235 case study](docs/case-studies/issue-235/README.md) for the
+design and its documented decisions.
 
 ### DateTime Support
 Supports multiple date and time formats:

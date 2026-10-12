@@ -118,19 +118,14 @@ fn compound_units_are_not_silently_discarded_by_unsupported_algebra() {
     assert_result("4 km/h / 2", "2 km/h");
     assert_result("4 km/h / 2 km/h", "2");
     assert_result("2 km/h + 1 km/h", "3 km/h");
-    for input in [
-        "5 kg * 9.8 m/s^2",
-        "1 kg * (299792458 m/s)^2",
-        "5 kg * 2 km/h",
-        "1 / 2 km/h",
-        "2 km/h / 2 kg",
-        "sqrt(9 km/h)",
-    ] {
-        assert!(
-            !Calculator::new().calculate_internal(input).success,
-            "{input}"
-        );
-    }
+    // Issue #235 gives compound units dimensional algebra; only a root with a
+    // non-integer dimension is still rejected rather than discarded.
+    assert_result("5 kg * 9.8 m/s^2", "49 kg m/s^2");
+    assert_result("1 kg * (299792458 m/s)^2 in J", "89875517873681764 J");
+    assert_result("5 kg * 2 km/h", "10 kg km/h");
+    assert_result("1 / 2 km/h", "0.5 km/h");
+    assert_result("2 km/h / 2 kg", "1 km h^-1 kg^-1");
+    assert!(!Calculator::new().calculate_internal("sqrt(9 km/h)").success);
 }
 
 #[test]

@@ -93,6 +93,9 @@ impl TokenParser<'_> {
                 }
             }
         }
+        if op == BinaryOp::Divide {
+            return super::quantities::divide_into_quantity(left, right);
+        }
         Expression::binary(left, op, right)
     }
 
