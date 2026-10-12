@@ -74,6 +74,8 @@ fn addition_requires_equal_dimensions() {
     assert_result("4m + 0 kg", "4 m");
     assert_error("1 kg + 1 m", "cannot add");
     assert_error("1 m - 1 s^2", "subtract");
+    // A plain number takes the unit, as `5 USD + 3` gives `8 USD`.
+    assert_result("2 m + 3", "5 m");
     assert_result("2m == 200cm", "true");
     assert_result("1 km > 999 m", "true");
 }

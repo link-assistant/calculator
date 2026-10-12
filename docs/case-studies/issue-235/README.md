@@ -145,6 +145,10 @@ code (`PI`, `SEK`) remains a currency, so `2 pi` is still `2π`.
   issue requires, it is now the metre. Before another unit it is still milli
   (`500m USD` → `0.5 USD`), and every `issue_162_si_suffix_tests` case passes
   unchanged.
+- A plain number added to a quantity takes the quantity's unit
+  (`2 m + 3` → `5 m`), as it already does for currencies, durations and mass
+  (`5 USD + 3` → `8 USD`). Numbat rejects this. Two quantities of different
+  dimensions are always rejected (`1 kg + 1 m`).
 - `10 meters + 20%` is displayed as `12 m` instead of the custom-unit spelling
   `12 meters`.
 - `128 bit` keeps the unit the user wrote. Rink prints `16 byte`; here
