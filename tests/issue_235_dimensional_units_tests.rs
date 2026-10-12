@@ -108,6 +108,12 @@ fn si_prefixes_include_micro_spellings() {
     assert_result("2 mA * 3 kΩ", "6 V");
     assert_result("1 GiB in MB", "1073.741824 MB");
     assert_result("1 KiB in bit", "8192 bit");
+    // `pm` and `as` are reserved for times and keywords but remain the
+    // canonical symbols of picometre and attosecond.
+    assert_result("2 picometers", "2 pm");
+    assert_result("2 picometres in nm", "0.002 nm");
+    assert_result("1 attosecond in fs", "0.001 fs");
+    assert_result("2 pm", "14:00:00 UTC");
 }
 
 #[test]

@@ -161,6 +161,19 @@ pub fn lookup_unit(name: &str) -> Option<ResolvedUnit> {
     })
 }
 
+/// Looks up a canonical symbol produced by [`lookup_unit`], including
+/// prefixed symbols that are reserved as typed words (`pm`, `am`).
+#[must_use]
+pub fn lookup_symbol(symbol: &str) -> Option<ResolvedUnit> {
+    let database = units();
+    let (index, symbol, factor) = database.resolve_unreserved(symbol)?;
+    Some(ResolvedUnit {
+        def: &database.units[index],
+        symbol,
+        factor,
+    })
+}
+
 /// Returns the coherent named unit (`N`, `J`, `V`, …) of a dimension.
 #[must_use]
 pub fn named_unit_for(dimension: &Dimension) -> Option<&'static str> {
@@ -198,6 +211,16 @@ impl UnitDatabase {
         }
         if self.reserved.iter().any(|reserved| reserved == name) {
             return None;
+        }
+        self.resolve_unreserved(name)
+    }
+
+    /// Resolves a name without the reserved-word check, so the canonical
+    /// symbol `pm` of `picometres` still resolves.
+    fn resolve_unreserved(&self, name: &str) -> Option<(usize, String, Rational)> {
+        if let Some(&index) = self.exact.get(name) {
+            let def = &self.units[index];
+            return Some((index, def.symbol.clone(), def.factor.clone()));
         }
         self.resolve_symbol_prefix(name)
             .or_else(|| self.resolve_word_prefix(&name.to_lowercase()))

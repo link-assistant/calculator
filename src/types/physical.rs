@@ -7,7 +7,7 @@
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
-use super::unit_db::{lookup_unit, named_unit_for, ResolvedUnit};
+use super::unit_db::{lookup_symbol, lookup_unit, named_unit_for, ResolvedUnit};
 use super::{DataSizeUnit, Dimension, DurationUnit, MassUnit, Rational, Unit};
 
 /// One `symbol^power` factor of a unit product.
@@ -27,7 +27,7 @@ pub struct PhysicalUnit {
 
 impl UnitTerm {
     fn resolved(&self) -> ResolvedUnit {
-        lookup_unit(&self.symbol).expect("unit terms hold canonical database symbols")
+        lookup_symbol(&self.symbol).expect("unit terms hold canonical database symbols")
     }
 
     fn dimension(&self) -> Dimension {
