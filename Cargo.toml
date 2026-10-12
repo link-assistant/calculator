@@ -19,6 +19,7 @@ include = [
     "/examples/**",
     "/data/currency/*.lino",
     "/data/words/*.lino",
+    "/data/units/*.lino",
     "/build.rs",
     "/Cargo.toml",
     "/Cargo.lock",
