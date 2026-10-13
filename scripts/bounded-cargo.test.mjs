@@ -134,7 +134,8 @@ test('runs cargo against the configured target directory and releases the lock',
     const result = spawnSync(process.execPath, [script, '--version'], {
       encoding: 'utf8',
       timeout: 15000,
-      env: { ...process.env, CALCULATOR_CARGO_TARGET_DIR: target, BOUNDED_CARGO_VERBOSE: '1' },
+      // CI sets CALCULATOR_CARGO_JOBS for the Rust stage; pin it here.
+      env: { ...process.env, CALCULATOR_CARGO_TARGET_DIR: target, CALCULATOR_CARGO_JOBS: '2', BOUNDED_CARGO_VERBOSE: '1' },
     });
     if (result.error?.code === 'ENOENT') {
       return;
