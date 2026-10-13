@@ -44,6 +44,7 @@ request reopened them.
 | [`data/reopen-repro.txt`](data/reopen-repro.txt) | [`experiments/issue-258/reopen-repro.mjs`](../../../experiments/issue-258/reopen-repro.mjs) before and after the fix |
 | [`data/hive-mind-dashboard-selection-repro.txt`](data/hive-mind-dashboard-selection-repro.txt) | [`experiments/issue-258/hive-mind-dashboard-selection-repro.mjs`](../../../experiments/issue-258/hive-mind-dashboard-selection-repro.mjs): hive-mind's own selection code produces #260's closing block |
 | [`data/dry-run-after.log`](data/dry-run-after.log) | `node scripts/update-coverage-gap-issue.mjs --dry-run --verbose` against the live repository after the fix |
+| [`data/hive-mind-3176-body.md`](data/hive-mind-3176-body.md) | The upstream report as filed |
 
 ## Timeline (UTC)
 
@@ -190,4 +191,18 @@ node --test scripts/update-coverage-gap-issue.test.mjs
 
 ## Upstream
 
-<!-- Filled after filing. -->
+- [link-assistant/hive-mind#3176](https://github.com/link-assistant/hive-mind/issues/3176):
+  repository mode selects bot-maintained status issues as work, with no way
+  to exclude them. It includes the reproduction, the workarounds (this PR's
+  no-reopen update; closing the page as "not planned"; solving issues one by
+  one) and a suggested fix: skip issues by label or a `<!-- hive-mind:skip -->`
+  marker through the existing `exclude` option, treat bot-authored issues as
+  opt-in, list skipped issues in the combined issue, and tests. The filed body
+  is in [`data/hive-mind-3176-body.md`](data/hive-mind-3176-body.md). Checked
+  against hive-mind `main` on 2026-10-13, which was still `ed6a155`.
+- [link-assistant/hive-mind#3174](https://github.com/link-assistant/hive-mind/issues/3174)
+  (filed for #247) is the other half: its post-session link repair would re-add
+  `Fixes #258` even if an agent removed it.
+
+No other tool needs a report. The GitHub behaviour (PATCH changes only the
+fields sent) and the actions above work as documented.
