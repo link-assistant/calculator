@@ -223,6 +223,12 @@ jobs:
       - name: Run doc tests
         run: node scripts/bounded-cargo.mjs test --doc --verbose
 
+      # tests/parity_goldens.rs above checks Rust against parity/goldens; the
+      # JavaScript engine must match the same goldens (issue #254). The
+      # checker has no npm dependencies.
+      - name: Check JavaScript parity with the Rust goldens
+        run: node js/scripts/check-parity.mjs
+
   # === COMPETITOR COVERAGE ===
   coverage:
     name: Competitor Coverage

@@ -330,6 +330,17 @@ jobs:
         if: matrix.runtime == 'bun'
         run: bun --bun x vitest run
 
+      # Every input of parity/corpus.json against the Rust goldens.
+      - name: Check parity with the Rust goldens
+        env:
+          RUNTIME: ${{ matrix.runtime == 'bun' && 'bun' || 'node' }}
+        run: '"$RUNTIME" scripts/check-parity.mjs'
+
+      - name: Smoke test the package entries
+        env:
+          RUNTIME: ${{ matrix.runtime == 'bun' && 'bun' || 'node' }}
+        run: '"$RUNTIME" scripts/smoke.mjs'
+
   # === MANUAL CHANGELOG PR ===
   changelog-pr:
     name: Create Changelog PR
