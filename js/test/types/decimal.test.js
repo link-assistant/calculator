@@ -81,7 +81,7 @@ describe('Decimal wrapper semantics', () => {
     expect(/** @type {Err} */ (e).error).toBeInstanceOf(DecimalError);
     expect(String(/** @type {Err} */ (e).error)).toBe('Invalid decimal: unknown character');
     const s = thrown(() => Decimal.fromScientific('1e29'));
-    expect(/** @type {Err} */ (s).error.fmtDebug()).toBe('ScaleExceedsMaximumPrecision(29)');
+    expect(/** @type {DecimalError} */ (/** @type {Err} */ (s).error).fmtDebug()).toBe('ScaleExceedsMaximumPrecision(29)');
   });
 
   test('floats', () => {
