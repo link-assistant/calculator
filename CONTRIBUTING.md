@@ -257,6 +257,19 @@ CALCULATOR_CARGO_TARGET_DIR=$HOME/.cache/calculator-target \
   node scripts/bounded-cargo.mjs clippy --all-targets --all-features
 ```
 
+## Multi-Agent Work
+
+When several agents work on one change, drafting sub-agents never push. One
+CI/CD sub-agent owns `git push` and pushes once, after collecting all failures
+of the latest run and never while a run is in progress on the same commit
+range. [AGENTS.md](AGENTS.md) has the full rules; the gate is a script:
+
+```bash
+# Exit 1 while a run on this branch's commits is queued or in progress;
+# otherwise save the failed-job logs of the latest pushed commit to ci-logs/.
+node scripts/ci-push-gate.mjs --verbose
+```
+
 ## Pull Request Process
 
 1. Ensure all tests pass locally
