@@ -24,34 +24,17 @@ env:
   GIT_CONFIG_VALUE_0: main
 
 jobs:
-  cargo-audit:
-    name: Cargo audit
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    concurrency:
-      group: check-${{ github.workflow }}-${{ github.ref }}-cargo-audit
-      cancel-in-progress: true
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-
-      - uses: taiki-e/install-action@ab6895351a88b908e96a4697860d4ffea5e57dbe # v2.87.27
-        with:
-          tool: cargo-audit@0.22.2
-
-      - name: Audit committed Cargo.lock
-        # unmaintained, unsound and yanked advisories are warnings, which leave
-        # cargo audit's exit status at 0 while it prints them.
-        run: cargo audit --file Cargo.lock --deny warnings
-
   npm-audit:
-    name: npm audit (web)
+    name: npm audit (${{ matrix.package }})
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     concurrency:
-      group: check-${{ github.workflow }}-${{ github.ref }}-npm-audit
+      group: check-${{ github.workflow }}-${{ github.ref }}-npm-audit-${{ matrix.package }}
       cancel-in-progress: true
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [js, web]
     steps:
       - uses: actions/checkout@v7
         with:
@@ -62,7 +45,7 @@ jobs:
           node-version: '24.x'
 
       - name: Audit committed package-lock.json
-        working-directory: web
+        working-directory: ${{ matrix.package }}
         run: npm audit --package-lock-only --audit-level=high
 
   codeql:
@@ -78,7 +61,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [actions, javascript-typescript, python, rust]
+        # rust runs in rust.yml, behind the JavaScript stage (issue #254).
+        language: [actions, javascript-typescript, python]
     steps:
       - uses: actions/checkout@v7
         with:
@@ -111,7 +95,7 @@ jobs:
       # The action fails with "Dependency review is not supported on this
       # repository" while the repository's Dependency graph setting is off
       # (run 38166546592). That is a setting, not a defect in the PR, and
-      # cargo audit and npm audit above still gate known vulnerabilities, so
+      # cargo audit (rust.yml) and npm audit above still gate known vulnerabilities, so
       # warn until it is enabled. The SBOM endpoint answers 404 exactly then;
       # any other unexpected status fails closed.
       - name: Check that the dependency graph is enabled
@@ -144,7 +128,6 @@ jobs:
   pipeline-status:
     name: Pipeline Status
     needs:
-      - cargo-audit
       - npm-audit
       - codeql
       - dependency-review

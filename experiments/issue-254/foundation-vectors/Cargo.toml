@@ -1,0 +1,21 @@
+# Prints what the Rust sources ported to js/src/error.js, js/src/utils.js,
+# js/src/types/dimension.js and js/src/grammar/locale_numbers.js produce, so
+# the JavaScript port can be compared with them (issue #254). The modules are
+# included from src/ with #[path], unchanged.
+#
+#   node scripts/bounded-cargo.mjs run --offline \
+#     --manifest-path experiments/issue-254/foundation-vectors/Cargo.toml \
+#     > /tmp/foundation-vectors.json
+#   node experiments/issue-254/foundation-compare.mjs /tmp/foundation-vectors.json
+[package]
+name = "foundation-vectors"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[workspace]
+
+[dependencies]
+thiserror = "=2.0.21"
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = "=1.0.154"

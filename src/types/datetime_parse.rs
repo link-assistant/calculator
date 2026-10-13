@@ -4,7 +4,7 @@
 //! timezones, and natural-language date strings.
 
 use chrono::Datelike;
-use chrono::{FixedOffset, NaiveDate, NaiveTime, Utc};
+use chrono::{FixedOffset, NaiveDate, NaiveTime};
 use regex;
 
 fn normalize_tz_abbreviation(tz: &str) -> String {
@@ -371,7 +371,7 @@ pub(super) fn normalize_month_name(input: &str) -> String {
 /// Parses a partial date (month + day, no year) using the current year.
 pub(super) fn parse_partial_date(input: &str) -> Option<NaiveDate> {
     let normalized = normalize_month_name(input);
-    let current_year = Utc::now().year();
+    let current_year = crate::clock::now().year();
 
     // "Jan 27" or "January 27"
     if let Ok(md) = NaiveDate::parse_from_str(&format!("{normalized} {current_year}"), "%b %d %Y") {

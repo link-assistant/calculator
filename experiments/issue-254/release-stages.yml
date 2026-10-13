@@ -1,0 +1,78 @@
+
+  # === JAVASCRIPT STAGE ===
+  # Terminal status gate of the JavaScript jobs (issue #256's pipeline-status
+  # pattern): a job skipped by a failed ancestor, or killed by timeout-minutes
+  # (reported as "cancelled"), fails this required check.
+  javascript-stage:
+    name: JavaScript Stage
+    needs:
+      - detect-changes
+      - changelog
+      - version-check
+      - secrets-scan
+      - scripts
+      - js-lint
+      - js-test
+      - changelog-pr
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Check aggregate pipeline status
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          # Used to tell a cancelled-but-superseded run (expected churn) from a
+          # cancelled run that was still the branch head (a hidden timeout).
+          # On pull_request, github.sha is the synthetic merge commit and ref_name
+          # is <n>/merge, neither of which a superseding push moves; compare
+          # the PR head instead so superseded PR runs are recognised.
+          RUN_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          BRANCH_REF: ${{ github.head_ref || github.ref_name }}
+        run: bash scripts/check-pipeline-status.sh
+
+  # === RUST STAGE ===
+  # Starts only when every JavaScript job passed (issue #254). It needs each of
+  # them directly, not only the gate: the gate excuses a superseded run's
+  # cancelled jobs, and a superseded commit must not build Rust. The group
+  # queues per branch and never cancels, so a new push waits for the running
+  # Rust stage instead of killing it.
+  rust-stage:
+    name: Rust Stage
+    needs:
+      - detect-changes
+      - changelog
+      - version-check
+      - secrets-scan
+      - scripts
+      - js-lint
+      - js-test
+      - javascript-stage
+    if: |
+      !cancelled() &&
+      needs.javascript-stage.result == 'success' &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled') &&
+      inputs.release_mode != 'changelog-pr'
+    concurrency:
+      group: rust-${{ github.ref }}
+      cancel-in-progress: false
+    uses: ./.github/workflows/rust.yml
+    # The union of what the called jobs escalate to; each job there still
+    # declares its own narrower permissions.
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+      issues: write
+      security-events: write
+      actions: read
+    secrets: inherit
+    with:
+      release_mode: ${{ inputs.release_mode }}
+      bump_type: ${{ inputs.bump_type }}
+      description: ${{ inputs.description }}
+      any_code_changed: ${{ needs.detect-changes.outputs.any-code-changed }}

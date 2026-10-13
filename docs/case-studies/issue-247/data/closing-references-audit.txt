@@ -1,0 +1,14 @@
+#228 closed merged=true closes=19 errors=29 Case study and sub-issue plan for competitor parity in natur
+    closes-only #229 has a closing keyword, but line 65 says this PR closes only #227: "Merging this PR closes only #227.".
+    closes-only #230 has a closing keyword, but line 65 says this PR closes only #227: "Merging this PR closes only #227.".
+    closes-only #231 has a closing keyword, but line 65 says this PR closes only #227: "Merging this PR closes only #227.".
+    closes-only #232 has a closing keyword, but line 65 says this PR closes only #227: "Merging this PR closes only #227.".
+#82 closed merged=true closes=1 errors=4 feat: add date/time features - now, until, UTC time, elapsed
+    missing-keyword "Fixes #36, #34, #23, #68, #45" does not close #34: GitHub needs one keyword per issue ("Fixes #34").
+    missing-keyword "Fixes #36, #34, #23, #68, #45" does not close #23: GitHub needs one keyword per issue ("Fixes #23").
+    missing-keyword "Fixes #36, #34, #23, #68, #45" does not close #68: GitHub needs one keyword per issue ("Fixes #68").
+    missing-keyword "Fixes #36, #34, #23, #68, #45" does not close #45: GitHub needs one keyword per issue ("Fixes #45").
+#61 closed merged=true closes=2 errors=2 feat: fix currency issues #51, #52, #53 (parent #54)
+    missing-keyword "Fixes #51, #52, #53" does not close #52: GitHub needs one keyword per issue ("Fixes #52").
+    missing-keyword "Fixes #51, #52, #53" does not close #53: GitHub needs one keyword per issue ("Fixes #53").
+flagged 3 of 117

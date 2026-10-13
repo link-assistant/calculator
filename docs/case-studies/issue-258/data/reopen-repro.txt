@@ -1,0 +1,8 @@
+## before (745c4345)
+PATCH repos/link-assistant/calculator/issues/258 state=open
+REOPENS the closed report
+
+## after
+Updating #258 (closed); its state is kept, a closed report is not reopened.
+PATCH repos/link-assistant/calculator/issues/258 state=(unchanged)
+keeps the closed report closed

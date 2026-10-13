@@ -66,17 +66,17 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
         "sin" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            checked_decimal(x.sin())
+            checked_decimal(libm::sin(x))
         }
         "cos" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            checked_decimal(x.cos())
+            checked_decimal(libm::cos(x))
         }
         "tan" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            let result = x.tan();
+            let result = libm::tan(x);
             if result.is_infinite() || result.is_nan() {
                 return Err(CalculatorError::domain("tan is undefined at this value"));
             }
@@ -88,7 +88,7 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
             if !(-1.0..=1.0).contains(&x) {
                 return Err(CalculatorError::domain("asin argument must be in [-1, 1]"));
             }
-            checked_decimal(x.asin())
+            checked_decimal(libm::asin(x))
         }
         "acos" => {
             check_arg_count(&name_lower, args, 1)?;
@@ -96,42 +96,42 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
             if !(-1.0..=1.0).contains(&x) {
                 return Err(CalculatorError::domain("acos argument must be in [-1, 1]"));
             }
-            checked_decimal(x.acos())
+            checked_decimal(libm::acos(x))
         }
         "atan" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            checked_decimal(x.atan())
+            checked_decimal(libm::atan(x))
         }
         "atan2" => {
             check_arg_count(&name_lower, args, 2)?;
             let y = args[0].to_f64();
             let x = args[1].to_f64();
-            checked_decimal(y.atan2(x))
+            checked_decimal(libm::atan2(y, x))
         }
 
         // Hyperbolic functions
         "sinh" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            checked_decimal(x.sinh())
+            checked_decimal(libm::sinh(x))
         }
         "cosh" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            checked_decimal(x.cosh())
+            checked_decimal(libm::cosh(x))
         }
         "tanh" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            checked_decimal(x.tanh())
+            checked_decimal(libm::tanh(x))
         }
 
         // Exponential and logarithmic
         "exp" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            let result = x.exp();
+            let result = libm::exp(x);
             if result.is_infinite() {
                 return Err(CalculatorError::Overflow);
             }
@@ -143,7 +143,7 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
             if x <= 0.0 {
                 return Err(CalculatorError::domain("ln argument must be positive"));
             }
-            checked_decimal(x.ln())
+            checked_decimal(libm::log(x))
         }
         "log" => {
             // log(x) is log base 10, log(x, base) is log base `base`
@@ -165,9 +165,9 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
                         "log base must be positive and not 1",
                     ));
                 }
-                checked_decimal(x.log(base))
+                checked_decimal(libm::log(x) / libm::log(base))
             } else {
-                checked_decimal(x.log10())
+                checked_decimal(libm::log10(x))
             }
         }
         "log2" => {
@@ -176,7 +176,7 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
             if x <= 0.0 {
                 return Err(CalculatorError::domain("log2 argument must be positive"));
             }
-            checked_decimal(x.log2())
+            checked_decimal(libm::log2(x))
         }
         "log10" => {
             check_arg_count(&name_lower, args, 1)?;
@@ -184,13 +184,13 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
             if x <= 0.0 {
                 return Err(CalculatorError::domain("log10 argument must be positive"));
             }
-            checked_decimal(x.log10())
+            checked_decimal(libm::log10(x))
         }
         "pow" => {
             check_arg_count(&name_lower, args, 2)?;
             let base = args[0].to_f64();
             let exp = args[1].to_f64();
-            let result = base.powf(exp);
+            let result = libm::pow(base, exp);
             if result.is_nan() {
                 return Err(CalculatorError::domain(
                     "pow result is undefined (e.g., negative base with fractional exponent)",
@@ -216,7 +216,7 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
         "cbrt" => {
             check_arg_count(&name_lower, args, 1)?;
             let x = args[0].to_f64();
-            checked_decimal(x.cbrt())
+            checked_decimal(libm::cbrt(x))
         }
         "abs" => {
             check_arg_count(&name_lower, args, 1)?;
@@ -612,7 +612,7 @@ mod tests {
     #[test]
     fn test_integrate_sin() {
         // Integral of sin(x) from 0 to pi should be 2
-        let result = integrate(f64::sin, 0.0, std::f64::consts::PI);
+        let result = integrate(libm::sin, 0.0, std::f64::consts::PI);
         assert!(approx_eq(result, 2.0, 1e-6));
     }
 

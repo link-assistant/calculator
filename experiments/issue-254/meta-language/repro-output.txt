@@ -1,0 +1,19 @@
+A_module_doc_comment: comment:carried(comment the target cannot hold) comment:translated export_statement:translated
+A_typedef_import_comment: comment:carried(comment the target cannot hold) comment:translated export_statement:translated
+B_union_number_bigint: comment:carried(unsupported) export_statement:carried(unsupported) | JSDoc type {number | bigint}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..51
+B_string_literal_union: comment:carried(unsupported) export_statement:carried(unsupported) | JSDoc type {'Hours' | 'Minutes'}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..58
+B_number_literal_union: comment:carried(unsupported) export_statement:carried(unsupported) | JSDoc type {-1 | 0 | 1}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..64
+C_import_type: comment:carried(unsupported) export_statement:carried(unsupported) | JSDoc type {import('./m.js').Thing}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..58
+C_never: comment:carried(type) export_statement:carried(type) | unknown type crate.never at 0..41
+D_bitwise: comment:carried(unsupported) export_statement:carried(unsupported) | bitwise &: bitwise operators are outside the portable core at 77..78
+D_shift: comment:carried(unsupported) export_statement:carried(unsupported) | shift >>>: bit shifts are outside the portable core at 76..79
+D_bigint_shift: comment:carried(unsupported) export_statement:carried(unsupported) | shift >>: bit shifts are outside the portable core at 79..81
+E_pow: export_statement:carried(unsupported) | exponentiation: powers are outside the portable core; use recursion at 26..28
+E_pow_number: comment:carried(unsupported) export_statement:carried(unsupported) | exponentiation: powers are outside the portable core; use recursion at 76..78
+F_BigInt_call: comment:carried(unsupported) export_statement:carried(unsupported) | BigInt: the JavaScript standard library is outside the portable core at 75..84
+F_Number_call: comment:carried(unsupported) export_statement:carried(unsupported) | Number: the JavaScript standard library is outside the portable core at 75..84
+F_toString_radix: comment:carried(unsupported) export_statement:carried(unsupported) | toString with a radix: only decimal text is portable at 77..89
+G_reexport: export_statement:carried(unsupported) | export "{": only function and const declarations are exported at 0..7
+G_reexport_star: export_statement:carried(unsupported) | export "*": only function and const declarations are exported at 0..7
+H_module_state: lexical_declaration:carried(top-level statement) comment:carried(unsupported) export_statement:carried(unsupported) | assignment of cache: only local variables declared with let, and parameters, are assignable at 65..73
+I_destructured_param: comment:carried(unsupported) export_statement:carried(unsupported) | destructured parameter: name each parameter at 79..80

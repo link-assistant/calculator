@@ -1,0 +1,7255 @@
+[
+ {
+  "module": "rust/fmt.js",
+  "ms": 5526,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/core.js",
+  "ms": 8563,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "syntax"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "syntax"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/chrono/delta.js",
+  "ms": 16524,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/str.js",
+  "ms": 19851,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "function_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "function_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "syntax"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "syntax"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "type"
+   }
+  ]
+ },
+ {
+  "module": "rust/chrono/strftime.js",
+  "ms": 12787,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/chrono/util.js",
+  "ms": 1825,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/chrono/formatting.js",
+  "ms": 15270,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "class_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "function_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/chrono/time.js",
+  "ms": 10757,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/chrono/offset.js",
+  "ms": 12828,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "class_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "class_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/chrono/parse.js",
+  "ms": 33600,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "function_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/chrono/datetime.js",
+  "ms": 8754,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/chrono/date.js",
+  "ms": 15612,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "export_statement",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "export_statement",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "function_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "function_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/chrono.js",
+  "ms": 140,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "clock.js",
+  "ms": 233,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "error.js",
+  "ms": 13639,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "generated/arithmetic-words-lino.js",
+  "ms": 93,
+  "items": [
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "export_statement",
+    "status": "translated",
+    "reason": null
+   }
+  ]
+ },
+ {
+  "module": "generated/bundled-rates.js",
+  "ms": 2999,
+  "items": [
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "type"
+   }
+  ]
+ },
+ {
+  "module": "generated/units-lino.js",
+  "ms": 114,
+  "items": [
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "export_statement",
+    "status": "translated",
+    "reason": null
+   }
+  ]
+ },
+ {
+  "module": "rust/num.js",
+  "ms": 12181,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "export_statement",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "export_statement",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "export_statement",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "export_statement",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "export_statement",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "export_statement",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "export_statement",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "export_statement",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "grammar/locale_numbers.js",
+  "ms": 17421,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "function_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/decimal.js",
+  "ms": 49515,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "function_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "function_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/libm/bits.js",
+  "ms": 4838,
+  "items": [
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "syntax"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "syntax"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/libm/atrig.js",
+  "ms": 12602,
+  "items": [
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/libm/fma.js",
+  "ms": 9467,
+  "items": [
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/libm/cbrt.js",
+  "ms": 6912,
+  "items": [
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/libm/exp.js",
+  "ms": 11367,
+  "items": [
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/libm/log.js",
+  "ms": 6196,
+  "items": [
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/libm/pow.js",
+  "ms": 15203,
+  "items": [
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/libm/rem_pio2.js",
+  "ms": 18852,
+  "items": [
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/libm/trig.js",
+  "ms": 7202,
+  "items": [
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "rust/libm.js",
+  "ms": 277,
+  "items": [
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "export_statement",
+    "status": "translated",
+    "reason": null
+   }
+  ]
+ },
+ {
+  "module": "rust/ratio.js",
+  "ms": 23634,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "export_statement",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "export_statement",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "export_statement",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "syntax"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "comment",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "types/currency.js",
+  "ms": 28672,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "syntax"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "syntax"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "syntax"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "syntax"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "types/datetime_parse.js",
+  "ms": 22979,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "types/datetime.js",
+  "ms": 30537,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "types/decimal.js",
+  "ms": 4275,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "types/dimension.js",
+  "ms": 3117,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "export_statement",
+    "status": "translated",
+    "reason": null
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "types/rational.js",
+  "ms": 22541,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "types/unit_db.js",
+  "ms": 29040,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "class_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "types/unit.js",
+  "ms": 27007,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "types/physical.js",
+  "ms": 16684,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "lexical_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "types/value/kind.js",
+  "ms": 5286,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ },
+ {
+  "module": "utils.js",
+  "ms": 1534,
+  "items": [
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "comment the target cannot hold"
+   },
+   {
+    "term": "import_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "type"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "export_statement",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "comment",
+    "status": "carried",
+    "reason": "unsupported"
+   },
+   {
+    "term": "function_declaration",
+    "status": "carried",
+    "reason": "unsupported"
+   }
+  ]
+ }
+]

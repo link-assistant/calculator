@@ -1,0 +1,5 @@
+# Generated translator sources; regenerate with the commands in README.md.
+# The report.json and census.json summaries stay committed.
+/head/**/*.rs
+/head-all/**/*.rs
+/v1.0.0/**/*.rs

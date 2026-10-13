@@ -30,9 +30,4 @@ export default defineConfig({
       allow: [path.resolve(import.meta.dirname, '..')],
     },
   },
-  resolve: {
-    alias: {
-      '@wasm': path.resolve(import.meta.dirname, 'pkg'),
-    },
-  },
 });
