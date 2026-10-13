@@ -1,5 +1,7 @@
 # libm: generic `fma` drops the sticky bit after shifting `x * y`, so `f64::mul_add` on wasm32 is not correctly rounded
 
+Filed as https://github.com/rust-lang/compiler-builtins/issues/1353 on 2026-10-13.
+
 ## Summary
 
 `libm::generic::fma_round` (behind `libm::fma`, `libm::fmaf128`, and the `fma`
