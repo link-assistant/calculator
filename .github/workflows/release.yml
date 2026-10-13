@@ -199,6 +199,14 @@ jobs:
       - name: Check that Rust runs only behind the JavaScript stage
         run: node scripts/check-javascript-first.mjs
 
+      # Warns on pull requests and fails on main until an admin applies
+      # .github/main-ruleset.json, so both stages become required checks.
+      - name: Check that main requires both CI stages
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RULESET_STRICT: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: node scripts/check-branch-ruleset.mjs
+
       - name: Check file size limit
         run: node scripts/check-file-size.mjs
 
