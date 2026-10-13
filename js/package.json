@@ -1,0 +1,34 @@
+{
+  "name": "link-calculator",
+  "version": "0.24.0",
+  "private": true,
+  "description": "Native JavaScript implementation of the Link Calculator engine (Node 20+, Bun and browsers, no WASM)",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js",
+    "./wasm": "./src/wasm.js"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "lint": "eslint --max-warnings 0 .",
+    "typecheck": "tsc -p jsconfig.json",
+    "test": "vitest run",
+    "parity": "node scripts/check-parity.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "generate": "node scripts/generate-data.mjs",
+    "check": "npm run lint && npm run typecheck && npm test && npm run parity"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.5",
+    "eslint": "^10.12.0",
+    "globals": "^17.13.0",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.4"
+  }
+}
