@@ -28,6 +28,8 @@ Data collected for this study:
 | 2026-10-13 | Porting libm's `fma` exposed a sticky-bit bug in the generic soft-float path that `f64::mul_add` hits on wasm32: filed as rust-lang/compiler-builtins#1353 ([report](upstream/compiler-builtins-fma-sticky.md)). |
 | 2026-10-13 | CI split: `release.yml` keeps only JavaScript jobs and calls `rust.yml` from one gated `rust-stage` job; `check-javascript-first.mjs` enforces it. |
 | 2026-10-13 | First run of the split pipeline: JavaScript stage green; the Rust stage's fresh-merge simulation failed because `CALCULATOR_CARGO_JOBS=4` from the Rust stage leaked into a script test that expected the local default of 2. Fixed by pinning the variable in the test. |
+| 2026-10-13 | Port complete: lexer, parsers, grammars, `Calculator` and the WASM-compatible API; `npm run parity` matches all 2474 goldens on Node.js and Bun. |
+| 2026-10-13 | `web/` switches from the WASM build to `link-calculator/wasm`; the Web Build job (with Playwright) moves into the JavaScript stage. |
 
 ## Requirements and Solutions
 
@@ -62,7 +64,17 @@ calculator's own Rust sources unchanged, so the vectors are the Rust results.
 `parity/corpus.json` (2279 inputs extracted from tests and docs) and
 `parity/goldens/*.json` (Rust results at a fixed clock and rate cutoff) are the
 end-to-end parity manifest: `tests/parity_goldens.rs` checks the Rust side and
-`npm run parity` in `js/` checks the JavaScript side.
+`npm run parity` in `js/` checks the JavaScript side (2474 of 2474 cases match,
+run by the JS Test jobs on Node.js 20, 24 and Bun, and again by the Rust stage's
+test job).
+
+`web/src/worker.ts` now imports `link-calculator/wasm`, which exposes the API of
+`src/wasm.rs` (snake_case names with camelCase aliases), so the web app no
+longer needs Rust or wasm-pack. `rust.yml` keeps a `WASM Build` job so the
+bindings still compile.
+
+Found while porting, out of scope: `Rational::from_f64` panics for magnitudes
+beyond the `i128` range (for example `1e39`); left for a follow-up issue.
 
 ### R2. Rust generated from JavaScript
 
