@@ -287,10 +287,23 @@ Include the coverage improvement and any intentional corpus changes in the PR
 description. Do not refresh the baseline to hide a regression. Corpus and
 baseline changes also trigger the CI pipeline.
 
-The Coverage Gap Report workflow runs every Monday at 06:00 UTC (and can be
-dispatched manually). It regenerates the full report artifact and creates or
-updates one **Coverage gap report** issue with the source and language tables,
-the measured commit, and a link to the workflow run.
+The Coverage Gap Report workflow runs every Monday at 06:00 UTC, whenever the
+baseline changes on `main`, and on manual dispatch. It regenerates the full
+report artifact and creates or updates one **Coverage gap report** issue with
+the source and language tables, the measured commit, a link to the workflow
+run and the open sub-issues of #227 that implement the missing features. The
+same tables are in the run's job summary.
+
+The report issue is a status page, not a work item. The workflow never reopens
+it, so it can be closed (for example by a pull request that addresses every
+open issue) and is still updated in place (#258). Work on the gaps through the
+sub-issues of #227. The workflow fails only when gaps remain and none of those
+sub-issues is open: then open one for the next missing feature. Preview the
+issue body without changing anything:
+
+```bash
+node scripts/update-coverage-gap-issue.mjs --dry-run --verbose
+```
 
 ## Changelog Management
 

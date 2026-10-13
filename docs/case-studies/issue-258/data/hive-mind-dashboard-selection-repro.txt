@@ -1,0 +1,10 @@
+selected: #247, #254, #258
+the bot-maintained status issue #258 is selected as work (no label, author or marker filter)
+## Required closing references in the pull request description
+
+```
+Fixes #247
+Fixes #254
+Fixes #258
+```
+the combined issue requires `Fixes #258`; the next scheduled run reopened it (before calculator#261), so the next /solve run picks it up again

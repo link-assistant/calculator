@@ -4,6 +4,12 @@ on:
   schedule:
     # Every Monday at 06:00 UTC.
     - cron: '0 6 * * 1'
+  # Refresh as soon as a merged PR moves the baseline, so the issue does not
+  # show last week's numbers (issue #258 showed 13.3% after #235 reached 14.4%).
+  push:
+    branches: [main]
+    paths:
+      - docs/case-studies/issue-227/results/coverage-baseline.json
   workflow_dispatch:
 
 concurrency:
@@ -73,7 +79,11 @@ jobs:
           path: docs/case-studies/issue-227/results/coverage-report.md
           retention-days: 14
 
+      # Updates the issue without reopening it: it is a status page, and a
+      # weekly reopen made it a perpetual work item for automated solvers
+      # (issue #258). Also writes the tables to the job summary, and fails
+      # only when gaps remain but no sub-issue of #227 is open to track them.
       - name: Open or update coverage gap issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node scripts/update-coverage-gap-issue.mjs
+        run: node scripts/update-coverage-gap-issue.mjs --verbose
