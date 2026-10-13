@@ -100,7 +100,7 @@ impl DateTime {
     #[must_use]
     pub fn now() -> Self {
         Self {
-            inner: Utc::now(),
+            inner: crate::clock::now(),
             offset_seconds: Some(0),
             has_time: true,
             has_date: true,
@@ -118,7 +118,7 @@ impl DateTime {
         tz_abbrev: Option<String>,
     ) -> Self {
         Self {
-            inner: Utc::now(),
+            inner: crate::clock::now(),
             offset_seconds,
             has_time: true,
             has_date: true,
@@ -137,7 +137,7 @@ impl DateTime {
     #[must_use]
     pub fn now_local(offset_seconds: i32) -> Self {
         Self {
-            inner: Utc::now(),
+            inner: crate::clock::now(),
             offset_seconds: Some(offset_seconds),
             has_time: true,
             has_date: true,
@@ -150,7 +150,7 @@ impl DateTime {
     /// represented by `offset_seconds` (seconds east of UTC).
     #[must_use]
     pub fn today(offset_seconds: i32) -> Self {
-        let local_now = Utc::now() + Duration::seconds(i64::from(offset_seconds));
+        let local_now = crate::clock::now() + Duration::seconds(i64::from(offset_seconds));
         Self::from_date(local_now.date_naive())
     }
 
@@ -222,7 +222,7 @@ impl DateTime {
     /// Creates a new DateTime from a time (today's date is used).
     #[must_use]
     pub fn from_time(time: NaiveTime) -> Self {
-        let today = Utc::now().date_naive();
+        let today = crate::clock::now().date_naive();
         let dt = today.and_time(time).and_utc();
         Self {
             inner: dt,

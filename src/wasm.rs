@@ -453,7 +453,7 @@ pub fn fetch_crypto_rates(vs_currency: String) -> Promise {
         let tickers = &[
             "TON", "BTC", "ETH", "BNB", "SOL", "XRP", "ADA", "DOGE", "DOT", "LTC", "LINK", "UNI",
         ];
-        let today = chrono::Utc::now().format("%Y-%m-%d").to_string();
+        let today = crate::clock::now().format("%Y-%m-%d").to_string();
 
         match crypto_api::fetch_crypto_prices(tickers, &vs_currency).await {
             Ok(prices) => {

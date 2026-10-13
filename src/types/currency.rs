@@ -167,6 +167,17 @@ impl CurrencyDatabase {
     /// Creates a new currency database with default currencies and rates.
     #[must_use]
     pub fn new() -> Self {
+        Self::with_bundled_rates(bundled_rates::BUNDLED_LATEST_RATES)
+    }
+
+    /// Creates a currency database with the default currencies and rates and
+    /// the given table instead of the rates bundled at build time.
+    ///
+    /// Each entry is `(from, to, source, date, rate)`. The parity fixtures
+    /// (`tests/parity_goldens.rs`) pass a frozen snapshot, so the daily rate
+    /// updates of `data/currency/` do not change their results.
+    #[must_use]
+    pub fn with_bundled_rates(bundled: &[(&str, &str, &str, &str, f64)]) -> Self {
         let mut db = Self {
             currencies: HashMap::new(),
             rates: HashMap::new(),
@@ -176,7 +187,7 @@ impl CurrencyDatabase {
         };
         db.initialize_default_currencies();
         db.initialize_default_rates();
-        db.initialize_bundled_rates();
+        db.initialize_bundled_rates(bundled);
         db
     }
 
@@ -187,8 +198,8 @@ impl CurrencyDatabase {
     /// "No exchange rate available" until live API rates were loaded. Existing
     /// hardcoded defaults are kept unchanged, and live API rates loaded later
     /// override the bundled ones.
-    fn initialize_bundled_rates(&mut self) {
-        for &(from, to, source, date, rate) in bundled_rates::BUNDLED_LATEST_RATES {
+    fn initialize_bundled_rates(&mut self, bundled: &[(&str, &str, &str, &str, f64)]) {
+        for &(from, to, source, date, rate) in bundled {
             if self.has_any_rate(from) && self.has_any_rate(to) {
                 continue;
             }
