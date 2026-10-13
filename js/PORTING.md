@@ -155,8 +155,14 @@ switch (kind.tag) {
   crate, which the Rust engine also calls (`libm::sin(x)`, not `x.sin()`), so
   both engines produce the same bits on every platform: `sin`, `cos`, `tan`,
   `asin`, `acos`, `atan`, `atan2`, `sinh`, `cosh`, `tanh`, `exp`, `log` (for
-  `ln`), `log10`, `log2`, `pow` (for `powf`), `cbrt`, `fma` (for `mul_add`).
-  `sqrt`, `abs`, `floor`, `ceil` and `trunc` are exact in IEEE 754, so they stay
+  `ln`), `log10`, `log2`, `pow` (for `powf`), `cbrt`. `x.log(base)` is
+  `log(x) / log(base)`, as `f64::log` computes it.
+- `a.mul_add(b, c)` stays `mul_add` in Rust (std calls the platform's
+  correctly rounded `fma`) and becomes `fma(a, b, c)` from `rust/libm.js`,
+  which is correctly rounded too. libm's own generic `fma` is not (it drops a
+  sticky bit; see `experiments/issue-254/libm-fma-sticky`), so the Rust engine
+  does not call `libm::fma`.
+- `sqrt`, `abs`, `floor`, `ceil` and `trunc` are exact in IEEE 754, so they stay
   `Math.sqrt`, `Math.abs`, `Math.floor`, `Math.ceil`, `Math.trunc`. Never use
   `Math.sin`, `Math.pow`, `**` on floats, or the other `Math` functions that are
   not correctly rounded.
