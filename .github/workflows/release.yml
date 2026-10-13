@@ -344,6 +344,47 @@ jobs:
           RUNTIME: ${{ matrix.runtime == 'bun' && 'bun' || 'node' }}
         run: '"$RUNTIME" scripts/smoke.mjs'
 
+  # === RUST GENERATED FROM JAVASCRIPT ===
+  # Issue #254: js/rust-generated/ is meta-language's translation of js/src at
+  # the commit pinned in js/rust-generated/translation.lino. Retranslate and
+  # fail on any difference, or on a carried item missing from
+  # js/translation-allowlist.lino. Node only: no Cargo runs here.
+  js-rust:
+    name: JS to Rust Translation
+    concurrency:
+      group: js-${{ github.workflow }}-${{ github.ref }}-js-rust
+      cancel-in-progress: true
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+
+      - name: Read the meta-language pin
+        id: pin
+        run: echo "commit=$(node js/scripts/translate-rust.mjs --pin)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v7
+        with:
+          repository: link-foundation/meta-language
+          ref: ${{ steps.pin.outputs.commit }}
+          path: .meta-language
+          persist-credentials: false
+
+      - name: Install meta-language
+        run: npm ci --prefix .meta-language/js --omit=dev --ignore-scripts
+
+      - name: Retranslate and diff
+        env:
+          META_LANGUAGE_DIR: .meta-language/js
+        run: node js/scripts/translate-rust.mjs --check
+
   # === WEB ===
   # The web app runs the JavaScript engine (issue #254), so its checks, build
   # and Playwright suite belong to the JavaScript stage. deploy-pages in the
@@ -498,6 +539,7 @@ jobs:
       - scripts
       - js-lint
       - js-test
+      - js-rust
       - web
       - changelog-pr
     if: ${{ !cancelled() }}
@@ -537,6 +579,7 @@ jobs:
       - scripts
       - js-lint
       - js-test
+      - js-rust
       - web
       - changelog-pr
       - javascript-stage

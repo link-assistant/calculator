@@ -8,3 +8,4 @@ bump: minor
 
 ### Changed
 - The web app runs the JavaScript engine instead of the WASM build, and its lint, type check, tests, build and Playwright suite run in the JavaScript stage. `rust.yml` keeps a `WASM Build` job for the Rust bindings in `src/wasm.rs`.
+- `js/scripts/translate-rust.mjs` generates `js/rust-generated/` from `js/src` with link-foundation/meta-language at a pinned commit. `--verify` runs in `npm test`, and the new `JS to Rust Translation` job retranslates and diffs; carried items must be listed in `js/translation-allowlist.lino`.

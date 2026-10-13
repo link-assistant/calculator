@@ -152,8 +152,19 @@ on any other unpinned action.
 
 ## Translation (R2)
 
-The status of generating Rust from the JavaScript source with
-link-foundation/meta-language is recorded in
+`js/scripts/translate-rust.mjs` translates all 81 modules of `js/src` with
+link-foundation/meta-language at the commit pinned in
+`js/rust-generated/translation.lino` (the ledger) into `js/rust-generated/`.
+Of 2141 items, 629 translate and 1512 are carried as source; every carried
+item is listed in `js/translation-allowlist.lino` with the upstream issue that
+blocks it (meta-language #204-#213, #223, or a drafted report). `--verify`
+(0.2 s, part of `npm test`) checks the committed output against the ledger;
+the JS-stage job `JS to Rust Translation` checks out meta-language at the pin,
+retranslates and fails on any difference (`--check`, about 8 minutes). The
+generated Rust is not yet compiled (`--compile` is future work), so the
+hand-written Rust crate remains the shipped implementation.
+
+The earlier experiment is recorded in
 [`experiments/issue-254/meta-language/README.md`](../../../experiments/issue-254/meta-language/README.md).
 
 ## Upstream Reports
