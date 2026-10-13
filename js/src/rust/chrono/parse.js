@@ -16,7 +16,8 @@
 import { err, panic } from '../core.js';
 import { isWhitespace, trimStart, utf8Len } from '../str.js';
 import { FixedOffset } from './offset.js';
-import { NaiveDate, NaiveTime } from './naive.js';
+import { NaiveDate } from './date.js';
+import { NaiveTime } from './time.js';
 
 const I32_MIN = -(2 ** 31);
 const I32_MAX = 2 ** 31 - 1;

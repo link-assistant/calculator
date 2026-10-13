@@ -69,6 +69,16 @@ function yoToCycle(yearMod400, ordinal) {
   return yearMod400 * 365 + yearDelta(yearMod400) + ordinal - 1;
 }
 
+/**
+ * `YearFlags::nisoweeks`: 53 when the year starts on a Thursday, or on a
+ * Wednesday in a leap year.
+ * @param {number} year
+ */
+function isoWeeksIn(year) {
+  const jan1 = new NaiveDate({ yearValue: year, ordinalValue: 1 }).numDaysFromMonday();
+  return jan1 === 3 || (jan1 === 2 && isLeapYear(year)) ? 53 : 52;
+}
+
 /** chrono `NaiveDate`: a proleptic Gregorian date in `MIN_YEAR..=MAX_YEAR`. */
 export class NaiveDate {
   /**
@@ -234,6 +244,33 @@ export class NaiveDate {
   /** `day0`. */
   day0() {
     return this.monthDay()[1] - 1;
+  }
+
+  /** `weekday().num_days_from_monday()` (0 = Monday). */
+  numDaysFromMonday() {
+    return (((this.numDaysFromCe() - 1) % 7) + 7) % 7;
+  }
+
+  /**
+   * `weeks_from(day)`: `day` as days from Monday.
+   * @param {number} day
+   */
+  weeksFrom(day) {
+    const since = (this.numDaysFromMonday() - day + 7) % 7;
+    return Math.trunc((this.ordinalValue - since + 6) / 7);
+  }
+
+  /**
+   * `iso_week()`: the ISO year and week.
+   * @returns {[number, number]}
+   */
+  isoWeek() {
+    const year = this.yearValue;
+    const raw = Math.floor((this.ordinalValue - (this.numDaysFromMonday() + 1) + 10) / 7);
+    if (raw < 1) {
+      return [year - 1, isoWeeksIn(year - 1)];
+    }
+    return raw > isoWeeksIn(year) ? [year + 1, 1] : [year, raw];
   }
 
   /** `num_days_from_ce` (crate-private): 0001-01-01 is day 1. */
