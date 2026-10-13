@@ -228,17 +228,17 @@ its memory and disk (#254), so the Rust build load is bounded everywhere:
 - `.cargo/config.toml` limits Cargo to two parallel rustc processes, turns off
   incremental compilation (`CARGO_INCREMENTAL=0`) and reduces debug info:
   none for dependencies, line tables for this crate. CI sets
-  `CARGO_BUILD_JOBS` to use all runner cores.
+  `CARGO_BUILD_JOBS=4`, the core count of a standard runner.
 - `node scripts/bounded-cargo.mjs <cargo arguments>` is the documented local
   workflow. It queues concurrent builds behind a lock file, sets
   `CARGO_INCREMENTAL=0` and the job limit, caps every process's address space
   with `prlimit` on Linux, and prunes the target directory before and after
   the build when it exceeds its disk budget: the incremental caches first,
   then the whole directory.
-- CI caches with `Swatinem/rust-cache`, keyed by the job, the toolchain and
-  the Cargo manifests. Before saving, it removes incremental artifacts,
-  build output of this crate and dependencies older than a week, so the cached
-  `target` cannot grow without bound.
+- CI caches through `.github/actions/setup-rust`, keyed by the job,
+  `rust-toolchain.toml` and every `Cargo.lock`, with no restore keys: a new
+  lock file starts from an empty `target` instead of piling new artifacts onto
+  the old ones, so the cache cannot grow without bound.
 
 The wrapper reads these variables, all optional:
 
@@ -256,6 +256,33 @@ The wrapper reads these variables, all optional:
 CALCULATOR_CARGO_TARGET_DIR=$HOME/.cache/calculator-target \
   node scripts/bounded-cargo.mjs clippy --all-targets --all-features
 ```
+
+## CI Stages
+
+`release.yml` (CI/CD Pipeline) runs in two stages (#254):
+
+1. **JavaScript stage.** Script checks, changelog and version checks, secret
+   scan, npm freshness, the `js/` lint and type check, and the `js/` tests on
+   Node 20, Node 24 and Bun. Every job has its own concurrency group with
+   `cancel-in-progress: true`, so a new push cancels the old JavaScript jobs.
+   The `JavaScript Stage` job reports the result.
+2. **Rust stage.** The `rust-stage` job calls `rust.yml` only after every
+   JavaScript job passed. Its group is per branch with
+   `cancel-in-progress: false`, so a started Rust stage always finishes.
+
+`scripts/check-javascript-first.mjs` fails the Script Checks job when Cargo,
+rustup, wasm-pack or CodeQL for Rust appears outside `rust.yml`, when a Rust
+workflow gains its own trigger, or when the gate above is weakened.
+
+The required checks of `main` are `JavaScript Stage` and
+`Rust Stage / Rust Stage`, defined in `.github/main-ruleset.json`. Rulesets
+are repository settings, so a pull request cannot apply them; until an admin
+runs `gh api -X POST repos/link-assistant/calculator/rulesets --input .github/main-ruleset.json`,
+Script Checks warns on pull requests and fails on `main`.
+
+`node scripts/ci-runs-per-pr.mjs 5` counts CI runs and runs that reached the
+Rust stage for the last five merged pull requests; the baseline is in
+`docs/case-studies/issue-254/runs-per-pr.md`.
 
 ## Multi-Agent Work
 
