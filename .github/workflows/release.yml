@@ -370,12 +370,19 @@ jobs:
         id: pin
         run: echo "commit=$(node js/scripts/translate-rust.mjs --pin)" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/checkout@v7
-        with:
-          repository: link-foundation/meta-language
-          ref: ${{ steps.pin.outputs.commit }}
-          path: .meta-language
-          persist-credentials: false
+      # Fetch exactly the pinned commit and refuse anything else. The commit
+      # comes from the committed ledger, and the job uses no cache, so a
+      # default-branch run cannot poison one (CodeQL
+      # actions/cache-poisoning/poisonable-step).
+      - name: Fetch meta-language at the pin
+        env:
+          PIN: ${{ steps.pin.outputs.commit }}
+        run: |
+          [[ "$PIN" =~ ^[0-9a-f]{40}$ ]] || { echo "::error::Bad meta-language pin: $PIN"; exit 1; }
+          git init -q .meta-language
+          git -C .meta-language fetch -q --depth 1 https://github.com/link-foundation/meta-language.git "$PIN"
+          git -C .meta-language checkout -q --detach FETCH_HEAD
+          test "$(git -C .meta-language rev-parse HEAD)" = "$PIN"
 
       - name: Install meta-language
         run: npm ci --prefix .meta-language/js --omit=dev --ignore-scripts

@@ -1,4 +1,4 @@
-// meta-language:self-translation:v1 source=JavaScript target=Rust sha256=174f00ba8d6d41e23c563ece5b6cd1f87c9654f5e76de0193a180827a5197591 bytes=10196
+// meta-language:self-translation:v1 source=JavaScript target=Rust sha256=98e7b7492aa032e9cbc133b60d54644eeaabaa950c68365da2216d64ab721752 bytes=10269
 
 // meta-language:prelude begin
 #![allow(unused, unreachable_patterns, non_snake_case, non_camel_case_types, invalid_nan_comparisons)]
@@ -541,7 +541,8 @@ pub fn to_radians(x: f64) -> f64 {
 // | }
 
 // meta-language:carried JavaScript lexical_declaration (unsupported)
-// | const FLOAT_LITERAL = /^[+-]?(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:[eE][+-]?[0-9]+)?$/;
+// | // Unambiguous (no nested `[0-9]+…[0-9]*`), so matching is linear.
+// | const FLOAT_LITERAL = /^[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?$/;
 // meta-language:carried JavaScript lexical_declaration (unsupported)
 // | const FLOAT_SPECIAL = /^([+-]?)(inf|infinity|nan)$/i;
 

@@ -240,8 +240,8 @@ export function createRateCoordination(): RateCoordination {
 
       if (states[source] === 'idle') {
         // Not yet started — trigger the fetch
-        const fetcher = fetchers[source];
-        if (fetcher) {
+        const fetcher = Object.prototype.hasOwnProperty.call(fetchers, source) ? fetchers[source] : undefined;
+        if (typeof fetcher === 'function') {
           markLoading(source);
           fetcher(); // Fire and forget — markLoaded is called in the finally block
         }

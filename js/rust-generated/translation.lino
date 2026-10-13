@@ -7,7 +7,7 @@ js_rust_translation
   commit eb0574d5528babd3b4aadece81590d8e2230b99b
   modules 81
   translated 629
-  carried 1512
+  carried 1513
   comment 128
 module clock.js
   source 1e7bb4eef731f4e1391242db1df2d21463fa0970976049d00c7955438faae699
@@ -298,8 +298,8 @@ module rust/chrono/datetime.js
   comment 0
   allowlisted 2
 module rust/chrono/delta.js
-  source 4fdf0385a1929ed70731acf02c10469c8e80ab63c91af77dd92c785693884f93
-  output 2a30bfc48743eb10f1f974bc75035114551a9eef26d8503883cf31a3cbc34fba
+  source 39ac94560d219b2a73b1cdaffa165f836a81fb78213b89129198659099f80d3e
+  output 1e38df238d2e12aabe1f5c51710abc29be15a9b45e46531952f55d4d6a9fbd82
   parts 1
   translated 5
   carried 29
@@ -458,11 +458,11 @@ module rust/libm/trig.js
   comment 13
   allowlisted 5
 module rust/num.js
-  source 174f00ba8d6d41e23c563ece5b6cd1f87c9654f5e76de0193a180827a5197591
-  output b4dd57c814e7890dbb2d06aeaf88c86c93d5a2e19b3f22412f203bbf324584b3
+  source 98e7b7492aa032e9cbc133b60d54644eeaabaa950c68365da2216d64ab721752
+  output 0513acd8af33fdbe17a03278a3355287c4f77ba6ca604cfa70dd7a4a5a6ec740
   parts 1
   translated 17
-  carried 31
+  carried 32
   comment 0
   allowlisted 23
 module rust/ratio.js

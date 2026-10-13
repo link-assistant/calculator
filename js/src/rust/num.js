@@ -372,7 +372,8 @@ export class ParseFloatError {
   }
 }
 
-const FLOAT_LITERAL = /^[+-]?(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:[eE][+-]?[0-9]+)?$/;
+// Unambiguous (no nested `[0-9]+…[0-9]*`), so matching is linear.
+const FLOAT_LITERAL = /^[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?$/;
 const FLOAT_SPECIAL = /^([+-]?)(inf|infinity|nan)$/i;
 
 /**

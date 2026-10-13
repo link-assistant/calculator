@@ -483,7 +483,11 @@ export class TimeDelta {
     }
     let text = `${sign}PT${abs.secs}`;
     if (abs.nanos > 0) {
-      text += `.${String(abs.nanos).padStart(9, '0').replace(/0+$/, '')}`;
+      let digits = String(abs.nanos).padStart(9, '0');
+      while (digits.endsWith('0')) {
+        digits = digits.slice(0, -1);
+      }
+      text += `.${digits}`;
     }
     return `${text}S`;
   }

@@ -1,4 +1,4 @@
-// meta-language:self-translation:v1 source=JavaScript target=Rust sha256=4fdf0385a1929ed70731acf02c10469c8e80ab63c91af77dd92c785693884f93 bytes=16166
+// meta-language:self-translation:v1 source=JavaScript target=Rust sha256=39ac94560d219b2a73b1cdaffa165f836a81fb78213b89129198659099f80d3e bytes=16257
 
 // meta-language:prelude begin
 #![allow(unused, unreachable_patterns, non_snake_case, non_camel_case_types, invalid_nan_comparisons)]
@@ -513,7 +513,11 @@ pub const NANOS_PER_SEC: f64 = 1000000000f64;
 // |     }
 // |     let text = `${sign}PT${abs.secs}`;
 // |     if (abs.nanos > 0) {
-// |       text += `.${String(abs.nanos).padStart(9, '0').replace(/0+$/, '')}`;
+// |       let digits = String(abs.nanos).padStart(9, '0');
+// |       while (digits.endsWith('0')) {
+// |         digits = digits.slice(0, -1);
+// |       }
+// |       text += `.${digits}`;
 // |     }
 // |     return `${text}S`;
 // |   }
