@@ -6,7 +6,7 @@
 // Differences are expected only for PRs that do not target the default branch
 // (GitHub links nothing for them) and for issues linked by hand in the
 // Development sidebar (they are not in the description).
-import { checkClosingReferences } from '../scripts/check-closing-references.mjs';
+import { checkClosingReferences } from '../../scripts/check-closing-references.mjs';
 import { readFileSync } from 'node:fs';
 
 const repository = 'link-assistant/calculator';

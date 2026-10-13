@@ -27,6 +27,8 @@ Everything here was downloaded with `gh` on 2026-10-13 into [`data/`](data/):
 | [`pr-228-description-edits.json`](data/pr-228-description-edits.json) | Every revision of the description (GraphQL `userContentEdits`) with its `Fixes` lines |
 | [`pr-228-comments.json`](data/pr-228-comments.json) | The 11 PR comments: session summaries, logs, auto-restart, ready-to-merge, auto-merge |
 | [`closed-events-227-246.json`](data/closed-events-227-246.json) | For #227 and #229 to #246: state, `closedAt`, and the PR and merge commit that closed it |
+| [`hive-mind-link-repair-repro.txt`](data/hive-mind-link-repair-repro.txt), [`hive-mind-3174.md`](data/hive-mind-3174.md) | The hive-mind reproduction's output and the upstream report |
+| [`pr-228-body-corrected.md`](data/pr-228-body-corrected.md) | PR #228's corrected description |
 | [`negated-keyword-probe.md`](data/negated-keyword-probe.md) | A probe on PR #261 showing that "does not close #N" still closes #N |
 | [`closing-references-audit.txt`](data/closing-references-audit.txt) | The new checker replayed over the descriptions of all 117 PRs in the repository |
 | [`closing-references-vs-github.txt`](data/closing-references-vs-github.txt) | The issues the checker parses compared with GitHub's `closingIssuesReferences` for all 117 PRs |
@@ -131,7 +133,7 @@ change the scope.
 
 ## Repository-wide audit
 
-[`experiments/audit-closing-references.mjs`](../../../experiments/audit-closing-references.mjs)
+[`experiments/issue-247/audit-closing-references.mjs`](../../../experiments/issue-247/audit-closing-references.mjs)
 replays the new checker over every PR description in the repository
 (117 PRs, from `gh api repos/link-assistant/calculator/pulls?state=all`). The
 [result](data/closing-references-audit.txt) has three hits:
@@ -155,9 +157,9 @@ covers that case as well.
 | R3 | [`.github/workflows/pr-description.yml`](../../../.github/workflows/pr-description.yml) runs it on `opened`, `edited`, `synchronize` and `reopened`, so an automated description edit re-runs the check. It has no path filter and read-only permissions, and reads the description from the event payload, never from `${{ }}` interpolation. |
 | R3 | [`scripts/check-closing-references.test.mjs`](../../../scripts/check-closing-references.test.mjs) uses PR #228's real description as a fixture and expects exactly the 11 `keep-open` and 18 `closes-only` errors. The same text without the appended lines must pass. Other fixtures: PRs #61, #82 and #95, and the repository-mode block of #260. |
 | R1, R5 | `CONTRIBUTING.md` gains a [Closing Issues](../../../CONTRIBUTING.md#closing-issues) section: one keyword per issue on its own line; `Part of #N` or "#N stays open" for issues a PR only plans; remove automatically appended references before merging. `scripts/check-required-docs.mjs` keeps that section from being removed. |
-| R2 | #236 to #246 are reopened, each with a comment linking to this case study. |
-| R1 | PR #228's description is corrected. The stray `Fixes #229` to `Fixes #246` lines are replaced by a note that the merge closed #236 to #246 by mistake. `Closes #227` stays. |
-| R4 | A hive-mind issue reports the plan-versus-implement scope, the `finally` repair that overrides the agent, and the negation pitfall, with a reproduction, a workaround and a suggested fix. The link is in the PR for #260. |
+| R2 | #236 to #246 were reopened on 2026-10-13, each with a comment explaining the mistake and linking to this case study. |
+| R1 | PR #228's description was corrected ([new text](data/pr-228-body-corrected.md)). The stray `Fixes #229` to `Fixes #246` lines are replaced by a note explaining the mistake, and `Closes #227` stays. `closingIssuesReferences` now lists only #227. The checker caught a first draft of that note: "so this merge closed #236" is itself a closing keyword. |
+| R4 | [link-assistant/hive-mind#3174](https://github.com/link-assistant/hive-mind/issues/3174) ([copy](data/hive-mind-3174.md)) reports the plan-versus-implement scope, the `finally` repair that overrides the agent, and the negation mismatch between hive-mind's shared parser and GitHub. It includes a reproduction, workarounds and a suggested fix. The reproduction, [`experiments/issue-247/hive-mind-link-repair-repro.mjs`](../../../experiments/issue-247/hive-mind-link-repair-repro.mjs), calls hive-mind's own `repairRequiredIssueLinks` with a fake `gh`. It shows that the repair re-adds the lines after the agent removes them, and that `extractClosingIssueReferences` ignores "does not close #2" ([output](data/hive-mind-link-repair-repro.txt)). |
 
 The workflow would have stopped #228. The first `edited` event at 10:31:07
 would have failed the check. hive-mind does not merge a PR with failing
@@ -173,7 +175,7 @@ would fail every time instead of letting the merge through.
   `pull-requests: read`. It is also updated asynchronously after an `edited`
   event, so a check that runs immediately can see stale data. Run locally, it
   needs a PR number before the PR exists. Instead,
-  [`experiments/compare-closing-references.mjs`](../../../experiments/compare-closing-references.mjs)
+  [`experiments/issue-247/compare-closing-references.mjs`](../../../experiments/issue-247/compare-closing-references.mjs)
   compares the parser with `closingIssuesReferences` for all 117 PRs. They
   [agree on all 117](data/closing-references-vs-github.txt), including #228
   after the merge. The remaining gap is sidebar links: they never appear in
@@ -208,12 +210,12 @@ gh api graphql -f query='{repository(owner:"link-assistant",name:"calculator"){
 # Replay the checker over every PR description:
 gh api 'repos/link-assistant/calculator/pulls?state=all' --paginate \
   --jq '.[] | {number,state,merged_at,title,body}' > /tmp/prs.jsonl
-node experiments/audit-closing-references.mjs /tmp/prs.jsonl
+node experiments/issue-247/audit-closing-references.mjs /tmp/prs.jsonl
 
 # Compare the parser with GitHub's closingIssuesReferences:
 gh pr list --repo link-assistant/calculator --state all --limit 1000 \
   --json number,state,baseRefName,body,closingIssuesReferences > /tmp/prs.json
-node experiments/compare-closing-references.mjs /tmp/prs.json
+node experiments/issue-247/compare-closing-references.mjs /tmp/prs.json
 
 node --test scripts/check-closing-references.test.mjs
 ```
