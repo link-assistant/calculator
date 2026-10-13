@@ -161,7 +161,9 @@ switch (kind.tag) {
   correctly rounded `fma`) and becomes `fma(a, b, c)` from `rust/libm.js`,
   which is correctly rounded too. libm's own generic `fma` is not (it drops a
   sticky bit; see `experiments/issue-254/libm-fma-sticky`), so the Rust engine
-  does not call `libm::fma`.
+  does not call `libm::fma`. The same generic code backs `mul_add` on wasm32
+  (`experiments/issue-254/fma-wasm`), so the WASM build can differ from both
+  engines in the last bit of a numeric integral.
 - `sqrt`, `abs`, `floor`, `ceil` and `trunc` are exact in IEEE 754, so they stay
   `Math.sqrt`, `Math.abs`, `Math.floor`, `Math.ceil`, `Math.trunc`. Never use
   `Math.sin`, `Math.pow`, `**` on floats, or the other `Math` functions that are
