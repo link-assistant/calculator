@@ -5,6 +5,10 @@
 # The Dependency Freshness job (scripts/check-dependency-freshness.mjs) still
 # fails a pull request when a direct dependency falls behind without a
 # documented blocker; these pull requests are the routine way to catch up.
+#
+# Every entry waits a week after a release (`cooldown`) before proposing it,
+# so a compromised or yanked release has time to be noticed first (zizmor's
+# dependabot-cooldown audit). Security updates are not delayed.
 version: 2
 updates:
   - package-ecosystem: cargo
@@ -12,6 +16,8 @@ updates:
     schedule:
       interval: weekly
       day: monday
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 5
     groups:
       cargo-minor-and-patch:
@@ -22,6 +28,8 @@ updates:
     schedule:
       interval: weekly
       day: monday
+    cooldown:
+      default-days: 7
 
   - package-ecosystem: npm
     directories:
@@ -30,6 +38,8 @@ updates:
     schedule:
       interval: weekly
       day: monday
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 5
     groups:
       npm-minor-and-patch:
@@ -44,6 +54,8 @@ updates:
     schedule:
       interval: weekly
       day: monday
+    cooldown:
+      default-days: 7
     groups:
       github-actions:
         patterns: ['*']
