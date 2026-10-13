@@ -34,6 +34,7 @@ describe('CalculatorError (src/error.rs)', () => {
 
 // Display, Debug and `to_error_info()` of every variant, as printed by the
 // Rust module (experiments/issue-254/foundation-vectors).
+/** @type {[CalculatorError, string, string, string, Record<string, string> | null][]} */
 const VARIANTS = [
   [
     CalculatorError.parse('invalid syntax'),

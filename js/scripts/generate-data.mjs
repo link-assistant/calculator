@@ -1,0 +1,273 @@
+#!/usr/bin/env node
+/**
+ * Generates the data modules of `js/src/generated/` from the repository's
+ * `data/` directory, as the Rust crate embeds it:
+ *
+ * - `units-lino.js`: `UNITS_LINO`, the text of `data/units/units.lino`
+ *   (`include_str!`);
+ * - `arithmetic-words-lino.js`: `ARITHMETIC_WORDS_LINO`, the text of
+ *   `data/words/arithmetic-words.lino`;
+ * - `bundled-rates.js`: `BUNDLED_LATEST_RATES`, what `build.rs` writes to
+ *   `$OUT_DIR/bundled_rates.rs` (issue #224).
+ *
+ * Usage (from `js/`): `node scripts/generate-data.mjs` writes the files;
+ * `node scripts/generate-data.mjs --check` writes nothing and exits 1 when a
+ * file is missing or stale.
+ */
+
+import { existsSync, readFileSync, readdirSync, writeFileSync, mkdirSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { debugF64 } from '../src/rust/fmt.js';
+import { ok } from '../src/rust/core.js';
+import { parseF64 } from '../src/rust/num.js';
+import { debugStr, lines, splitWhitespace, stripPrefix, trim, trimMatches } from '../src/rust/str.js';
+
+const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
+
+/** The repository root. */
+export const REPO_ROOT = join(SCRIPT_DIR, '..', '..');
+
+/** Where the generated modules go. */
+export const GENERATED_DIR = join(SCRIPT_DIR, '..', 'src', 'generated');
+
+/**
+ * @typedef {object} LatestRate The most recent rate of a `.lino` rate file.
+ * @property {string} from
+ * @property {string} to
+ * @property {string} source
+ * @property {string} date
+ * @property {number} rate
+ */
+
+/**
+ * `parse_latest_rate` of build.rs: the newest finite positive rate of a
+ * consolidated `.lino` file (`rates:` or `data:` section), or null when the
+ * file has no such rate, no `from` or no `to`.
+ * @param {string} content
+ * @returns {LatestRate | null}
+ */
+export function parseLatestRate(content) {
+  /** @type {string | null} */
+  let from = null;
+  /** @type {string | null} */
+  let to = null;
+  let source = 'unknown';
+  /** @type {[string, number] | null} */
+  let latest = null;
+  let inRates = false;
+
+  for (const rawLine of lines(content)) {
+    const line = trim(rawLine);
+    if (line === 'rates:' || line === 'data:') {
+      inRates = true;
+      continue;
+    }
+    if (inRates) {
+      const parts = splitWhitespace(line);
+      if (parts.length >= 2) {
+        const [date, value] = parts;
+        const rate = ok(() => parseF64(value));
+        if (rate !== null) {
+          // `date > d.as_str()` compares UTF-8 bytes.
+          const isNewer = latest === null || compareBytes(date, latest[0]) > 0;
+          if (Number.isFinite(rate) && rate > 0 && isNewer) {
+            latest = [date, rate];
+          }
+        }
+      }
+      continue;
+    }
+    const fromRest = stripPrefix(line, 'from ');
+    const toRest = fromRest === null ? stripPrefix(line, 'to ') : null;
+    const sourceRest = fromRest === null && toRest === null ? stripPrefix(line, 'source ') : null;
+    if (fromRest !== null) {
+      from = trim(fromRest).toUpperCase();
+    } else if (toRest !== null) {
+      to = trim(toRest).toUpperCase();
+    } else if (sourceRest !== null) {
+      source = trimMatches(trim(sourceRest), (c) => c === "'" || c === '"');
+    }
+  }
+
+  if (latest === null || from === null || to === null) {
+    return null;
+  }
+  const [date, rate] = latest;
+  return { from, to, source, date, rate };
+}
+
+/**
+ * Whether `Path::extension()` of the file name is `lino` (`.lino` alone has
+ * no extension).
+ * @param {string} name
+ */
+function hasLinoExtension(name) {
+  const dot = name.lastIndexOf('.');
+  return dot > 0 && name.slice(dot + 1) === 'lino';
+}
+
+/** Compares strings by UTF-8 bytes, as `PathBuf` ordering of flat names. */
+function compareBytes(/** @type {string} */ a, /** @type {string} */ b) {
+  return Buffer.compare(Buffer.from(a), Buffer.from(b));
+}
+
+/**
+ * The latest rate of every `data/currency/*.lino` file, sorted by path, as
+ * `main` of build.rs. An absent directory gives an empty table; unreadable,
+ * non-UTF-8 or rate-less files are skipped.
+ * @param {string} dataDir
+ * @returns {LatestRate[]}
+ */
+export function collectBundledRates(dataDir) {
+  /** @type {string[]} */
+  let names;
+  try {
+    names = readdirSync(dataDir);
+  } catch {
+    return [];
+  }
+  const decoder = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
+  /** @type {LatestRate[]} */
+  const rates = [];
+  for (const name of names.filter(hasLinoExtension).sort(compareBytes)) {
+    let content;
+    try {
+      content = decoder.decode(readFileSync(join(dataDir, name)));
+    } catch {
+      continue;
+    }
+    const rate = parseLatestRate(content);
+    if (rate !== null) {
+      rates.push(rate);
+    }
+  }
+  return rates;
+}
+
+/**
+ * The header comment of a generated module.
+ * @param {string} source
+ */
+function header(source) {
+  return `// Generated by js/scripts/generate-data.mjs from ${source}. Do not edit;\n`
+    + '// run `cd js && npm run generate` instead.\n';
+}
+
+/**
+ * A template literal whose value is exactly `text`. Backslashes, backticks,
+ * `${`, carriage returns (which template literals normalize) and control or
+ * irregular whitespace characters are escaped.
+ * @param {string} text
+ */
+export function templateLiteral(text) {
+  let out = '`';
+  for (const c of text) {
+    const cp = /** @type {number} */ (c.codePointAt(0));
+    if (c === '\\' || c === '`') {
+      out += `\\${c}`;
+    } else if (c === '$') {
+      out += '\\$';
+    } else if (c === '\n' || c === '\t') {
+      out += c;
+    } else if (cp < 0x20 || (cp >= 0x7f && cp <= 0xa0) || cp === 0x1680
+      || (cp >= 0x2000 && cp <= 0x200b) || cp === 0x2028 || cp === 0x2029
+      || cp === 0x202f || cp === 0x205f || cp === 0x3000 || cp === 0xfeff
+    ) {
+      out += `\\u{${cp.toString(16)}}`;
+    } else {
+      out += c;
+    }
+  }
+  return `${out}\``;
+}
+
+/**
+ * A module exporting the text of a data file.
+ * @param {string} name the constant name
+ * @param {string} source the path relative to the repository root
+ * @param {string} text
+ */
+export function renderTextModule(name, source, text) {
+  return `${header(source)}\n/** The text of \`${source}\`. */\nexport const ${name} = ${templateLiteral(text)};\n`;
+}
+
+/**
+ * The `bundled-rates.js` module: `bundled_rates.rs` of build.rs as frozen
+ * `[from, to, source, date, rate]` tuples. `{:?}` of an `f64` is a JavaScript
+ * literal that round-trips.
+ * @param {LatestRate[]} rates
+ */
+export function renderBundledRates(rates) {
+  let out = `${header('data/currency/*.lino (as build.rs)')}\n`
+    + '/** A frozen `(from, to, source, date, rate)` tuple. */\n'
+    + 'const rate = (/** @type {[string, string, string, string, number]} */ entry) => Object.freeze(entry);\n\n'
+    + '/**\n'
+    + ' * Latest rates bundled from `data/currency/*.lino`: `(from, to, source, date, rate)`.\n'
+    + ' * @type {ReadonlyArray<readonly [string, string, string, string, number]>}\n'
+    + ' */\n'
+    + 'export const BUNDLED_LATEST_RATES = Object.freeze([\n';
+  for (const r of rates) {
+    out += `  rate([${debugStr(r.from)}, ${debugStr(r.to)}, ${debugStr(r.source)}, `
+      + `${debugStr(r.date)}, ${debugF64(r.rate)}]),\n`;
+  }
+  return `${out}]);\n`;
+}
+
+/**
+ * Every generated file: its path relative to `js/src/generated/` and content.
+ * @param {string} [repoRoot]
+ * @returns {Array<[string, string]>}
+ */
+export function generateAll(repoRoot = REPO_ROOT) {
+  const read = (/** @type {string} */ path) => readFileSync(join(repoRoot, path), 'utf8');
+  return [
+    ['units-lino.js', renderTextModule('UNITS_LINO', 'data/units/units.lino', read('data/units/units.lino'))],
+    ['arithmetic-words-lino.js', renderTextModule(
+      'ARITHMETIC_WORDS_LINO',
+      'data/words/arithmetic-words.lino',
+      read('data/words/arithmetic-words.lino'),
+    )],
+    ['bundled-rates.js', renderBundledRates(collectBundledRates(join(repoRoot, 'data', 'currency')))],
+  ];
+}
+
+/**
+ * The generated files that are missing or differ from what is committed.
+ * @param {string} [repoRoot]
+ * @param {string} [generatedDir]
+ * @returns {string[]}
+ */
+export function staleFiles(repoRoot = REPO_ROOT, generatedDir = GENERATED_DIR) {
+  return generateAll(repoRoot)
+    .filter(([name, content]) => {
+      const path = join(generatedDir, name);
+      return !existsSync(path) || readFileSync(path, 'utf8') !== content;
+    })
+    .map(([name]) => name);
+}
+
+/**
+ * The command line.
+ * @param {string[]} args
+ * @returns {number} the exit code
+ */
+export function main(args) {
+  if (args.includes('--check')) {
+    const stale = staleFiles();
+    for (const name of stale) {
+      console.error(`js/src/generated/${name} is missing or stale; run \`cd js && npm run generate\`.`);
+    }
+    return stale.length === 0 ? 0 : 1;
+  }
+  mkdirSync(GENERATED_DIR, { recursive: true });
+  for (const [name, content] of generateAll()) {
+    writeFileSync(join(GENERATED_DIR, name), content);
+    console.log(`wrote js/src/generated/${name}`);
+  }
+  return 0;
+}
+
+if (process.argv[1] !== undefined && pathToFileURL(process.argv[1]).href === import.meta.url) {
+  process.exitCode = main(process.argv.slice(2));
+}

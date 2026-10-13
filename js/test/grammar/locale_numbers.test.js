@@ -140,6 +140,7 @@ const SCANS = [
 ];
 
 /** `[input, start, expected]` with `allow_comma = true, decimal_comma = false`. */
+/** @type {[string, number, any][]} */
 const SCANS_FROM = [
   ['x 1,234.5', 2, ['1234.5', 9]],
   ['ab0x1F', 2, ['31', 6]],
