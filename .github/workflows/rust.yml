@@ -1,0 +1,746 @@
+name: Rust Stage
+
+# The Rust half of the pipeline (issue #254). Only the rust-stage job of
+# release.yml calls it, after every JavaScript job of the same run passed; a
+# relative call runs this file at the caller's commit with the caller's event.
+# scripts/check-javascript-first.mjs fails CI if any other workflow, job or
+# local action can start Rust tooling.
+#
+# Nothing here cancels: the caller holds a per-branch concurrency group with
+# cancel-in-progress: false, so a newer push waits for the running Rust stage
+# instead of killing it halfway (issue #254). GitHub keeps at most one pending
+# run per group and replaces an older pending one, so a burst of pushes runs
+# Rust for the first and the last commit. (`concurrency.queue: max` would
+# keep them all, but actionlint does not accept the key yet.)
+on:
+  workflow_call:
+    inputs:
+      release_mode:
+        type: string
+        default: ''
+      bump_type:
+        type: string
+        default: patch
+      description:
+        type: string
+        default: ''
+      any_code_changed:
+        description: detect-changes output; empty when detect-changes was skipped.
+        type: string
+        default: ''
+    # Only the release jobs read these; they are declared on those steps.
+    secrets:
+      CARGO_REGISTRY_TOKEN:
+        required: false
+      CARGO_TOKEN:
+        required: false
+
+permissions:
+  contents: read
+
+env:
+  GIT_CONFIG_COUNT: 1
+  GIT_CONFIG_KEY_0: init.defaultBranch
+  GIT_CONFIG_VALUE_0: main
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: '0'
+  RUSTFLAGS: -Dwarnings
+  CARGO_NET_RETRY: '10'
+  CARGO_HTTP_MULTIPLEXING: 'false'
+  # ubuntu-24.04 runners have 4 cores; the local default in .cargo/config.toml
+  # and scripts/bounded-cargo.mjs is 2.
+  CARGO_BUILD_JOBS: '4'
+  CALCULATOR_CARGO_JOBS: '4'
+  # The crates.io credentials are deliberately *not* declared here (issue
+  # #256): they are declared only on the publish and preflight steps.
+
+jobs:
+  # === FRESH MERGE SIMULATION ===
+  # Catches semantic merge conflicts: a pull request that is green in isolation
+  # but breaks main once merged into its current tip (issue #256, from the Rust
+  # pipeline template). FRESH_MERGE_VERBOSE=1 traces the script.
+  fresh-merge:
+    name: Fresh Merge Simulation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    if: github.event_name == 'pull_request' && inputs.any_code_changed == 'true'
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Setup Rust
+        uses: ./.github/actions/setup-rust
+        with:
+          cache-key: fresh-merge
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+
+      - name: Simulate fresh merge with base branch
+        env:
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+        run: bash scripts/simulate-fresh-merge.sh
+
+  # === LINT AND FORMAT CHECK ===
+  lint:
+    name: Rust Lint and Format Check
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Rust
+        uses: ./.github/actions/setup-rust
+        with:
+          cache-key: lint
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Run Clippy
+        # --workspace keeps the experiments member compiling (issue #256).
+        run: node scripts/bounded-cargo.mjs clippy --workspace --all-targets --all-features
+
+  # === DEPENDENCY FRESHNESS ===
+  # Fails when a direct dependency is behind its latest release, unless its
+  # manifest documents the blocker with an issue URL (issue #223). Upstream
+  # releases, not this repository's diff, make dependencies stale, so the job
+  # runs on every pipeline run.
+  dependency-freshness:
+    name: Dependency Freshness
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Rust
+        uses: ./.github/actions/setup-rust
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+
+      - name: Cache cargo-outdated
+        id: cargo-outdated-cache
+        uses: actions/cache@v6
+        with:
+          path: ~/.cargo/bin/cargo-outdated
+          key: ${{ runner.os }}-cargo-outdated-0.19-${{ hashFiles('rust-toolchain.toml') }}
+
+      - name: Install cargo-outdated
+        if: steps.cargo-outdated-cache.outputs.cache-hit != 'true'
+        run: cargo install cargo-outdated --locked --version '^0.19'
+
+      - name: Install web dependencies
+        working-directory: web
+        run: npm ci
+
+      # Issue #256: freshness is external state, so it blocks pull requests
+      # only; on push to main (or schedule/dispatch) it emits warnings instead
+      # of failing a pipeline whose code already passed the gate.
+      - name: Check dependency freshness
+        env:
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: node scripts/check-dependency-freshness.mjs
+
+  # === CARGO AUDIT ===
+  # Moved from security.yml so it runs behind the JavaScript stage (#254).
+  cargo-audit:
+    name: Cargo Audit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Rust
+        uses: ./.github/actions/setup-rust
+
+      - uses: taiki-e/install-action@ab6895351a88b908e96a4697860d4ffea5e57dbe # v2.87.27
+        with:
+          tool: cargo-audit@0.22.2
+
+      - name: Audit committed Cargo.lock
+        # unmaintained, unsound and yanked advisories are warnings, which leave
+        # cargo audit's exit status at 0 while it prints them.
+        run: cargo audit --file Cargo.lock --deny warnings
+
+  # === CODEQL (RUST) ===
+  # The other CodeQL languages stay in security.yml.
+  codeql-rust:
+    name: CodeQL (rust)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: github/codeql-action/init@v4
+        with:
+          languages: rust
+          build-mode: none
+          config-file: ./.github/codeql/codeql-config.yml
+
+      - uses: github/codeql-action/analyze@v4
+
+  # === TEST ===
+  test:
+    name: Rust Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Rust
+        uses: ./.github/actions/setup-rust
+        with:
+          cache-key: test
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+
+      - name: Run tests
+        run: node scripts/bounded-cargo.mjs test --all-features --verbose
+
+      - name: Run doc tests
+        run: node scripts/bounded-cargo.mjs test --doc --verbose
+
+  # === COMPETITOR COVERAGE ===
+  coverage:
+    name: Competitor Coverage
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    needs: [test]
+    if: ${{ !cancelled() && needs.test.result == 'success' }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Rust
+        uses: ./.github/actions/setup-rust
+        with:
+          cache-key: build
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+
+      - name: Build release binary
+        run: node scripts/bounded-cargo.mjs build --release --locked --bin link-calculator
+
+      - name: Check competitor coverage
+        id: competitor-check
+        run: |
+          rm -f docs/case-studies/issue-227/results/coverage-report.md
+          node scripts/competitor-coverage.mjs --binary experiments/issue-227/bounded-calculator.sh --baseline docs/case-studies/issue-227/results/coverage-baseline.json --quiet
+
+      - name: Upload coverage report
+        if: ${{ !cancelled() && steps.competitor-check.outcome != 'skipped' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: competitor-coverage-report
+          path: docs/case-studies/issue-227/results/coverage-report.md
+          retention-days: 14
+
+  # === BUILD ===
+  build:
+    name: Build Package
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    needs: [lint, test, coverage]
+    if: ${{ !cancelled() && needs.lint.result == 'success' && needs.test.result == 'success' && needs.coverage.result == 'success' }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Rust
+        uses: ./.github/actions/setup-rust
+        with:
+          cache-key: build
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+
+      - name: Build release
+        run: node scripts/bounded-cargo.mjs build --release --verbose
+
+      - name: Check package
+        run: cargo package --list --allow-dirty
+
+      # crates.io rejects uploads over 10 MiB with "413 Payload Too Large",
+      # which silently blocked the v0.20.4..v0.21.0 releases (issue #223).
+      - name: Check package size
+        run: |
+          cargo package --allow-dirty --no-verify
+          size=$(stat -c %s target/package/*.crate)
+          echo "Package size: $size bytes"
+          if [ "$size" -ge 10485760 ]; then
+            echo "::error::The .crate file is $size bytes; crates.io accepts at most 10 MiB. Narrow the include list in Cargo.toml."
+            exit 1
+          fi
+
+  # === WEB BUILD ===
+  # Builds the WASM package and the web application on it, then runs the web
+  # checks and the Playwright suite.
+  web-build:
+    name: Web Build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    needs: [lint, test, coverage]
+    if: ${{ !cancelled() && needs.lint.result == 'success' && needs.test.result == 'success' && needs.coverage.result == 'success' }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Rust
+        uses: ./.github/actions/setup-rust
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        uses: ./.github/actions/install-wasm-pack
+
+      - name: Build WASM package
+        run: wasm-pack build --target web --out-dir web/public/pkg
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install dependencies
+        working-directory: web
+        run: npm ci
+
+      - name: Copy currency data files to web public directory
+        run: |
+          mkdir -p web/public/data/currency
+          cp data/currency/*.lino web/public/data/currency/
+          count=$(find data/currency -maxdepth 1 -name '*.lino' | wc -l)
+          echo "Copied $count .lino files to web/public/data/currency/"
+
+      # Issue #256: `npm run lint` called an eslint that was never installed
+      # (typescript-eslint does not support TypeScript 7), so the web code was
+      # never linted. oxlint parses TypeScript natively.
+      - name: Lint
+        working-directory: web
+        run: npm run lint
+
+      - name: Type check
+        working-directory: web
+        run: npx tsc --noEmit
+
+      - name: Run web tests
+        working-directory: web
+        run: npm test
+
+      - name: Build
+        working-directory: web
+        run: npm run build
+
+      # Issue #256: the Playwright suite in web/e2e was never run by CI, so 8 of
+      # its 50 tests had silently rotted (false negative). Run it on the build.
+      - name: Install Playwright browsers
+        working-directory: web
+        run: npx playwright install chromium --with-deps
+
+      - name: Run end-to-end tests
+        working-directory: web
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report-${{ github.run_id }}
+          path: web/playwright-report
+          retention-days: 7
+
+      - name: Upload web build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: web-dist
+          path: web/dist
+          retention-days: 1
+
+  # === DEPLOY TO GITHUB PAGES ===
+  deploy-pages:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    needs: [web-build]
+    if: |
+      !cancelled() &&
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      needs.web-build.result == 'success'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download web build artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: web-dist
+          path: web/dist
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: web/dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
+
+  # === AUTO RELEASE ===
+  # Automatic release on push to main using changelog fragments.
+  auto-release:
+    name: Auto Release
+    needs: [lint, test, build]
+    if: |
+      !cancelled() &&
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      needs.build.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    concurrency:
+      group: main-writer-main
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    outputs:
+      version_committed: ${{ steps.version.outputs.version_committed }}
+      new_version: ${{ steps.version.outputs.new_version }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # This job pushes with the checkout credentials, so it keeps them.
+          persist-credentials: true
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Rust
+        uses: ./.github/actions/setup-rust
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+
+      - name: Configure git
+        run: node scripts/git-config.mjs
+
+      - name: Determine bump type from changelog fragments
+        id: bump_type
+        run: node scripts/get-bump-type.mjs
+
+      - name: Check if version already released or no fragments
+        id: check
+        env:
+          HAS_FRAGMENTS: ${{ steps.bump_type.outputs.has_fragments }}
+        run: node scripts/check-release-needed.mjs
+
+      # Principle 16: the bump below is pushed to main before cargo publish
+      # runs, so prove the token can publish first (issue #223 left main
+      # bumped and tagged on versions crates.io never received).
+      - name: Preflight crates.io publish token
+        if: steps.check.outputs.should_release == 'true'
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN || secrets.CARGO_TOKEN }}
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN || secrets.CARGO_REGISTRY_TOKEN }}
+        run: node scripts/preflight-crates-token.mjs
+
+      - name: Collect changelog and bump version
+        id: version
+        if: steps.check.outputs.should_release == 'true' && steps.check.outputs.skip_bump != 'true'
+        env:
+          BUMP_TYPE: ${{ steps.bump_type.outputs.bump_type }}
+        run: node scripts/version-and-commit.mjs --bump-type "$BUMP_TYPE"
+
+      - name: Get current version
+        id: current_version
+        if: steps.check.outputs.should_release == 'true'
+        run: node scripts/get-version.mjs
+
+      - name: Build release
+        if: steps.check.outputs.should_release == 'true'
+        run: cargo build --release
+
+      - name: Publish to Crates.io
+        if: steps.check.outputs.should_release == 'true'
+        id: publish-crate
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN || secrets.CARGO_TOKEN }}
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN || secrets.CARGO_REGISTRY_TOKEN }}
+        run: node scripts/publish-crate.mjs
+
+      - name: Create GitHub Release
+        if: steps.check.outputs.should_release == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: ${{ steps.current_version.outputs.version }}
+          REPOSITORY: ${{ github.repository }}
+        run: node scripts/create-github-release.mjs --release-version "$RELEASE_VERSION" --repository "$REPOSITORY"
+
+  # === DEPLOY WEB AFTER RELEASE ===
+  # The standard web-build/deploy-pages jobs run in parallel with auto-release
+  # and therefore use the OLD Cargo.toml version. This job rebuilds from main
+  # after the bump so the web footer shows the released version.
+  # See: https://github.com/link-assistant/calculator/issues/78
+  deploy-after-release:
+    name: Deploy Web After Release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    needs: [auto-release, deploy-pages]
+    if: |
+      !cancelled() &&
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      needs.auto-release.result == 'success' &&
+      needs.auto-release.outputs.version_committed == 'true'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          # The latest main includes the version bump auto-release pushed.
+          ref: main
+
+      - name: Setup Rust
+        uses: ./.github/actions/setup-rust
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        uses: ./.github/actions/install-wasm-pack
+
+      - name: Build WASM package with updated version
+        run: wasm-pack build --target web --out-dir web/public/pkg
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install dependencies
+        working-directory: web
+        run: npm ci
+
+      - name: Copy currency data files to web public directory
+        run: |
+          mkdir -p web/public/data/currency
+          cp data/currency/*.lino web/public/data/currency/
+          count=$(find data/currency -maxdepth 1 -name '*.lino' | wc -l)
+          echo "Copied $count .lino files to web/public/data/currency/"
+
+      - name: Build web app
+        working-directory: web
+        run: npm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: web/dist
+          # A unique name avoids a 409 Conflict with deploy-pages' artifact.
+          name: github-pages-after-release
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
+        with:
+          artifact_name: github-pages-after-release
+
+  # === UPDATE SCREENSHOTS ===
+  # Regenerates the documentation screenshots on every push to main, after a
+  # release deployed the new version if there was one, and on dispatch.
+  update-screenshots:
+    name: Update Screenshots
+    needs: [web-build, auto-release, deploy-after-release]
+    if: |
+      !cancelled() &&
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || inputs.release_mode == 'screenshots') &&
+      needs.web-build.result == 'success' &&
+      needs.auto-release.result != 'failure' &&
+      needs.deploy-after-release.result != 'failure'
+    uses: ./.github/workflows/update-screenshots.yml
+    permissions:
+      contents: write
+
+  # === MANUAL INSTANT RELEASE ===
+  manual-release:
+    name: Instant Release
+    needs: [lint, test, build]
+    if: |
+      !cancelled() &&
+      github.event_name == 'workflow_dispatch' &&
+      inputs.release_mode == 'instant' &&
+      needs.build.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    concurrency:
+      group: main-writer-main
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # This job pushes with the checkout credentials, so it keeps them.
+          persist-credentials: true
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Rust
+        uses: ./.github/actions/setup-rust
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+
+      - name: Configure git
+        run: node scripts/git-config.mjs
+
+      # Principle 16: prove the token can publish before the bump is pushed.
+      - name: Preflight crates.io publish token
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN || secrets.CARGO_TOKEN }}
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN || secrets.CARGO_REGISTRY_TOKEN }}
+        run: node scripts/preflight-crates-token.mjs
+
+      - name: Collect changelog fragments
+        run: node scripts/collect-changelog.mjs
+
+      - name: Version and commit
+        id: version
+        env:
+          BUMP_TYPE: ${{ inputs.bump_type }}
+          DESCRIPTION: ${{ inputs.description }}
+        run: node scripts/version-and-commit.mjs --bump-type "$BUMP_TYPE" --description "$DESCRIPTION"
+
+      - name: Build release
+        if: steps.version.outputs.version_committed == 'true' || steps.version.outputs.already_released == 'true'
+        run: cargo build --release
+
+      - name: Publish to Crates.io
+        if: steps.version.outputs.version_committed == 'true' || steps.version.outputs.already_released == 'true'
+        id: publish-crate
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN || secrets.CARGO_TOKEN }}
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN || secrets.CARGO_REGISTRY_TOKEN }}
+        run: node scripts/publish-crate.mjs
+
+      - name: Create GitHub Release
+        if: steps.version.outputs.version_committed == 'true' || steps.version.outputs.already_released == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: ${{ steps.version.outputs.new_version }}
+          REPOSITORY: ${{ github.repository }}
+        run: node scripts/create-github-release.mjs --release-version "$RELEASE_VERSION" --repository "$REPOSITORY"
+
+  # === COVERAGE GAP REPORT ===
+  # Weekly, on dispatch, and on pushes to main (a merged PR may move the
+  # baseline, issue #258).
+  coverage-gap-report:
+    name: Coverage Gap Report
+    needs: [coverage]
+    if: |
+      !cancelled() &&
+      needs.coverage.result == 'success' &&
+      (github.event_name == 'schedule' ||
+       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+       inputs.release_mode == 'coverage-gap-report')
+    uses: ./.github/workflows/coverage-gap-report.yml
+    permissions:
+      contents: read
+      issues: write
+
+  # === PIPELINE STATUS ===
+  # Terminal status gate: jobs skipped by a failed ancestor, or killed by
+  # timeout-minutes (reported as "cancelled"), fail this required check.
+  pipeline-status:
+    name: Rust Stage
+    needs:
+      - fresh-merge
+      - lint
+      - dependency-freshness
+      - cargo-audit
+      - codeql-rust
+      - test
+      - coverage
+      - build
+      - web-build
+      - deploy-pages
+      - auto-release
+      - deploy-after-release
+      - update-screenshots
+      - manual-release
+      - coverage-gap-report
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Check aggregate pipeline status
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          # github.workflow_ref names the caller (release.yml) inside a called
+          # workflow, so name this file for the cancellation lookup.
+          WORKFLOW_FILE: .github/workflows/rust.yml
+          RUN_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          BRANCH_REF: ${{ github.head_ref || github.ref_name }}
+        run: bash scripts/check-pipeline-status.sh

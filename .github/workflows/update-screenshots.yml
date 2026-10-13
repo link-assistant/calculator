@@ -1,23 +1,9 @@
 name: Update Screenshots
 
+# Called by rust.yml only (issue #254): it builds the WASM package, so it
+# runs behind the JavaScript stage, on pushes to main and on dispatch of
+# release.yml with release_mode=screenshots.
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'web/**'
-      - 'src/**'
-      - 'data/examples.lino'
-  workflow_dispatch:
-    inputs:
-      update_readme:
-        description: 'Update README.md with new screenshots'
-        type: boolean
-        default: true
-      update_use_cases:
-        description: 'Update USE-CASES.md with new screenshots'
-        type: boolean
-        default: true
   workflow_call:
 
 # Least-privilege default; the job below escalates to what it needs.
@@ -52,9 +38,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Rust
-        uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master branch @ 2026-10-09
+        uses: ./.github/actions/setup-rust
         with:
-          toolchain: stable
+          targets: wasm32-unknown-unknown
 
       - name: Install wasm-pack
         uses: ./.github/actions/install-wasm-pack
