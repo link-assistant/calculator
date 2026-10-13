@@ -75,3 +75,6 @@ wasm-pack-v*.tar.gz
 # Local CI investigation logs and full competitor results
 /ci-logs/
 docs/case-studies/issue-227/results/coverage-results.json
+
+# link-foundation/meta-language checkout for js/scripts/translate-rust.mjs (issue #254 R2)
+/.meta-language/

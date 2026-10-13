@@ -1,0 +1,659 @@
+# Rust generated from js/src by link-foundation/meta-language (issue #254 R2).
+# Written by `node js/scripts/translate-rust.mjs --write`. Edit only `commit`, the pin,
+# then run --write with meta-language checked out at it. `allowlisted` counts the
+# js/translation-allowlist.lino entries the module needs (items, cascades, comments).
+js_rust_translation
+  meta_language "https://github.com/link-foundation/meta-language"
+  commit eb0574d5528babd3b4aadece81590d8e2230b99b
+  modules 81
+  translated 629
+  carried 1512
+  comment 128
+module clock.js
+  source 1e7bb4eef731f4e1391242db1df2d21463fa0970976049d00c7955438faae699
+  output 4a597979f8dfd3b640ca030754e55d09a5f95d39fa398db7937abfee5f35972b
+  parts 1
+  translated 1
+  carried 8
+  comment 0
+  allowlisted 4
+module crypto_api.js
+  source 0a8012af36e61c01215a449c2d5d7577100d9b222967d4b90437e73ec4e61965
+  output 5baf221c814fb5ecbdf62562be2094dfe146da47ef19c6f00865ad6ee8d483ac
+  parts 1
+  translated 8
+  carried 24
+  comment 0
+  allowlisted 13
+module currency_api.js
+  source 8ae33dead36afc0133a76f2d86b568255187e303f5b2a3cf7f62c534ee565da4
+  output a9ec1acea971b4f891acd0e4b547270efe6ab19e08c49427474527ed4f5253e4
+  parts 1
+  translated 14
+  carried 32
+  comment 0
+  allowlisted 17
+module error.js
+  source 1f63a68e7b4800d205161c71d6afc44a060499afe5a7a5b8cb2ce7680a994ec6
+  output fc3755c3a490831b8b1bf79a4e0328fca4be7669e46a634a4e6eca1fba599a32
+  parts 1
+  translated 2
+  carried 6
+  comment 0
+  allowlisted 3
+module generated/arithmetic-words-lino.js
+  source f4a4a79e9b58a2c961ec3a52ac0cf2a658a5bff2eabc5b32c3837ca80c505c1f
+  output 811b4dc170b94ac71662ee9c43eaa275c204e104a2e73cbd358ba85586e3b41e
+  parts 1
+  translated 2
+  carried 0
+  comment 2
+  allowlisted 0
+module generated/bundled-rates.js
+  source b7421ab8fad66dd04a98075e3bbc4a2d36cf6d00688080aeb15d4026951e750c
+  output 2f44161c3539709672a794a55820f426ca7a95a4a44eb9cd25888f170063a900
+  parts 1
+  translated 2
+  carried 2
+  comment 2
+  allowlisted 1
+module generated/units-lino.js
+  source 174ac77bf2420a5b89b4ede463056073ab9c3da944e805847b6d102404d5c289
+  output f063f50ad54a8c158aea20ce8470c7c91dba115304e860ffb7c177e666e345ea
+  parts 1
+  translated 2
+  carried 0
+  comment 2
+  allowlisted 0
+module grammar/arithmetic_words.js
+  source fce3ae010db273743c5a81950eb3cdf66f631bd35d2a5b5ebbf57d5965f70e4f
+  output 5313923934a598c97998364451aea760f7ab93d2d45f30e5529a02d8ccb6aed3
+  parts 1
+  translated 8
+  carried 42
+  comment 0
+  allowlisted 19
+module grammar/datetime_grammar.js
+  source 78199ecb6766fbba06056782fb658cb59deab08c4241268fdf93973dedfa58f4
+  output fb789b2136a2c6db2c327961efa47447b217aeec85c877e11e3f5e623021acb2
+  parts 1
+  translated 3
+  carried 3
+  comment 0
+  allowlisted 2
+module grammar/dimensional_functions.js
+  source 3cefdf13c9849c0b480f77d3a692feb2ec70d4d6f62ae72eb33787c81cdc8050
+  output 752ab0604a1b10177cd46ee6c5b7bb24b83da661096cba3fea5c9d76d128a778
+  parts 1
+  translated 5
+  carried 9
+  comment 0
+  allowlisted 5
+module grammar/expression_parser.js
+  source 587b0c1ac0c5e3fad83877994e1d2f95c78b16e045425c097d18524652709924
+  output 4eefe0513157d4642c0b3c06525b512c65c59ddf59d3330d784aa1828253ab13
+  parts 2
+  translated 13
+  carried 22
+  comment 0
+  allowlisted 12
+module grammar/expression_parser_locale.js
+  source a7e45190b5dc629ece64c6bbc4c02f7a4eed0b4d5f729fdb9f734ac0e11a8705
+  output 73ac40a69a08533225ba4b5f8a91b646aed8766c72924689189b18d6a3537616
+  parts 1
+  translated 1
+  carried 7
+  comment 0
+  allowlisted 3
+module grammar/expression_parser_timezone.js
+  source abbc52f6d0002f46afd125e89285c31199e672bcb755532a08b160596ed10c33
+  output cf496223ae21fa9da48477ee6b01f0922257bf6144bf89d910a84fa98fe23948
+  parts 1
+  translated 2
+  carried 11
+  comment 0
+  allowlisted 5
+module grammar/index.js
+  source d426b7f4c231e17cfbd717786bb8959d410d4c8e0284a11accbb191435c4b3a5
+  output 19b950de4ba4645588a4df95f4eaaa82218ecd132c35025874ce33b27fc2d1df
+  parts 1
+  translated 0
+  carried 7
+  comment 0
+  allowlisted 7
+module grammar/integral.js
+  source 51ab2d3ee549ba1274a40595ed37f3c910f1e1d2ceb98b17d7bd10b444071461
+  output 21f631c24205c34e9bd275989b1ece3c94757d66e6cd079e4d640fc157cdae12
+  parts 1
+  translated 5
+  carried 7
+  comment 0
+  allowlisted 4
+module grammar/lexer.js
+  source 78e452da3f383ca86b295d8898d1216ee5e44e376b9ea70e7f0834715714f3bd
+  output 1077da2d0027020677791fec1f773efc75b2c1dfa271559f2c359a5297f38a8a
+  parts 2
+  translated 9
+  carried 19
+  comment 0
+  allowlisted 11
+module grammar/linear_equation.js
+  source ffc260df15788813350b613598d4fe4be62ac98e20f5e114ddd51f49f27a7962
+  output 4cbc3bb5ae94155416fe716d12bab3853a891e927680445cef8934ff0b47262e
+  parts 1
+  translated 4
+  carried 18
+  comment 0
+  allowlisted 11
+module grammar/locale_numbers.js
+  source 9be458c5b1df2a95bc24b7ac80674f8ebaed655c26c48d3bc6e80ab1a607f0e5
+  output 71cb0a1221c3c93f25ef4e6dae304c33d390cb01df1aede860f717d2e399eec1
+  parts 1
+  translated 8
+  carried 17
+  comment 0
+  allowlisted 9
+module grammar/math_functions.js
+  source 2a601266b3e0f8f53786df4649a249819657954a2dc92312660a47db621815c6
+  output b3d5eff206de8deee28fa398fb4f674a60f5bcfa5f32b052fa76577cfcf0dfc7
+  parts 1
+  translated 12
+  carried 17
+  comment 0
+  allowlisted 10
+module grammar/number_grammar.js
+  source e3724485589c188647f60905ea79ad076694a48ba3defba2e301db940b093ce0
+  output 18a82c86071c6f9b919a98f45d37311d748d661eb83719fd291ad604b10ca59d
+  parts 1
+  translated 4
+  carried 6
+  comment 0
+  allowlisted 4
+module grammar/polynomial_equation.js
+  source c07156800042f9c32d8b331e305e19733ca9ea708f77ecb76331ade4ef0c3727
+  output 38650ba611f129019a9e8408b122cd659cec78c92de619d7b72d1cc831329564
+  parts 2
+  translated 12
+  carried 46
+  comment 0
+  allowlisted 24
+module grammar/token_parser.js
+  source 693bb45bed86df491ae992416ccbc387e0c0806a197a266422e02c68e1907c16
+  output 29c08c675a2a7dae7d8b5de342d068920a9550f0733820fc945a5eeb419a566d
+  parts 1
+  translated 9
+  carried 16
+  comment 0
+  allowlisted 12
+module grammar/token_parser/comparison.js
+  source 70c7312adb96fa94f08c55ccc1e25f50ff0dafe45ce51624b78f50a67c6ce066
+  output e13ad33a90b0b5f16d441dd8a0e9029c03fcdeac8ffad8bd29cf49552773436b
+  parts 1
+  translated 3
+  carried 16
+  comment 0
+  allowlisted 8
+module grammar/token_parser/datetime.js
+  source 7ea897ec99bf2c756df1cce64fd45739c641d526892ee9b191166bd84103ac5c
+  output 88249cd7db12df6ce45c8be9df1fef4f36c229508d44fe1310ce793adb5adb3f
+  parts 1
+  translated 6
+  carried 17
+  comment 0
+  allowlisted 8
+module grammar/token_parser/integral.js
+  source 18addd93e2c35beda7a1d9177f2d0d653aeaa247602042ddcf47fa606cb3d638
+  output 7ea53c07b4dd9828235a690cee3051efe19e8824c1e11541c7635a8a606947bc
+  parts 1
+  translated 8
+  carried 17
+  comment 0
+  allowlisted 9
+module grammar/token_parser/numbers.js
+  source 3012f9b78dccf7e53cff54c142f8bc1e9042df35d39c904c632cb9e98ee3a65f
+  output 280d9f99bbfdf866c5fc5da28bf6e07cb71dd11f2b51435dade03ebb15bbf448
+  parts 1
+  translated 1
+  carried 4
+  comment 0
+  allowlisted 2
+module grammar/token_parser/operators.js
+  source 612be1143f1afbfe37569076c28dbff89aeae615bfa99c62e7e1519707453a91
+  output b3666d4a93b854923fff1e955f994f5a4f31c905cf3a712af167aa6e291b88f3
+  parts 1
+  translated 3
+  carried 7
+  comment 0
+  allowlisted 4
+module grammar/token_parser/percentage.js
+  source 6f4c44b8e3984f56f7bae985dd675c3344d4b36e5455581230c003d427cea29f
+  output e990382b9105f6476ed64b3711c67f2cb71253132fc1d5100eea27ff4678fbec
+  parts 1
+  translated 6
+  carried 20
+  comment 0
+  allowlisted 10
+module grammar/token_parser/quantities.js
+  source c7260adcb538c3b109ad90ec7eb81ab18950e408e0511b6e5c48edfe56e919ce
+  output 2c9c66e7ffbc033c5d09830d8d4cb82dcf5d8981dc3a3969990663ca568c25bf
+  parts 1
+  translated 9
+  carried 33
+  comment 0
+  allowlisted 17
+module grammar/token_parser/units.js
+  source 922b380bd9e136a720755633f0e8f36bba0b51ca3907a087c66a8a9ea156479b
+  output 96c3d94df6ff0134b20dc98c57de397b1176ef7ad6d81d637e3d933ce72e67a2
+  parts 1
+  translated 4
+  carried 9
+  comment 0
+  allowlisted 5
+module index.js
+  source 6a8c5451411daa69605f3ad986af0d7c3c3d2ef4a408ce90410c87667b603095
+  output 5e8e50e912b6104166071dca88d5eeee8087565d006d10e36317c2670dd20cb1
+  parts 2
+  translated 11
+  carried 38
+  comment 0
+  allowlisted 25
+module lino/index.js
+  source c86f4da3646aee57a9d1238f12cf0c556cec512016acafa5facbdaf5c8346c3a
+  output d40ca70361790f2e4bc7fa383eabd0964c094717a9fc753eeb4eec9e022666ac
+  parts 1
+  translated 2
+  carried 9
+  comment 0
+  allowlisted 5
+module plan.js
+  source d536f576cc1649d220182d80f16265e4ca7624550eb209446ebc2dc6cd0d7e34
+  output 3eaf8c0a22a44c573a01050e9e03cb0030d95da4bacfe24d69fd848192018ff8
+  parts 1
+  translated 2
+  carried 19
+  comment 0
+  allowlisted 10
+module rust/chrono.js
+  source 482516643c9d7823efd375768e7e4875a8eb37cb05cb1dbc7b3211d7380ec967
+  output 7c925cfa8cd51ca6ab8c1242aa5e982caa4cca3960d6f2bde68cc36c89e9f0e4
+  parts 1
+  translated 0
+  carried 9
+  comment 0
+  allowlisted 9
+module rust/chrono/date.js
+  source 5ff3b494e8c56c836a3a0b3cbc33bff430185a32c93e33ac2dd590aed6532372
+  output 526a1c45cf146e02214992d622cf00283dab5c5f470c59e835840e2e39f5cfc1
+  parts 1
+  translated 20
+  carried 7
+  comment 0
+  allowlisted 4
+module rust/chrono/datetime.js
+  source 3247d46a49f8fb8f26ed5df2cbc19437fa41ea77906fe8825b4970cb9798f9ea
+  output 9d8719bbbb5b5e811d2ac31ee8ff9e3cc8bb7c62a67daa7fc9e5622d23c3c545
+  parts 1
+  translated 8
+  carried 4
+  comment 0
+  allowlisted 2
+module rust/chrono/delta.js
+  source 4fdf0385a1929ed70731acf02c10469c8e80ab63c91af77dd92c785693884f93
+  output 2a30bfc48743eb10f1f974bc75035114551a9eef26d8503883cf31a3cbc34fba
+  parts 1
+  translated 5
+  carried 29
+  comment 0
+  allowlisted 19
+module rust/chrono/formatting.js
+  source d0b1c31b62890307892d53a8e0ca02b5ab30e59af8005f4f6776c6233bbe815f
+  output 58297f64642b3fd46a2db6d27fb27bcd312ee3a6ffb9c32cc635279e60bdf93e
+  parts 1
+  translated 9
+  carried 31
+  comment 0
+  allowlisted 14
+module rust/chrono/offset.js
+  source 9968f6afd70795bb42e43be1e365ba800754bc3f975ab87fbf9d7d802ab99a61
+  output 9aba17b8ca2946c519c5a41aeff3709701107623001ae033071653e93c65c878
+  parts 1
+  translated 6
+  carried 18
+  comment 0
+  allowlisted 8
+module rust/chrono/parse.js
+  source e742de181a1eeed1dddb6b60456e287db8b812a3dedf98059e72d043aa7dc7d3
+  output e6f19d952cb6bfefff05a5d798b7cb5209bd4b7b25ec18ce1d073f78480028fb
+  parts 1
+  translated 12
+  carried 57
+  comment 0
+  allowlisted 33
+module rust/chrono/strftime.js
+  source 60711b0dc5d69dd41a169f4d2bb9ee9a51f668a5400fcc74bde4a20c8a34129d
+  output fc492276a509ffa07e23bbcaa5fb7593d43f0b599ff3cd050b2dcc3e20b32780
+  parts 1
+  translated 1
+  carried 37
+  comment 0
+  allowlisted 19
+module rust/chrono/time.js
+  source 3ad46e51f16c2f08621b4a2c2a326d0a0af9f5a009e854f9aa2851692d2b3864
+  output 3347ab9c465ac506187bae3ac298a6da607b528579708fe4c281446f2072f24c
+  parts 1
+  translated 6
+  carried 4
+  comment 0
+  allowlisted 2
+module rust/chrono/util.js
+  source 7737cddd65648e941d28a3365386b7bb971efa0eff57e644eab4782f466f3062
+  output 8cd96e879ba20efcdc384684e87c625404984bbf74f0646ae861d0867e7946dc
+  parts 1
+  translated 0
+  carried 15
+  comment 0
+  allowlisted 8
+module rust/core.js
+  source cf120d42784e3627af76c2bb57a2a0196ad7ee8c1b1bb1dceb9748345c89b378
+  output ffc1cd351db5e3d5289bd4be522e8ffa16ee2433b3065c7a18385452991cf9aa
+  parts 1
+  translated 0
+  carried 35
+  comment 0
+  allowlisted 18
+module rust/decimal.js
+  source 4303f78492ace159fa9a3c30d180ff4ae6e5b10517839ca3c421b287bf4fa223
+  output c465adbd91218c038ce77622bac2be66450e0e292b587855551b0db2d6b6ee6d
+  parts 2
+  translated 18
+  carried 65
+  comment 0
+  allowlisted 35
+module rust/fmt.js
+  source 0f63939f5285c952686b12417b530c251fc6456f2fbf66bb54acb176777a55fd
+  output 62db030a54194a8d071a54ac9d483dc836d1e2ae522e706013dd11d6515b3de2
+  parts 1
+  translated 0
+  carried 23
+  comment 0
+  allowlisted 12
+module rust/libm.js
+  source 6d5af885c245ae5751746b91a0ed2a305ef3e5d6bc374827df193d73df47dc3b
+  output 7781583420bcd1fd88123728659e1ac7270433296d4e71bf550eac4c74029688
+  parts 1
+  translated 2
+  carried 7
+  comment 32
+  allowlisted 7
+module rust/libm/atrig.js
+  source a40e8efb584a5bc1169b4753a7b0c615d5192a4751a2caf919e8ea65e3d23119
+  output 1d5d278bf81d584f40e9a93df3b8cbcd31822412615cc306b98494f1be7c1a48
+  parts 1
+  translated 33
+  carried 11
+  comment 13
+  allowlisted 6
+module rust/libm/bits.js
+  source 9c31b6916a55c56e8c7bf659becf6c7171b26576674d30c067841ce5cf4f1f66
+  output a504a39b33541ebfe5f8b49ed4deee29dea94ed23ecb9f6473c5cdc31fc567e0
+  parts 1
+  translated 0
+  carried 27
+  comment 10
+  allowlisted 17
+module rust/libm/cbrt.js
+  source a72de5789857752dcc09a51f02374ca9ce60597583ed0387d53b2732965dd618
+  output d6bf1a52f40383522bf4f1e6d97965ab65b96aff44e3403de9a09b4a3cb50414
+  parts 1
+  translated 6
+  carried 20
+  comment 5
+  allowlisted 15
+module rust/libm/exp.js
+  source ccc15df0077eb1c28b625f463574d94583924493b4e31007ef00c49f00051254
+  output e49b8bd8f7efa41d47685f021ad5396e3dcc33ca557bd24a0bc07f630919c64c
+  parts 1
+  translated 35
+  carried 18
+  comment 14
+  allowlisted 10
+module rust/libm/fma.js
+  source ac6becd41792833c3f0a794731326d3bc97522a3e59e8ef7f56b469bc391c169
+  output ce24d8d6329961f8981aaad52a10d9cbe12567279b9e608115c493cd6063f6a3
+  parts 1
+  translated 10
+  carried 16
+  comment 9
+  allowlisted 9
+module rust/libm/log.js
+  source 96841b8c72589ae2d473ed178e39d9bcecb59f0f51a7aebe46114204b4760cfa
+  output 1b52d05d3b57e274dfc5115e88274db25e1b5d5cd0206a808f8e6841fe471800
+  parts 1
+  translated 30
+  carried 10
+  comment 4
+  allowlisted 6
+module rust/libm/pow.js
+  source 59a4063f8d094e27fd26e6b4b0bfb43762552f713db3752c2d4dba97e1058ba9
+  output f4f8b7c20f7dda1f2507517e74c540ac66bbaa11486fce6871b135f47bdd9903
+  parts 1
+  translated 52
+  carried 2
+  comment 5
+  allowlisted 1
+module rust/libm/rem_pio2.js
+  source 61a05aad89aca64fedb7bda392a07af530e0d1dcec34bd703aabcded0fcdbc75
+  output 0ec34fd953703ca387c3c579d1780d0d5e40eb99253ce940ae7009ee489e0add
+  parts 1
+  translated 21
+  carried 9
+  comment 9
+  allowlisted 5
+module rust/libm/trig.js
+  source f0b74f339447eebb3e028b53aeaf4cee145b77628cc4939034e01b128ee46ee4
+  output b0a599248aca0b7092b871025f3b8e6c27dcadabee1ab9f859c1baa84f0eacb8
+  parts 1
+  translated 32
+  carried 10
+  comment 13
+  allowlisted 5
+module rust/num.js
+  source 174f00ba8d6d41e23c563ece5b6cd1f87c9654f5e76de0193a180827a5197591
+  output b4dd57c814e7890dbb2d06aeaf88c86c93d5a2e19b3f22412f203bbf324584b3
+  parts 1
+  translated 17
+  carried 31
+  comment 0
+  allowlisted 23
+module rust/ratio.js
+  source a6294b3208c6541da8355b468c6e9a36a2c2dd952435ae1743e682b414911767
+  output 6a83836b2590b7d5c5f10148563454a1aa5b72fc5a66acc3cb65790b755635cf
+  parts 2
+  translated 18
+  carried 62
+  comment 8
+  allowlisted 37
+module rust/str.js
+  source 4dcfe272f372a983984a3600bf0fe746afaf5d16fc258bf6ef316e9721861b48
+  output a7c784290b6a6fecdf80a695320bdbc961e40d36f9145aab57cfa4a0286f4118
+  parts 1
+  translated 5
+  carried 116
+  comment 0
+  allowlisted 62
+module substitution.js
+  source e47c7ad34d8feba9daa89542802c4ba1fd06a6f1e88e963b4104f32367e9b097
+  output 270ac6bb5dd47edabb91f94ba82fe9ce24efd5b2186d2749c77b0c00077b4e24
+  parts 1
+  translated 1
+  carried 3
+  comment 0
+  allowlisted 2
+module types/currency.js
+  source 09e518aa397910a2e0b893f39d7a5d69c696dd7c7385d48df69eec48d4363e90
+  output 90b01afa80a687eba218376f59612ee1aa57fca79a95f1d163350c217da92aa2
+  parts 1
+  translated 5
+  carried 13
+  comment 0
+  allowlisted 6
+module types/datetime.js
+  source 34030f7cd5620cb3dd705a4e586399b8fbc51e788543d900b3ace58d328b0370
+  output 889f7f977dfc827cd771d29c7ce4fbbd7087c7e96e332dd31fb77a8c8cf6bdc5
+  parts 2
+  translated 6
+  carried 6
+  comment 0
+  allowlisted 3
+module types/datetime_parse.js
+  source 92d5d38a674f36d9aad35f4164eb98c532b83fb0afdb0a1b23396ac64aa18eb5
+  output 5f0444057f203bb3fad4f99487c17121feeb80193aca3d93f45499efd8a09c2a
+  parts 1
+  translated 7
+  carried 27
+  comment 0
+  allowlisted 14
+module types/decimal.js
+  source 7d0d22eae8d195cf4f8a94468e92a7ee3e8d66898be02edd39f62b9e19d0c650
+  output 1d4c6bf0d35304427060e2a517d2bfa24ca8a359eaafee433b555d5c5676ec57
+  parts 1
+  translated 1
+  carried 5
+  comment 0
+  allowlisted 3
+module types/dimension.js
+  source 33aaa66b3b3d233b3a67379f84d9c70d8d7c9ee080b4c36e15606a588c7f62ee
+  output 06a54e0e0d63503db0dc9ca3870368b991aebe1ef0ee92b0b6d61b0ad6a4e189
+  parts 1
+  translated 3
+  carried 3
+  comment 0
+  allowlisted 2
+module types/expression.js
+  source 05a39a3f13785cb6dd5e6ab19a7c9e4ebc4a02cd5036cd40a6d54c2135b9d1b8
+  output 8e6f817fb7a5ec86be490347d6113a976f7ad546edbaa7e8da87793b859538d6
+  parts 1
+  translated 3
+  carried 9
+  comment 0
+  allowlisted 5
+module types/index.js
+  source cbc54826d846c2526774d21bdf7471786d5765e7339135de6f28210e044be544
+  output 5a8d744475059d6e8d949fcfd696c48356fe1d33ed9cc126ff1cc9e14fbb7ce9
+  parts 1
+  translated 0
+  carried 10
+  comment 0
+  allowlisted 10
+module types/physical.js
+  source eccad0dc663f84cd824697315cd841cfa73e570634ef8a5c6b0359099b029bb5
+  output 49f4a8174931da6abe73b556d853a3ac74f560d9345fa9870b25fa1237dc0c4a
+  parts 1
+  translated 5
+  carried 17
+  comment 0
+  allowlisted 9
+module types/rational.js
+  source 954f41d0583d258da3fa3e21e6082f5a0f2819250a8d1dbda100b275cdbeec18
+  output 5bc2031b930a0f63f4a65afc6d79bc95d46c8b1884324ec284ff14774f36d31f
+  parts 1
+  translated 5
+  carried 13
+  comment 0
+  allowlisted 7
+module types/unit.js
+  source 190d597f7a5625b0600b57c4c85d4487911a1e7cd06a832283aba143bb817202
+  output 4e5ad48f565c64c5c6f2d295508b26da4e83533fa772c1ed19644696a5799478
+  parts 1
+  translated 4
+  carried 23
+  comment 0
+  allowlisted 12
+module types/unit_db.js
+  source ca92ebc060be70f8582fb36734a14ac6916eb87345ffdf21e0df74b0aef6b492
+  output 5c47be5832f330dc368ff146d4071ec4fb4f6f18fa25bf5cd08f946062f2b95e
+  parts 1
+  translated 7
+  carried 39
+  comment 0
+  allowlisted 19
+module types/value/display.js
+  source 59a261a64cd7fdd9a3a9ae9b2144cf28f3be40e840fddb74f8802485450218cd
+  output bb153224e2eff1602b90be69c93d4ae0a374480569d4e6aff8249cbca58f60f1
+  parts 1
+  translated 2
+  carried 3
+  comment 0
+  allowlisted 2
+module types/value/duration.js
+  source 94baea8fa94c2c29896caac2ffb3d97b0392efb1886179c9d5276ba6445daa2e
+  output 4b75be3d7dbe8ed3f6844c4ae8a0e66d1312c3a1d7c47d33b39f68e94626bcc9
+  parts 1
+  translated 7
+  carried 21
+  comment 0
+  allowlisted 11
+module types/value/formatting.js
+  source 8d5e81a202c88b794aa62f1f1c1a556704ca49c55c1a0ccc14bf890f20499d4e
+  output 596b915004d3d3172828ee1fb3dbb177c1f2c186b9071a1444b74b459aa09aba
+  parts 1
+  translated 1
+  carried 15
+  comment 0
+  allowlisted 8
+module types/value/index.js
+  source 210529ca563ec7da7a36605d051f9b5e6892ce5622005c2b8e0cc416bfdc1cca
+  output adccdf6478c832a42e7bc41a3342c84cffbef9b4a0b4685ddb56721e0edeaff5
+  parts 1
+  translated 13
+  carried 13
+  comment 0
+  allowlisted 7
+module types/value/kind.js
+  source 7507fe332fbbeb8a196e1d58349371d2e6f67bd761e7d00c201861d1f4cf47a7
+  output 5214fcf5ba6431ceee92c2963964709d6059012175cf396ae896bc27e7dd5112
+  parts 1
+  translated 0
+  carried 5
+  comment 0
+  allowlisted 3
+module types/value/physical.js
+  source e28dee288a9b9483fb7ee8cb5e0711d7114b070631ae61576fac291d16cc1cad
+  output e546069b954639939b256e7bf0fac22c6dc5ed116323e6b97944ef2fabdb2814
+  parts 1
+  translated 8
+  carried 43
+  comment 0
+  allowlisted 22
+module types/value/ratio.js
+  source a5f880c18703ad689925f879d258e5a406b17c401186b421ee753e3777d3cc8a
+  output a261e31c7a22151b992b7abc2c7b20df1ca524db47394b23df3d4e792b220cc8
+  parts 1
+  translated 7
+  carried 15
+  comment 0
+  allowlisted 8
+module types/value/uncertainty.js
+  source d6cb31e7668f5548bdc88c149116caba810b5e5dc4001720b9235b1a73e42f5b
+  output 04df773a630febf97b536e4be138a0388f2aca2c95c62de7e83ceaaf9f128369
+  parts 1
+  translated 4
+  carried 5
+  comment 0
+  allowlisted 3
+module utils.js
+  source 3baa7636edbfa8ccf9ec1bf864d4020986941b95584b6659dd72974726ba4b9e
+  output d8e80b3263cb3ee2332c95afe7cdba7bb3bc89a330115e78fbd3426bb3932030
+  parts 1
+  translated 1
+  carried 7
+  comment 0
+  allowlisted 4
+module wasm.js
+  source 39cfab4d8e8a8a39c7eaf0e346f59f26a46096bc1a6341981e0c9f9f1e56fbbd
+  output 2c329c2bb68355550a4e34e0d32699b13de80c196d597e64e28fd2eb36415d13
+  parts 1
+  translated 12
+  carried 36
+  comment 0
+  allowlisted 20
