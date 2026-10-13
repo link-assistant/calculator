@@ -1,0 +1,9 @@
+# The Rust toolchain used locally and in CI (issue #254). CI installs exactly
+# this version with `rustup toolchain install`, so a new stable release can no
+# longer break an unchanged commit. Dependabot (the `rust-toolchain` ecosystem
+# in .github/dependabot.yml) proposes updates. `rust-version` in Cargo.toml
+# stays the minimum supported version for crate users.
+[toolchain]
+channel = "1.99.0"
+components = ["rustfmt", "clippy"]
+profile = "minimal"

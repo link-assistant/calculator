@@ -1,0 +1,49 @@
+# Version updates for every dependency manifest (issue #254, from the
+# link-foundation pipeline templates' checklist). Security updates are enabled
+# in the repository settings and do not need entries here.
+#
+# The Dependency Freshness job (scripts/check-dependency-freshness.mjs) still
+# fails a pull request when a direct dependency falls behind without a
+# documented blocker; these pull requests are the routine way to catch up.
+version: 2
+updates:
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      cargo-minor-and-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: rust-toolchain
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+
+  - package-ecosystem: npm
+    directories:
+      - /web
+      - /js
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      npm-minor-and-patch:
+        update-types: [minor, patch]
+
+  # Workflows in .github/workflows and the composite actions in
+  # .github/actions/* both reference actions.
+  - package-ecosystem: github-actions
+    directories:
+      - /
+      - /.github/actions/*
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      github-actions:
+        patterns: ['*']
