@@ -25,3 +25,13 @@ serde_json = "=1.0.154"
 # The rational bin includes src/types/{decimal,rational}.rs, which derive serde.
 serde = { version = "1.0", features = ["derive"] }
 libm = "=0.2.16"
+# The lexer bin tokenizes with the calculator itself; optional, so the other
+# bins do not build the whole crate.
+link-calculator = { path = "../../..", optional = true }
+
+[features]
+calculator = ["dep:link-calculator"]
+
+[[bin]]
+name = "lexer"
+required-features = ["calculator"]
