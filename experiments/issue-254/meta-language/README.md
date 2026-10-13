@@ -94,7 +94,8 @@ node $E/det.mjs    /tmp/ml-research/head/js/src js/src/rust/libm/log.js  # deter
 
 Toolchain: Node 22, cargo/rustc 1.99.0. The generated files are under
 `v1.0.0/`, `head/` (43 modules, calculator commit `5a0b9849`) and `head-all/`
-(every module at the commit in `head-all.commit`). Each has a `report.json`
+(every module at the commit in `head-all.commit`). The generated `.rs` files are not committed (see `.gitignore`; the commands
+above regenerate them). Each has a committed `report.json`
 with per-item status and reason; `head/census.json` has the diagnostic of
 each carried block.
 
@@ -515,3 +516,11 @@ constant tables with hex comments) does not round-trip.
 starts on the same line as the previous item's end to that item: either keep
 it in the item's `// |` provenance, or record the separator. Add a corpus case
 with trailing `/* */` and `//` comments to `parity/self-translation/cases.lino`.
+
+## 6. Full run over all 64 modules (calculator `44508454`)
+
+`node run.mjs /tmp/ml-research/head/js/src js/src head-all --bind` with main `eb0574d5`:
+**531 translated, 1230 carried, 128 comment** across 64 modules (output in `head-all/`).
+The census, categorisation and compile check in sections 3.2-3.3 were run on the
+43-module set only; run `census.mjs` and `categorize.mjs` on `head-all/` to break down
+the 21 newer modules (math, dimensional, integral, datetime, number, equation grammars, lino, plan).
