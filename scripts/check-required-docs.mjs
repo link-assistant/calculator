@@ -27,8 +27,10 @@ export const REQUIREMENTS = {
   'README.md': ['Features', 'Development Setup', 'Contributing', 'License'],
   // #competitor-coverage: docs/competitor-corpus.md, scripts/update-coverage-gap-issue.mjs
   // #closing-issues: scripts/check-closing-references.mjs
+  // #rust-build-load: .cargo/config.toml, scripts/bounded-cargo.mjs
   'CONTRIBUTING.md': [
     'Development Setup',
+    'Rust Build Load',
     'Pull Request Process',
     'Closing Issues',
     'Competitor Coverage',

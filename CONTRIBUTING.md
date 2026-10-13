@@ -70,7 +70,17 @@ Thank you for your interest in contributing! This document provides guidelines a
 
 4. **Run tests**
 
+   Local agent runs execute the JavaScript tests by default and build Rust
+   only when a change needs it (see [Rust Build Load](#rust-build-load)):
+
    ```bash
+   # JavaScript checks: run first, by default
+   node --test scripts/*.test.mjs
+   npm test --prefix web
+
+   # Rust checks: only when needed, through the bounded wrapper
+   node scripts/bounded-cargo.mjs test
+
    # Run all tests
    cargo test
 
@@ -203,6 +213,48 @@ mod tests {
         }
     }
 }
+```
+
+## Rust Build Load
+
+A full `cargo test` compiles the library, the CLI and every integration test
+binary. Several agents doing that on one machine at the same time exhausted
+its memory and disk (#254), so the Rust build load is bounded everywhere:
+
+- **Local agent runs execute the JavaScript tests by default**:
+  `node --test scripts/*.test.mjs` and `npm test --prefix web`. Build Rust
+  only when the change touches Rust, the WASM bindings or a check that needs
+  the binary, and then run Cargo through `scripts/bounded-cargo.mjs`.
+- `.cargo/config.toml` limits Cargo to two parallel rustc processes, turns off
+  incremental compilation (`CARGO_INCREMENTAL=0`) and reduces debug info:
+  none for dependencies, line tables for this crate. CI sets
+  `CARGO_BUILD_JOBS` to use all runner cores.
+- `node scripts/bounded-cargo.mjs <cargo arguments>` is the documented local
+  workflow. It queues concurrent builds behind a lock file, sets
+  `CARGO_INCREMENTAL=0` and the job limit, caps every process's address space
+  with `prlimit` on Linux, and prunes the target directory before and after
+  the build when it exceeds its disk budget: the incremental caches first,
+  then the whole directory.
+- CI caches with `Swatinem/rust-cache`, keyed by the job, the toolchain and
+  the Cargo manifests. Before saving, it removes incremental artifacts,
+  build output of this crate and dependencies older than a week, so the cached
+  `target` cannot grow without bound.
+
+The wrapper reads these variables, all optional:
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `CALCULATOR_CARGO_TARGET_DIR` | `target/` | Shared target directory, for example one per machine for all worktrees |
+| `CALCULATOR_CARGO_MAX_GIB` | `8` | Disk budget of the target directory |
+| `CALCULATOR_CARGO_MEMORY_GIB` | `4` | Address-space limit per process (Linux) |
+| `CALCULATOR_CARGO_JOBS` | `2` | Parallel rustc processes |
+| `CALCULATOR_CARGO_LOCK_WAIT_SECONDS` | `3600` | How long to wait for another build |
+| `BOUNDED_CARGO_VERBOSE` | off | `1` prints the sizes, lock owner and command |
+
+```bash
+# One shared, bounded build directory for every worktree on this machine
+CALCULATOR_CARGO_TARGET_DIR=$HOME/.cache/calculator-target \
+  node scripts/bounded-cargo.mjs clippy --all-targets --all-features
 ```
 
 ## Pull Request Process
