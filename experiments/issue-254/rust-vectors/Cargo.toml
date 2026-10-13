@@ -35,3 +35,7 @@ calculator = ["dep:link-calculator"]
 [[bin]]
 name = "lexer"
 required-features = ["calculator"]
+
+[[bin]]
+name = "expression_parser"
+required-features = ["calculator"]
