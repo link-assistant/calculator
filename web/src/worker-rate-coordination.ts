@@ -14,6 +14,9 @@
 /** The three independent rate sources the calculator supports. */
 export type RateSource = 'ecb' | 'cbr' | 'crypto';
 
+/** Every rate source; requests name sources only by membership in this list. */
+const RATE_SOURCES: readonly RateSource[] = ['ecb', 'cbr', 'crypto'];
+
 // ---------------------------------------------------------------------------
 // Rate source state management
 // ---------------------------------------------------------------------------
@@ -234,8 +237,10 @@ export function createRateCoordination(): RateCoordination {
 
     const waitFor: Promise<void>[] = [];
 
-    for (const source of needed) {
-      if (states[source] === 'loaded') {
+    // Iterate the known sources, not the request: a name from a message
+    // never selects a fetcher, and an unknown name is ignored.
+    for (const source of RATE_SOURCES) {
+      if (!needed.has(source) || states[source] === 'loaded') {
         continue; // Already available — no delay
       }
 
