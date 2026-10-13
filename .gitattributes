@@ -1,1 +1,2 @@
 parity/goldens/*.json linguist-generated=true
+js/test/vectors/*.json linguist-generated=true

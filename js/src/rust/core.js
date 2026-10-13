@@ -133,17 +133,39 @@ export function expect(value, message) {
 }
 
 /**
+ * `{:?}` of an error value: its `fmtDebug()`, or its string form for errors
+ * that have none.
+ * @param {unknown} error
+ */
+function debugError(error) {
+  const value = /** @type {{ fmtDebug?: () => string }} */ (error);
+  return typeof value?.fmtDebug === 'function' ? value.fmtDebug() : String(error);
+}
+
+/**
  * `result.unwrap()` for a function returning `Result`.
  * @template T
  * @param {() => T} fn
  * @returns {T}
  */
 export function unwrapResult(fn) {
+  return expectResult(fn, 'called `Result::unwrap()` on an `Err` value');
+}
+
+/**
+ * `result.expect(message)` for a function returning `Result`: panics with
+ * `message: {error:?}`.
+ * @template T
+ * @param {() => T} fn
+ * @param {string} message
+ * @returns {T}
+ */
+export function expectResult(fn, message) {
   try {
     return fn();
   } catch (thrown) {
     if (thrown instanceof Err) {
-      throw new Panic(`called \`Result::unwrap()\` on an \`Err\` value: ${String(thrown.error)}`);
+      throw new Panic(`${message}: ${debugError(thrown.error)}`);
     }
     throw thrown;
   }
