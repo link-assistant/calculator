@@ -214,6 +214,38 @@ jobs:
       - name: Run script tests
         run: node --test scripts/*.test.mjs
 
+  # === DEPENDENCY FRESHNESS (NPM) ===
+  # The npm half of the freshness check (issue #223) for js/ and web/; the
+  # Cargo half runs in rust.yml.
+  npm-freshness:
+    name: Dependency Freshness (npm)
+    concurrency:
+      group: js-${{ github.workflow }}-${{ github.ref }}-npm-freshness
+      cancel-in-progress: true
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+
+      - name: Install dependencies
+        run: |
+          npm ci --prefix js
+          npm ci --prefix web
+
+      # Issue #256: freshness is external state, so it blocks pull requests
+      # only; on push to main (or schedule/dispatch) it only warns.
+      - name: Check dependency freshness
+        env:
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: node scripts/check-dependency-freshness.mjs --skip-cargo
+
   # === JAVASCRIPT ENGINE ===
   # The native engine in js/ (issue #254) on the oldest supported Node.js,
   # the current one, and Bun.
@@ -373,6 +405,7 @@ jobs:
       - changelog
       - version-check
       - secrets-scan
+      - npm-freshness
       - scripts
       - js-lint
       - js-test
@@ -410,6 +443,7 @@ jobs:
       - changelog
       - version-check
       - secrets-scan
+      - npm-freshness
       - scripts
       - js-lint
       - js-test

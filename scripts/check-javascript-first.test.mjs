@@ -109,6 +109,11 @@ describe('check-javascript-first', () => {
     assert.equal(usesRust(parseWorkflow('jobs:\n  a:\n    steps:\n      # cargo build\n      - run: npm test # not cargo\n').jobs.get('a').text), false);
   });
 
+  it('allows the --skip-cargo flag but not bounded-cargo', () => {
+    assert.equal(usesRust('run: node scripts/check-dependency-freshness.mjs --skip-cargo'), false);
+    assert.equal(usesRust('run: node scripts/bounded-cargo.mjs test'), true);
+  });
+
   it('parses inline and list forms of needs and on', () => {
     const workflow = parseWorkflow(
       'on: [push, pull_request]\njobs:\n  a:\n    needs: [b, c]\n    runs-on: x\n  b:\n    needs:\n      - c\n  c:\n    needs: a\n',

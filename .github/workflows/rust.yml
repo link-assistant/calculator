@@ -107,13 +107,13 @@ jobs:
         # --workspace keeps the experiments member compiling (issue #256).
         run: node scripts/bounded-cargo.mjs clippy --workspace --all-targets --all-features
 
-  # === DEPENDENCY FRESHNESS ===
+  # === DEPENDENCY FRESHNESS (CARGO) ===
   # Fails when a direct dependency is behind its latest release, unless its
   # manifest documents the blocker with an issue URL (issue #223). Upstream
   # releases, not this repository's diff, make dependencies stale, so the job
-  # runs on every pipeline run.
+  # runs on every pipeline run. The npm half runs in the JavaScript stage.
   dependency-freshness:
-    name: Dependency Freshness
+    name: Dependency Freshness (Cargo)
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -140,17 +140,13 @@ jobs:
         if: steps.cargo-outdated-cache.outputs.cache-hit != 'true'
         run: cargo install cargo-outdated --locked --version '^0.19'
 
-      - name: Install web dependencies
-        working-directory: web
-        run: npm ci
-
       # Issue #256: freshness is external state, so it blocks pull requests
       # only; on push to main (or schedule/dispatch) it emits warnings instead
       # of failing a pipeline whose code already passed the gate.
       - name: Check dependency freshness
         env:
           GITHUB_EVENT_NAME: ${{ github.event_name }}
-        run: node scripts/check-dependency-freshness.mjs
+        run: node scripts/check-dependency-freshness.mjs --skip-npm
 
   # === CARGO AUDIT ===
   # Moved from security.yml so it runs behind the JavaScript stage (#254).

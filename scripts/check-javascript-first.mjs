@@ -34,7 +34,8 @@ export const RUST_STAGE_JOB = 'rust-stage';
 export const JS_GATE_JOB = 'javascript-stage';
 
 const RUST_MARKERS = [
-  /\b(?:cargo|rustc|rustup|rustfmt|clippy|wasm-pack|wasm-bindgen)\b/,
+  // `--skip-cargo` is the flag that keeps a script away from Cargo.
+  /(?<!--skip-)\b(?:cargo|rustc|rustup|rustfmt|clippy|wasm-pack|wasm-bindgen)\b/,
   /rust-toolchain/,
   /\blanguages?:.*\brust\b/,
 ];
