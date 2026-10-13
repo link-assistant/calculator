@@ -1,0 +1,44 @@
+name: Pull Request Description
+
+# Fails when the description closes issues it says stay open (issue #247):
+# PR #228 said "Merging this PR closes only #227" but carried `Fixes` lines for
+# #229-#246, and the merge closed 11 unimplemented issues. GitHub acts on the
+# keywords, not the prose, so this compares the two on every description edit.
+on:
+  pull_request:
+    # `edited` re-checks the description after an agent or a person changes
+    # it; no `paths` filter, because the description is not a file.
+    types: [opened, edited, synchronize, reopened]
+
+# Keep the workflow read-only; the check only reads the event payload.
+permissions:
+  contents: read
+
+# Provide Git config to actions/checkout itself; checkout runs git init before
+# any workflow step can configure Git.
+env:
+  GIT_CONFIG_COUNT: '1'
+  GIT_CONFIG_KEY_0: init.defaultBranch
+  GIT_CONFIG_VALUE_0: main
+
+jobs:
+  closing-references:
+    name: Closing references
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    concurrency:
+      group: check-${{ github.workflow }}-${{ github.ref }}-closing-references
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+
+      # The description is read from $GITHUB_EVENT_PATH, never interpolated
+      # into the script, so its text cannot inject shell commands.
+      - name: Check closing keywords against the description
+        run: node scripts/check-closing-references.mjs --verbose

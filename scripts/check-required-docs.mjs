@@ -26,9 +26,11 @@ import { fileURLToPath } from 'node:url';
 export const REQUIREMENTS = {
   'README.md': ['Features', 'Development Setup', 'Contributing', 'License'],
   // #competitor-coverage: docs/competitor-corpus.md, scripts/update-coverage-gap-issue.mjs
+  // #closing-issues: scripts/check-closing-references.mjs
   'CONTRIBUTING.md': [
     'Development Setup',
     'Pull Request Process',
+    'Closing Issues',
     'Competitor Coverage',
     'Changelog Management',
     'Release Process',

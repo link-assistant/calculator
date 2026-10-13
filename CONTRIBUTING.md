@@ -211,9 +211,48 @@ mod tests {
 2. Update documentation if needed
 3. Add a changelog fragment (see step 5 in Development Workflow)
 4. Ensure the PR description clearly describes the changes
-5. Link any related issues in the PR description
+5. Link any related issues in the PR description (see [Closing Issues](#closing-issues))
 6. Wait for CI checks to pass
 7. Address any review feedback
+
+## Closing Issues
+
+GitHub closes every issue that a closing keyword references when the PR is
+merged into `main`, whatever the rest of the description says (#247: PR #228
+said "closes only #227", yet its `Fixes` lines closed 11 unimplemented
+sub-issues). The **Pull Request Description** workflow
+(`scripts/check-closing-references.mjs`) runs on every description edit and
+fails when:
+
+- an issue has a closing keyword (`close`, `closes`, `closed`, `fix`, `fixes`,
+  `fixed`, `resolve`, `resolves`, `resolved`) and a sentence says it stays
+  open, is kept open, or is not closed (`keep-open`);
+- the description says the PR "closes only #N" while keywords close others
+  (`closes-only`);
+- an issue is referenced both as `Part of #N` / `Refs #N` and with a keyword
+  (`part-of`);
+- several issues share one keyword: `Fixes #1, #2` and `Fixes #1 and #2`
+  close only #1 (`missing-keyword`);
+- a keyword is negated: "does not close #N" still closes #N (`negated-keyword`).
+
+Write one keyword per issue the PR implements, each on its own line:
+
+```markdown
+Fixes #260
+Fixes #247
+```
+
+Mention issues the PR only plans, documents or prepares without a keyword:
+"Part of #227" or "#236 to #246 stay open". If an automated tool appends
+closing references for a whole sub-issue tree, remove the ones for issues that
+stay open before merging. Keywords inside code blocks, inline code and HTML
+comments are ignored. Check a description locally with:
+
+```bash
+node scripts/check-closing-references.mjs --body-file description.md --verbose
+# What GitHub will close, including issues linked in the Development sidebar:
+gh pr view <number> --json closingIssuesReferences --jq '.closingIssuesReferences[].number'
+```
 
 ## Competitor Coverage
 
