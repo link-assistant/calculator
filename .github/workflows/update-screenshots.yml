@@ -1,8 +1,8 @@
 name: Update Screenshots
 
-# Called by rust.yml only (issue #254): it builds the WASM package, so it
-# runs behind the JavaScript stage, on pushes to main and on dispatch of
-# release.yml with release_mode=screenshots.
+# Called by rust.yml only (issue #254): it commits to main, so it runs after
+# both stages passed, on pushes to main and on dispatch of release.yml with
+# release_mode=screenshots. The web app runs the JavaScript engine.
 on:
   workflow_call:
 
@@ -36,17 +36,6 @@ jobs:
           ref: main
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup Rust
-        uses: ./.github/actions/setup-rust
-        with:
-          targets: wasm32-unknown-unknown
-
-      - name: Install wasm-pack
-        uses: ./.github/actions/install-wasm-pack
-
-      - name: Build WASM package
-        run: wasm-pack build --target web --out-dir web/public/pkg
 
       - name: Setup Node.js
         uses: actions/setup-node@v7

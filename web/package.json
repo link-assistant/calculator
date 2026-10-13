@@ -19,6 +19,7 @@
     "i18next": "^26.4.4",
     "i18next-browser-languagedetector": "^8.2.1",
     "katex": "^0.19.0",
+    "link-calculator": "file:../js",
     "links-notation": "^0.26.0",
     "lino-objects-codec": "^0.9.2",
     "react": "^19.3.0",
@@ -39,7 +40,6 @@
     "oxlint": "^1.88.0",
     "typescript": "^7.0.2",
     "vite": "^8.3.4",
-    "vite-plugin-wasm": "^3.6.0",
     "vitest": "^5.0.4"
   },
   "engines": {

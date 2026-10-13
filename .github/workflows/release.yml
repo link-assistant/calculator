@@ -207,6 +207,9 @@ jobs:
           RULESET_STRICT: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         run: node scripts/check-branch-ruleset.mjs
 
+      - name: Check that the JavaScript engine has Cargo.toml's version
+        run: node scripts/sync-js-version.mjs --check
+
       - name: Check file size limit
         run: node scripts/check-file-size.mjs
 
@@ -341,6 +344,73 @@ jobs:
           RUNTIME: ${{ matrix.runtime == 'bun' && 'bun' || 'node' }}
         run: '"$RUNTIME" scripts/smoke.mjs'
 
+  # === WEB ===
+  # The web app runs the JavaScript engine (issue #254), so its checks, build
+  # and Playwright suite belong to the JavaScript stage. deploy-pages in the
+  # Rust stage downloads the web-dist artifact of this run.
+  web:
+    name: Web Build
+    concurrency:
+      group: js-${{ github.workflow }}-${{ github.ref }}-web
+      cancel-in-progress: true
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - run: npm ci
+
+      - name: Copy currency data files to web public directory
+        working-directory: .
+        run: |
+          mkdir -p web/public/data/currency
+          cp data/currency/*.lino web/public/data/currency/
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Run web tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Run end-to-end tests
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report-${{ github.run_id }}
+          path: web/playwright-report
+          retention-days: 7
+
+      - name: Upload web build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: web-dist
+          path: web/dist
+          retention-days: 1
+
   # === MANUAL CHANGELOG PR ===
   changelog-pr:
     name: Create Changelog PR
@@ -428,6 +498,7 @@ jobs:
       - scripts
       - js-lint
       - js-test
+      - web
       - changelog-pr
     if: ${{ !cancelled() }}
     runs-on: ubuntu-24.04
@@ -466,6 +537,7 @@ jobs:
       - scripts
       - js-lint
       - js-test
+      - web
       - changelog-pr
       - javascript-stage
     if: |

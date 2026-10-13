@@ -308,15 +308,15 @@ jobs:
             exit 1
           fi
 
-  # === WEB BUILD ===
-  # Builds the WASM package and the web application on it, then runs the web
-  # checks and the Playwright suite.
-  web-build:
-    name: Web Build
+  # === WASM BUILD ===
+  # The web app runs the JavaScript engine (issue #254); this keeps the Rust
+  # crate's wasm-bindgen API in src/wasm.rs building for wasm32.
+  wasm-build:
+    name: WASM Build
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
-    needs: [lint, test, coverage]
-    if: ${{ !cancelled() && needs.lint.result == 'success' && needs.test.result == 'success' && needs.coverage.result == 'success' }}
+    timeout-minutes: 30
+    needs: [lint, test]
+    if: ${{ !cancelled() && needs.lint.result == 'success' && needs.test.result == 'success' }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -326,86 +326,29 @@ jobs:
         uses: ./.github/actions/setup-rust
         with:
           targets: wasm32-unknown-unknown
+          cache-key: wasm
 
       - name: Install wasm-pack
         uses: ./.github/actions/install-wasm-pack
 
       - name: Build WASM package
-        run: wasm-pack build --target web --out-dir web/public/pkg
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: '24'
-          cache: 'npm'
-          cache-dependency-path: web/package-lock.json
-
-      - name: Install dependencies
-        working-directory: web
-        run: npm ci
-
-      - name: Copy currency data files to web public directory
-        run: |
-          mkdir -p web/public/data/currency
-          cp data/currency/*.lino web/public/data/currency/
-          count=$(find data/currency -maxdepth 1 -name '*.lino' | wc -l)
-          echo "Copied $count .lino files to web/public/data/currency/"
-
-      # Issue #256: `npm run lint` called an eslint that was never installed
-      # (typescript-eslint does not support TypeScript 7), so the web code was
-      # never linted. oxlint parses TypeScript natively.
-      - name: Lint
-        working-directory: web
-        run: npm run lint
-
-      - name: Type check
-        working-directory: web
-        run: npx tsc --noEmit
-
-      - name: Run web tests
-        working-directory: web
-        run: npm test
-
-      - name: Build
-        working-directory: web
-        run: npm run build
-
-      # Issue #256: the Playwright suite in web/e2e was never run by CI, so 8 of
-      # its 50 tests had silently rotted (false negative). Run it on the build.
-      - name: Install Playwright browsers
-        working-directory: web
-        run: npx playwright install chromium --with-deps
-
-      - name: Run end-to-end tests
-        working-directory: web
-        run: npx playwright test
-
-      - name: Upload Playwright report
-        if: failure()
-        uses: actions/upload-artifact@v7
-        with:
-          name: playwright-report-${{ github.run_id }}
-          path: web/playwright-report
-          retention-days: 7
-
-      - name: Upload web build artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: web-dist
-          path: web/dist
-          retention-days: 1
+        run: wasm-pack build --target web --out-dir target/wasm-pkg
 
   # === DEPLOY TO GITHUB PAGES ===
   deploy-pages:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-    needs: [web-build]
+    # web-dist is built by the JavaScript stage's Web job of the same run;
+    # the site is deployed only once the Rust checks passed too.
+    needs: [lint, test, coverage]
     if: |
       !cancelled() &&
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main' &&
-      needs.web-build.result == 'success'
+      needs.lint.result == 'success' &&
+      needs.test.result == 'success' &&
+      needs.coverage.result == 'success'
     permissions:
       contents: read
       pages: write
@@ -524,9 +467,10 @@ jobs:
         run: node scripts/create-github-release.mjs --release-version "$RELEASE_VERSION" --repository "$REPOSITORY"
 
   # === DEPLOY WEB AFTER RELEASE ===
-  # The standard web-build/deploy-pages jobs run in parallel with auto-release
-  # and therefore use the OLD Cargo.toml version. This job rebuilds from main
-  # after the bump so the web footer shows the released version.
+  # The Web job and deploy-pages build from the commit before auto-release's
+  # bump, so they show the OLD version. This job rebuilds from main after the
+  # bump (which also syncs the JavaScript engine's version, see
+  # scripts/sync-js-version.mjs) so the web footer shows the released version.
   # See: https://github.com/link-assistant/calculator/issues/78
   deploy-after-release:
     name: Deploy Web After Release
@@ -552,17 +496,6 @@ jobs:
           persist-credentials: false
           # The latest main includes the version bump auto-release pushed.
           ref: main
-
-      - name: Setup Rust
-        uses: ./.github/actions/setup-rust
-        with:
-          targets: wasm32-unknown-unknown
-
-      - name: Install wasm-pack
-        uses: ./.github/actions/install-wasm-pack
-
-      - name: Build WASM package with updated version
-        run: wasm-pack build --target web --out-dir web/public/pkg
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
@@ -607,12 +540,13 @@ jobs:
   # release deployed the new version if there was one, and on dispatch.
   update-screenshots:
     name: Update Screenshots
-    needs: [web-build, auto-release, deploy-after-release]
+    needs: [lint, test, auto-release, deploy-after-release]
     if: |
       !cancelled() &&
       github.ref == 'refs/heads/main' &&
       (github.event_name == 'push' || inputs.release_mode == 'screenshots') &&
-      needs.web-build.result == 'success' &&
+      needs.lint.result == 'success' &&
+      needs.test.result == 'success' &&
       needs.auto-release.result != 'failure' &&
       needs.deploy-after-release.result != 'failure'
     uses: ./.github/workflows/update-screenshots.yml
@@ -722,7 +656,7 @@ jobs:
       - test
       - coverage
       - build
-      - web-build
+      - wasm-build
       - deploy-pages
       - auto-release
       - deploy-after-release

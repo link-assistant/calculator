@@ -171,9 +171,8 @@ Links notation: (((84 USD)) - ((34 EUR)))
 ## Development Setup
 
 ### Prerequisites
-- Rust 1.70+ with `wasm32-unknown-unknown` target
-- Node.js 18+
-- wasm-pack
+- Node.js 20+ (the web app runs the JavaScript engine in `js/`)
+- Rust (the toolchain in `rust-toolchain.toml`) for the Rust crate only
 
 ### Build & Run
 
@@ -182,10 +181,7 @@ Links notation: (((84 USD)) - ((34 EUR)))
 git clone https://github.com/link-assistant/calculator.git
 cd calculator
 
-# Build the WASM package
-wasm-pack build --target web --out-dir web/public/pkg
-
-# Install web dependencies
+# Install web dependencies (they include the JavaScript engine in js/)
 cd web
 npm install
 
@@ -215,9 +211,6 @@ cargo fmt --check
 ### Building for Production
 
 ```bash
-# Build optimized WASM
-wasm-pack build --target web --release --out-dir web/public/pkg
-
 # Build web frontend
 cd web
 npm run build
