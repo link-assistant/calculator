@@ -1104,7 +1104,7 @@ fend	en	megapond to N	9806.65 N
 fend	en	gf to N	0.00980665 N	
 
 # qalculate: libqalculate tests/*.batch (GPL-2.0-or-later) https://github.com/Qalculate/libqalculate/tree/master/tests
-# Upstream commit: d3672af9cf6e05a39bd4206b7b7d6b1e0d194caa; commit date: 2026-10-09T19:12:49+02:00; pinned source: https://github.com/Qalculate/libqalculate/tree/d3672af9cf6e05a39bd4206b7b7d6b1e0d194caa/tests
+# Upstream commit: 94482b3dfb7a22910dc6064c85ae206b2b670747; commit date: 2026-10-17T19:02:08+02:00; pinned source: https://github.com/Qalculate/libqalculate/tree/94482b3dfb7a22910dc6064c85ae206b2b670747/tests
 Qalculate!	en	¬1	-2	bitwise
 Qalculate!	en	~0	-1	bitwise
 Qalculate!	en	~-1	0	bitwise
@@ -1763,7 +1763,7 @@ Qalculate!	en	beta:=[1,2,3]	[1  2  3]	variables
 Qalculate!	en	beta*2	[2  4  6]	variables
 
 # numbat: numbat numbat/tests/interpreter.rs (MIT OR Apache-2.0) https://github.com/sharkdp/numbat/blob/master/numbat/tests/interpreter.rs
-# Upstream commit: a5e70bf1d121e0be6f9e38bc254d59f0474dc496; commit date: 2026-10-10T12:22:14+02:00; pinned source: https://github.com/sharkdp/numbat/blob/a5e70bf1d121e0be6f9e38bc254d59f0474dc496/numbat/tests/interpreter.rs
+# Upstream commit: e8abf32b975fb03d5a554f5e7141cd50ae63e88d; commit date: 2026-10-11T21:59:17+02:00; pinned source: https://github.com/sharkdp/numbat/blob/e8abf32b975fb03d5a554f5e7141cd50ae63e88d/numbat/tests/interpreter.rs
 Numbat	en	0	0	
 Numbat	en	0_0	0	
 Numbat	en	0_0.0_0	0	
@@ -5644,7 +5644,7 @@ kalker	en	sum(a=1, 3, Σ(b=1, 3, a + b))	36	tests/sum.kalker:4; equality asserti
 kalker	en	(2, 3, 5) * (7, 11, 13)	112	tests/vectors.kalker:3; equality assertion
 
 # hurmet: Hurmet test/test.cjs (calcTests) (MIT) https://github.com/ronkok/Hurmet/blob/master/test/test.cjs
-# Upstream commit: 8e82edefe91f1fff5d79df046880fcb5375ed1c4; commit date: 2026-10-09T13:03:36-07:00; pinned source: https://github.com/ronkok/Hurmet/blob/8e82edefe91f1fff5d79df046880fcb5375ed1c4/test/test.cjs
+# Upstream commit: 24abefdaecbc84a10e628326a235391db41caf83; commit date: 2026-10-16T12:56:34-07:00; pinned source: https://github.com/ronkok/Hurmet/blob/24abefdaecbc84a10e628326a235391db41caf83/test/test.cjs
 Hurmet	en	2^3^4	2,417,851,639,229,258,349,412,352	test/test.cjs; calcTests; input: 2^3^4 = @
 Hurmet	en	5 modulo 4	1	test/test.cjs; calcTests; input: 5 modulo 4 = @
 Hurmet	en	2 + 2	4	test/test.cjs; calcTests; input: 2 + 2 = @
@@ -5699,7 +5699,7 @@ Hurmet	en	5 mod 3	2	test/test.cjs; calcTests; input: 5 mod 3 = @
 Hurmet	en	5 2/3 + 1 1/3	7	test/test.cjs; calcTests; input: 5 2/3 + 1 1/3 = @
 
 # speedcrunch: SpeedCrunch src/tests/*.cpp (literal CHECK_EVAL assertions) (GPL-2.0-or-later) https://github.com/heldercorreia/speedcrunch/tree/master/src/tests
-# Upstream commit: 4cb502ce9ad774dcc7ed3044cab232df65d4596f; commit date: 2026-10-11T01:08:04+01:00; pinned source: https://github.com/heldercorreia/speedcrunch/tree/4cb502ce9ad774dcc7ed3044cab232df65d4596f/src/tests
+# Upstream commit: ef81a905d05feddd5fafbcd05e0a17e7f6c2de42; commit date: 2026-10-17T21:13:36+01:00; pinned source: https://github.com/heldercorreia/speedcrunch/tree/ef81a905d05feddd5fafbcd05e0a17e7f6c2de42/src/tests
 SpeedCrunch	en	2e10	20000000000	src/tests/testevaluator.cpp:673
 SpeedCrunch	en	2E10	20000000000	src/tests/testevaluator.cpp:674
 SpeedCrunch	en	2e-10	0.0000000002	src/tests/testevaluator.cpp:675
@@ -6092,539 +6092,568 @@ SpeedCrunch	en	[Mpc] -> [parsec]	1000000 parsec	src/tests/testevaluator.cpp:1274
 SpeedCrunch	en	[hm] -> [metre]	100 metre	src/tests/testevaluator.cpp:1275
 SpeedCrunch	en	[hPa] -> [pascal]	100 pascal	src/tests/testevaluator.cpp:1277
 SpeedCrunch	en	[kΩ] -> [ohm]	1000 ohm	src/tests/testevaluator.cpp:1278
-SpeedCrunch	en	[volt] -> [joule/coulomb]	1 joule·coulomb⁻¹	src/tests/testevaluator.cpp:1410
-SpeedCrunch	en	[joule/coulomb] -> [volt]	1 volt	src/tests/testevaluator.cpp:1411
-SpeedCrunch	en	[watt] -> [joule/second]	1 joule·second⁻¹	src/tests/testevaluator.cpp:1412
-SpeedCrunch	en	[joule/second] -> [watt]	1 watt	src/tests/testevaluator.cpp:1413
-SpeedCrunch	en	[ampere] -> [coulomb/second]	1 coulomb·second⁻¹	src/tests/testevaluator.cpp:1414
-SpeedCrunch	en	[coulomb/second] -> [ampere]	1 ampere	src/tests/testevaluator.cpp:1415
-SpeedCrunch	en	[volt] -> [ohm*ampere]	1 ohm*ampere	src/tests/testevaluator.cpp:1416
-SpeedCrunch	en	[ohm*ampere] -> [volt]	1 volt	src/tests/testevaluator.cpp:1417
-SpeedCrunch	en	[watt] -> [volt*ampere]	1 volt*ampere	src/tests/testevaluator.cpp:1418
-SpeedCrunch	en	[volt*ampere] -> [watt]	1 watt	src/tests/testevaluator.cpp:1419
-SpeedCrunch	en	[volt] -> [volt]	1 volt	src/tests/testevaluator.cpp:1426
-SpeedCrunch	en	[watt] -> [watt]	1 watt	src/tests/testevaluator.cpp:1427
-SpeedCrunch	en	[ampere] -> [ampere]	1 ampere	src/tests/testevaluator.cpp:1428
-SpeedCrunch	en	[kg*m^2/s^4] -> [kg*m^2/s^4]	1 kg·m²·s⁻⁴	src/tests/testevaluator.cpp:1429
-SpeedCrunch	en	[volt^2] -> [volt^2]	1 volt²	src/tests/testevaluator.cpp:1430
-SpeedCrunch	en	[volt^2] -> [1 * (ohm * ampere)^2]	1 1 * (ohm * ampere)²	src/tests/testevaluator.cpp:1431
-SpeedCrunch	en	25[degree_celsius] -> [kelvin]	298.15 kelvin	src/tests/testevaluator.cpp:1436
-SpeedCrunch	en	0[degree_celsius] -> [degree_fahrenheit]	32 degree_fahrenheit	src/tests/testevaluator.cpp:1437
-SpeedCrunch	en	32[degree_fahrenheit] -> [degree_celsius]	0 degree_celsius	src/tests/testevaluator.cpp:1438
-SpeedCrunch	en	77[degree_fahrenheit] -> [kelvin]	298.15 kelvin	src/tests/testevaluator.cpp:1439
-SpeedCrunch	en	298.15[kelvin] -> [degree_fahrenheit]	77 degree_fahrenheit	src/tests/testevaluator.cpp:1440
-SpeedCrunch	en	0[°C] -> [kelvin]	273.15 kelvin	src/tests/testevaluator.cpp:1441
-SpeedCrunch	en	0[˚C] -> [kelvin]	273.15 kelvin	src/tests/testevaluator.cpp:1442
-SpeedCrunch	en	32[°F] -> [°C]	0 °C	src/tests/testevaluator.cpp:1443
-SpeedCrunch	en	77[°F] -> [°C]	25 °C	src/tests/testevaluator.cpp:1444
-SpeedCrunch	en	273.15[kelvin] -> [°C]	0 °C	src/tests/testevaluator.cpp:1445
-SpeedCrunch	en	0[°C] -> [°F]	32 °F	src/tests/testevaluator.cpp:1446
-SpeedCrunch	en	32[ºF] -> [ºC]	0 °C	src/tests/testevaluator.cpp:1447
-SpeedCrunch	en	32[˚F] -> [˚C]	0 °C	src/tests/testevaluator.cpp:1448
-SpeedCrunch	en	2 [°C] -> [°C]	2 °C	src/tests/testevaluator.cpp:1507
-SpeedCrunch	en	71.2 [°F] + 3 [°F]	74.2 °F	src/tests/testevaluator.cpp:1511
-SpeedCrunch	en	71.2 [°F] - 3 [°F]	68.2 °F	src/tests/testevaluator.cpp:1512
-SpeedCrunch	en	10[N] / 2[N]	5	src/tests/testevaluator.cpp:1598
-SpeedCrunch	en	6[J] / 3[J]	2	src/tests/testevaluator.cpp:1599
-SpeedCrunch	en	8[W] / 4[W]	2	src/tests/testevaluator.cpp:1600
-SpeedCrunch	en	numval(3)	3	src/tests/testevaluator.cpp:1658
-SpeedCrunch	en	numval(3 [m/s])	3	src/tests/testevaluator.cpp:1659
-SpeedCrunch	en	numval(3 [km/s])	3000	src/tests/testevaluator.cpp:1660
-SpeedCrunch	en	numval(3 [km/s] -> [cm/s])	300000	src/tests/testevaluator.cpp:1661
-SpeedCrunch	en	50%	0.5	src/tests/testevaluator.cpp:1666
-SpeedCrunch	en	(20+30)%	0.5	src/tests/testevaluator.cpp:1667
-SpeedCrunch	en	50%%	0.005	src/tests/testevaluator.cpp:1668
-SpeedCrunch	en	-50%	-0.5	src/tests/testevaluator.cpp:1669
-SpeedCrunch	en	1000+12%	1120	src/tests/testevaluator.cpp:1671
-SpeedCrunch	en	100 + 12%	112	src/tests/testevaluator.cpp:1672
-SpeedCrunch	en	1000-12%	880	src/tests/testevaluator.cpp:1673
-SpeedCrunch	en	1000+125%	2250	src/tests/testevaluator.cpp:1674
-SpeedCrunch	en	1000+(12%)	1120	src/tests/testevaluator.cpp:1675
-SpeedCrunch	en	1000-(12%)	880	src/tests/testevaluator.cpp:1676
-SpeedCrunch	en	1000+(-12%)	880	src/tests/testevaluator.cpp:1677
-SpeedCrunch	en	1000-(-12%)	1120	src/tests/testevaluator.cpp:1678
-SpeedCrunch	en	1000+(10+2)%	1120	src/tests/testevaluator.cpp:1679
-SpeedCrunch	en	1000-(10+2)%	880	src/tests/testevaluator.cpp:1680
-SpeedCrunch	en	1000+10%+10%	1210	src/tests/testevaluator.cpp:1682
-SpeedCrunch	en	1000-10%-10%	810	src/tests/testevaluator.cpp:1683
-SpeedCrunch	en	1000+10%-10%	990	src/tests/testevaluator.cpp:1684
-SpeedCrunch	en	1000-10%+10%	990	src/tests/testevaluator.cpp:1685
-SpeedCrunch	en	100+10%+10%+10%	133.1	src/tests/testevaluator.cpp:1686
-SpeedCrunch	en	1000*12%	120	src/tests/testevaluator.cpp:1688
-SpeedCrunch	en	12%*1000	120	src/tests/testevaluator.cpp:1689
-SpeedCrunch	en	1000/25%	4000	src/tests/testevaluator.cpp:1690
-SpeedCrunch	en	200+(10%*2)	200.2	src/tests/testevaluator.cpp:1691
-SpeedCrunch	en	200+10%^2	200.01	src/tests/testevaluator.cpp:1692
-SpeedCrunch	en	100+(10%+10%)	100.11	src/tests/testevaluator.cpp:1693
-SpeedCrunch	en	100-(10%+10%)	99.89	src/tests/testevaluator.cpp:1694
-SpeedCrunch	en	100-(10%-5%)	99.905	src/tests/testevaluator.cpp:1695
-SpeedCrunch	en	1+2+3+10%	6.6	src/tests/testevaluator.cpp:1697
-SpeedCrunch	en	1+(2+3)+10%	6.6	src/tests/testevaluator.cpp:1698
-SpeedCrunch	en	(1+2+3)+10%	6.6	src/tests/testevaluator.cpp:1699
-SpeedCrunch	en	1+2+(3+10%)	6.3	src/tests/testevaluator.cpp:1700
-SpeedCrunch	en	1+99-10%	90	src/tests/testevaluator.cpp:1701
-SpeedCrunch	en	(1+99)-10%	90	src/tests/testevaluator.cpp:1702
-SpeedCrunch	en	1+(99-10%)	90.1	src/tests/testevaluator.cpp:1703
-SpeedCrunch	en	200[metre]+10%	220 metre	src/tests/testevaluator.cpp:1705
-SpeedCrunch	en	200[metre]-10%	180 metre	src/tests/testevaluator.cpp:1706
-SpeedCrunch	en	200[metre]+10%+10%	242 metre	src/tests/testevaluator.cpp:1707
-SpeedCrunch	en	~~~~1	1	src/tests/testevaluator.cpp:1749
-SpeedCrunch	en	~-~1	-3	src/tests/testevaluator.cpp:1750
-SpeedCrunch	en	-~-1	0	src/tests/testevaluator.cpp:1751
-SpeedCrunch	en	~~-1	-1	src/tests/testevaluator.cpp:1752
-SpeedCrunch	en	(~2)^3	-27	src/tests/testevaluator.cpp:1753
-SpeedCrunch	en	~(2^3)	-9	src/tests/testevaluator.cpp:1754
-SpeedCrunch	en	~2^3	-9	src/tests/testevaluator.cpp:1755
-SpeedCrunch	en	~(-5)	4	src/tests/testevaluator.cpp:1756
-SpeedCrunch	en	-~(-1)	0	src/tests/testevaluator.cpp:1757
-SpeedCrunch	en	-5 & 3	3	src/tests/testevaluator.cpp:1758
-SpeedCrunch	en	-5 | 3	-5	src/tests/testevaluator.cpp:1759
-SpeedCrunch	en	-5 ^ 3	-125	src/tests/testevaluator.cpp:1760
-SpeedCrunch	en	~0 >> 1	-1	src/tests/testevaluator.cpp:1761
-SpeedCrunch	en	~0 << 1	-2	src/tests/testevaluator.cpp:1762
-SpeedCrunch	en	-1 >> 1	-1	src/tests/testevaluator.cpp:1763
-SpeedCrunch	en	-8 >> 2	-2	src/tests/testevaluator.cpp:1764
-SpeedCrunch	en	-9 >> 2	-3	src/tests/testevaluator.cpp:1765
-SpeedCrunch	en	~1 & 1	0	src/tests/testevaluator.cpp:1766
-SpeedCrunch	en	~1 | 1	-1	src/tests/testevaluator.cpp:1767
-SpeedCrunch	en	1 | 2 & 3	3	src/tests/testevaluator.cpp:1768
-SpeedCrunch	en	(1 | 2) & 3	3	src/tests/testevaluator.cpp:1769
-SpeedCrunch	en	1 | (2 & 3)	3	src/tests/testevaluator.cpp:1770
-SpeedCrunch	en	2*~3	-8	src/tests/testevaluator.cpp:1771
-SpeedCrunch	en	~3*2	-8	src/tests/testevaluator.cpp:1772
-SpeedCrunch	en	~(3*2)	-7	src/tests/testevaluator.cpp:1773
-SpeedCrunch	en	~2^3&7	7	src/tests/testevaluator.cpp:1774
-SpeedCrunch	en	~(2^3&7)	-1	src/tests/testevaluator.cpp:1775
-SpeedCrunch	en	(~2^3)&7	7	src/tests/testevaluator.cpp:1776
-SpeedCrunch	en	~(~(~1))	-2	src/tests/testevaluator.cpp:1777
-SpeedCrunch	en	~(~(~(~1)))	1	src/tests/testevaluator.cpp:1778
-SpeedCrunch	en	~5	-6	src/tests/testevaluator.cpp:1779
-SpeedCrunch	en	~(~5)	5	src/tests/testevaluator.cpp:1780
-SpeedCrunch	en	~(~(~5))	-6	src/tests/testevaluator.cpp:1781
-SpeedCrunch	en	~(2^3) + ~3! * (~1 & 3) << 1	-46	src/tests/testevaluator.cpp:1782
-SpeedCrunch	en	not(-1)	0	src/tests/testevaluator.cpp:1785
-SpeedCrunch	en	~(-1)	0	src/tests/testevaluator.cpp:1786
-SpeedCrunch	en	-not(-1)	0	src/tests/testevaluator.cpp:1787
-SpeedCrunch	en	-~(-1)	0	src/tests/testevaluator.cpp:1788
-SpeedCrunch	en	not(not(not(not(1))))	1	src/tests/testevaluator.cpp:1790
-SpeedCrunch	en	not(-not(1))	-3	src/tests/testevaluator.cpp:1791
-SpeedCrunch	en	-not(-1)	0	src/tests/testevaluator.cpp:1792
-SpeedCrunch	en	not(not(-1))	-1	src/tests/testevaluator.cpp:1793
-SpeedCrunch	en	(not(2))^3	-27	src/tests/testevaluator.cpp:1794
-SpeedCrunch	en	not(2^3)	-9	src/tests/testevaluator.cpp:1795
-SpeedCrunch	en	not(2^3)	-9	src/tests/testevaluator.cpp:1796
-SpeedCrunch	en	not(-5)	4	src/tests/testevaluator.cpp:1797
-SpeedCrunch	en	not(0) >> 1	-1	src/tests/testevaluator.cpp:1798
-SpeedCrunch	en	not(0) << 1	-2	src/tests/testevaluator.cpp:1799
-SpeedCrunch	en	not(1) & 1	0	src/tests/testevaluator.cpp:1800
-SpeedCrunch	en	not(1) | 1	-1	src/tests/testevaluator.cpp:1801
-SpeedCrunch	en	2*not(3)	-8	src/tests/testevaluator.cpp:1802
-SpeedCrunch	en	not(3)*2	-8	src/tests/testevaluator.cpp:1803
-SpeedCrunch	en	not(3*2)	-7	src/tests/testevaluator.cpp:1804
-SpeedCrunch	en	not(2^3&7)	-1	src/tests/testevaluator.cpp:1805
-SpeedCrunch	en	not(2^3&7)	-1	src/tests/testevaluator.cpp:1806
-SpeedCrunch	en	(not(2^3))&7	7	src/tests/testevaluator.cpp:1807
-SpeedCrunch	en	not(not(not(1)))	-2	src/tests/testevaluator.cpp:1808
-SpeedCrunch	en	not(not(not(not(1))))	1	src/tests/testevaluator.cpp:1809
-SpeedCrunch	en	not(5)	-6	src/tests/testevaluator.cpp:1810
-SpeedCrunch	en	not(not(5))	5	src/tests/testevaluator.cpp:1811
-SpeedCrunch	en	not(not(not(5)))	-6	src/tests/testevaluator.cpp:1812
-SpeedCrunch	en	not(2^3) + not(3!) * (not(1) & 3) << 1	-46	src/tests/testevaluator.cpp:1813
-SpeedCrunch	en	12_345.678_9	12345.6789	src/tests/testevaluator.cpp:1911
-SpeedCrunch	en	1234_5.67_89	12345.6789	src/tests/testevaluator.cpp:1912
-SpeedCrunch	en	1234_56	123456	src/tests/testevaluator.cpp:1913
-SpeedCrunch	en	_123456	123456	src/tests/testevaluator.cpp:1914
-SpeedCrunch	en	123456_	123456	src/tests/testevaluator.cpp:1915
-SpeedCrunch	en	123___456	123456	src/tests/testevaluator.cpp:1916
-SpeedCrunch	en	._123456	0.123456	src/tests/testevaluator.cpp:1917
-SpeedCrunch	en	12 345.678 9	12345.6789	src/tests/testevaluator.cpp:1919
-SpeedCrunch	en	12·345.678·9	37333.224	src/tests/testevaluator.cpp:1921
-SpeedCrunch	en	12٫345.678٫9	12345.6789	src/tests/testevaluator.cpp:1922
-SpeedCrunch	en	12٬345.678٬9	12345.6789	src/tests/testevaluator.cpp:1923
-SpeedCrunch	en	12˙345.678˙9	12345.6789	src/tests/testevaluator.cpp:1924
-SpeedCrunch	en	12⎖345.678⎖9	12345.6789	src/tests/testevaluator.cpp:1925
-SpeedCrunch	en	12$345.678~9	12345.6789	src/tests/testevaluator.cpp:1928
-SpeedCrunch	en	12`345.678@9	12345.6789	src/tests/testevaluator.cpp:1929
-SpeedCrunch	en	12€345.678€9	12345.6789	src/tests/testevaluator.cpp:1930
-SpeedCrunch	en	12£345.678£9	12345.6789	src/tests/testevaluator.cpp:1931
-SpeedCrunch	en	12¥345.678¥9	12345.6789	src/tests/testevaluator.cpp:1932
-SpeedCrunch	en	12₩345.678₩9	12345.6789	src/tests/testevaluator.cpp:1933
-SpeedCrunch	en	$ 1234.567	1234.567	src/tests/testevaluator.cpp:1936
-SpeedCrunch	en	1234.567 $	1234.567	src/tests/testevaluator.cpp:1937
-SpeedCrunch	en	€ 1234.567	1234.567	src/tests/testevaluator.cpp:1938
-SpeedCrunch	en	1234.567 ¥	1234.567	src/tests/testevaluator.cpp:1939
-SpeedCrunch	en	$-10	-10	src/tests/testevaluator.cpp:1940
-SpeedCrunch	en	$+10	10	src/tests/testevaluator.cpp:1941
-SpeedCrunch	en	ABS(0)	0	src/tests/testevaluator.cpp:3016
-SpeedCrunch	en	ABS(1)	1	src/tests/testevaluator.cpp:3017
-SpeedCrunch	en	ABS(-1)	1	src/tests/testevaluator.cpp:3018
-SpeedCrunch	en	ABS(--1)	1	src/tests/testevaluator.cpp:3019
-SpeedCrunch	en	ABS(---1)	1	src/tests/testevaluator.cpp:3020
-SpeedCrunch	en	ABS((1))	1	src/tests/testevaluator.cpp:3021
-SpeedCrunch	en	ABS((-1))	1	src/tests/testevaluator.cpp:3022
-SpeedCrunch	en	ABS(1/2)	0.5	src/tests/testevaluator.cpp:3024
-SpeedCrunch	en	ABS(-1/2)	0.5	src/tests/testevaluator.cpp:3025
-SpeedCrunch	en	ABS(-1/-2)	0.5	src/tests/testevaluator.cpp:3026
-SpeedCrunch	en	ABS(1/-2)	0.5	src/tests/testevaluator.cpp:3027
-SpeedCrunch	en	INT(0)	0	src/tests/testevaluator.cpp:3029
-SpeedCrunch	en	INT(1)	1	src/tests/testevaluator.cpp:3030
-SpeedCrunch	en	INT(-1)	-1	src/tests/testevaluator.cpp:3031
-SpeedCrunch	en	INT(0.5)	0	src/tests/testevaluator.cpp:3032
-SpeedCrunch	en	INT(-0.75)	0	src/tests/testevaluator.cpp:3033
-SpeedCrunch	en	INT(-0.9999*1)	0	src/tests/testevaluator.cpp:3034
-SpeedCrunch	en	INT(0.9999*1)	0	src/tests/testevaluator.cpp:3035
-SpeedCrunch	en	INT(2.1)	2	src/tests/testevaluator.cpp:3036
-SpeedCrunch	en	INT(-3.4)	-3	src/tests/testevaluator.cpp:3037
-SpeedCrunch	en	log(0.123; 0.1234)	0.99845065797473594741	src/tests/testevaluator.cpp:3039
-SpeedCrunch	en	log10(0.00000000001)	-11	src/tests/testevaluator.cpp:3040
-SpeedCrunch	en	log10(1e-3)	-3	src/tests/testevaluator.cpp:3041
-SpeedCrunch	en	log2(0.00000000001)	-36.54120904376098582657	src/tests/testevaluator.cpp:3042
-SpeedCrunch	en	log2(32)	5	src/tests/testevaluator.cpp:3043
-SpeedCrunch	en	ln(100)	4.60517018598809136804	src/tests/testevaluator.cpp:3044
-SpeedCrunch	en	ln(4.0)	1.38629436111989061883	src/tests/testevaluator.cpp:3045
-SpeedCrunch	en	0!	1	src/tests/testevaluator.cpp:3047
-SpeedCrunch	en	1!	1	src/tests/testevaluator.cpp:3048
-SpeedCrunch	en	2!	2	src/tests/testevaluator.cpp:3049
-SpeedCrunch	en	3!	6	src/tests/testevaluator.cpp:3050
-SpeedCrunch	en	4!	24	src/tests/testevaluator.cpp:3051
-SpeedCrunch	en	5!	120	src/tests/testevaluator.cpp:3052
-SpeedCrunch	en	6!	720	src/tests/testevaluator.cpp:3053
-SpeedCrunch	en	7!	5040	src/tests/testevaluator.cpp:3054
-SpeedCrunch	en	(1+1)!^2	4	src/tests/testevaluator.cpp:3055
-SpeedCrunch	en	(-27)^(1/3)	-3	src/tests/testevaluator.cpp:3057
-SpeedCrunch	en	(-27)^(-1/3)	-0.33333333333333333333	src/tests/testevaluator.cpp:3058
-SpeedCrunch	en	(-1)^(1/3)	-1	src/tests/testevaluator.cpp:3059
-SpeedCrunch	en	(-1)^(1/7)	-1	src/tests/testevaluator.cpp:3060
-SpeedCrunch	en	(-1)^(2/3)	1	src/tests/testevaluator.cpp:3061
-SpeedCrunch	en	(-1)^(1/2)	NaN	src/tests/testevaluator.cpp:3062
-SpeedCrunch	en	exp((1)/2) + exp((1)/2)	3.29744254140025629369730157562832714330755220142030	src/tests/testevaluator.cpp:3064
-SpeedCrunch	en	√(81)	9	src/tests/testevaluator.cpp:3066
-SpeedCrunch	en	∛(-27)	-3	src/tests/testevaluator.cpp:3067
-SpeedCrunch	en	log(10;log(10;1e100))	2	src/tests/testevaluator.cpp:3074
-SpeedCrunch	en	log(10;abs(-100))	2	src/tests/testevaluator.cpp:3075
-SpeedCrunch	en	abs(log(10;100))	2	src/tests/testevaluator.cpp:3076
-SpeedCrunch	en	abs(abs(-100))	100	src/tests/testevaluator.cpp:3077
-SpeedCrunch	en	sum(10;abs(-100);1)	111	src/tests/testevaluator.cpp:3078
-SpeedCrunch	en	sum(abs(-100);10;1)	111	src/tests/testevaluator.cpp:3079
-SpeedCrunch	en	sum(10;1;abs(-100))	111	src/tests/testevaluator.cpp:3080
-SpeedCrunch	en	ieee754_half_decode(0x7E00)	NaN	src/tests/testevaluator.cpp:3082
-SpeedCrunch	en	hex(ieee754_half_encode(1))	0x3C00	src/tests/testevaluator.cpp:3083
-SpeedCrunch	en	hex(ieee754_half_encode(0.99951171875))	0x3BFF	src/tests/testevaluator.cpp:3084
-SpeedCrunch	en	hex(ieee754_half_encode(0.999755859375))	0x3C00	src/tests/testevaluator.cpp:3085
-SpeedCrunch	en	ieee754_round_half(0.999755859375)	1	src/tests/testevaluator.cpp:3087
-SpeedCrunch	en	ieee754_round_float(pi) - ieee754_single_decode(ieee754_single_encode(pi))	0	src/tests/testevaluator.cpp:3088
-SpeedCrunch	en	ieee754_round_double(pi) - ieee754_double_decode(ieee754_double_encode(pi))	0	src/tests/testevaluator.cpp:3089
-SpeedCrunch	en	ieee754_round_quad(pi) - ieee754_quad_decode(ieee754_quad_encode(pi))	0	src/tests/testevaluator.cpp:3090
-SpeedCrunch	en	ieee754_half_residual(0.999755859375) - (0.999755859375 - ieee754_round_half(0.999755859375))	0	src/tests/testevaluator.cpp:3092
-SpeedCrunch	en	ieee754_float_residual(pi) - (pi - ieee754_round_float(pi))	0	src/tests/testevaluator.cpp:3093
-SpeedCrunch	en	ieee754_double_residual(pi) - (pi - ieee754_round_double(pi))	0	src/tests/testevaluator.cpp:3094
-SpeedCrunch	en	ieee754_quad_residual(pi) - (pi - ieee754_round_quad(pi))	0	src/tests/testevaluator.cpp:3095
-SpeedCrunch	en	ieee754_double_residual(pi)	0.00000000000000012246	src/tests/testevaluator.cpp:3097
-SpeedCrunch	en	ieee754_double_residual(pi/2)	0.00000000000000006123	src/tests/testevaluator.cpp:3098
-SpeedCrunch	en	pi/2	1.57079632679489661923	src/tests/testevaluator.cpp:3100
-SpeedCrunch	en	ieee754_double_residual(pi/2)	0.00000000000000006123233995736765886130329661375005	src/tests/testevaluator.cpp:3101
-SpeedCrunch	en	ieee754_double_residual(ieee754_double_residual(pi/2))	-0.00000000000000000000000000000000149738490485916978	src/tests/testevaluator.cpp:3102
-SpeedCrunch	en	ieee754_double_residual(ieee754_double_residual(ieee754_double_residual(pi/2)))	0.00000000000000000000000000000000000000000000000006	src/tests/testevaluator.cpp:3103
-SpeedCrunch	en	molmass(H)	1.008 g·mol⁻¹	src/tests/testevaluator.cpp:3105
-SpeedCrunch	en	molmass(He)	4.0026 g·mol⁻¹	src/tests/testevaluator.cpp:3106
-SpeedCrunch	en	molmass(C6H12O6)	180.156 g·mol⁻¹	src/tests/testevaluator.cpp:3107
-SpeedCrunch	en	molmass(H₂O)	18.015 g·mol⁻¹	src/tests/testevaluator.cpp:3108
-SpeedCrunch	en	molmass(NaCl)	58.44 g·mol⁻¹	src/tests/testevaluator.cpp:3109
-SpeedCrunch	en	molmass(C₆H₁₂O₆)	180.156 g·mol⁻¹	src/tests/testevaluator.cpp:3110
-SpeedCrunch	en	molmass(Na₂SO₄)	142.036 g·mol⁻¹	src/tests/testevaluator.cpp:3111
-SpeedCrunch	en	molmass(C6H12O6)*molmass(C6H12O6)	32456.184336 g²·mol⁻²	src/tests/testevaluator.cpp:3112
-SpeedCrunch	en	mass(1;C6H12O6)	180.156 g	src/tests/testevaluator.cpp:3154
-SpeedCrunch	en	mass(2;H2O)	36.03 g	src/tests/testevaluator.cpp:3155
-SpeedCrunch	en	mass(0.5;H₂O)	9.0075 g	src/tests/testevaluator.cpp:3156
-SpeedCrunch	en	mass(1;C6H12O6)-molmass(C6H12O6)*1[mol]	0 g	src/tests/testevaluator.cpp:3157
-SpeedCrunch	en	molarity(0.50;1.00)	0.5 mol/L	src/tests/testevaluator.cpp:3164
-SpeedCrunch	en	molarity(1[mol];2[L])	0.5 mol/L	src/tests/testevaluator.cpp:3165
-SpeedCrunch	en	molarity(1;2[L])	0.5 mol/L	src/tests/testevaluator.cpp:3166
-SpeedCrunch	en	molarity(1[mol];2)	0.5 mol/L	src/tests/testevaluator.cpp:3167
-SpeedCrunch	en	molarity(3[mmol];2[mL])	1.5 mol/L	src/tests/testevaluator.cpp:3168
-SpeedCrunch	en	molarity(250[umol];500[mL])	0.0005 mol/L	src/tests/testevaluator.cpp:3169
-SpeedCrunch	en	molarity(0.75[mol];300[mL])	2.5 mol/L	src/tests/testevaluator.cpp:3170
-SpeedCrunch	en	molarity(3[mmol];2[mL])-molarity(0.003[mol];0.002[L])	0 mol/L	src/tests/testevaluator.cpp:3171
-SpeedCrunch	en	molarity(1[mol];2[L])-0.5[mol/L]	0 mol/L	src/tests/testevaluator.cpp:3172
-SpeedCrunch	en	pi	3.14159265358979323846264338327950288419716939937511	src/tests/testevaluator.cpp:3182
-SpeedCrunch	en	sin(0)	0	src/tests/testevaluator.cpp:3184
-SpeedCrunch	en	cos(0)	1	src/tests/testevaluator.cpp:3185
-SpeedCrunch	en	tan(0)	0	src/tests/testevaluator.cpp:3186
-SpeedCrunch	en	sin(pi)	0	src/tests/testevaluator.cpp:3188
-SpeedCrunch	en	cos(pi)	-1	src/tests/testevaluator.cpp:3189
-SpeedCrunch	en	tan(pi)	0	src/tests/testevaluator.cpp:3190
-SpeedCrunch	en	sin(-pi)	0	src/tests/testevaluator.cpp:3192
-SpeedCrunch	en	cos(-pi)	-1	src/tests/testevaluator.cpp:3193
-SpeedCrunch	en	tan(-pi)	0	src/tests/testevaluator.cpp:3194
-SpeedCrunch	en	sin(--pi)	0	src/tests/testevaluator.cpp:3196
-SpeedCrunch	en	cos(--pi)	-1	src/tests/testevaluator.cpp:3197
-SpeedCrunch	en	tan(--pi)	0	src/tests/testevaluator.cpp:3198
-SpeedCrunch	en	sin(pi/2)	1	src/tests/testevaluator.cpp:3200
-SpeedCrunch	en	cos(pi/2)	0	src/tests/testevaluator.cpp:3201
-SpeedCrunch	en	sin(-pi/2)	-1	src/tests/testevaluator.cpp:3203
-SpeedCrunch	en	cos(-pi/2)	0	src/tests/testevaluator.cpp:3204
-SpeedCrunch	en	sin(-pi/2) + sin(pi/2)	0	src/tests/testevaluator.cpp:3206
-SpeedCrunch	en	sin(-pi/2) - sin(pi/2)	-2	src/tests/testevaluator.cpp:3207
-SpeedCrunch	en	cos(-pi/2) + cos(pi/2)	0	src/tests/testevaluator.cpp:3208
-SpeedCrunch	en	cos(-pi/2) - cos(pi/2)	0	src/tests/testevaluator.cpp:3209
-SpeedCrunch	en	arcsin(sin(1))	1	src/tests/testevaluator.cpp:3211
-SpeedCrunch	en	arccos(cos(1))	1	src/tests/testevaluator.cpp:3212
-SpeedCrunch	en	arctan(tan(1))	1	src/tests/testevaluator.cpp:3213
-SpeedCrunch	en	arcsin(0)	0	src/tests/testevaluator.cpp:3214
-SpeedCrunch	en	arccos(1)	0	src/tests/testevaluator.cpp:3215
-SpeedCrunch	en	arctan(0)	0	src/tests/testevaluator.cpp:3216
-SpeedCrunch	en	degrees(0)	0	src/tests/testevaluator.cpp:3218
-SpeedCrunch	en	degrees(pi/2)	90	src/tests/testevaluator.cpp:3219
-SpeedCrunch	en	degrees(pi)	180	src/tests/testevaluator.cpp:3220
-SpeedCrunch	en	degrees(3*pi/2)	270	src/tests/testevaluator.cpp:3221
-SpeedCrunch	en	degrees(2*pi)	360	src/tests/testevaluator.cpp:3222
-SpeedCrunch	en	radians(0)	0	src/tests/testevaluator.cpp:3224
-SpeedCrunch	en	radians(90)/pi	0.5	src/tests/testevaluator.cpp:3225
-SpeedCrunch	en	radians(180)/pi	1	src/tests/testevaluator.cpp:3226
-SpeedCrunch	en	radians(270)/pi	1.5	src/tests/testevaluator.cpp:3227
-SpeedCrunch	en	radians(360)/pi	2	src/tests/testevaluator.cpp:3228
-SpeedCrunch	en	gradians(0)	0	src/tests/testevaluator.cpp:3230
-SpeedCrunch	en	gradians(pi/2)	100	src/tests/testevaluator.cpp:3231
-SpeedCrunch	en	gradians(pi)	200	src/tests/testevaluator.cpp:3232
-SpeedCrunch	en	gradians(3*pi/2)	300	src/tests/testevaluator.cpp:3233
-SpeedCrunch	en	gradians(2*pi)	400	src/tests/testevaluator.cpp:3234
-SpeedCrunch	en	turns(0)	0	src/tests/testevaluator.cpp:3236
-SpeedCrunch	en	turns(pi/2)	0.25	src/tests/testevaluator.cpp:3237
-SpeedCrunch	en	turns(pi)	0.5	src/tests/testevaluator.cpp:3238
-SpeedCrunch	en	turns(3*pi/2)	0.75	src/tests/testevaluator.cpp:3239
-SpeedCrunch	en	turns(2*pi)	1	src/tests/testevaluator.cpp:3240
-SpeedCrunch	en	tanh(0)	0	src/tests/testevaluator.cpp:3245
-SpeedCrunch	en	tanh(58)	0.99999999999999999999999999999999999999999999999999	src/tests/testevaluator.cpp:3246
-SpeedCrunch	en	tanh(-58)	-0.99999999999999999999999999999999999999999999999999	src/tests/testevaluator.cpp:3247
-SpeedCrunch	en	tanh(59)	1.00000000000000000000000000000000000000000000000000	src/tests/testevaluator.cpp:3248
-SpeedCrunch	en	tanh(-59)	-1.00000000000000000000000000000000000000000000000000	src/tests/testevaluator.cpp:3249
-SpeedCrunch	en	MIN(0; 1)	0	src/tests/testevaluator.cpp:3272
-SpeedCrunch	en	MIN(0; 2)	0	src/tests/testevaluator.cpp:3273
-SpeedCrunch	en	MIN(-1; 0)	-1	src/tests/testevaluator.cpp:3274
-SpeedCrunch	en	MIN(-1; 1)	-1	src/tests/testevaluator.cpp:3275
-SpeedCrunch	en	MIN(-0.01; 0)	-0.01	src/tests/testevaluator.cpp:3276
-SpeedCrunch	en	MIN(0; 1; 2)	0	src/tests/testevaluator.cpp:3277
-SpeedCrunch	en	MIN(-1; 0; 1; 2)	-1	src/tests/testevaluator.cpp:3278
-SpeedCrunch	en	MIN(-2; -1; 0; 1; 2)	-2	src/tests/testevaluator.cpp:3279
-SpeedCrunch	en	MAX(0; 1)	1	src/tests/testevaluator.cpp:3282
-SpeedCrunch	en	MAX(0; 2)	2	src/tests/testevaluator.cpp:3283
-SpeedCrunch	en	MAX(-1; 0)	0	src/tests/testevaluator.cpp:3284
-SpeedCrunch	en	MAX(-1; 1)	1	src/tests/testevaluator.cpp:3285
-SpeedCrunch	en	MAX(0.01; 0)	0.01	src/tests/testevaluator.cpp:3286
-SpeedCrunch	en	MAX(0; 1; 2)	2	src/tests/testevaluator.cpp:3287
-SpeedCrunch	en	MAX(-1; 0; 1; 2)	2	src/tests/testevaluator.cpp:3288
-SpeedCrunch	en	MAX(-2; -1; 0; 1; 2)	2	src/tests/testevaluator.cpp:3289
-SpeedCrunch	en	SUM(100;1)	101	src/tests/testevaluator.cpp:3292
-SpeedCrunch	en	SUM(-100;1)	-99	src/tests/testevaluator.cpp:3293
-SpeedCrunch	en	SUM(0;0;0)	0	src/tests/testevaluator.cpp:3294
-SpeedCrunch	en	SUM(100;-1)	99	src/tests/testevaluator.cpp:3295
-SpeedCrunch	en	SUM(-100;-1)	-101	src/tests/testevaluator.cpp:3296
-SpeedCrunch	en	SUM(1;2;3;4;5;6)	21	src/tests/testevaluator.cpp:3297
-SpeedCrunch	en	SUM(1;-2;3;-4;5;-6)	-3	src/tests/testevaluator.cpp:3298
-SpeedCrunch	en	SUMMATION(1;4;3)	12	src/tests/testevaluator.cpp:3307
-SpeedCrunch	en	SUMMATION(1;3;SUMMATION(1;2;1))	6	src/tests/testevaluator.cpp:3320
-SpeedCrunch	en	PRODUCT(100;0)	0	src/tests/testevaluator.cpp:3332
-SpeedCrunch	en	PRODUCT(100;1)	100	src/tests/testevaluator.cpp:3333
-SpeedCrunch	en	PRODUCT(-100;1)	-100	src/tests/testevaluator.cpp:3334
-SpeedCrunch	en	PRODUCT(-100;-1)	100	src/tests/testevaluator.cpp:3335
-SpeedCrunch	en	PRODUCT(1;1;1)	1	src/tests/testevaluator.cpp:3336
-SpeedCrunch	en	PRODUCT(1;2;3;4;5;6)	720	src/tests/testevaluator.cpp:3337
-SpeedCrunch	en	PRODUCT(1;-2;3;-4;5;-6)	-720	src/tests/testevaluator.cpp:3338
-SpeedCrunch	en	AVERAGE(0;0)	0	src/tests/testevaluator.cpp:3341
-SpeedCrunch	en	AVERAGE(0;0;0)	0	src/tests/testevaluator.cpp:3342
-SpeedCrunch	en	AVERAGE(0;1)	0.5	src/tests/testevaluator.cpp:3343
-SpeedCrunch	en	AVERAGE(0;1;2)	1	src/tests/testevaluator.cpp:3344
-SpeedCrunch	en	AVERAGE(0;1;0)*3	1	src/tests/testevaluator.cpp:3345
-SpeedCrunch	en	AVERAGE(1;1;1)	1	src/tests/testevaluator.cpp:3346
-SpeedCrunch	en	AVERAGE(2;2;2)	2	src/tests/testevaluator.cpp:3347
-SpeedCrunch	en	AVERAGE(3;3;3)	3	src/tests/testevaluator.cpp:3348
-SpeedCrunch	en	AVERAGE(0.25;0.75)	0.5	src/tests/testevaluator.cpp:3349
-SpeedCrunch	en	AVERAGE(2.25;4.75)	3.5	src/tests/testevaluator.cpp:3350
-SpeedCrunch	en	AVERAGE(1/3;2/3)	0.5	src/tests/testevaluator.cpp:3351
-SpeedCrunch	en	123 + average(2;3;4;)	126	src/tests/testevaluator.cpp:3352
-SpeedCrunch	en	GEOMEAN(1;1)	1	src/tests/testevaluator.cpp:3356
-SpeedCrunch	en	GEOMEAN(1;4)	2	src/tests/testevaluator.cpp:3357
-SpeedCrunch	en	GEOMEAN(4;9)	6	src/tests/testevaluator.cpp:3358
-SpeedCrunch	en	GEOMEAN(3.6;8.1)	5.4	src/tests/testevaluator.cpp:3359
-SpeedCrunch	en	GEOMEAN(3;4;18)	6	src/tests/testevaluator.cpp:3360
-SpeedCrunch	en	GEOMEAN(1;1;1)	1	src/tests/testevaluator.cpp:3361
-SpeedCrunch	en	GEOMEAN(1;1;1;1)	1	src/tests/testevaluator.cpp:3362
-SpeedCrunch	en	VARP(1;-1)	1	src/tests/testevaluator.cpp:3365
-SpeedCrunch	en	VARS(1;-1)	2	src/tests/testevaluator.cpp:3366
-SpeedCrunch	en	VARP(5[metre]; 13[metre])	16 metre²	src/tests/testevaluator.cpp:3367
-SpeedCrunch	en	VARS(5[metre]; 13[metre])	32 metre²	src/tests/testevaluator.cpp:3368
-SpeedCrunch	en	int(rand())	0	src/tests/testevaluator.cpp:3373
-SpeedCrunch	en	rand(0)	0	src/tests/testevaluator.cpp:3374
-SpeedCrunch	en	randint(0)	0	src/tests/testevaluator.cpp:3381
-SpeedCrunch	en	randint(5;5)	5	src/tests/testevaluator.cpp:3382
-SpeedCrunch	en	randint(-3;-3)	-3	src/tests/testevaluator.cpp:3383
-SpeedCrunch	en	int(randint(9)/10)	0	src/tests/testevaluator.cpp:3384
-SpeedCrunch	en	int(randint(-9)/10)	0	src/tests/testevaluator.cpp:3385
-SpeedCrunch	en	int(randint(3;1)/10)	0	src/tests/testevaluator.cpp:3386
-SpeedCrunch	en	and(0;0)	0	src/tests/testevaluator.cpp:3404
-SpeedCrunch	en	and(0;1)	0	src/tests/testevaluator.cpp:3405
-SpeedCrunch	en	and(1;0)	0	src/tests/testevaluator.cpp:3406
-SpeedCrunch	en	and(1;1)	1	src/tests/testevaluator.cpp:3407
-SpeedCrunch	en	or(0;0)	0	src/tests/testevaluator.cpp:3409
-SpeedCrunch	en	or(0;1)	1	src/tests/testevaluator.cpp:3410
-SpeedCrunch	en	or(1;0)	1	src/tests/testevaluator.cpp:3411
-SpeedCrunch	en	or(1;1)	1	src/tests/testevaluator.cpp:3412
-SpeedCrunch	en	xor(0;0)	0	src/tests/testevaluator.cpp:3414
-SpeedCrunch	en	xor(0;1)	1	src/tests/testevaluator.cpp:3415
-SpeedCrunch	en	xor(1;0)	1	src/tests/testevaluator.cpp:3416
-SpeedCrunch	en	xor(1;1)	0	src/tests/testevaluator.cpp:3417
-SpeedCrunch	en	popcount(0)	0	src/tests/testevaluator.cpp:3419
-SpeedCrunch	en	popcount(1)	1	src/tests/testevaluator.cpp:3420
-SpeedCrunch	en	popcount(2^254)	1	src/tests/testevaluator.cpp:3421
-SpeedCrunch	en	popcount(2^255-1)	255	src/tests/testevaluator.cpp:3422
-SpeedCrunch	en	popcount(-2^255)	1	src/tests/testevaluator.cpp:3423
-SpeedCrunch	en	popcount(15)	4	src/tests/testevaluator.cpp:3424
-SpeedCrunch	en	popcount(0xF0F0)	8	src/tests/testevaluator.cpp:3425
-SpeedCrunch	en	popcount(3.9)	2	src/tests/testevaluator.cpp:3426
-SpeedCrunch	en	popcount(-3.9)	255	src/tests/testevaluator.cpp:3427
-SpeedCrunch	en	popcount(0.9)	0	src/tests/testevaluator.cpp:3428
-SpeedCrunch	en	popcount(-0.9)	256	src/tests/testevaluator.cpp:3429
-SpeedCrunch	en	popcount(-1)	256	src/tests/testevaluator.cpp:3430
-SpeedCrunch	en	popcount(and(0x123456789ABCDEF0; not(0x123456789ABCDEF0)))	0	src/tests/testevaluator.cpp:3431
-SpeedCrunch	en	popcount(or(0x123456789ABCDEF0; not(0x123456789ABCDEF0)))	256	src/tests/testevaluator.cpp:3432
-SpeedCrunch	en	popcount(123456789) + popcount(not(123456789))	256	src/tests/testevaluator.cpp:3433
-SpeedCrunch	en	popcount(-123456789) + popcount(not(-123456789))	256	src/tests/testevaluator.cpp:3434
-SpeedCrunch	en	idiv(10;3)	3	src/tests/testevaluator.cpp:3439
-SpeedCrunch	en	idiv(-10;3)	-3	src/tests/testevaluator.cpp:3440
-SpeedCrunch	en	idiv(10;-3)	-3	src/tests/testevaluator.cpp:3441
-SpeedCrunch	en	idiv(-10;-3)	3	src/tests/testevaluator.cpp:3442
-SpeedCrunch	en	mod(10;3)	1	src/tests/testevaluator.cpp:3444
-SpeedCrunch	en	mod(-10;3)	-1	src/tests/testevaluator.cpp:3445
-SpeedCrunch	en	mod(10;-3)	1	src/tests/testevaluator.cpp:3446
-SpeedCrunch	en	mod(-10;-3)	-1	src/tests/testevaluator.cpp:3447
-SpeedCrunch	en	emod(10;3)	1	src/tests/testevaluator.cpp:3449
-SpeedCrunch	en	emod(-10;3)	2	src/tests/testevaluator.cpp:3450
-SpeedCrunch	en	emod(10;-3)	-2	src/tests/testevaluator.cpp:3451
-SpeedCrunch	en	emod(-10;-3)	-1	src/tests/testevaluator.cpp:3452
-SpeedCrunch	en	emod(-1;360)	359	src/tests/testevaluator.cpp:3453
-SpeedCrunch	en	emod(360;360)	0	src/tests/testevaluator.cpp:3454
-SpeedCrunch	en	emod(361;360)	1	src/tests/testevaluator.cpp:3455
-SpeedCrunch	en	emod(-360;360)	0	src/tests/testevaluator.cpp:3456
-SpeedCrunch	en	emod(-361;360)	359	src/tests/testevaluator.cpp:3457
-SpeedCrunch	en	emod(721;360)	1	src/tests/testevaluator.cpp:3458
-SpeedCrunch	en	emod(-721;360)	359	src/tests/testevaluator.cpp:3459
-SpeedCrunch	en	emod(0;360)	0	src/tests/testevaluator.cpp:3460
-SpeedCrunch	en	emod(180;360)	180	src/tests/testevaluator.cpp:3461
-SpeedCrunch	en	emod(-180;360)	180	src/tests/testevaluator.cpp:3462
-SpeedCrunch	en	emod(1;-360)	-359	src/tests/testevaluator.cpp:3463
-SpeedCrunch	en	emod(359;-360)	-1	src/tests/testevaluator.cpp:3464
-SpeedCrunch	en	emod(360;-360)	0	src/tests/testevaluator.cpp:3465
-SpeedCrunch	en	emod(-1;-360)	-1	src/tests/testevaluator.cpp:3466
-SpeedCrunch	en	emod(-361;-360)	-1	src/tests/testevaluator.cpp:3467
-SpeedCrunch	en	emod(2.5;2)	0.5	src/tests/testevaluator.cpp:3468
-SpeedCrunch	en	emod(-2.5;2)	1.5	src/tests/testevaluator.cpp:3469
-SpeedCrunch	en	powmod(2;10;7)	2	src/tests/testevaluator.cpp:3471
-SpeedCrunch	en	powmod(3;233;353)	248	src/tests/testevaluator.cpp:3472
-SpeedCrunch	en	powmod(-3;233;353)	105	src/tests/testevaluator.cpp:3473
-SpeedCrunch	en	powmod(123456789;0;97)	1	src/tests/testevaluator.cpp:3474
-SpeedCrunch	en	powmod(123456789;1234567;1)	0	src/tests/testevaluator.cpp:3475
-SpeedCrunch	en	powmod(123456789;1234567;-97)	-80	src/tests/testevaluator.cpp:3476
-SpeedCrunch	en	gcd(12;18)	6	src/tests/testevaluator.cpp:3481
-SpeedCrunch	en	gcd(36;56;210)	2	src/tests/testevaluator.cpp:3482
-SpeedCrunch	en	gcd(28;120;126)	2	src/tests/testevaluator.cpp:3483
-SpeedCrunch	en	lcm(12;18)	36	src/tests/testevaluator.cpp:3484
-SpeedCrunch	en	lcm(36;56;210)	2520	src/tests/testevaluator.cpp:3485
-SpeedCrunch	en	lcm(0;5)	0	src/tests/testevaluator.cpp:3486
-SpeedCrunch	en	lcm(-9;27)	27	src/tests/testevaluator.cpp:3487
-SpeedCrunch	en	round(5.5e-10;2)	0	src/tests/testevaluator.cpp:3488
-SpeedCrunch	en	round(5.5*10^-10;2)	0	src/tests/testevaluator.cpp:3489
-SpeedCrunch	en	round(0.00000000055;2)	0	src/tests/testevaluator.cpp:3490
-SpeedCrunch	en	ncr(-3;-1)	0	src/tests/testevaluator.cpp:3492
-SpeedCrunch	en	ncr(-3;0)	1	src/tests/testevaluator.cpp:3493
-SpeedCrunch	en	ncr(-3;1)	-3	src/tests/testevaluator.cpp:3494
-SpeedCrunch	en	ncr(-3;2)	6	src/tests/testevaluator.cpp:3495
-SpeedCrunch	en	ncr(-3;3)	-10	src/tests/testevaluator.cpp:3496
-SpeedCrunch	en	ncr(-3;4)	15	src/tests/testevaluator.cpp:3497
-SpeedCrunch	en	ncr(-3;5)	-21	src/tests/testevaluator.cpp:3498
-SpeedCrunch	en	ncr(-2;-1)	0	src/tests/testevaluator.cpp:3499
-SpeedCrunch	en	ncr(-2;0)	1	src/tests/testevaluator.cpp:3500
-SpeedCrunch	en	ncr(-2;1)	-2	src/tests/testevaluator.cpp:3501
-SpeedCrunch	en	ncr(-2;2)	3	src/tests/testevaluator.cpp:3502
-SpeedCrunch	en	ncr(-2;3)	-4	src/tests/testevaluator.cpp:3503
-SpeedCrunch	en	ncr(-2;4)	5	src/tests/testevaluator.cpp:3504
-SpeedCrunch	en	ncr(-2;5)	-6	src/tests/testevaluator.cpp:3505
-SpeedCrunch	en	ncr(-1;-1)	0	src/tests/testevaluator.cpp:3507
-SpeedCrunch	en	ncr(-1;0)	1	src/tests/testevaluator.cpp:3508
-SpeedCrunch	en	ncr(-1;1)	-1	src/tests/testevaluator.cpp:3509
-SpeedCrunch	en	ncr(-1;2)	1	src/tests/testevaluator.cpp:3510
-SpeedCrunch	en	ncr(-1;3)	-1	src/tests/testevaluator.cpp:3511
-SpeedCrunch	en	ncr(-1;4)	1	src/tests/testevaluator.cpp:3512
-SpeedCrunch	en	ncr(-1;5)	-1	src/tests/testevaluator.cpp:3513
-SpeedCrunch	en	ncr(0;-1)	0	src/tests/testevaluator.cpp:3515
-SpeedCrunch	en	ncr(0;0)	1	src/tests/testevaluator.cpp:3516
-SpeedCrunch	en	ncr(0;1)	0	src/tests/testevaluator.cpp:3517
-SpeedCrunch	en	ncr(1;-1)	0	src/tests/testevaluator.cpp:3519
-SpeedCrunch	en	ncr(1;0)	1	src/tests/testevaluator.cpp:3520
-SpeedCrunch	en	ncr(1;1)	1	src/tests/testevaluator.cpp:3521
-SpeedCrunch	en	ncr(1;2)	0	src/tests/testevaluator.cpp:3522
-SpeedCrunch	en	ncr(2;-1)	0	src/tests/testevaluator.cpp:3524
-SpeedCrunch	en	ncr(2;0)	1	src/tests/testevaluator.cpp:3525
-SpeedCrunch	en	ncr(2;1)	2	src/tests/testevaluator.cpp:3526
-SpeedCrunch	en	ncr(2;2)	1	src/tests/testevaluator.cpp:3527
-SpeedCrunch	en	ncr(2;3)	0	src/tests/testevaluator.cpp:3528
-SpeedCrunch	en	ncr(3;-1)	0	src/tests/testevaluator.cpp:3530
-SpeedCrunch	en	ncr(3;0)	1	src/tests/testevaluator.cpp:3531
-SpeedCrunch	en	ncr(3;1)	3	src/tests/testevaluator.cpp:3532
-SpeedCrunch	en	ncr(3;2)	3	src/tests/testevaluator.cpp:3533
-SpeedCrunch	en	ncr(3;3)	1	src/tests/testevaluator.cpp:3534
-SpeedCrunch	en	ncr(3;4)	0	src/tests/testevaluator.cpp:3535
-SpeedCrunch	en	ncr(4;-1)	0	src/tests/testevaluator.cpp:3537
-SpeedCrunch	en	ncr(4;0)	1	src/tests/testevaluator.cpp:3538
-SpeedCrunch	en	ncr(4;1)	4	src/tests/testevaluator.cpp:3539
-SpeedCrunch	en	ncr(4;2)	6	src/tests/testevaluator.cpp:3540
-SpeedCrunch	en	ncr(4;3)	4	src/tests/testevaluator.cpp:3541
-SpeedCrunch	en	ncr(4;4)	1	src/tests/testevaluator.cpp:3542
-SpeedCrunch	en	ncr(4;5)	0	src/tests/testevaluator.cpp:3543
-SpeedCrunch	en	ncr(3;3) ? this is because foo	1	src/tests/testevaluator.cpp:3944
-SpeedCrunch	en	? this is a comment-only line	NaN	src/tests/testevaluator.cpp:3945
-SpeedCrunch	en	   ? this is an indented comment-only line	NaN	src/tests/testevaluator.cpp:3946
-SpeedCrunch	en	21	21	src/tests/testevaluator.cpp:3947
-SpeedCrunch	en	? foo	NaN	src/tests/testevaluator.cpp:3948
-SpeedCrunch	en	1[two_cubic_metres] -> [m^3]	2 m³	src/tests/testevaluator.cpp:4097
-SpeedCrunch	en	3[ten_metres] -> [m]	30 m	src/tests/testevaluator.cpp:4100
-SpeedCrunch	en	100[cm_s] -> [m/s]	1 m·s⁻¹	src/tests/testevaluator.cpp:4103
-SpeedCrunch	en	1j	1i	src/tests/testevaluator.cpp:4112
-SpeedCrunch	en	0.1j	0.1i	src/tests/testevaluator.cpp:4113
-SpeedCrunch	en	.1j	0.1i	src/tests/testevaluator.cpp:4114
-SpeedCrunch	en	1E12j	1000000000000i	src/tests/testevaluator.cpp:4115
-SpeedCrunch	en	0.1E12j	100000000000i	src/tests/testevaluator.cpp:4116
-SpeedCrunch	en	1E-12j	0.000000000001i	src/tests/testevaluator.cpp:4117
-SpeedCrunch	en	0.1E-12j	0.0000000000001i	src/tests/testevaluator.cpp:4118
-SpeedCrunch	en	0.1	0.1	src/tests/testevaluator.cpp:4120
-SpeedCrunch	en	(1+1j)*(1-1j)	2	src/tests/testevaluator.cpp:4122
-SpeedCrunch	en	(1+1j)*(1+1j)	2i	src/tests/testevaluator.cpp:4123
-SpeedCrunch	en	VARP(1j;-1j)	1	src/tests/testevaluator.cpp:4126
-SpeedCrunch	en	VARS(1j;-1j)	2	src/tests/testevaluator.cpp:4127
-SpeedCrunch	en	VARP(1j;-1j;1;-1)	1	src/tests/testevaluator.cpp:4128
-SpeedCrunch	en	VARP(2j;-2j;1;-1)	2.5	src/tests/testevaluator.cpp:4129
-SpeedCrunch	en	VARS(2j;-2j;1;-1)	3.33333333333333333333	src/tests/testevaluator.cpp:4130
-SpeedCrunch	en	5e2av	2500	src/tests/testevaluator.cpp:4589
-SpeedCrunch	en	2f()	246	src/tests/testevaluator.cpp:4604
-SpeedCrunch	en	5   5	55	src/tests/testevaluator.cpp:4605
-SpeedCrunch	en	0b10av	10	src/tests/testevaluator.cpp:4627
-SpeedCrunch	en	0o2av	10	src/tests/testevaluator.cpp:4628
-SpeedCrunch	en	5(5)	25	src/tests/testevaluator.cpp:4629
-SpeedCrunch	en	3 sin (3 pi)	0	src/tests/testevaluator.cpp:4641
-SpeedCrunch	en	3 sin (3)	0.4233600241796016663	src/tests/testevaluator.cpp:4642
-SpeedCrunch	en	2 (2 + 1)	6	src/tests/testevaluator.cpp:4646
-SpeedCrunch	en	6/2(2+1)	9	src/tests/testevaluator.cpp:4657
-SpeedCrunch	en	2^2(2)	8	src/tests/testevaluator.cpp:4699
-SpeedCrunch	en	2^2(2)(2)	16	src/tests/testevaluator.cpp:4700
-SpeedCrunch	en	2^2(2*2)	16	src/tests/testevaluator.cpp:4701
-SpeedCrunch	en	2^2(2)+3	11	src/tests/testevaluator.cpp:4702
-SpeedCrunch	en	datetime(1538242871;    0)	20180929.174111	src/tests/testevaluator.cpp:5909
-SpeedCrunch	en	datetime(1514761200;    1)	20180101.000000	src/tests/testevaluator.cpp:5910
-SpeedCrunch	en	datetime(1514764800;   -1)	20171231.230000	src/tests/testevaluator.cpp:5911
-SpeedCrunch	en	datetime(1551464695;13.75)	20190302.080955	src/tests/testevaluator.cpp:5912
-SpeedCrunch	en	datetime(1551464695; -3.5)	20190301.145455	src/tests/testevaluator.cpp:5913
-SpeedCrunch	en	epoch(20180929.174111; 0)	1538242871	src/tests/testevaluator.cpp:5919
-SpeedCrunch	en	epoch(20180101.000000; 1)	1514761200	src/tests/testevaluator.cpp:5920
-SpeedCrunch	en	epoch(20171231.230000; -1)	1514764800	src/tests/testevaluator.cpp:5921
-SpeedCrunch	en	epoch(20190302.080955; 13.75)	1551464695	src/tests/testevaluator.cpp:5922
-SpeedCrunch	en	epoch(20190301.145455; -3.5)	1551464695	src/tests/testevaluator.cpp:5923
-SpeedCrunch	en	4	4	src/tests/testevaluator.cpp:10182
+SpeedCrunch	en	4[J/m^3]	4 joule / metre³	src/tests/testevaluator.cpp:1289
+SpeedCrunch	en	7[J/m^2]	7 joule / metre²	src/tests/testevaluator.cpp:1290
+SpeedCrunch	en	4[TJ/m^3]	4000000000000 joule / metre³	src/tests/testevaluator.cpp:1291
+SpeedCrunch	en	7[TJ/m^2]	7000000000000 joule / metre²	src/tests/testevaluator.cpp:1293
+SpeedCrunch	en	4[mJ/m^3]	0.004 joule / metre³	src/tests/testevaluator.cpp:1294
+SpeedCrunch	en	7[mJ/m^2]	0.007 joule / metre²	src/tests/testevaluator.cpp:1295
+SpeedCrunch	en	4[J/cm^3]	4000000 joule / metre³	src/tests/testevaluator.cpp:1296
+SpeedCrunch	en	7[J/cm^2]	70000 joule / metre²	src/tests/testevaluator.cpp:1297
+SpeedCrunch	en	4[kJ/cm^3]	4000000000 joule / metre³	src/tests/testevaluator.cpp:1298
+SpeedCrunch	en	7[kJ/cm^2]	70000000 joule / metre²	src/tests/testevaluator.cpp:1299
+SpeedCrunch	en	2[kWh/m^3]	7200000 joule / metre³	src/tests/testevaluator.cpp:1300
+SpeedCrunch	en	2[kWh/m^2]	7200000 joule / metre²	src/tests/testevaluator.cpp:1301
+SpeedCrunch	en	4[TJ] / 2[m^3]	2000000000000 joule / metre³	src/tests/testevaluator.cpp:1302
+SpeedCrunch	en	7[TJ] / 2[m^2]	3500000000000 joule / metre²	src/tests/testevaluator.cpp:1303
+SpeedCrunch	en	4[TJ/m^3] in [TJ/m^3]	4 TJ·m⁻³	src/tests/testevaluator.cpp:1306
+SpeedCrunch	en	7[TJ/m^2] in [TJ/m^2]	7 TJ·m⁻²	src/tests/testevaluator.cpp:1307
+SpeedCrunch	en	[volt] -> [joule/coulomb]	1 joule·coulomb⁻¹	src/tests/testevaluator.cpp:1433
+SpeedCrunch	en	[joule/coulomb] -> [volt]	1 volt	src/tests/testevaluator.cpp:1434
+SpeedCrunch	en	[watt] -> [joule/second]	1 joule·second⁻¹	src/tests/testevaluator.cpp:1435
+SpeedCrunch	en	[joule/second] -> [watt]	1 watt	src/tests/testevaluator.cpp:1436
+SpeedCrunch	en	[ampere] -> [coulomb/second]	1 coulomb·second⁻¹	src/tests/testevaluator.cpp:1437
+SpeedCrunch	en	[coulomb/second] -> [ampere]	1 ampere	src/tests/testevaluator.cpp:1438
+SpeedCrunch	en	[volt] -> [ohm*ampere]	1 ohm*ampere	src/tests/testevaluator.cpp:1439
+SpeedCrunch	en	[ohm*ampere] -> [volt]	1 volt	src/tests/testevaluator.cpp:1440
+SpeedCrunch	en	[watt] -> [volt*ampere]	1 volt*ampere	src/tests/testevaluator.cpp:1441
+SpeedCrunch	en	[volt*ampere] -> [watt]	1 watt	src/tests/testevaluator.cpp:1442
+SpeedCrunch	en	[volt] -> [volt]	1 volt	src/tests/testevaluator.cpp:1449
+SpeedCrunch	en	[watt] -> [watt]	1 watt	src/tests/testevaluator.cpp:1450
+SpeedCrunch	en	[ampere] -> [ampere]	1 ampere	src/tests/testevaluator.cpp:1451
+SpeedCrunch	en	[kg*m^2/s^4] -> [kg*m^2/s^4]	1 kg·m²·s⁻⁴	src/tests/testevaluator.cpp:1452
+SpeedCrunch	en	[volt^2] -> [volt^2]	1 volt²	src/tests/testevaluator.cpp:1453
+SpeedCrunch	en	[volt^2] -> [1 * (ohm * ampere)^2]	1 1 * (ohm * ampere)²	src/tests/testevaluator.cpp:1454
+SpeedCrunch	en	25[degree_celsius] -> [kelvin]	298.15 kelvin	src/tests/testevaluator.cpp:1459
+SpeedCrunch	en	0[degree_celsius] -> [degree_fahrenheit]	32 degree_fahrenheit	src/tests/testevaluator.cpp:1460
+SpeedCrunch	en	32[degree_fahrenheit] -> [degree_celsius]	0 degree_celsius	src/tests/testevaluator.cpp:1461
+SpeedCrunch	en	77[degree_fahrenheit] -> [kelvin]	298.15 kelvin	src/tests/testevaluator.cpp:1462
+SpeedCrunch	en	298.15[kelvin] -> [degree_fahrenheit]	77 degree_fahrenheit	src/tests/testevaluator.cpp:1463
+SpeedCrunch	en	0[°C] -> [kelvin]	273.15 kelvin	src/tests/testevaluator.cpp:1464
+SpeedCrunch	en	0[˚C] -> [kelvin]	273.15 kelvin	src/tests/testevaluator.cpp:1465
+SpeedCrunch	en	32[°F] -> [°C]	0 °C	src/tests/testevaluator.cpp:1466
+SpeedCrunch	en	77[°F] -> [°C]	25 °C	src/tests/testevaluator.cpp:1467
+SpeedCrunch	en	273.15[kelvin] -> [°C]	0 °C	src/tests/testevaluator.cpp:1468
+SpeedCrunch	en	0[°C] -> [°F]	32 °F	src/tests/testevaluator.cpp:1469
+SpeedCrunch	en	32[ºF] -> [ºC]	0 °C	src/tests/testevaluator.cpp:1470
+SpeedCrunch	en	32[˚F] -> [˚C]	0 °C	src/tests/testevaluator.cpp:1471
+SpeedCrunch	en	2 [°C] -> [°C]	2 °C	src/tests/testevaluator.cpp:1530
+SpeedCrunch	en	71.2 [°F] + 3 [°F]	74.2 °F	src/tests/testevaluator.cpp:1534
+SpeedCrunch	en	71.2 [°F] - 3 [°F]	68.2 °F	src/tests/testevaluator.cpp:1535
+SpeedCrunch	en	10[N] / 2[N]	5	src/tests/testevaluator.cpp:1621
+SpeedCrunch	en	6[J] / 3[J]	2	src/tests/testevaluator.cpp:1622
+SpeedCrunch	en	8[W] / 4[W]	2	src/tests/testevaluator.cpp:1623
+SpeedCrunch	en	numval(3)	3	src/tests/testevaluator.cpp:1682
+SpeedCrunch	en	numval(3 [m/s])	3	src/tests/testevaluator.cpp:1683
+SpeedCrunch	en	numval(3 [km/s])	3000	src/tests/testevaluator.cpp:1684
+SpeedCrunch	en	numval(3 [km/s] -> [cm/s])	300000	src/tests/testevaluator.cpp:1685
+SpeedCrunch	en	(2[m])^2	4 metre²	src/tests/testevaluator.cpp:1690
+SpeedCrunch	en	(2[m])²	4 metre²	src/tests/testevaluator.cpp:1691
+SpeedCrunch	en	((2[m]))**2	4 metre²	src/tests/testevaluator.cpp:1692
+SpeedCrunch	en	(2[m])^-2	0.25 metre⁻²	src/tests/testevaluator.cpp:1693
+SpeedCrunch	en	(2[m])⁻²	0.25 metre⁻²	src/tests/testevaluator.cpp:1694
+SpeedCrunch	en	(2[m]+3[m])^2	25 metre²	src/tests/testevaluator.cpp:1695
+SpeedCrunch	en	(2[m]/1[m])^2	4	src/tests/testevaluator.cpp:1696
+SpeedCrunch	en	(2[m]/1[m])^(-2)	0.25	src/tests/testevaluator.cpp:1697
+SpeedCrunch	en	[m]^2	1 metre²	src/tests/testevaluator.cpp:1698
+SpeedCrunch	en	sqrt(4[m^2])^2	4 metre²	src/tests/testevaluator.cpp:1699
+SpeedCrunch	en	((2[m/s])^2)/(4[m^2/s^2])	1	src/tests/testevaluator.cpp:1700
+SpeedCrunch	en	(2[m])²+(3[m])²	13 metre²	src/tests/testevaluator.cpp:1701
+SpeedCrunch	en	1 × 10⁻³ + (2[m]/1[m])²	4.001	src/tests/testevaluator.cpp:1702
+SpeedCrunch	en	50%	0.5	src/tests/testevaluator.cpp:1736
+SpeedCrunch	en	(20+30)%	0.5	src/tests/testevaluator.cpp:1737
+SpeedCrunch	en	50%%	0.005	src/tests/testevaluator.cpp:1738
+SpeedCrunch	en	-50%	-0.5	src/tests/testevaluator.cpp:1739
+SpeedCrunch	en	1000+12%	1120	src/tests/testevaluator.cpp:1741
+SpeedCrunch	en	100 + 12%	112	src/tests/testevaluator.cpp:1742
+SpeedCrunch	en	1000-12%	880	src/tests/testevaluator.cpp:1743
+SpeedCrunch	en	1000+125%	2250	src/tests/testevaluator.cpp:1744
+SpeedCrunch	en	1000+(12%)	1120	src/tests/testevaluator.cpp:1745
+SpeedCrunch	en	1000-(12%)	880	src/tests/testevaluator.cpp:1746
+SpeedCrunch	en	1000+(-12%)	880	src/tests/testevaluator.cpp:1747
+SpeedCrunch	en	1000-(-12%)	1120	src/tests/testevaluator.cpp:1748
+SpeedCrunch	en	1000+(10+2)%	1120	src/tests/testevaluator.cpp:1749
+SpeedCrunch	en	1000-(10+2)%	880	src/tests/testevaluator.cpp:1750
+SpeedCrunch	en	1000+10%+10%	1210	src/tests/testevaluator.cpp:1752
+SpeedCrunch	en	1000-10%-10%	810	src/tests/testevaluator.cpp:1753
+SpeedCrunch	en	1000+10%-10%	990	src/tests/testevaluator.cpp:1754
+SpeedCrunch	en	1000-10%+10%	990	src/tests/testevaluator.cpp:1755
+SpeedCrunch	en	100+10%+10%+10%	133.1	src/tests/testevaluator.cpp:1756
+SpeedCrunch	en	1000*12%	120	src/tests/testevaluator.cpp:1758
+SpeedCrunch	en	12%*1000	120	src/tests/testevaluator.cpp:1759
+SpeedCrunch	en	1000/25%	4000	src/tests/testevaluator.cpp:1760
+SpeedCrunch	en	200+(10%*2)	200.2	src/tests/testevaluator.cpp:1761
+SpeedCrunch	en	200+10%^2	200.01	src/tests/testevaluator.cpp:1762
+SpeedCrunch	en	100+(10%+10%)	100.11	src/tests/testevaluator.cpp:1763
+SpeedCrunch	en	100-(10%+10%)	99.89	src/tests/testevaluator.cpp:1764
+SpeedCrunch	en	100-(10%-5%)	99.905	src/tests/testevaluator.cpp:1765
+SpeedCrunch	en	1+2+3+10%	6.6	src/tests/testevaluator.cpp:1767
+SpeedCrunch	en	1+(2+3)+10%	6.6	src/tests/testevaluator.cpp:1768
+SpeedCrunch	en	(1+2+3)+10%	6.6	src/tests/testevaluator.cpp:1769
+SpeedCrunch	en	1+2+(3+10%)	6.3	src/tests/testevaluator.cpp:1770
+SpeedCrunch	en	1+99-10%	90	src/tests/testevaluator.cpp:1771
+SpeedCrunch	en	(1+99)-10%	90	src/tests/testevaluator.cpp:1772
+SpeedCrunch	en	1+(99-10%)	90.1	src/tests/testevaluator.cpp:1773
+SpeedCrunch	en	200[metre]+10%	220 metre	src/tests/testevaluator.cpp:1775
+SpeedCrunch	en	200[metre]-10%	180 metre	src/tests/testevaluator.cpp:1776
+SpeedCrunch	en	200[metre]+10%+10%	242 metre	src/tests/testevaluator.cpp:1777
+SpeedCrunch	en	~~~~1	1	src/tests/testevaluator.cpp:1819
+SpeedCrunch	en	~-~1	-3	src/tests/testevaluator.cpp:1820
+SpeedCrunch	en	-~-1	0	src/tests/testevaluator.cpp:1821
+SpeedCrunch	en	~~-1	-1	src/tests/testevaluator.cpp:1822
+SpeedCrunch	en	(~2)^3	-27	src/tests/testevaluator.cpp:1823
+SpeedCrunch	en	~(2^3)	-9	src/tests/testevaluator.cpp:1824
+SpeedCrunch	en	~2^3	-9	src/tests/testevaluator.cpp:1825
+SpeedCrunch	en	~(-5)	4	src/tests/testevaluator.cpp:1826
+SpeedCrunch	en	-~(-1)	0	src/tests/testevaluator.cpp:1827
+SpeedCrunch	en	-5 & 3	3	src/tests/testevaluator.cpp:1828
+SpeedCrunch	en	-5 | 3	-5	src/tests/testevaluator.cpp:1829
+SpeedCrunch	en	-5 ^ 3	-125	src/tests/testevaluator.cpp:1830
+SpeedCrunch	en	~0 >> 1	-1	src/tests/testevaluator.cpp:1831
+SpeedCrunch	en	~0 << 1	-2	src/tests/testevaluator.cpp:1832
+SpeedCrunch	en	-1 >> 1	-1	src/tests/testevaluator.cpp:1833
+SpeedCrunch	en	-8 >> 2	-2	src/tests/testevaluator.cpp:1834
+SpeedCrunch	en	-9 >> 2	-3	src/tests/testevaluator.cpp:1835
+SpeedCrunch	en	~1 & 1	0	src/tests/testevaluator.cpp:1836
+SpeedCrunch	en	~1 | 1	-1	src/tests/testevaluator.cpp:1837
+SpeedCrunch	en	1 | 2 & 3	3	src/tests/testevaluator.cpp:1838
+SpeedCrunch	en	(1 | 2) & 3	3	src/tests/testevaluator.cpp:1839
+SpeedCrunch	en	1 | (2 & 3)	3	src/tests/testevaluator.cpp:1840
+SpeedCrunch	en	2*~3	-8	src/tests/testevaluator.cpp:1841
+SpeedCrunch	en	~3*2	-8	src/tests/testevaluator.cpp:1842
+SpeedCrunch	en	~(3*2)	-7	src/tests/testevaluator.cpp:1843
+SpeedCrunch	en	~2^3&7	7	src/tests/testevaluator.cpp:1844
+SpeedCrunch	en	~(2^3&7)	-1	src/tests/testevaluator.cpp:1845
+SpeedCrunch	en	(~2^3)&7	7	src/tests/testevaluator.cpp:1846
+SpeedCrunch	en	~(~(~1))	-2	src/tests/testevaluator.cpp:1847
+SpeedCrunch	en	~(~(~(~1)))	1	src/tests/testevaluator.cpp:1848
+SpeedCrunch	en	~5	-6	src/tests/testevaluator.cpp:1849
+SpeedCrunch	en	~(~5)	5	src/tests/testevaluator.cpp:1850
+SpeedCrunch	en	~(~(~5))	-6	src/tests/testevaluator.cpp:1851
+SpeedCrunch	en	~(2^3) + ~3! * (~1 & 3) << 1	-46	src/tests/testevaluator.cpp:1852
+SpeedCrunch	en	not(-1)	0	src/tests/testevaluator.cpp:1855
+SpeedCrunch	en	~(-1)	0	src/tests/testevaluator.cpp:1856
+SpeedCrunch	en	-not(-1)	0	src/tests/testevaluator.cpp:1857
+SpeedCrunch	en	-~(-1)	0	src/tests/testevaluator.cpp:1858
+SpeedCrunch	en	not(not(not(not(1))))	1	src/tests/testevaluator.cpp:1860
+SpeedCrunch	en	not(-not(1))	-3	src/tests/testevaluator.cpp:1861
+SpeedCrunch	en	-not(-1)	0	src/tests/testevaluator.cpp:1862
+SpeedCrunch	en	not(not(-1))	-1	src/tests/testevaluator.cpp:1863
+SpeedCrunch	en	(not(2))^3	-27	src/tests/testevaluator.cpp:1864
+SpeedCrunch	en	not(2^3)	-9	src/tests/testevaluator.cpp:1865
+SpeedCrunch	en	not(2^3)	-9	src/tests/testevaluator.cpp:1866
+SpeedCrunch	en	not(-5)	4	src/tests/testevaluator.cpp:1867
+SpeedCrunch	en	not(0) >> 1	-1	src/tests/testevaluator.cpp:1868
+SpeedCrunch	en	not(0) << 1	-2	src/tests/testevaluator.cpp:1869
+SpeedCrunch	en	not(1) & 1	0	src/tests/testevaluator.cpp:1870
+SpeedCrunch	en	not(1) | 1	-1	src/tests/testevaluator.cpp:1871
+SpeedCrunch	en	2*not(3)	-8	src/tests/testevaluator.cpp:1872
+SpeedCrunch	en	not(3)*2	-8	src/tests/testevaluator.cpp:1873
+SpeedCrunch	en	not(3*2)	-7	src/tests/testevaluator.cpp:1874
+SpeedCrunch	en	not(2^3&7)	-1	src/tests/testevaluator.cpp:1875
+SpeedCrunch	en	not(2^3&7)	-1	src/tests/testevaluator.cpp:1876
+SpeedCrunch	en	(not(2^3))&7	7	src/tests/testevaluator.cpp:1877
+SpeedCrunch	en	not(not(not(1)))	-2	src/tests/testevaluator.cpp:1878
+SpeedCrunch	en	not(not(not(not(1))))	1	src/tests/testevaluator.cpp:1879
+SpeedCrunch	en	not(5)	-6	src/tests/testevaluator.cpp:1880
+SpeedCrunch	en	not(not(5))	5	src/tests/testevaluator.cpp:1881
+SpeedCrunch	en	not(not(not(5)))	-6	src/tests/testevaluator.cpp:1882
+SpeedCrunch	en	not(2^3) + not(3!) * (not(1) & 3) << 1	-46	src/tests/testevaluator.cpp:1883
+SpeedCrunch	en	12_345.678_9	12345.6789	src/tests/testevaluator.cpp:1981
+SpeedCrunch	en	1234_5.67_89	12345.6789	src/tests/testevaluator.cpp:1982
+SpeedCrunch	en	1234_56	123456	src/tests/testevaluator.cpp:1983
+SpeedCrunch	en	_123456	123456	src/tests/testevaluator.cpp:1984
+SpeedCrunch	en	123456_	123456	src/tests/testevaluator.cpp:1985
+SpeedCrunch	en	123___456	123456	src/tests/testevaluator.cpp:1986
+SpeedCrunch	en	._123456	0.123456	src/tests/testevaluator.cpp:1987
+SpeedCrunch	en	12 345.678 9	12345.6789	src/tests/testevaluator.cpp:1989
+SpeedCrunch	en	12·345.678·9	37333.224	src/tests/testevaluator.cpp:1991
+SpeedCrunch	en	12٫345.678٫9	12345.6789	src/tests/testevaluator.cpp:1992
+SpeedCrunch	en	12٬345.678٬9	12345.6789	src/tests/testevaluator.cpp:1993
+SpeedCrunch	en	12˙345.678˙9	12345.6789	src/tests/testevaluator.cpp:1994
+SpeedCrunch	en	12⎖345.678⎖9	12345.6789	src/tests/testevaluator.cpp:1995
+SpeedCrunch	en	12$345.678~9	12345.6789	src/tests/testevaluator.cpp:1998
+SpeedCrunch	en	12`345.678@9	12345.6789	src/tests/testevaluator.cpp:1999
+SpeedCrunch	en	12€345.678€9	12345.6789	src/tests/testevaluator.cpp:2000
+SpeedCrunch	en	12£345.678£9	12345.6789	src/tests/testevaluator.cpp:2001
+SpeedCrunch	en	12¥345.678¥9	12345.6789	src/tests/testevaluator.cpp:2002
+SpeedCrunch	en	12₩345.678₩9	12345.6789	src/tests/testevaluator.cpp:2003
+SpeedCrunch	en	$ 1234.567	1234.567	src/tests/testevaluator.cpp:2006
+SpeedCrunch	en	1234.567 $	1234.567	src/tests/testevaluator.cpp:2007
+SpeedCrunch	en	€ 1234.567	1234.567	src/tests/testevaluator.cpp:2008
+SpeedCrunch	en	1234.567 ¥	1234.567	src/tests/testevaluator.cpp:2009
+SpeedCrunch	en	$-10	-10	src/tests/testevaluator.cpp:2010
+SpeedCrunch	en	$+10	10	src/tests/testevaluator.cpp:2011
+SpeedCrunch	en	ABS(0)	0	src/tests/testevaluator.cpp:3089
+SpeedCrunch	en	ABS(1)	1	src/tests/testevaluator.cpp:3090
+SpeedCrunch	en	ABS(-1)	1	src/tests/testevaluator.cpp:3091
+SpeedCrunch	en	ABS(--1)	1	src/tests/testevaluator.cpp:3092
+SpeedCrunch	en	ABS(---1)	1	src/tests/testevaluator.cpp:3093
+SpeedCrunch	en	ABS((1))	1	src/tests/testevaluator.cpp:3094
+SpeedCrunch	en	ABS((-1))	1	src/tests/testevaluator.cpp:3095
+SpeedCrunch	en	ABS(1/2)	0.5	src/tests/testevaluator.cpp:3097
+SpeedCrunch	en	ABS(-1/2)	0.5	src/tests/testevaluator.cpp:3098
+SpeedCrunch	en	ABS(-1/-2)	0.5	src/tests/testevaluator.cpp:3099
+SpeedCrunch	en	ABS(1/-2)	0.5	src/tests/testevaluator.cpp:3100
+SpeedCrunch	en	INT(0)	0	src/tests/testevaluator.cpp:3102
+SpeedCrunch	en	INT(1)	1	src/tests/testevaluator.cpp:3103
+SpeedCrunch	en	INT(-1)	-1	src/tests/testevaluator.cpp:3104
+SpeedCrunch	en	INT(0.5)	0	src/tests/testevaluator.cpp:3105
+SpeedCrunch	en	INT(-0.75)	0	src/tests/testevaluator.cpp:3106
+SpeedCrunch	en	INT(-0.9999*1)	0	src/tests/testevaluator.cpp:3107
+SpeedCrunch	en	INT(0.9999*1)	0	src/tests/testevaluator.cpp:3108
+SpeedCrunch	en	INT(2.1)	2	src/tests/testevaluator.cpp:3109
+SpeedCrunch	en	INT(-3.4)	-3	src/tests/testevaluator.cpp:3110
+SpeedCrunch	en	log(0.123; 0.1234)	0.99845065797473594741	src/tests/testevaluator.cpp:3112
+SpeedCrunch	en	log10(0.00000000001)	-11	src/tests/testevaluator.cpp:3113
+SpeedCrunch	en	log10(1e-3)	-3	src/tests/testevaluator.cpp:3114
+SpeedCrunch	en	log2(0.00000000001)	-36.54120904376098582657	src/tests/testevaluator.cpp:3115
+SpeedCrunch	en	log2(32)	5	src/tests/testevaluator.cpp:3116
+SpeedCrunch	en	ln(100)	4.60517018598809136804	src/tests/testevaluator.cpp:3117
+SpeedCrunch	en	ln(4.0)	1.38629436111989061883	src/tests/testevaluator.cpp:3118
+SpeedCrunch	en	0!	1	src/tests/testevaluator.cpp:3120
+SpeedCrunch	en	1!	1	src/tests/testevaluator.cpp:3121
+SpeedCrunch	en	2!	2	src/tests/testevaluator.cpp:3122
+SpeedCrunch	en	3!	6	src/tests/testevaluator.cpp:3123
+SpeedCrunch	en	4!	24	src/tests/testevaluator.cpp:3124
+SpeedCrunch	en	5!	120	src/tests/testevaluator.cpp:3125
+SpeedCrunch	en	6!	720	src/tests/testevaluator.cpp:3126
+SpeedCrunch	en	7!	5040	src/tests/testevaluator.cpp:3127
+SpeedCrunch	en	(1+1)!^2	4	src/tests/testevaluator.cpp:3128
+SpeedCrunch	en	(-27)^(1/3)	-3	src/tests/testevaluator.cpp:3130
+SpeedCrunch	en	(-27)^(-1/3)	-0.33333333333333333333	src/tests/testevaluator.cpp:3131
+SpeedCrunch	en	(-1)^(1/3)	-1	src/tests/testevaluator.cpp:3132
+SpeedCrunch	en	(-1)^(1/7)	-1	src/tests/testevaluator.cpp:3133
+SpeedCrunch	en	(-1)^(2/3)	1	src/tests/testevaluator.cpp:3134
+SpeedCrunch	en	(-1)^(1/2)	NaN	src/tests/testevaluator.cpp:3135
+SpeedCrunch	en	exp((1)/2) + exp((1)/2)	3.29744254140025629369730157562832714330755220142030	src/tests/testevaluator.cpp:3137
+SpeedCrunch	en	√(81)	9	src/tests/testevaluator.cpp:3139
+SpeedCrunch	en	∛(-27)	-3	src/tests/testevaluator.cpp:3140
+SpeedCrunch	en	log(10;log(10;1e100))	2	src/tests/testevaluator.cpp:3147
+SpeedCrunch	en	log(10;abs(-100))	2	src/tests/testevaluator.cpp:3148
+SpeedCrunch	en	abs(log(10;100))	2	src/tests/testevaluator.cpp:3149
+SpeedCrunch	en	abs(abs(-100))	100	src/tests/testevaluator.cpp:3150
+SpeedCrunch	en	sum(10;abs(-100);1)	111	src/tests/testevaluator.cpp:3151
+SpeedCrunch	en	sum(abs(-100);10;1)	111	src/tests/testevaluator.cpp:3152
+SpeedCrunch	en	sum(10;1;abs(-100))	111	src/tests/testevaluator.cpp:3153
+SpeedCrunch	en	ieee754_half_decode(0x7E00)	NaN	src/tests/testevaluator.cpp:3155
+SpeedCrunch	en	hex(ieee754_half_encode(1))	0x3C00	src/tests/testevaluator.cpp:3156
+SpeedCrunch	en	hex(ieee754_half_encode(0.99951171875))	0x3BFF	src/tests/testevaluator.cpp:3157
+SpeedCrunch	en	hex(ieee754_half_encode(0.999755859375))	0x3C00	src/tests/testevaluator.cpp:3158
+SpeedCrunch	en	ieee754_round_half(0.999755859375)	1	src/tests/testevaluator.cpp:3160
+SpeedCrunch	en	ieee754_round_float(pi) - ieee754_single_decode(ieee754_single_encode(pi))	0	src/tests/testevaluator.cpp:3161
+SpeedCrunch	en	ieee754_round_double(pi) - ieee754_double_decode(ieee754_double_encode(pi))	0	src/tests/testevaluator.cpp:3162
+SpeedCrunch	en	ieee754_round_quad(pi) - ieee754_quad_decode(ieee754_quad_encode(pi))	0	src/tests/testevaluator.cpp:3163
+SpeedCrunch	en	ieee754_half_residual(0.999755859375) - (0.999755859375 - ieee754_round_half(0.999755859375))	0	src/tests/testevaluator.cpp:3165
+SpeedCrunch	en	ieee754_float_residual(pi) - (pi - ieee754_round_float(pi))	0	src/tests/testevaluator.cpp:3166
+SpeedCrunch	en	ieee754_double_residual(pi) - (pi - ieee754_round_double(pi))	0	src/tests/testevaluator.cpp:3167
+SpeedCrunch	en	ieee754_quad_residual(pi) - (pi - ieee754_round_quad(pi))	0	src/tests/testevaluator.cpp:3168
+SpeedCrunch	en	ieee754_double_residual(pi)	0.00000000000000012246	src/tests/testevaluator.cpp:3170
+SpeedCrunch	en	ieee754_double_residual(pi/2)	0.00000000000000006123	src/tests/testevaluator.cpp:3171
+SpeedCrunch	en	pi/2	1.57079632679489661923	src/tests/testevaluator.cpp:3173
+SpeedCrunch	en	ieee754_double_residual(pi/2)	0.00000000000000006123233995736765886130329661375005	src/tests/testevaluator.cpp:3174
+SpeedCrunch	en	ieee754_double_residual(ieee754_double_residual(pi/2))	-0.00000000000000000000000000000000149738490485916978	src/tests/testevaluator.cpp:3175
+SpeedCrunch	en	ieee754_double_residual(ieee754_double_residual(ieee754_double_residual(pi/2)))	0.00000000000000000000000000000000000000000000000006	src/tests/testevaluator.cpp:3176
+SpeedCrunch	en	molmass(H)	1.008 g·mol⁻¹	src/tests/testevaluator.cpp:3178
+SpeedCrunch	en	molmass(He)	4.0026 g·mol⁻¹	src/tests/testevaluator.cpp:3179
+SpeedCrunch	en	molmass(C6H12O6)	180.156 g·mol⁻¹	src/tests/testevaluator.cpp:3180
+SpeedCrunch	en	molmass(H₂O)	18.015 g·mol⁻¹	src/tests/testevaluator.cpp:3181
+SpeedCrunch	en	molmass(NaCl)	58.44 g·mol⁻¹	src/tests/testevaluator.cpp:3182
+SpeedCrunch	en	molmass(C₆H₁₂O₆)	180.156 g·mol⁻¹	src/tests/testevaluator.cpp:3183
+SpeedCrunch	en	molmass(Na₂SO₄)	142.036 g·mol⁻¹	src/tests/testevaluator.cpp:3184
+SpeedCrunch	en	molmass(C6H12O6)*molmass(C6H12O6)	32456.184336 g²·mol⁻²	src/tests/testevaluator.cpp:3185
+SpeedCrunch	en	mass(1;C6H12O6)	180.156 g	src/tests/testevaluator.cpp:3227
+SpeedCrunch	en	mass(2;H2O)	36.03 g	src/tests/testevaluator.cpp:3228
+SpeedCrunch	en	mass(0.5;H₂O)	9.0075 g	src/tests/testevaluator.cpp:3229
+SpeedCrunch	en	mass(1;C6H12O6)-molmass(C6H12O6)*1[mol]	0 g	src/tests/testevaluator.cpp:3230
+SpeedCrunch	en	molarity(0.50;1.00)	0.5 mol/L	src/tests/testevaluator.cpp:3237
+SpeedCrunch	en	molarity(1[mol];2[L])	0.5 mol/L	src/tests/testevaluator.cpp:3238
+SpeedCrunch	en	molarity(1;2[L])	0.5 mol/L	src/tests/testevaluator.cpp:3239
+SpeedCrunch	en	molarity(1[mol];2)	0.5 mol/L	src/tests/testevaluator.cpp:3240
+SpeedCrunch	en	molarity(3[mmol];2[mL])	1.5 mol/L	src/tests/testevaluator.cpp:3241
+SpeedCrunch	en	molarity(250[umol];500[mL])	0.0005 mol/L	src/tests/testevaluator.cpp:3242
+SpeedCrunch	en	molarity(0.75[mol];300[mL])	2.5 mol/L	src/tests/testevaluator.cpp:3243
+SpeedCrunch	en	molarity(3[mmol];2[mL])-molarity(0.003[mol];0.002[L])	0 mol/L	src/tests/testevaluator.cpp:3244
+SpeedCrunch	en	molarity(1[mol];2[L])-0.5[mol/L]	0 mol/L	src/tests/testevaluator.cpp:3245
+SpeedCrunch	en	pi	3.14159265358979323846264338327950288419716939937511	src/tests/testevaluator.cpp:3255
+SpeedCrunch	en	sin(0)	0	src/tests/testevaluator.cpp:3257
+SpeedCrunch	en	cos(0)	1	src/tests/testevaluator.cpp:3258
+SpeedCrunch	en	tan(0)	0	src/tests/testevaluator.cpp:3259
+SpeedCrunch	en	sin(pi)	0	src/tests/testevaluator.cpp:3261
+SpeedCrunch	en	cos(pi)	-1	src/tests/testevaluator.cpp:3262
+SpeedCrunch	en	tan(pi)	0	src/tests/testevaluator.cpp:3263
+SpeedCrunch	en	sin(-pi)	0	src/tests/testevaluator.cpp:3265
+SpeedCrunch	en	cos(-pi)	-1	src/tests/testevaluator.cpp:3266
+SpeedCrunch	en	tan(-pi)	0	src/tests/testevaluator.cpp:3267
+SpeedCrunch	en	sin(--pi)	0	src/tests/testevaluator.cpp:3269
+SpeedCrunch	en	cos(--pi)	-1	src/tests/testevaluator.cpp:3270
+SpeedCrunch	en	tan(--pi)	0	src/tests/testevaluator.cpp:3271
+SpeedCrunch	en	sin(pi/2)	1	src/tests/testevaluator.cpp:3273
+SpeedCrunch	en	cos(pi/2)	0	src/tests/testevaluator.cpp:3274
+SpeedCrunch	en	sin(-pi/2)	-1	src/tests/testevaluator.cpp:3276
+SpeedCrunch	en	cos(-pi/2)	0	src/tests/testevaluator.cpp:3277
+SpeedCrunch	en	sin(-pi/2) + sin(pi/2)	0	src/tests/testevaluator.cpp:3279
+SpeedCrunch	en	sin(-pi/2) - sin(pi/2)	-2	src/tests/testevaluator.cpp:3280
+SpeedCrunch	en	cos(-pi/2) + cos(pi/2)	0	src/tests/testevaluator.cpp:3281
+SpeedCrunch	en	cos(-pi/2) - cos(pi/2)	0	src/tests/testevaluator.cpp:3282
+SpeedCrunch	en	arcsin(sin(1))	1	src/tests/testevaluator.cpp:3284
+SpeedCrunch	en	arccos(cos(1))	1	src/tests/testevaluator.cpp:3285
+SpeedCrunch	en	arctan(tan(1))	1	src/tests/testevaluator.cpp:3286
+SpeedCrunch	en	arcsin(0)	0	src/tests/testevaluator.cpp:3287
+SpeedCrunch	en	arccos(1)	0	src/tests/testevaluator.cpp:3288
+SpeedCrunch	en	arctan(0)	0	src/tests/testevaluator.cpp:3289
+SpeedCrunch	en	degrees(0)	0	src/tests/testevaluator.cpp:3291
+SpeedCrunch	en	degrees(pi/2)	90	src/tests/testevaluator.cpp:3292
+SpeedCrunch	en	degrees(pi)	180	src/tests/testevaluator.cpp:3293
+SpeedCrunch	en	degrees(3*pi/2)	270	src/tests/testevaluator.cpp:3294
+SpeedCrunch	en	degrees(2*pi)	360	src/tests/testevaluator.cpp:3295
+SpeedCrunch	en	radians(0)	0	src/tests/testevaluator.cpp:3297
+SpeedCrunch	en	radians(90)/pi	0.5	src/tests/testevaluator.cpp:3298
+SpeedCrunch	en	radians(180)/pi	1	src/tests/testevaluator.cpp:3299
+SpeedCrunch	en	radians(270)/pi	1.5	src/tests/testevaluator.cpp:3300
+SpeedCrunch	en	radians(360)/pi	2	src/tests/testevaluator.cpp:3301
+SpeedCrunch	en	gradians(0)	0	src/tests/testevaluator.cpp:3303
+SpeedCrunch	en	gradians(pi/2)	100	src/tests/testevaluator.cpp:3304
+SpeedCrunch	en	gradians(pi)	200	src/tests/testevaluator.cpp:3305
+SpeedCrunch	en	gradians(3*pi/2)	300	src/tests/testevaluator.cpp:3306
+SpeedCrunch	en	gradians(2*pi)	400	src/tests/testevaluator.cpp:3307
+SpeedCrunch	en	turns(0)	0	src/tests/testevaluator.cpp:3309
+SpeedCrunch	en	turns(pi/2)	0.25	src/tests/testevaluator.cpp:3310
+SpeedCrunch	en	turns(pi)	0.5	src/tests/testevaluator.cpp:3311
+SpeedCrunch	en	turns(3*pi/2)	0.75	src/tests/testevaluator.cpp:3312
+SpeedCrunch	en	turns(2*pi)	1	src/tests/testevaluator.cpp:3313
+SpeedCrunch	en	tanh(0)	0	src/tests/testevaluator.cpp:3318
+SpeedCrunch	en	tanh(58)	0.99999999999999999999999999999999999999999999999999	src/tests/testevaluator.cpp:3319
+SpeedCrunch	en	tanh(-58)	-0.99999999999999999999999999999999999999999999999999	src/tests/testevaluator.cpp:3320
+SpeedCrunch	en	tanh(59)	1.00000000000000000000000000000000000000000000000000	src/tests/testevaluator.cpp:3321
+SpeedCrunch	en	tanh(-59)	-1.00000000000000000000000000000000000000000000000000	src/tests/testevaluator.cpp:3322
+SpeedCrunch	en	MIN(0; 1)	0	src/tests/testevaluator.cpp:3345
+SpeedCrunch	en	MIN(0; 2)	0	src/tests/testevaluator.cpp:3346
+SpeedCrunch	en	MIN(-1; 0)	-1	src/tests/testevaluator.cpp:3347
+SpeedCrunch	en	MIN(-1; 1)	-1	src/tests/testevaluator.cpp:3348
+SpeedCrunch	en	MIN(-0.01; 0)	-0.01	src/tests/testevaluator.cpp:3349
+SpeedCrunch	en	MIN(0; 1; 2)	0	src/tests/testevaluator.cpp:3350
+SpeedCrunch	en	MIN(-1; 0; 1; 2)	-1	src/tests/testevaluator.cpp:3351
+SpeedCrunch	en	MIN(-2; -1; 0; 1; 2)	-2	src/tests/testevaluator.cpp:3352
+SpeedCrunch	en	MAX(0; 1)	1	src/tests/testevaluator.cpp:3355
+SpeedCrunch	en	MAX(0; 2)	2	src/tests/testevaluator.cpp:3356
+SpeedCrunch	en	MAX(-1; 0)	0	src/tests/testevaluator.cpp:3357
+SpeedCrunch	en	MAX(-1; 1)	1	src/tests/testevaluator.cpp:3358
+SpeedCrunch	en	MAX(0.01; 0)	0.01	src/tests/testevaluator.cpp:3359
+SpeedCrunch	en	MAX(0; 1; 2)	2	src/tests/testevaluator.cpp:3360
+SpeedCrunch	en	MAX(-1; 0; 1; 2)	2	src/tests/testevaluator.cpp:3361
+SpeedCrunch	en	MAX(-2; -1; 0; 1; 2)	2	src/tests/testevaluator.cpp:3362
+SpeedCrunch	en	SUM(100;1)	101	src/tests/testevaluator.cpp:3365
+SpeedCrunch	en	SUM(-100;1)	-99	src/tests/testevaluator.cpp:3366
+SpeedCrunch	en	SUM(0;0;0)	0	src/tests/testevaluator.cpp:3367
+SpeedCrunch	en	SUM(100;-1)	99	src/tests/testevaluator.cpp:3368
+SpeedCrunch	en	SUM(-100;-1)	-101	src/tests/testevaluator.cpp:3369
+SpeedCrunch	en	SUM(1;2;3;4;5;6)	21	src/tests/testevaluator.cpp:3370
+SpeedCrunch	en	SUM(1;-2;3;-4;5;-6)	-3	src/tests/testevaluator.cpp:3371
+SpeedCrunch	en	SUMMATION(1;4;3)	12	src/tests/testevaluator.cpp:3380
+SpeedCrunch	en	SUMMATION(1;3;SUMMATION(1;2;1))	6	src/tests/testevaluator.cpp:3393
+SpeedCrunch	en	PRODUCT(100;0)	0	src/tests/testevaluator.cpp:3405
+SpeedCrunch	en	PRODUCT(100;1)	100	src/tests/testevaluator.cpp:3406
+SpeedCrunch	en	PRODUCT(-100;1)	-100	src/tests/testevaluator.cpp:3407
+SpeedCrunch	en	PRODUCT(-100;-1)	100	src/tests/testevaluator.cpp:3408
+SpeedCrunch	en	PRODUCT(1;1;1)	1	src/tests/testevaluator.cpp:3409
+SpeedCrunch	en	PRODUCT(1;2;3;4;5;6)	720	src/tests/testevaluator.cpp:3410
+SpeedCrunch	en	PRODUCT(1;-2;3;-4;5;-6)	-720	src/tests/testevaluator.cpp:3411
+SpeedCrunch	en	AVERAGE(0;0)	0	src/tests/testevaluator.cpp:3414
+SpeedCrunch	en	AVERAGE(0;0;0)	0	src/tests/testevaluator.cpp:3415
+SpeedCrunch	en	AVERAGE(0;1)	0.5	src/tests/testevaluator.cpp:3416
+SpeedCrunch	en	AVERAGE(0;1;2)	1	src/tests/testevaluator.cpp:3417
+SpeedCrunch	en	AVERAGE(0;1;0)*3	1	src/tests/testevaluator.cpp:3418
+SpeedCrunch	en	AVERAGE(1;1;1)	1	src/tests/testevaluator.cpp:3419
+SpeedCrunch	en	AVERAGE(2;2;2)	2	src/tests/testevaluator.cpp:3420
+SpeedCrunch	en	AVERAGE(3;3;3)	3	src/tests/testevaluator.cpp:3421
+SpeedCrunch	en	AVERAGE(0.25;0.75)	0.5	src/tests/testevaluator.cpp:3422
+SpeedCrunch	en	AVERAGE(2.25;4.75)	3.5	src/tests/testevaluator.cpp:3423
+SpeedCrunch	en	AVERAGE(1/3;2/3)	0.5	src/tests/testevaluator.cpp:3424
+SpeedCrunch	en	123 + average(2;3;4;)	126	src/tests/testevaluator.cpp:3425
+SpeedCrunch	en	GEOMEAN(1;1)	1	src/tests/testevaluator.cpp:3429
+SpeedCrunch	en	GEOMEAN(1;4)	2	src/tests/testevaluator.cpp:3430
+SpeedCrunch	en	GEOMEAN(4;9)	6	src/tests/testevaluator.cpp:3431
+SpeedCrunch	en	GEOMEAN(3.6;8.1)	5.4	src/tests/testevaluator.cpp:3432
+SpeedCrunch	en	GEOMEAN(3;4;18)	6	src/tests/testevaluator.cpp:3433
+SpeedCrunch	en	GEOMEAN(1;1;1)	1	src/tests/testevaluator.cpp:3434
+SpeedCrunch	en	GEOMEAN(1;1;1;1)	1	src/tests/testevaluator.cpp:3435
+SpeedCrunch	en	VARP(1;-1)	1	src/tests/testevaluator.cpp:3438
+SpeedCrunch	en	VARS(1;-1)	2	src/tests/testevaluator.cpp:3439
+SpeedCrunch	en	VARP(5[metre]; 13[metre])	16 metre²	src/tests/testevaluator.cpp:3440
+SpeedCrunch	en	VARS(5[metre]; 13[metre])	32 metre²	src/tests/testevaluator.cpp:3441
+SpeedCrunch	en	int(rand())	0	src/tests/testevaluator.cpp:3446
+SpeedCrunch	en	rand(0)	0	src/tests/testevaluator.cpp:3447
+SpeedCrunch	en	randint(0)	0	src/tests/testevaluator.cpp:3454
+SpeedCrunch	en	randint(5;5)	5	src/tests/testevaluator.cpp:3455
+SpeedCrunch	en	randint(-3;-3)	-3	src/tests/testevaluator.cpp:3456
+SpeedCrunch	en	int(randint(9)/10)	0	src/tests/testevaluator.cpp:3457
+SpeedCrunch	en	int(randint(-9)/10)	0	src/tests/testevaluator.cpp:3458
+SpeedCrunch	en	int(randint(3;1)/10)	0	src/tests/testevaluator.cpp:3459
+SpeedCrunch	en	and(0;0)	0	src/tests/testevaluator.cpp:3477
+SpeedCrunch	en	and(0;1)	0	src/tests/testevaluator.cpp:3478
+SpeedCrunch	en	and(1;0)	0	src/tests/testevaluator.cpp:3479
+SpeedCrunch	en	and(1;1)	1	src/tests/testevaluator.cpp:3480
+SpeedCrunch	en	or(0;0)	0	src/tests/testevaluator.cpp:3482
+SpeedCrunch	en	or(0;1)	1	src/tests/testevaluator.cpp:3483
+SpeedCrunch	en	or(1;0)	1	src/tests/testevaluator.cpp:3484
+SpeedCrunch	en	or(1;1)	1	src/tests/testevaluator.cpp:3485
+SpeedCrunch	en	xor(0;0)	0	src/tests/testevaluator.cpp:3487
+SpeedCrunch	en	xor(0;1)	1	src/tests/testevaluator.cpp:3488
+SpeedCrunch	en	xor(1;0)	1	src/tests/testevaluator.cpp:3489
+SpeedCrunch	en	xor(1;1)	0	src/tests/testevaluator.cpp:3490
+SpeedCrunch	en	popcount(0)	0	src/tests/testevaluator.cpp:3492
+SpeedCrunch	en	popcount(1)	1	src/tests/testevaluator.cpp:3493
+SpeedCrunch	en	popcount(2^254)	1	src/tests/testevaluator.cpp:3494
+SpeedCrunch	en	popcount(2^255-1)	255	src/tests/testevaluator.cpp:3495
+SpeedCrunch	en	popcount(-2^255)	1	src/tests/testevaluator.cpp:3496
+SpeedCrunch	en	popcount(15)	4	src/tests/testevaluator.cpp:3497
+SpeedCrunch	en	popcount(0xF0F0)	8	src/tests/testevaluator.cpp:3498
+SpeedCrunch	en	popcount(3.9)	2	src/tests/testevaluator.cpp:3499
+SpeedCrunch	en	popcount(-3.9)	255	src/tests/testevaluator.cpp:3500
+SpeedCrunch	en	popcount(0.9)	0	src/tests/testevaluator.cpp:3501
+SpeedCrunch	en	popcount(-0.9)	256	src/tests/testevaluator.cpp:3502
+SpeedCrunch	en	popcount(-1)	256	src/tests/testevaluator.cpp:3503
+SpeedCrunch	en	popcount(and(0x123456789ABCDEF0; not(0x123456789ABCDEF0)))	0	src/tests/testevaluator.cpp:3504
+SpeedCrunch	en	popcount(or(0x123456789ABCDEF0; not(0x123456789ABCDEF0)))	256	src/tests/testevaluator.cpp:3505
+SpeedCrunch	en	popcount(123456789) + popcount(not(123456789))	256	src/tests/testevaluator.cpp:3506
+SpeedCrunch	en	popcount(-123456789) + popcount(not(-123456789))	256	src/tests/testevaluator.cpp:3507
+SpeedCrunch	en	idiv(10;3)	3	src/tests/testevaluator.cpp:3512
+SpeedCrunch	en	idiv(-10;3)	-3	src/tests/testevaluator.cpp:3513
+SpeedCrunch	en	idiv(10;-3)	-3	src/tests/testevaluator.cpp:3514
+SpeedCrunch	en	idiv(-10;-3)	3	src/tests/testevaluator.cpp:3515
+SpeedCrunch	en	mod(10;3)	1	src/tests/testevaluator.cpp:3517
+SpeedCrunch	en	mod(-10;3)	-1	src/tests/testevaluator.cpp:3518
+SpeedCrunch	en	mod(10;-3)	1	src/tests/testevaluator.cpp:3519
+SpeedCrunch	en	mod(-10;-3)	-1	src/tests/testevaluator.cpp:3520
+SpeedCrunch	en	emod(10;3)	1	src/tests/testevaluator.cpp:3522
+SpeedCrunch	en	emod(-10;3)	2	src/tests/testevaluator.cpp:3523
+SpeedCrunch	en	emod(10;-3)	-2	src/tests/testevaluator.cpp:3524
+SpeedCrunch	en	emod(-10;-3)	-1	src/tests/testevaluator.cpp:3525
+SpeedCrunch	en	emod(-1;360)	359	src/tests/testevaluator.cpp:3526
+SpeedCrunch	en	emod(360;360)	0	src/tests/testevaluator.cpp:3527
+SpeedCrunch	en	emod(361;360)	1	src/tests/testevaluator.cpp:3528
+SpeedCrunch	en	emod(-360;360)	0	src/tests/testevaluator.cpp:3529
+SpeedCrunch	en	emod(-361;360)	359	src/tests/testevaluator.cpp:3530
+SpeedCrunch	en	emod(721;360)	1	src/tests/testevaluator.cpp:3531
+SpeedCrunch	en	emod(-721;360)	359	src/tests/testevaluator.cpp:3532
+SpeedCrunch	en	emod(0;360)	0	src/tests/testevaluator.cpp:3533
+SpeedCrunch	en	emod(180;360)	180	src/tests/testevaluator.cpp:3534
+SpeedCrunch	en	emod(-180;360)	180	src/tests/testevaluator.cpp:3535
+SpeedCrunch	en	emod(1;-360)	-359	src/tests/testevaluator.cpp:3536
+SpeedCrunch	en	emod(359;-360)	-1	src/tests/testevaluator.cpp:3537
+SpeedCrunch	en	emod(360;-360)	0	src/tests/testevaluator.cpp:3538
+SpeedCrunch	en	emod(-1;-360)	-1	src/tests/testevaluator.cpp:3539
+SpeedCrunch	en	emod(-361;-360)	-1	src/tests/testevaluator.cpp:3540
+SpeedCrunch	en	emod(2.5;2)	0.5	src/tests/testevaluator.cpp:3541
+SpeedCrunch	en	emod(-2.5;2)	1.5	src/tests/testevaluator.cpp:3542
+SpeedCrunch	en	powmod(2;10;7)	2	src/tests/testevaluator.cpp:3544
+SpeedCrunch	en	powmod(3;233;353)	248	src/tests/testevaluator.cpp:3545
+SpeedCrunch	en	powmod(-3;233;353)	105	src/tests/testevaluator.cpp:3546
+SpeedCrunch	en	powmod(123456789;0;97)	1	src/tests/testevaluator.cpp:3547
+SpeedCrunch	en	powmod(123456789;1234567;1)	0	src/tests/testevaluator.cpp:3548
+SpeedCrunch	en	powmod(123456789;1234567;-97)	-80	src/tests/testevaluator.cpp:3549
+SpeedCrunch	en	gcd(12;18)	6	src/tests/testevaluator.cpp:3554
+SpeedCrunch	en	gcd(36;56;210)	2	src/tests/testevaluator.cpp:3555
+SpeedCrunch	en	gcd(28;120;126)	2	src/tests/testevaluator.cpp:3556
+SpeedCrunch	en	lcm(12;18)	36	src/tests/testevaluator.cpp:3557
+SpeedCrunch	en	lcm(36;56;210)	2520	src/tests/testevaluator.cpp:3558
+SpeedCrunch	en	lcm(0;5)	0	src/tests/testevaluator.cpp:3559
+SpeedCrunch	en	lcm(-9;27)	27	src/tests/testevaluator.cpp:3560
+SpeedCrunch	en	round(5.5e-10;2)	0	src/tests/testevaluator.cpp:3561
+SpeedCrunch	en	round(5.5*10^-10;2)	0	src/tests/testevaluator.cpp:3562
+SpeedCrunch	en	round(0.00000000055;2)	0	src/tests/testevaluator.cpp:3563
+SpeedCrunch	en	ncr(-3;-1)	0	src/tests/testevaluator.cpp:3565
+SpeedCrunch	en	ncr(-3;0)	1	src/tests/testevaluator.cpp:3566
+SpeedCrunch	en	ncr(-3;1)	-3	src/tests/testevaluator.cpp:3567
+SpeedCrunch	en	ncr(-3;2)	6	src/tests/testevaluator.cpp:3568
+SpeedCrunch	en	ncr(-3;3)	-10	src/tests/testevaluator.cpp:3569
+SpeedCrunch	en	ncr(-3;4)	15	src/tests/testevaluator.cpp:3570
+SpeedCrunch	en	ncr(-3;5)	-21	src/tests/testevaluator.cpp:3571
+SpeedCrunch	en	ncr(-2;-1)	0	src/tests/testevaluator.cpp:3572
+SpeedCrunch	en	ncr(-2;0)	1	src/tests/testevaluator.cpp:3573
+SpeedCrunch	en	ncr(-2;1)	-2	src/tests/testevaluator.cpp:3574
+SpeedCrunch	en	ncr(-2;2)	3	src/tests/testevaluator.cpp:3575
+SpeedCrunch	en	ncr(-2;3)	-4	src/tests/testevaluator.cpp:3576
+SpeedCrunch	en	ncr(-2;4)	5	src/tests/testevaluator.cpp:3577
+SpeedCrunch	en	ncr(-2;5)	-6	src/tests/testevaluator.cpp:3578
+SpeedCrunch	en	ncr(-1;-1)	0	src/tests/testevaluator.cpp:3580
+SpeedCrunch	en	ncr(-1;0)	1	src/tests/testevaluator.cpp:3581
+SpeedCrunch	en	ncr(-1;1)	-1	src/tests/testevaluator.cpp:3582
+SpeedCrunch	en	ncr(-1;2)	1	src/tests/testevaluator.cpp:3583
+SpeedCrunch	en	ncr(-1;3)	-1	src/tests/testevaluator.cpp:3584
+SpeedCrunch	en	ncr(-1;4)	1	src/tests/testevaluator.cpp:3585
+SpeedCrunch	en	ncr(-1;5)	-1	src/tests/testevaluator.cpp:3586
+SpeedCrunch	en	ncr(0;-1)	0	src/tests/testevaluator.cpp:3588
+SpeedCrunch	en	ncr(0;0)	1	src/tests/testevaluator.cpp:3589
+SpeedCrunch	en	ncr(0;1)	0	src/tests/testevaluator.cpp:3590
+SpeedCrunch	en	ncr(1;-1)	0	src/tests/testevaluator.cpp:3592
+SpeedCrunch	en	ncr(1;0)	1	src/tests/testevaluator.cpp:3593
+SpeedCrunch	en	ncr(1;1)	1	src/tests/testevaluator.cpp:3594
+SpeedCrunch	en	ncr(1;2)	0	src/tests/testevaluator.cpp:3595
+SpeedCrunch	en	ncr(2;-1)	0	src/tests/testevaluator.cpp:3597
+SpeedCrunch	en	ncr(2;0)	1	src/tests/testevaluator.cpp:3598
+SpeedCrunch	en	ncr(2;1)	2	src/tests/testevaluator.cpp:3599
+SpeedCrunch	en	ncr(2;2)	1	src/tests/testevaluator.cpp:3600
+SpeedCrunch	en	ncr(2;3)	0	src/tests/testevaluator.cpp:3601
+SpeedCrunch	en	ncr(3;-1)	0	src/tests/testevaluator.cpp:3603
+SpeedCrunch	en	ncr(3;0)	1	src/tests/testevaluator.cpp:3604
+SpeedCrunch	en	ncr(3;1)	3	src/tests/testevaluator.cpp:3605
+SpeedCrunch	en	ncr(3;2)	3	src/tests/testevaluator.cpp:3606
+SpeedCrunch	en	ncr(3;3)	1	src/tests/testevaluator.cpp:3607
+SpeedCrunch	en	ncr(3;4)	0	src/tests/testevaluator.cpp:3608
+SpeedCrunch	en	ncr(4;-1)	0	src/tests/testevaluator.cpp:3610
+SpeedCrunch	en	ncr(4;0)	1	src/tests/testevaluator.cpp:3611
+SpeedCrunch	en	ncr(4;1)	4	src/tests/testevaluator.cpp:3612
+SpeedCrunch	en	ncr(4;2)	6	src/tests/testevaluator.cpp:3613
+SpeedCrunch	en	ncr(4;3)	4	src/tests/testevaluator.cpp:3614
+SpeedCrunch	en	ncr(4;4)	1	src/tests/testevaluator.cpp:3615
+SpeedCrunch	en	ncr(4;5)	0	src/tests/testevaluator.cpp:3616
+SpeedCrunch	en	ncr(3;3) ? this is because foo	1	src/tests/testevaluator.cpp:4017
+SpeedCrunch	en	? this is a comment-only line	NaN	src/tests/testevaluator.cpp:4018
+SpeedCrunch	en	   ? this is an indented comment-only line	NaN	src/tests/testevaluator.cpp:4019
+SpeedCrunch	en	21	21	src/tests/testevaluator.cpp:4020
+SpeedCrunch	en	? foo	NaN	src/tests/testevaluator.cpp:4021
+SpeedCrunch	en	1[two_cubic_metres] -> [m^3]	2 m³	src/tests/testevaluator.cpp:4259
+SpeedCrunch	en	3[ten_metres] -> [m]	30 m	src/tests/testevaluator.cpp:4262
+SpeedCrunch	en	100[cm_s] -> [m/s]	1 m·s⁻¹	src/tests/testevaluator.cpp:4265
+SpeedCrunch	en	1j	1i	src/tests/testevaluator.cpp:4274
+SpeedCrunch	en	0.1j	0.1i	src/tests/testevaluator.cpp:4275
+SpeedCrunch	en	.1j	0.1i	src/tests/testevaluator.cpp:4276
+SpeedCrunch	en	1E12j	1000000000000i	src/tests/testevaluator.cpp:4277
+SpeedCrunch	en	0.1E12j	100000000000i	src/tests/testevaluator.cpp:4278
+SpeedCrunch	en	1E-12j	0.000000000001i	src/tests/testevaluator.cpp:4279
+SpeedCrunch	en	0.1E-12j	0.0000000000001i	src/tests/testevaluator.cpp:4280
+SpeedCrunch	en	0.1	0.1	src/tests/testevaluator.cpp:4282
+SpeedCrunch	en	(1+1j)*(1-1j)	2	src/tests/testevaluator.cpp:4284
+SpeedCrunch	en	(1+1j)*(1+1j)	2i	src/tests/testevaluator.cpp:4285
+SpeedCrunch	en	VARP(1j;-1j)	1	src/tests/testevaluator.cpp:4288
+SpeedCrunch	en	VARS(1j;-1j)	2	src/tests/testevaluator.cpp:4289
+SpeedCrunch	en	VARP(1j;-1j;1;-1)	1	src/tests/testevaluator.cpp:4290
+SpeedCrunch	en	VARP(2j;-2j;1;-1)	2.5	src/tests/testevaluator.cpp:4291
+SpeedCrunch	en	VARS(2j;-2j;1;-1)	3.33333333333333333333	src/tests/testevaluator.cpp:4292
+SpeedCrunch	en	5e2av	2500	src/tests/testevaluator.cpp:4751
+SpeedCrunch	en	2f()	246	src/tests/testevaluator.cpp:4766
+SpeedCrunch	en	5   5	55	src/tests/testevaluator.cpp:4767
+SpeedCrunch	en	0b10av	10	src/tests/testevaluator.cpp:4789
+SpeedCrunch	en	0o2av	10	src/tests/testevaluator.cpp:4790
+SpeedCrunch	en	5(5)	25	src/tests/testevaluator.cpp:4791
+SpeedCrunch	en	3 sin (3 pi)	0	src/tests/testevaluator.cpp:4803
+SpeedCrunch	en	3 sin (3)	0.4233600241796016663	src/tests/testevaluator.cpp:4804
+SpeedCrunch	en	2 (2 + 1)	6	src/tests/testevaluator.cpp:4808
+SpeedCrunch	en	6/2(2+1)	9	src/tests/testevaluator.cpp:4819
+SpeedCrunch	en	2^2(2)	8	src/tests/testevaluator.cpp:4861
+SpeedCrunch	en	2^2(2)(2)	16	src/tests/testevaluator.cpp:4862
+SpeedCrunch	en	2^2(2*2)	16	src/tests/testevaluator.cpp:4863
+SpeedCrunch	en	2^2(2)+3	11	src/tests/testevaluator.cpp:4864
+SpeedCrunch	en	datetime(1538242871;    0)	20180929.174111	src/tests/testevaluator.cpp:6071
+SpeedCrunch	en	datetime(1514761200;    1)	20180101.000000	src/tests/testevaluator.cpp:6072
+SpeedCrunch	en	datetime(1514764800;   -1)	20171231.230000	src/tests/testevaluator.cpp:6073
+SpeedCrunch	en	datetime(1551464695;13.75)	20190302.080955	src/tests/testevaluator.cpp:6074
+SpeedCrunch	en	datetime(1551464695; -3.5)	20190301.145455	src/tests/testevaluator.cpp:6075
+SpeedCrunch	en	epoch(20180929.174111; 0)	1538242871	src/tests/testevaluator.cpp:6081
+SpeedCrunch	en	epoch(20180101.000000; 1)	1514761200	src/tests/testevaluator.cpp:6082
+SpeedCrunch	en	epoch(20171231.230000; -1)	1514764800	src/tests/testevaluator.cpp:6083
+SpeedCrunch	en	epoch(20190302.080955; 13.75)	1551464695	src/tests/testevaluator.cpp:6084
+SpeedCrunch	en	epoch(20190301.145455; -3.5)	1551464695	src/tests/testevaluator.cpp:6085
+SpeedCrunch	en	4	4	src/tests/testevaluator.cpp:10344
