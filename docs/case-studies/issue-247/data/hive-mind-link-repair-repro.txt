@@ -1,0 +1,9 @@
+1. Session ends; the finally-block repair runs:
+  log: 🔗 Repaired 2 required issue-closing reference(s) in PR #10.
+"Closes #1\n\nThis PR only plans the work: #2 and #3 stay open.\n\n---\n\nFixes #2\nFixes #3"
+2. The next session removes the lines again; the repair re-adds them:
+  log: 🔗 Repaired 2 required issue-closing reference(s) in PR #10.
+"Closes #1\n\nThis PR only plans the work: #2 and #3 stay open.\n\n---\n\nFixes #2\nFixes #3"
+3. hive-mind and GitHub disagree on negated keywords:
+  extractClosingIssueReferences("This PR does not close #2.") = []
+  GitHub: closingIssuesReferences lists #2, and merging closes it (probe on link-assistant/calculator#261).

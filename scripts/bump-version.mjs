@@ -19,6 +19,7 @@ import {
   getCargoTomlPath,
   parseRustRootConfig,
 } from './rust-paths.mjs';
+import { syncJsVersion } from './sync-js-version.mjs';
 
 // Load use-m dynamically
 const { use } = eval(
@@ -135,6 +136,7 @@ try {
   } else {
     updateCargoToml(newVersion);
     console.log(`Updated ${CARGO_TOML}`);
+    console.log(`Synced the JavaScript engine version: ${syncJsVersion('.').join(', ')}`);
   }
 } catch (error) {
   console.error('Error:', error.message);

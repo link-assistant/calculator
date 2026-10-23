@@ -1,0 +1,420 @@
+[
+  {
+    "number": 227,
+    "title": "We need to double check that we beat exactly all competitors for math expressions in natural language",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-12T19:44:22Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-12T19:44:23Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 228,
+          "mergedAt": "2026-10-12T19:44:21Z",
+          "mergeCommit": {
+            "oid": "da77fafe973668fafe6471af5736ff23b8347af8"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "number": 229,
+    "title": "Run the competitor coverage checker in CI and fail on regressions",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-08T05:54:41Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-08T05:54:41Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 248,
+          "mergedAt": "2026-10-08T05:54:39Z",
+          "mergeCommit": {
+            "oid": "654a17aa1ba4f65f1f4202103ac809322ce0e05d"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "number": 230,
+    "title": "Keep the imported open-source calculator test suites current and add the missing engines",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-08T07:48:51Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-08T07:48:51Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 249,
+          "mergedAt": "2026-10-08T07:48:50Z",
+          "mergeCommit": {
+            "oid": "f6012ec9781fb55c796602b94eb22c3af7f15b43"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "number": 231,
+    "title": "Complete the closed-source calculator documentation corpus",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-08T09:28:28Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-08T09:28:28Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 250,
+          "mergedAt": "2026-10-08T09:28:26Z",
+          "mergeCommit": {
+            "oid": "126c542b7a7e59e048247e1e351ae2669f200144"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "number": 232,
+    "title": "Grow the multilingual scientific-quote corpus beyond the 13 seeded languages",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-08T08:11:19Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-08T08:11:19Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 251,
+          "mergedAt": "2026-10-08T08:11:18Z",
+          "mergeCommit": {
+            "oid": "90c86e6a13c11eb14786144023a5ad20887ee6f5"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "number": 233,
+    "title": "Thousands separators and locale decimal commas give silently wrong answers",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-08T08:43:13Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-08T08:43:14Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 252,
+          "mergedAt": "2026-10-08T08:43:11Z",
+          "mergeCommit": {
+            "oid": "ec0f310d8407563ee70d99e7281a0deedf6e904e"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "number": 234,
+    "title": "Percent arithmetic differs from every competitor",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-08T10:21:15Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-08T10:21:15Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 253,
+          "mergedAt": "2026-10-08T10:21:13Z",
+          "mergeCommit": {
+            "oid": "24a7ac8431a1ed131b59cc3b5cb4a07603b5dd3f"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "number": 235,
+    "title": "General dimensional unit algebra: length, temperature, electrical and compound units",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-12T18:55:06Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-12T18:55:07Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 259,
+          "mergedAt": "2026-10-12T18:55:05Z",
+          "mergeCommit": {
+            "oid": "3dd119d7c539ef11b99285b7180050e9d1c21cf7"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "number": 236,
+    "title": "Scientific notation as written in papers: superscripts, SI prefixes, ± uncertainty, scale words after digits",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-12T19:44:23Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-12T19:44:24Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 228,
+          "mergedAt": "2026-10-12T19:44:21Z",
+          "mergeCommit": {
+            "oid": "da77fafe973668fafe6471af5736ff23b8347af8"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "number": 237,
+    "title": "English noun-phrase operators: squared, cubed, sum of, half of, dozen, rounded, log base",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-12T19:44:24Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-12T19:44:24Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 228,
+          "mergedAt": "2026-10-12T19:44:21Z",
+          "mergeCommit": {
+            "oid": "da77fafe973668fafe6471af5736ff23b8347af8"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "number": 238,
+    "title": "Multilingual phrase operators, spelled numbers and CJK tokenization",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-12T19:44:25Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-12T19:44:25Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 228,
+          "mergedAt": "2026-10-12T19:44:21Z",
+          "mergeCommit": {
+            "oid": "da77fafe973668fafe6471af5736ff23b8347af8"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "number": 239,
+    "title": "Number bases, bitwise operators, repeating decimals and display formats (fraction, roman, words, eng, hex)",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-12T19:44:26Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-12T19:44:26Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 228,
+          "mergedAt": "2026-10-12T19:44:21Z",
+          "mergeCommit": {
+            "oid": "da77fafe973668fafe6471af5736ff23b8347af8"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "number": 240,
+    "title": "Complex numbers, vectors and matrices, infinity/NaN and the missing special functions",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-12T19:44:26Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-12T19:44:26Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 228,
+          "mergedAt": "2026-10-12T19:44:21Z",
+          "mergeCommit": {
+            "oid": "da77fafe973668fafe6471af5736ff23b8347af8"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "number": 241,
+    "title": "Symbolic algebra: variables in expressions, non-polynomial equations, calculus and simplification",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-12T19:44:27Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-12T19:44:27Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 228,
+          "mergedAt": "2026-10-12T19:44:21Z",
+          "mergeCommit": {
+            "oid": "da77fafe973668fafe6471af5736ff23b8347af8"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "number": 242,
+    "title": "Notepad state: variables, line references, totals, booleans, strings, comments and conditionals",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-12T19:44:27Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-12T19:44:27Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 228,
+          "mergedAt": "2026-10-12T19:44:21Z",
+          "mergeCommit": {
+            "oid": "da77fafe973668fafe6471af5736ff23b8347af8"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "number": 243,
+    "title": "Date and time parity: sign of clock differences, natural display, IANA/city zones, relative dates, workdays, timecode",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-12T19:44:28Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-12T19:44:28Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 228,
+          "mergedAt": "2026-10-12T19:44:21Z",
+          "mergeCommit": {
+            "oid": "da77fafe973668fafe6471af5736ff23b8347af8"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "number": 244,
+    "title": "Finance, statistics and rate phrases: VAT, interest, mortgages, mean/median, per-unit rates",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-12T19:44:28Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-12T19:44:28Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 228,
+          "mergedAt": "2026-10-12T19:44:21Z",
+          "mergeCommit": {
+            "oid": "da77fafe973668fafe6471af5736ff23b8347af8"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "number": 245,
+    "title": "Accept LaTeX, MathML and Unicode math notation copied from papers",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-12T19:44:25Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-12T19:44:25Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 228,
+          "mergedAt": "2026-10-12T19:44:21Z",
+          "mergeCommit": {
+            "oid": "da77fafe973668fafe6471af5736ff23b8347af8"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "number": 246,
+    "title": "Milestone: every competitor and scientific-quote corpus row is supported or has a documented difference",
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "closedAt": "2026-10-12T19:44:23Z",
+    "events": [
+      {
+        "type": "ClosedEvent",
+        "createdAt": "2026-10-12T19:44:23Z",
+        "actor": "konard",
+        "closer": {
+          "__typename": "PullRequest",
+          "number": 228,
+          "mergedAt": "2026-10-12T19:44:21Z",
+          "mergeCommit": {
+            "oid": "da77fafe973668fafe6471af5736ff23b8347af8"
+          }
+        }
+      }
+    ]
+  }
+]

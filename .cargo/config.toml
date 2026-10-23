@@ -1,0 +1,30 @@
+# Bounded Rust build load for local agent runs and CI (issue #254).
+#
+# A full `cargo test` here compiles the library, the CLI and every integration
+# test binary. Several agents doing that at once on one machine exhausted its
+# memory and disk, so local builds are bounded by default:
+#
+# - `jobs = 2` caps parallel rustc processes. CI overrides it with
+#   CARGO_BUILD_JOBS to use all runner cores.
+# - `incremental = false` (CARGO_INCREMENTAL=0) skips the incremental cache,
+#   the largest and fastest-growing part of `target/`.
+# - Dependencies get no debug info and workspace crates only line tables,
+#   which keeps backtraces with file and line numbers.
+#
+# Shared bounded target directory option: `target-dir` is deliberately not set
+# here, so `target/` stays where scripts expect it. To share one build
+# directory between worktrees or agents, run Cargo through
+# `node scripts/bounded-cargo.mjs <cargo arguments>` with
+# CALCULATOR_CARGO_TARGET_DIR pointing at the shared directory. The wrapper
+# serialises builds and prunes the directory when it exceeds its disk budget
+# (see CONTRIBUTING.md, "Rust Build Load").
+
+[build]
+jobs = 2
+incremental = false
+
+[profile.dev]
+debug = "line-tables-only"
+
+[profile.dev.package."*"]
+debug = false

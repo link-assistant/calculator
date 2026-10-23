@@ -1,0 +1,49 @@
+name: Setup Rust
+description: >-
+  Install the toolchain pinned in rust-toolchain.toml and restore a bounded
+  Cargo cache. Only the gated Rust stage (rust.yml) may use it (issue #254).
+
+inputs:
+  cache-key:
+    description: >-
+      Job-specific cache name. Each job keeps one entry per Cargo.lock, so the
+      cached target directory cannot grow across dependency updates.
+    required: false
+    default: ''
+  targets:
+    description: Extra compilation targets, for example wasm32-unknown-unknown.
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Install the pinned toolchain
+      shell: bash
+      env:
+        RUST_TARGETS: ${{ inputs.targets }}
+      run: |
+        set -euo pipefail
+        # Without arguments rustup installs the toolchain rust-toolchain.toml
+        # names, with its components, so CI and local runs use the same one.
+        rustup toolchain install
+        if [ -n "$RUST_TARGETS" ]; then
+          # shellcheck disable=SC2086 # a space-separated list
+          rustup target add $RUST_TARGETS
+        fi
+        rustc --version
+        cargo --version
+
+    # No restore-keys: a new Cargo.lock starts from an empty target directory
+    # instead of piling new artifacts onto the old ones. actions/cache never
+    # overwrites an existing key, so each entry is written once.
+    - name: Cache Cargo downloads and build output
+      if: inputs.cache-key != ''
+      uses: actions/cache@v6
+      with:
+        path: |
+          ~/.cargo/registry/index
+          ~/.cargo/registry/cache
+          ~/.cargo/git/db
+          target
+        key: ${{ runner.os }}-cargo-${{ inputs.cache-key }}-${{ hashFiles('rust-toolchain.toml', '**/Cargo.lock') }}

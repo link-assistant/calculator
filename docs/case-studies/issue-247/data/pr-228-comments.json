@@ -1,0 +1,68 @@
+[
+  {
+    "created_at": "2026-10-07T10:30:40Z",
+    "user": "konard",
+    "html_url": "https://github.com/link-assistant/calculator/pull/228#issuecomment-6036057126",
+    "body": "<!-- hive-mind:working-session-summary -->\n## Working session summary\n\nThe work for issue #227 is complete and PR #228 is marked ready for review: https://github.com/link-assistant/calculator/pull/228\n\n**What the PR delivers**\n\n- **Case study** in `docs/case-studies/issue-227` with the competitor inventory, the natural-language quote corpus in several languages, requirements R1–R7 with solution options, component and crate review, and the measured coverage report.\n- **Automated coverage checker** `scripts/competitor-coverage.mjs` that runs all three corpora through the CLI, reports supported, different, unsupported and timeout per source and language, and fails on regressions against the committed baseline. It has node:test unit tests.\n- **Corpus importer** that extracts single-expression assertions from the fend, libqalculate, Numbat, Rink and math.js test suites.\n- **18 sub-issues** (#229 to #246) created, linked as sub-issues of #227 through the GitHub API, with blockers registered through the dependencies API. The milestone issue #246 is blocked by the other 16 feature issues.\n\n**Measured baseline** on v0.22.0 across 3055 corpus rows:\n\n| Status | Rows |\n|---|---|\n| supported | 640 (20.9%) |\n| different | 213 |\n| unsupported | 2202 |\n\n<details>\n<summary>Rest of the working session summary (918 characters)</summary>\n\n```text\n| timeout | 0 |\n\n**CI status**\n\nThe first two runs failed on two jobs. The missing changelog fragment was fixed in the docs commit. The Dependency Freshness job failed because seven web packages had new releases published after main last passed on Oct 3, which the repo's convention from PR #226 treats as an error. I bumped those packages to the latest versions, verified the 229 web unit tests and the TypeScript build locally, and documented the bump in the changelog fragment and the PR description. The run for the final commit passed every job, including Web Build with the new Vite version.\n\nThe branch is level with main, the working tree is clean apart from the intentionally untracked `ci-logs/` directory, and there are no comments on the issue or the PR to address. One background poll command was stopped by its time limit, but the same check was repeated in the foreground and confirmed the green result.\n```\n\n</details>\n\n---\n*This summary was automatically extracted from the AI working session output.*"
+  },
+  {
+    "created_at": "2026-10-07T10:31:26Z",
+    "user": "konard",
+    "html_url": "https://github.com/link-assistant/calculator/pull/228#issuecomment-6036068757",
+    "body": "## 🤖 Solution Draft Log\nThis log file contains the complete execution trace of the AI solution draft process.\n\n### 💰 Cost: **$16.648287**\n\n### 📊 **Context and tokens usage:**\n\n**Claude Fable 5.1:** (4 sub-sessions)\n1. 116.5K / 1M (12%) input tokens, 33.2K / 128K (26%) output tokens\n2. 114.2K / 1M (11%) input tokens, 31.8K / 128K (25%) output tokens\n3. 116.0K / 1M (12%) input tokens, 52.1K / 128K (41%) output tokens\n4. 47.5K / 1M (5%) input tokens, 9.1K / 128K (7%) output tokens\n\nTotal: (12.0K new + 350.4K cache writes + 6.0M cache reads) input tokens, 153.0K output tokens, $16.243884 cost\n\n**Claude Haiku 4.5:**\n- 189.7K / 200K (95%) input tokens, 8.9K / 64K (14%) output tokens\n\nTotal: 189.7K input tokens, 8.9K output tokens, $0.404403 cost\n\n### 🤖 **Models used:**\n- Tool: Anthropic Claude Code\n- Requested: `fable` (`claude-fable-5-1`)\n- Thinking level: high (~23999 tokens)\n- **Main model: Claude Fable 5.1** (`claude-fable-5-1`)\n- **Additional models:**\n  *  **Claude Haiku 4.5** (`claude-haiku-4-5-20251001`)\n\n### 📎 **Log file uploaded as Gist** (4621KB)\n- [View complete solution draft log](https://gist.githubusercontent.com/konard/1023602faae25056fda9ccf9e4a3f471/raw/b25545467b40e9c957d6a49bbe919fd6e1cf1bcd/tmp-hive-mind-log-upload-a3rKAW-sanitized.log.txt)\n\n---\n*Now working session is ended, feel free to review and add any feedback on the solution draft.*"
+  },
+  {
+    "created_at": "2026-10-07T10:31:41Z",
+    "user": "konard",
+    "html_url": "https://github.com/link-assistant/calculator/pull/228#issuecomment-6036072359",
+    "body": "## 🔄 Auto-restart 1/5\n\nDetected uncommitted changes from previous run. Starting new session to review and commit or discard them.\n\n**Uncommitted files:**\n```\n?? ci-logs/\n```\n\n---\n*Auto-restart will stop after changes are committed or discarded, or after 4 more iterations. Please wait until working session will end and give your feedback.*"
+  },
+  {
+    "created_at": "2026-10-07T10:44:59Z",
+    "user": "konard",
+    "html_url": "https://github.com/link-assistant/calculator/pull/228#issuecomment-6036273994",
+    "body": "<!-- hive-mind:working-session-summary -->\n## Working session summary\n\nThe session is finished. PR 228 is ready for review with a clean working tree and green CI: https://github.com/link-assistant/calculator/pull/228\n\n**What I did this session**\n\n- **Ignored the scratch directory.** The untracked `ci-logs/` held downloaded CI logs and working notes whose content is already consolidated in the case study, so I added a root-anchored ignore rule to `.gitignore` and pushed it. Existing per-case-study log folders under docs are unaffected. The tree is clean.\n- **Fixed the PR description.** The edit made after my last commit had appended \"Fixes\" lines for all 18 sub-issues, which would have auto-closed the whole work plan on merge. I removed those lines and added a note that only #227 closes and #229 to #246 stay open.\n- **Verified the final state.** Script unit tests, the file-size check and cargo fmt pass locally. The CI run for the new commit passed every job, including Dependency Freshness and Web Build. The branch contains main, there are no new issue or PR comments, and the PR is marked ready for review.\n\n**One thing to watch:** the automation that edited the PR body earlier may re-add the \"Fixes\" lines for the sub-issues at the next session end. If t\n\n<details>\n<summary>Rest of the working session summary (87 characters)</summary>\n\n```text\nhat happens, they should be removed again before merging so the sub-issues remain open.\n```\n\n</details>\n\n---\n*This summary was automatically extracted from the AI working session output.*"
+  },
+  {
+    "created_at": "2026-10-07T10:45:15Z",
+    "user": "konard",
+    "html_url": "https://github.com/link-assistant/calculator/pull/228#issuecomment-6036277988",
+    "body": "## 🔄 Auto-restart 1/5 Log\nThis log file contains the complete execution trace of the AI solution draft process.\n\n### 💰 Cost: **$1.226209**\n\n### 📊 **Context and tokens usage:**\n- 52.0K / 1M (5%) input tokens, 7.8K / 128K (6%) output tokens\n\nTotal: (418 new + 35.3K cache writes + 507.2K cache reads) input tokens, 7.8K output tokens, $1.226209 cost\n\n### 🤖 **Models used:**\n- Tool: Anthropic Claude Code\n- Requested: `fable` (`claude-fable-5-1`)\n- **Model: Claude Fable 5.1** (`claude-fable-5-1`)\n\n### 📎 **Log file uploaded as Gist** (5151KB)\n- [View complete solution draft log](https://gist.githubusercontent.com/konard/75dea7afa9c7e2ddca01a94a687d40b7/raw/d8b1c5258f98670d33e124f7defd559f6401e66b/tmp-hive-mind-log-upload-ysQrFK-sanitized.log.txt)\n\n---\n*Now working session is ended, feel free to review and add any feedback on the solution draft.*"
+  },
+  {
+    "created_at": "2026-10-07T10:48:37Z",
+    "user": "konard",
+    "html_url": "https://github.com/link-assistant/calculator/pull/228#issuecomment-6036328202",
+    "body": "## ✅ Ready to merge\n\nThis pull request is now ready to be merged:\n- All CI checks have passed\n- No merge conflicts\n- No pending changes\n\n---\n*Monitored by hive-mind with --auto-restart-until-mergeable flag*"
+  },
+  {
+    "created_at": "2026-10-12T16:48:36Z",
+    "user": "konard",
+    "html_url": "https://github.com/link-assistant/calculator/pull/228#issuecomment-6128653311",
+    "body": "We need resolve conflicts and double check that we implemented exactly all requirements.\r\n"
+  },
+  {
+    "created_at": "2026-10-12T19:14:42Z",
+    "user": "konard",
+    "html_url": "https://github.com/link-assistant/calculator/pull/228#issuecomment-6130932988",
+    "body": "🤖 **AI Work Session Started**\n\nStarted at 2026-10-12T19:14:40.023Z. Please wait for it to finish before giving feedback.\n\n_Runtime: solve `v2.35.8` · tool `claude` · model `opus` · task image `konard/hive-mind-dind:2.35.8@sha256:9706ce436565c715d6c2b95f615b51fa8c8ee96ddbbf56d98201e6861fdc60e9`_"
+  },
+  {
+    "created_at": "2026-10-12T19:39:59Z",
+    "user": "konard",
+    "html_url": "https://github.com/link-assistant/calculator/pull/228#issuecomment-6131339274",
+    "body": "<!-- hive-mind:working-session-summary -->\n## Working session summary\n\nI resolved the merge conflicts, re-checked every requirement of #227, and updated the docs. PR #228 now has no conflicts, all its checks pass, and it is ready for review: https://github.com/link-assistant/calculator/pull/228\n\n**Conflicts.** All 13 conflicting files were shared with `main`: the coverage checker, the corpus importer, the corpora, the baseline and report, `.gitignore` and the web `package.json`/lock. The sub-issue PRs had already merged newer versions of them into `main` (#248–#253, #259), so I took `main`'s version of each. The PR now adds only the parts `main` doesn't have:\n- the case-study README\n- the 18 sub-issue specifications with `issues.json`\n- the issue snapshot\n- `create-sub-issues.mjs`\n- a changelog fragment, rewritten to list only these additions\n\n**Requirement check.** Each requirement in #227 is met either by a file in the case study or by a sub-issue:\n- **Closed sub-issues:** 7 of the 18 (#229–#235), each by its own PR.\n- **Blockers:** the 37 \"blocked by\" links are still registered on GitHub, unchanged.\n- **Open work:** #236–#245 (the feature sub-issues) and the final acceptance issue #246.\n\nI added a \"Progress since the plan was filed\" section to `docs/case-studies/issue-227/README.md`:\n- **Whole corpus:** 2010 of 13,975 rows supported (14.4%).\n- **Original 3055 rows:** 891 supported, up from 640. Silently wrong answers are down from 213 to 195.\n- **Fixed examples:** I ran the original ones through the new build: `3,000 minus 12` → 2988, `200 + 10%` → 220, `10m × 10m` → 100 m², `2 amperes times 5 ohms` → 10 V.\n- **Worse statuses:** five rows got worse (`0.1 + 5%`, `4 Metres`, `4 mEtRes`, `cbrt (1kg)`, `sqrt(2m)`). Each change is intentional and documented in the case studies for #234 and #235.\n\nThe overall percentage is lower than the 20.9% first reported because the corpus grew about 4.6 times, mostly with features that are still open.\n\n**PR description.** Something had re-added `Fixes #229`…`Fixes #246` to the body. Merging with those lines would have closed the 11 open sub-issues, so I removed them and rewrote the description. Merging now closes only #227.\n\n**Checks.**\n- **Local:** the coverage check reports no regressions against the baseline, all 129 script tests pass, and the required-docs and file-size checks pass.\n- **On the PR:** the security, link and CodeQL checks all pass.\n- **Not run:** the main CI/CD pipeline. The PR now changes only docs, the changelog and `experiments/`, and the workflow only runs when code, corpus or workflow files change.\n\nThere are no new comments on the issue or the PR, and the working tree is clean.\n\n---\n*This summary was automatically extracted from the AI working session output.*"
+  },
+  {
+    "created_at": "2026-10-12T19:40:39Z",
+    "user": "konard",
+    "html_url": "https://github.com/link-assistant/calculator/pull/228#issuecomment-6131349846",
+    "body": "## 🤖 Solution Draft Log\nThis log file contains the complete execution trace of the AI solution draft process.\n\n### 💰 Cost: **$1.475874**\n\n### 📊 **Context and tokens usage:**\n- 82.2K / 1M (8%) input tokens, 18.9K / 128K (15%) output tokens\n\nTotal: (86 new + 73.5K cache writes + 2.5M cache reads) input tokens, 18.9K output tokens, $1.475874 cost\n\n### 🤖 **Models used:**\n- Tool: Anthropic Claude Code\n- Requested: `opus` (`claude-opus-5-5`)\n- Thinking level: high (~23999 tokens)\n- **Model: Claude Opus 5.5** (`claude-opus-5-5`)\n\n### 📎 **Log file uploaded as Gist** (1788KB)\n- [View complete solution draft log](https://gist.githubusercontent.com/konard/844ad705e50be5cf389a08843c492d04/raw/d238cb5f154584d0025f49d514b857c16a80002b/tmp-hive-mind-log-upload-pyWrBV-sanitized.log.txt)\n\n---\n*Now working session is ended, feel free to review and add any feedback on the solution draft.*"
+  },
+  {
+    "created_at": "2026-10-12T19:44:23Z",
+    "user": "konard",
+    "html_url": "https://github.com/link-assistant/calculator/pull/228#issuecomment-6131407266",
+    "body": "## 🎉 Auto-merged\n\nThis pull request has been automatically merged by hive-mind.\n- All CI checks have passed"
+  }
+]

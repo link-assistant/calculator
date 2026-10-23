@@ -1,14 +1,11 @@
 name: Coverage Gap Report
 
+# Called by rust.yml after the Rust stage built and checked the binary
+# (issue #254): weekly from release.yml's schedule, on every push to main (a
+# merged PR may move the baseline, issue #258) and on dispatch with
+# release_mode=coverage-gap-report.
 on:
-  schedule:
-    # Every Monday at 06:00 UTC.
-    - cron: '0 6 * * 1'
-  workflow_dispatch:
-
-concurrency:
-  group: coverage-gap-report
-  cancel-in-progress: false
+  workflow_call:
 
 # Least-privilege default; the job below escalates to what it needs.
 permissions:
@@ -39,28 +36,17 @@ jobs:
           persist-credentials: false
 
       - name: Setup Rust
-        uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master branch @ 2026-10-09
+        uses: ./.github/actions/setup-rust
         with:
-          toolchain: stable
+          cache-key: build
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
           node-version: '24.x'
 
-      - name: Cache cargo registry
-        uses: actions/cache@v6
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            target
-          key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-build-
-
       - name: Build release binary
-        run: cargo build --release --locked --bin link-calculator
+        run: node scripts/bounded-cargo.mjs build --release --locked --bin link-calculator
 
       # The weekly report measures current gaps; PR/push CI enforces the baseline.
       - name: Regenerate competitor report
@@ -73,7 +59,11 @@ jobs:
           path: docs/case-studies/issue-227/results/coverage-report.md
           retention-days: 14
 
+      # Updates the issue without reopening it: it is a status page, and a
+      # weekly reopen made it a perpetual work item for automated solvers
+      # (issue #258). Also writes the tables to the job summary, and fails
+      # only when gaps remain but no sub-issue of #227 is open to track them.
       - name: Open or update coverage gap issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node scripts/update-coverage-gap-issue.mjs
+        run: node scripts/update-coverage-gap-issue.mjs --verbose

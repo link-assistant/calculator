@@ -31,6 +31,7 @@ import {
   syncWithRemote,
   pushCurrentBranchWithRebase,
 } from './git-push-with-rebase.mjs';
+import { syncJsVersion } from './sync-js-version.mjs';
 
 // Load use-m dynamically
 const { use } = eval(
@@ -269,6 +270,8 @@ async function main() {
 
     // Update version in Cargo.toml
     updateCargoToml(newVersion);
+    // The web app shows the version of the JavaScript engine (issue #254).
+    console.log(`Synced the JavaScript engine version: ${syncJsVersion('.').join(', ')}`);
 
     // Collect changelog fragments
     collectChangelog(newVersion);
@@ -285,6 +288,7 @@ async function main() {
     // Stage Cargo.toml, Cargo.lock, CHANGELOG.md, and removed changelog fragments
     // Use the paths determined by rust-root configuration
     await $`git add ${CARGO_TOML} ${CARGO_LOCK} ${CHANGELOG_FILE}`;
+    await $`git add js/package.json js/package-lock.json js/src/index.js`;
     // Stage deleted changelog fragments (if any)
     if (existsSync(CHANGELOG_DIR)) {
       await $`git add ${CHANGELOG_DIR}`;

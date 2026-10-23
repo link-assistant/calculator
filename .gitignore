@@ -2,6 +2,8 @@
 # will have compiled files and executables
 debug/
 target/
+# Lock file of scripts/bounded-cargo.mjs
+target.lock
 
 # Remove Cargo.lock from gitignore if creating an executable, leave it for libraries
 # See https://doc.rust-lang.org/cargo/guide/cargo-toml-vs-cargo-lock.html
@@ -73,3 +75,6 @@ wasm-pack-v*.tar.gz
 # Local CI investigation logs and full competitor results
 /ci-logs/
 docs/case-studies/issue-227/results/coverage-results.json
+
+# link-foundation/meta-language checkout for js/scripts/translate-rust.mjs (issue #254 R2)
+/.meta-language/

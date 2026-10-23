@@ -193,7 +193,7 @@ pub fn rates_to_exchange_info(
     date: &str,
     rates: &HashMap<String, f64>,
 ) -> Vec<(String, String, ExchangeRateInfo)> {
-    let timestamp = chrono::Utc::now().to_rfc3339();
+    let timestamp = crate::clock::now().to_rfc3339();
     let base_upper = base.to_uppercase();
 
     rates
@@ -214,7 +214,7 @@ pub async fn fetch_rate(from: &str, to: &str) -> Result<ExchangeRateInfo, Curren
     rates
         .get(&to_lower)
         .map(|rate| {
-            let timestamp = chrono::Utc::now().to_rfc3339();
+            let timestamp = crate::clock::now().to_rfc3339();
             ExchangeRateInfo::new(*rate, API_SOURCE, &date).with_fetched_at(timestamp)
         })
         .ok_or_else(|| CurrencyApiError::RateNotFound {
