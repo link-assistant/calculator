@@ -1,18 +1,18 @@
 {
   "fend": {
     "repo": "https://github.com/printfn/fend",
-    "revision": "d9cb764e83cd1fe629bb526fd1cb08777d123014",
-    "date": "2026-08-28T11:40:26Z"
+    "revision": "2eace428ce5b260fa0ebd2096290d14bdfcba12c",
+    "date": "2026-10-23T22:06:33Z"
   },
   "qalculate": {
     "repo": "https://github.com/Qalculate/libqalculate",
-    "revision": "d3672af9cf6e05a39bd4206b7b7d6b1e0d194caa",
-    "date": "2026-10-09T19:12:49+02:00"
+    "revision": "132d7b2f150de1ace81c02a93701a012e10fb97c",
+    "date": "2026-10-21T09:31:13+02:00"
   },
   "numbat": {
     "repo": "https://github.com/sharkdp/numbat",
-    "revision": "a5e70bf1d121e0be6f9e38bc254d59f0474dc496",
-    "date": "2026-10-10T12:22:14+02:00"
+    "revision": "e8abf32b975fb03d5a554f5e7141cd50ae63e88d",
+    "date": "2026-10-11T21:59:17+02:00"
   },
   "rink": {
     "repo": "https://github.com/tiffany352/rink-rs",
@@ -36,12 +36,12 @@
   },
   "hurmet": {
     "repo": "https://github.com/ronkok/Hurmet",
-    "revision": "8e82edefe91f1fff5d79df046880fcb5375ed1c4",
-    "date": "2026-10-09T13:03:36-07:00"
+    "revision": "24abefdaecbc84a10e628326a235391db41caf83",
+    "date": "2026-10-16T12:56:34-07:00"
   },
   "speedcrunch": {
     "repo": "https://github.com/heldercorreia/speedcrunch",
-    "revision": "4cb502ce9ad774dcc7ed3044cab232df65d4596f",
-    "date": "2026-10-11T01:08:04+01:00"
+    "revision": "7f3db2f02583726436856c7e2d308c28dff85aef",
+    "date": "2026-10-22T20:07:32+01:00"
   }
 }
