@@ -1,4 +1,4 @@
-// Web Worker for running WASM calculations in the background
+// Web Worker for running calculations (native JS engine from ../js, issue #254) in the background
 // This prevents blocking the main UI thread
 //
 // Architecture: plan → fetch rates → execute
@@ -12,7 +12,7 @@
 // The plan is sent to the main thread immediately so the UI can show the
 // interpretation and busy indicator while rates are being fetched.
 
-import init, { Calculator, fetch_exchange_rates, fetch_crypto_rates, fetch_cbr_rates, parse_consolidated_lino_rates } from '@wasm/link_calculator';
+import init, { Calculator, fetch_exchange_rates, fetch_crypto_rates, fetch_cbr_rates, parse_consolidated_lino_rates } from 'link-calculator/wasm';
 import { createRateCoordination, type RateSource } from './worker-rate-coordination';
 import { loadCbrRatesFromLinoFiles } from './worker-cbr-lino-loader';
 

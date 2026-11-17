@@ -1,0 +1,4272 @@
+[
+ {
+  "module": "clock.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "clock.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { Utc }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..13"
+ },
+ {
+  "module": "clock.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "clock.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "fixedNow",
+  "message": "null: outside the portable core at 46..50"
+ },
+ {
+  "module": "clock.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "now",
+  "message": "function value fixedNow: functions and namespaces are only portable when a function is called at 141..150"
+ },
+ {
+  "module": "clock.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "setFixedNow",
+  "message": "JSDoc type {DateTime | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..113"
+ },
+ {
+  "module": "error.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "error.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { debugStruct }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..20"
+ },
+ {
+  "module": "error.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { debugStr }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..18"
+ },
+ {
+  "module": "error.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "error.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "CalculatorError",
+  "message": "export \"class\": only function and const declarations are exported at 233..240"
+ },
+ {
+  "module": "error.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "ErrorInfo",
+  "message": "export \"class\": only function and const declarations are exported at 412..419"
+ },
+ {
+  "module": "generated/bundled-rates.rs",
+  "term": "export_statement",
+  "reason": "type",
+  "name": "BUNDLED_LATEST_RATES",
+  "message": "unknown name crate.rate at 225..292"
+ },
+ {
+  "module": "grammar/locale_numbers.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "grammar/locale_numbers.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { CalculatorError }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..25"
+ },
+ {
+  "module": "grammar/locale_numbers.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { err }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..13"
+ },
+ {
+  "module": "grammar/locale_numbers.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { U128 }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..13"
+ },
+ {
+  "module": "grammar/locale_numbers.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { contains }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..19"
+ },
+ {
+  "module": "grammar/locale_numbers.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "getIsSomeAnd",
+  "message": "JSDoc type {(ch: string) => boolean}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..151"
+ },
+ {
+  "module": "grammar/locale_numbers.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "takeWhileCount",
+  "message": "JSDoc type {(ch: string) => boolean}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..129"
+ },
+ {
+  "module": "grammar/locale_numbers.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "scan",
+  "message": "JSDoc type {[string, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..261"
+ },
+ {
+  "module": "grammar/locale_numbers.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "isThreeDigitGroup",
+  "message": "method call .slice(): methods of values are outside the portable core at 132..138"
+ },
+ {
+  "module": "grammar/locale_numbers.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "normalize",
+  "message": "JSDoc type {string | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..97"
+ },
+ {
+  "module": "grammar/locale_numbers.rs",
+  "term": "function_declaration",
+  "reason": "type",
+  "name": "sameGroup",
+  "message": "unknown name crate.isSpace at 123..137"
+ },
+ {
+  "module": "grammar/locale_numbers.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "validGroups",
+  "message": "arrow function: functions as values are outside the portable core at 136..137"
+ },
+ {
+  "module": "grammar/locale_numbers.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "scanRadix",
+  "message": "JSDoc type {[string, number] | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..303"
+ },
+ {
+  "module": "grammar/locale_numbers.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "scanRadixExponent",
+  "message": "JSDoc type {[boolean, number, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..292"
+ },
+ {
+  "module": "rust/chrono.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/chrono.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "export \"{\": only function and const declarations are exported at 0..7"
+ },
+ {
+  "module": "rust/chrono.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "export \"{\": only function and const declarations are exported at 0..7"
+ },
+ {
+  "module": "rust/chrono.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "export \"{\": only function and const declarations are exported at 0..7"
+ },
+ {
+  "module": "rust/chrono.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "export \"{\": only function and const declarations are exported at 0..7"
+ },
+ {
+  "module": "rust/chrono.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "export \"{\": only function and const declarations are exported at 0..7"
+ },
+ {
+  "module": "rust/chrono.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "export \"{\": only function and const declarations are exported at 0..7"
+ },
+ {
+  "module": "rust/chrono.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "export \"{\": only function and const declarations are exported at 0..7"
+ },
+ {
+  "module": "rust/chrono.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "export \"{\": only function and const declarations are exported at 0..7"
+ },
+ {
+  "module": "rust/chrono/date.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/chrono/date.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { expect }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..16"
+ },
+ {
+  "module": "rust/chrono/date.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { I32_MAX }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..16"
+ },
+ {
+  "module": "rust/chrono/date.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { formatToString }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..24"
+ },
+ {
+  "module": "rust/chrono/date.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { Parsed }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..15"
+ },
+ {
+  "module": "rust/chrono/date.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { StrftimeItems }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..23"
+ },
+ {
+  "module": "rust/chrono/date.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { NaiveDateTime }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..23"
+ },
+ {
+  "module": "rust/chrono/date.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { NaiveTime }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..19"
+ },
+ {
+  "module": "rust/chrono/date.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { debugYear }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..18"
+ },
+ {
+  "module": "rust/chrono/date.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "cycleToYo",
+  "message": "JSDoc type {[number, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..107"
+ },
+ {
+  "module": "rust/chrono/date.rs",
+  "term": "function_declaration",
+  "reason": "type",
+  "name": "yoToCycle",
+  "message": "unknown name crate.yearDelta at 153..175"
+ },
+ {
+  "module": "rust/chrono/date.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "isoWeeksIn",
+  "message": "new expression: outside the portable core at 178..181"
+ },
+ {
+  "module": "rust/chrono/date.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "NaiveDate",
+  "message": "export \"class\": only function and const declarations are exported at 80..87"
+ },
+ {
+  "module": "rust/chrono/datetime.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/chrono/datetime.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { expect }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..16"
+ },
+ {
+  "module": "rust/chrono/datetime.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { Months }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..15"
+ },
+ {
+  "module": "rust/chrono/datetime.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { formatToString }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..24"
+ },
+ {
+  "module": "rust/chrono/datetime.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { DateTime }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..17"
+ },
+ {
+  "module": "rust/chrono/datetime.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { Parsed }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..15"
+ },
+ {
+  "module": "rust/chrono/datetime.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { StrftimeItems }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..23"
+ },
+ {
+  "module": "rust/chrono/datetime.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { NaiveDate }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..19"
+ },
+ {
+  "module": "rust/chrono/datetime.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { NaiveTime }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..19"
+ },
+ {
+  "module": "rust/chrono/datetime.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/chrono/datetime.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "NaiveDateTime",
+  "message": "export \"class\": only function and const declarations are exported at 64..71"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { debugStruct }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..20"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { err }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..12"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "I64_MIN",
+  "message": "exponentiation: powers are outside the portable core; use recursion at 21..23"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "I64_MAX",
+  "message": "exponentiation: powers are outside the portable core; use recursion at 19..21"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "I32_MIN",
+  "message": "exponentiation: powers are outside the portable core; use recursion at 20..22"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "I32_MAX",
+  "message": "exponentiation: powers are outside the portable core; use recursion at 18..20"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "U32_MAX",
+  "message": "exponentiation: powers are outside the portable core; use recursion at 18..20"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "toI64",
+  "message": "JSDoc type {number | bigint}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..96"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "checkedMulI64",
+  "message": "JSDoc type {bigint | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..100"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "divModFloor",
+  "message": "JSDoc type {[bigint, bigint]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..168"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "MIN_SECS",
+  "message": "function value I64_MAX: functions and namespaces are only portable when a function is called at 96..104"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "MIN_NANOS",
+  "message": "function value NANOS_PER_SEC: functions and namespaces are only portable when a function is called at 18..32"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "MAX_SECS",
+  "message": "function value I64_MAX: functions and namespaces are only portable when a function is called at 83..91"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "MAX_NANOS",
+  "message": "function value I64_MAX: functions and namespaces are only portable when a function is called at 25..33"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "TimeDelta",
+  "message": "export \"class\": only function and const declarations are exported at 156..163"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "Duration",
+  "message": "function value TimeDelta: functions and namespaces are only portable when a function is called at 76..85"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "OutOfRangeError",
+  "message": "export \"class\": only function and const declarations are exported at 78..85"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "StdDuration",
+  "message": "export \"class\": only function and const declarations are exported at 138..145"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "Months",
+  "message": "export \"class\": only function and const declarations are exported at 44..51"
+ },
+ {
+  "module": "rust/chrono/delta.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "export \"{\": only function and const declarations are exported at 0..7"
+ },
+ {
+  "module": "rust/chrono/formatting.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/chrono/formatting.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { panic }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..15"
+ },
+ {
+  "module": "rust/chrono/formatting.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { StrftimeItems }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..23"
+ },
+ {
+  "module": "rust/chrono/formatting.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { autoSiFraction }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..24"
+ },
+ {
+  "module": "rust/chrono/formatting.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/chrono/formatting.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "SecondsFormat",
+  "message": "object without a $ tag: a portable object is an alternative of a @typedef data type at 67..156"
+ },
+ {
+  "module": "rust/chrono/formatting.rs",
+  "term": "class_declaration",
+  "reason": "unsupported",
+  "name": "FmtError",
+  "message": "top-level class statement: the top level prints with console.log, binds with const or let, assigns, branches with if, loops and asserts at 43..48"
+ },
+ {
+  "module": "rust/chrono/formatting.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "fail",
+  "message": "throw new FmtError: throw an Error, RangeError or TypeError at 54..62"
+ },
+ {
+  "module": "rust/chrono/formatting.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "hundreds",
+  "message": "method call .padStart(): methods of values are outside the portable core at 118..127"
+ },
+ {
+  "module": "rust/chrono/formatting.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "writeTwo",
+  "message": "let out without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value at 164..168"
+ },
+ {
+  "module": "rust/chrono/formatting.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "writeN",
+  "message": "method call .padStart(): methods of values are outside the portable core at 321..330"
+ },
+ {
+  "module": "rust/chrono/formatting.rs",
+  "term": "function_declaration",
+  "reason": "type",
+  "name": "writeYear",
+  "message": "unknown name crate.writeN at 180..230"
+ },
+ {
+  "module": "rust/chrono/formatting.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "formatOffset",
+  "message": "JSDoc type {'Hours' | 'Minutes' | 'Seconds'}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..208"
+ },
+ {
+  "module": "rust/chrono/formatting.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "writeRfc3339",
+  "message": "try statement: outside the portable core at 213..216"
+ },
+ {
+  "module": "rust/chrono/formatting.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "formatNumeric",
+  "message": "JSDoc type {NaiveDate | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..182"
+ },
+ {
+  "module": "rust/chrono/formatting.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "formatFixed",
+  "message": "JSDoc type {NaiveDate | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..154"
+ },
+ {
+  "module": "rust/chrono/formatting.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "tryFormat",
+  "message": "JSDoc type {NaiveDate | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..231"
+ },
+ {
+  "module": "rust/chrono/formatting.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "formatToString",
+  "message": "JSDoc type {NaiveDate | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..208"
+ },
+ {
+  "module": "rust/chrono/offset.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/chrono/offset.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { expect }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..15"
+ },
+ {
+  "module": "rust/chrono/offset.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { Months }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..16"
+ },
+ {
+  "module": "rust/chrono/offset.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { NaiveDate }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..19"
+ },
+ {
+  "module": "rust/chrono/offset.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { NaiveTime }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..19"
+ },
+ {
+  "module": "rust/chrono/offset.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { formatToString }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..23"
+ },
+ {
+  "module": "rust/chrono/offset.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { parseRfc3339 }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..22"
+ },
+ {
+  "module": "rust/chrono/offset.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/chrono/offset.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "LocalResult",
+  "message": "export \"class\": only function and const declarations are exported at 113..120"
+ },
+ {
+  "module": "rust/chrono/offset.rs",
+  "term": "class_declaration",
+  "reason": "unsupported",
+  "name": "TimeZoneBase",
+  "message": "top-level class statement: the top level prints with console.log, binds with const or let, assigns, branches with if, loops and asserts at 63..68"
+ },
+ {
+  "module": "rust/chrono/offset.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "naiveFromTimestamp",
+  "message": "JSDoc type {NaiveDateTime | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..147"
+ },
+ {
+  "module": "rust/chrono/offset.rs",
+  "term": "class_declaration",
+  "reason": "unsupported",
+  "name": "UtcZone",
+  "message": "top-level class statement: the top level prints with console.log, binds with const or let, assigns, branches with if, loops and asserts at 52..57"
+ },
+ {
+  "module": "rust/chrono/offset.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "Utc",
+  "message": "new expression: outside the portable core at 47..50"
+ },
+ {
+  "module": "rust/chrono/offset.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "FixedOffset",
+  "message": "export \"class\": only function and const declarations are exported at 70..77"
+ },
+ {
+  "module": "rust/chrono/offset.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/chrono/offset.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "DateTime",
+  "message": "export \"class\": only function and const declarations are exported at 83..90"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { err }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..12"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { isWhitespace }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..21"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { FixedOffset }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..21"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { NaiveDate }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..19"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { NaiveTime }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..19"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "I32_MIN",
+  "message": "exponentiation: powers are outside the portable core; use recursion at 20..22"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "I32_MAX",
+  "message": "exponentiation: powers are outside the portable core; use recursion at 18..20"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "MESSAGES",
+  "message": "object without a $ tag: a portable object is an alternative of a @typedef data type at 100..425"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "ParseError",
+  "message": "export \"class\": only function and const declarations are exported at 44..51"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "OUT_OF_RANGE",
+  "message": "new expression: outside the portable core at 28..31"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "IMPOSSIBLE",
+  "message": "new expression: outside the portable core at 26..29"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "NOT_ENOUGH",
+  "message": "new expression: outside the portable core at 26..29"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "INVALID",
+  "message": "new expression: outside the portable core at 23..26"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "TOO_SHORT",
+  "message": "new expression: outside the portable core at 25..28"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "TOO_LONG",
+  "message": "new expression: outside the portable core at 24..27"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "BAD_FORMAT",
+  "message": "new expression: outside the portable core at 26..29"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "scanNumber",
+  "message": "JSDoc type {[string, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..171"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "scanNanosecond",
+  "message": "JSDoc type {[string, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..133"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "scanNanosecondFixed",
+  "message": "JSDoc type {[string, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..139"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "lowerPrefix",
+  "message": "method call .charCodeAt(): methods of values are outside the portable core at 229..240"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "scanShortName",
+  "message": "JSDoc type {[string, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..148"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "scanShortOrLongName",
+  "message": "JSDoc type {[string, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..182"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "scanShortMonth0",
+  "message": "function value SHORT_MONTHS: functions and namespaces are only portable when a function is called at 117..129"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "scanShortOrLongMonth0",
+  "message": "function value SHORT_MONTHS: functions and namespaces are only portable when a function is called at 176..188"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "scanChar",
+  "message": "function value TOO_SHORT: functions and namespaces are only portable when a function is called at 151..160"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "colonOrSpace",
+  "message": "method call .slice(): methods of values are outside the portable core at 260..266"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "twoDigits",
+  "message": "method call .charCodeAt(): methods of values are outside the portable core at 124..135"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "scanTimezoneOffset",
+  "message": "JSDoc type {(s: string) => string}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..281"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "setIfConsistent",
+  "message": "JSDoc type {'year' | 'yearDiv100' | 'yearMod100' | 'quarter' | 'month' | 'weekday' | 'ordinal'    | 'day' | 'hourDiv12' | 'hourMod12' | 'minute' | 'second' | 'nanosecond' | 'offset'}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..272"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "checkRange",
+  "message": "function value OUT_OF_RANGE: functions and namespaces are only portable when a function is called at 226..238"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "Parsed",
+  "message": "export \"class\": only function and const declarations are exported at 222..229"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "function_declaration",
+  "reason": "type",
+  "name": "unsupported",
+  "message": "unknown type crate.never at 0..99"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "NUMERIC",
+  "message": "new expression: outside the portable core at 100..103"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "setNumeric",
+  "message": "case test: the cases of a value switch are BigInt or boolean literals at 181..187"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "parseFixed",
+  "message": "let scanned without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value at 235..239"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "parse",
+  "message": "JSDoc type {Iterable<import('./strftime.js').Item>}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..242"
+ },
+ {
+  "module": "rust/chrono/parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "parseRfc3339",
+  "message": "JSDoc type {import('./offset.js').DateTime}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..192"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { isWhitespace }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..22"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "literal",
+  "message": "object without a $ tag: a portable object is an alternative of a @typedef data type at 101..126"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "space",
+  "message": "object without a $ tag: a portable object is an alternative of a @typedef data type at 99..122"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "num",
+  "message": "object without a $ tag: a portable object is an alternative of a @typedef data type at 143..183"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "num0",
+  "message": "object without a $ tag: a portable object is an alternative of a @typedef data type at 141..181"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "nums",
+  "message": "object without a $ tag: a portable object is an alternative of a @typedef data type at 142..183"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "fixed",
+  "message": "object without a $ tag: a portable object is an alternative of a @typedef data type at 128..157"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "ERROR",
+  "message": "object without a $ tag: a portable object is an alternative of a @typedef data type at 71..87"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "D_FMT",
+  "message": "unknown name crate.num0 at 38..51"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "D_T_FMT",
+  "message": "unknown name crate.fixed at 45..70"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "T_FMT",
+  "message": "unknown name crate.num0 at 38..50"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "T_FMT_AMPM",
+  "message": "unknown name crate.num0 at 51..65"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "SIMPLE",
+  "message": "new expression: outside the portable core at 62..65"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "QUEUED",
+  "message": "new expression: outside the portable core at 96..99"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "DOT_NANOS",
+  "message": "new expression: outside the portable core at 82..85"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "NO_DOT_NANOS",
+  "message": "new expression: outside the portable core at 21..24"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "firstChar",
+  "message": "method call .codePointAt(): methods of values are outside the portable core at 141..153"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "findChar",
+  "message": "JSDoc type {(c: string) => boolean}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..163"
+ },
+ {
+  "module": "rust/chrono/strftime.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "StrftimeItems",
+  "message": "export \"class\": only function and const declarations are exported at 241..248"
+ },
+ {
+  "module": "rust/chrono/time.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/chrono/time.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { expect }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..16"
+ },
+ {
+  "module": "rust/chrono/time.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { NANOS_PER_SEC }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..22"
+ },
+ {
+  "module": "rust/chrono/time.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { formatToString }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..24"
+ },
+ {
+  "module": "rust/chrono/time.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { Parsed }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..15"
+ },
+ {
+  "module": "rust/chrono/time.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { StrftimeItems }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..23"
+ },
+ {
+  "module": "rust/chrono/time.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { U32_MAX }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..16"
+ },
+ {
+  "module": "rust/chrono/time.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/chrono/time.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "NaiveTime",
+  "message": "export \"class\": only function and const declarations are exported at 144..151"
+ },
+ {
+  "module": "rust/chrono/util.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/chrono/util.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "U32_MAX",
+  "message": "exponentiation: powers are outside the portable core; use recursion at 44..46"
+ },
+ {
+  "module": "rust/chrono/util.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "inRange",
+  "message": "JSDoc type {unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..158"
+ },
+ {
+  "module": "rust/chrono/util.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "isU32",
+  "message": "JSDoc type {unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..94"
+ },
+ {
+  "module": "rust/chrono/util.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "divModFloor",
+  "message": "JSDoc type {[number, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..162"
+ },
+ {
+  "module": "rust/chrono/util.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "two",
+  "message": "method call .padStart(): methods of values are outside the portable core at 130..139"
+ },
+ {
+  "module": "rust/chrono/util.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "autoSiFraction",
+  "message": "method call .padStart(): methods of values are outside the portable core at 264..273"
+ },
+ {
+  "module": "rust/chrono/util.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "debugYear",
+  "message": "method call .padStart(): methods of values are outside the portable core at 198..207"
+ },
+ {
+  "module": "rust/core.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/core.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "Err",
+  "message": "export \"class\": only function and const declarations are exported at 279..286"
+ },
+ {
+  "module": "rust/core.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "Panic",
+  "message": "export \"class\": only function and const declarations are exported at 77..84"
+ },
+ {
+  "module": "rust/core.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "err",
+  "message": "JSDoc type {unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..77"
+ },
+ {
+  "module": "rust/core.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "panic",
+  "message": "throw new Panic: throw an Error, RangeError or TypeError at 122..127"
+ },
+ {
+  "module": "rust/core.rs",
+  "term": "export_statement",
+  "reason": "syntax",
+  "name": "unreachable",
+  "message": "@param needs a type and a name at 0..77"
+ },
+ {
+  "module": "rust/core.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "tryResult",
+  "message": "JSDoc type {() => T}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..357"
+ },
+ {
+  "module": "rust/core.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "ok",
+  "message": "JSDoc type {() => T}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..129"
+ },
+ {
+  "module": "rust/core.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "isOk",
+  "message": "JSDoc type {() => unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..54"
+ },
+ {
+  "module": "rust/core.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "unwrap",
+  "message": "JSDoc type {T | null | undefined}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..99"
+ },
+ {
+  "module": "rust/core.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "expect",
+  "message": "JSDoc type {T | null | undefined}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..133"
+ },
+ {
+  "module": "rust/core.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "debugError",
+  "message": "JSDoc type {unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..129"
+ },
+ {
+  "module": "rust/core.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "returning",
+  "message": "JSDoc type {() => T}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..117"
+ },
+ {
+  "module": "rust/core.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "returning",
+  "message": "JSDoc type {() => T}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..188"
+ },
+ {
+  "module": "rust/core.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "eq",
+  "message": "JSDoc type {unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..252"
+ },
+ {
+  "module": "rust/core.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "clone",
+  "message": "null: outside the portable core at 317..321"
+ },
+ {
+  "module": "rust/core.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "cmp",
+  "message": "JSDoc type {any}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..242"
+ },
+ {
+  "module": "rust/core.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "compareStrings",
+  "message": "JSDoc type {-1 | 0 | 1}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..220"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { err }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..12"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { debugStr }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..18"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": null,
+  "message": "array destructuring: bind each element by its index, const a = xs[0] at 0..6"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": null,
+  "message": "array destructuring: bind each element by its index, const a = xs[0] at 0..6"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "POW10",
+  "message": "object without a $ tag: a portable object is an alternative of a @typedef data type at 54..68"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "POWI10",
+  "message": "function value MAX_SCALE: functions and namespaces are only portable when a function is called at 188..198"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "ERROR_TEXT",
+  "message": "namespace property ExceedsMaximumPossibleValue: namespaces hold methods, name(…) { … }, and nested namespaces only at 94..123"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "DecimalError",
+  "message": "export \"class\": only function and const declarations are exported at 236..243"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "RustDecimal",
+  "message": "export \"class\": only function and const declarations are exported at 202..209"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "fromParts",
+  "message": "new expression: outside the portable core at 209..212"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "okOrNull",
+  "message": "JSDoc type {RustDecimal | string}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..106"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "orPanic",
+  "message": "JSDoc type {RustDecimal | string}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..152"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "rescaleBuf",
+  "message": "JSDoc type {{ value: bigint, scale: number } | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..279"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "addSub",
+  "message": "JSDoc type {RustDecimal | string}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..155"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "mul",
+  "message": "JSDoc type {RustDecimal | string}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..121"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "POWER_OVERFLOW_VALUES",
+  "message": "method call .map(): methods of values are outside the portable core at 385..389"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "findScale",
+  "message": "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..229"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "unscaleFromOverflow",
+  "message": "JSDoc type {[bigint, number] | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..253"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "div",
+  "message": "JSDoc type {RustDecimal | string}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..256"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "rem",
+  "message": "JSDoc type {RustDecimal | string}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..363"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "remFull",
+  "message": "shift >>: bit shifts are outside the portable core at 490..492"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "partialDivide64",
+  "message": "bitwise |: bitwise operators are outside the portable core at 320..321"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "partialDivide96",
+  "message": "bitwise |: bitwise operators are outside the portable core at 374..375"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "rescale",
+  "message": "new expression: outside the portable core at 297..300"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "setScale",
+  "message": "function value MAX_SCALE: functions and namespaces are only portable when a function is called at 156..165"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "parseU32",
+  "message": "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..129"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "fromScientific",
+  "message": "method call .search(): methods of values are outside the portable core at 206..213"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "UTF8",
+  "message": "new expression: outside the portable core at 13..16"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "type",
+  "name": "parseError",
+  "message": "unknown name crate.DecimalError.ErrorString at 71..126"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "tailInvalidDigit",
+  "message": "function value DOT: functions and namespaces are only portable when a function is called at 99..102"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "type",
+  "name": "handleData",
+  "message": "unknown name crate.parseError at 215..244"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "maybeRound",
+  "message": "let digit without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value at 392..396"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "handleFull128",
+  "message": "BigInt: the JavaScript standard library is outside the portable core at 468..484"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "parseStrRadix10",
+  "message": "JSDoc type {RustDecimal | DecimalError}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..284"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "F64_VIEW",
+  "message": "new expression: outside the portable core at 17..20"
+ },
+ {
+  "module": "rust/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "fromF64",
+  "message": "JSDoc type {RustDecimal | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..312"
+ },
+ {
+  "module": "rust/fmt.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/fmt.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "shortestDigits",
+  "message": "JSDoc type {{ digits: string, exp: number }}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..247"
+ },
+ {
+  "module": "rust/fmt.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "digitsToDecStr",
+  "message": "method call .repeat(): methods of values are outside the portable core at 253..260"
+ },
+ {
+  "module": "rust/fmt.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "digitsToExpStr",
+  "message": "method call .slice(): methods of values are outside the portable core at 233..239"
+ },
+ {
+  "module": "rust/fmt.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "formatF64",
+  "message": "JSDoc type {(digits: string, exp: number) => string}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..176"
+ },
+ {
+  "module": "rust/fmt.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "fmtF64",
+  "message": "arrow function: functions as values are outside the portable core at 266..267"
+ },
+ {
+  "module": "rust/fmt.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "debugF64",
+  "message": "arrow function: functions as values are outside the portable core at 216..217"
+ },
+ {
+  "module": "rust/fmt.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "debugStruct",
+  "message": "JSDoc type {[string, string]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..197"
+ },
+ {
+  "module": "rust/fmt.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "debugTuple",
+  "message": "method call .join(): methods of values are outside the portable core at 250..255"
+ },
+ {
+  "module": "rust/fmt.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "debugList",
+  "message": "method call .join(): methods of values are outside the portable core at 162..167"
+ },
+ {
+  "module": "rust/fmt.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "debugOption",
+  "message": "JSDoc type {T | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..135"
+ },
+ {
+  "module": "rust/fmt.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "debugMap",
+  "message": "JSDoc type {[string, string]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..129"
+ },
+ {
+  "module": "rust/libm.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "export \"{\": only function and const declarations are exported at 0..7"
+ },
+ {
+  "module": "rust/libm.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "export \"{\": only function and const declarations are exported at 0..7"
+ },
+ {
+  "module": "rust/libm.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "export \"{\": only function and const declarations are exported at 0..7"
+ },
+ {
+  "module": "rust/libm.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "export \"{\": only function and const declarations are exported at 0..7"
+ },
+ {
+  "module": "rust/libm.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "export \"{\": only function and const declarations are exported at 0..7"
+ },
+ {
+  "module": "rust/libm.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "export \"{\": only function and const declarations are exported at 0..7"
+ },
+ {
+  "module": "rust/libm.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "export \"{\": only function and const declarations are exported at 0..7"
+ },
+ {
+  "module": "rust/libm/atrig.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { fromBits }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..17"
+ },
+ {
+  "module": "rust/libm/atrig.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "X1P_120",
+  "message": "unknown name crate.fromBits at 16..45"
+ },
+ {
+  "module": "rust/libm/atrig.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "compR",
+  "message": "function value P_S0: functions and namespaces are only portable when a function is called at 150..155"
+ },
+ {
+  "module": "rust/libm/atrig.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "asin",
+  "message": "bitwise &: bitwise operators are outside the portable core at 138..139"
+ },
+ {
+  "module": "rust/libm/atrig.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "acos",
+  "message": "bitwise &: bitwise operators are outside the portable core at 138..139"
+ },
+ {
+  "module": "rust/libm/atrig.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "ATAN_TINY",
+  "message": "unknown name crate.fromBits at 106..127"
+ },
+ {
+  "module": "rust/libm/atrig.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "atan",
+  "message": "shift >>>: bit shifts are outside the portable core at 138..141"
+ },
+ {
+  "module": "rust/libm/atrig.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "atan2",
+  "message": "bitwise |: bitwise operators are outside the portable core at 326..327"
+ },
+ {
+  "module": "rust/libm/bits.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "F64",
+  "message": "new expression: outside the portable core at 12..15"
+ },
+ {
+  "module": "rust/libm/bits.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "U32",
+  "message": "new expression: outside the portable core at 12..15"
+ },
+ {
+  "module": "rust/libm/bits.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "U64",
+  "message": "new expression: outside the portable core at 12..15"
+ },
+ {
+  "module": "rust/libm/bits.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "LITTLE_ENDIAN",
+  "message": "new expression: outside the portable core at 22..25"
+ },
+ {
+  "module": "rust/libm/bits.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "HI",
+  "message": "function value LITTLE_ENDIAN: functions and namespaces are only portable when a function is called at 11..25"
+ },
+ {
+  "module": "rust/libm/bits.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "LO",
+  "message": "function value LITTLE_ENDIAN: functions and namespaces are only portable when a function is called at 11..25"
+ },
+ {
+  "module": "rust/libm/bits.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "getHighWord",
+  "message": "function value F64: functions and namespaces are only portable when a function is called at 144..147"
+ },
+ {
+  "module": "rust/libm/bits.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "getLowWord",
+  "message": "function value F64: functions and namespaces are only portable when a function is called at 135..138"
+ },
+ {
+  "module": "rust/libm/bits.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "withSetHighWord",
+  "message": "function value F64: functions and namespaces are only portable when a function is called at 195..198"
+ },
+ {
+  "module": "rust/libm/bits.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "withSetLowWord",
+  "message": "function value F64: functions and namespaces are only portable when a function is called at 193..196"
+ },
+ {
+  "module": "rust/libm/bits.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "combineWords",
+  "message": "function value U32: functions and namespaces are only portable when a function is called at 168..171"
+ },
+ {
+  "module": "rust/libm/bits.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "toBits",
+  "message": "function value F64: functions and namespaces are only portable when a function is called at 99..102"
+ },
+ {
+  "module": "rust/libm/bits.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "fromBits",
+  "message": "function value U64: functions and namespaces are only portable when a function is called at 147..150"
+ },
+ {
+  "module": "rust/libm/bits.rs",
+  "term": "export_statement",
+  "reason": "syntax",
+  "name": "hf64",
+  "message": "malformed number 9a at 250..252"
+ },
+ {
+  "module": "rust/libm/bits.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "F_EXP_MAX",
+  "message": "unknown name crate.combineWords at 18..45"
+ },
+ {
+  "module": "rust/libm/bits.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "F_EXP_MIN_TIMES_POW_SUBNORM",
+  "message": "unknown name crate.combineWords at 46..73"
+ },
+ {
+  "module": "rust/libm/bits.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "scalbn",
+  "message": "function value F_EXP_MAX: functions and namespaces are only portable when a function is called at 262..271"
+ },
+ {
+  "module": "rust/libm/cbrt.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { fromBits }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..17"
+ },
+ {
+  "module": "rust/libm/cbrt.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { fma }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..13"
+ },
+ {
+  "module": "rust/libm/cbrt.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "ESCALE",
+  "message": "unknown name crate.hf64 at 26..54"
+ },
+ {
+  "module": "rust/libm/cbrt.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "C",
+  "message": "unknown name crate.hf64 at 133..161"
+ },
+ {
+  "module": "rust/libm/cbrt.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "U0",
+  "message": "unknown name crate.hf64 at 11..39"
+ },
+ {
+  "module": "rust/libm/cbrt.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "U1",
+  "message": "unknown name crate.hf64 at 11..39"
+ },
+ {
+  "module": "rust/libm/cbrt.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "OFF",
+  "message": "unknown name crate.hf64 at 38..53"
+ },
+ {
+  "module": "rust/libm/cbrt.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "P2M52",
+  "message": "unknown name crate.hf64 at 14..29"
+ },
+ {
+  "module": "rust/libm/cbrt.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "P2M60",
+  "message": "unknown name crate.hf64 at 14..29"
+ },
+ {
+  "module": "rust/libm/cbrt.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "P2M75",
+  "message": "unknown name crate.hf64 at 14..29"
+ },
+ {
+  "module": "rust/libm/cbrt.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "P2M98",
+  "message": "unknown name crate.hf64 at 14..29"
+ },
+ {
+  "module": "rust/libm/cbrt.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "AZZ_A",
+  "message": "unknown name crate.hf64 at 14..42"
+ },
+ {
+  "module": "rust/libm/cbrt.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "Y1_A",
+  "message": "unknown name crate.hf64 at 13..41"
+ },
+ {
+  "module": "rust/libm/cbrt.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "AZZ_B",
+  "message": "unknown name crate.hf64 at 59..87"
+ },
+ {
+  "module": "rust/libm/cbrt.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "Y1_B",
+  "message": "unknown name crate.hf64 at 13..41"
+ },
+ {
+  "module": "rust/libm/cbrt.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "clz64",
+  "message": "toString with a radix: only decimal text is portable at 142..154"
+ },
+ {
+  "module": "rust/libm/cbrt.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "cbrt",
+  "message": "bitwise &: bitwise operators are outside the portable core at 211..212"
+ },
+ {
+  "module": "rust/libm/exp.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { combineWords }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..21"
+ },
+ {
+  "module": "rust/libm/exp.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "X1P1023",
+  "message": "unknown name crate.fromBits at 16..45"
+ },
+ {
+  "module": "rust/libm/exp.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "exp",
+  "message": "let hi without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value at 93..97"
+ },
+ {
+  "module": "rust/libm/exp.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "expm1",
+  "message": "let hi without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value at 106..110"
+ },
+ {
+  "module": "rust/libm/exp.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "K_LN2",
+  "message": "unknown name crate.fromBits at 14..43"
+ },
+ {
+  "module": "rust/libm/exp.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "EXPO2_SCALE",
+  "message": "function value K: functions and namespaces are only portable when a function is called at 104..106"
+ },
+ {
+  "module": "rust/libm/exp.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "kExpo2",
+  "message": "function value K_LN2: functions and namespaces are only portable when a function is called at 157..162"
+ },
+ {
+  "module": "rust/libm/exp.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "clearSign",
+  "message": "bitwise &: bitwise operators are outside the portable core at 167..168"
+ },
+ {
+  "module": "rust/libm/exp.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "sinh",
+  "message": "shift >>>: bit shifts are outside the portable core at 129..132"
+ },
+ {
+  "module": "rust/libm/exp.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "cosh",
+  "message": "shift <<: bit shifts are outside the portable core at 228..230"
+ },
+ {
+  "module": "rust/libm/exp.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "tanh",
+  "message": "let t without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value at 95..99"
+ },
+ {
+  "module": "rust/libm/fma.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { fromBits }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..17"
+ },
+ {
+  "module": "rust/libm/fma.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "ZERO_INF_NAN",
+  "message": "function value EXP_UNBIAS: functions and namespaces are only portable when a function is called at 83..93"
+ },
+ {
+  "module": "rust/libm/fma.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "SCALE_F",
+  "message": "BigInt: the JavaScript standard library is outside the portable core at 83..101"
+ },
+ {
+  "module": "rust/libm/fma.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "C_MAX_POW",
+  "message": "function value MAX_POW: functions and namespaces are only portable when a function is called at 80..87"
+ },
+ {
+  "module": "rust/libm/fma.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "MIN_POSITIVE_NORMAL",
+  "message": "unknown name crate.fromBits at 28..57"
+ },
+ {
+  "module": "rust/libm/fma.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "clz64",
+  "message": "shift >>: bit shifts are outside the portable core at 148..150"
+ },
+ {
+  "module": "rust/libm/fma.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "shl",
+  "message": "shift <<: bit shifts are outside the portable core at 145..147"
+ },
+ {
+  "module": "rust/libm/fma.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "shr",
+  "message": "shift >>: bit shifts are outside the portable core at 135..137"
+ },
+ {
+  "module": "rust/libm/fma.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/libm/fma.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "norm",
+  "message": "shift >>: bit shifts are outside the portable core at 302..304"
+ },
+ {
+  "module": "rust/libm/fma.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "fma",
+  "message": "function value ZERO_INF_NAN: functions and namespaces are only portable when a function is called at 278..291"
+ },
+ {
+  "module": "rust/libm/log.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { combineWords }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..21"
+ },
+ {
+  "module": "rust/libm/log.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "X1P54",
+  "message": "unknown name crate.fromBits at 14..43"
+ },
+ {
+  "module": "rust/libm/log.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/libm/log.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "reduce",
+  "message": "shift >>>: bit shifts are outside the portable core at 167..170"
+ },
+ {
+  "module": "rust/libm/log.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "log",
+  "message": "function value LG2: functions and namespaces are only portable when a function is called at 341..345"
+ },
+ {
+  "module": "rust/libm/log.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "log10",
+  "message": "function value LG2: functions and namespaces are only portable when a function is called at 326..330"
+ },
+ {
+  "module": "rust/libm/log.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "log2",
+  "message": "function value LG2: functions and namespaces are only portable when a function is called at 324..328"
+ },
+ {
+  "module": "rust/libm/pow.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { combineWords }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..21"
+ },
+ {
+  "module": "rust/libm/pow.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "pow",
+  "message": "let t1 without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value at 136..140"
+ },
+ {
+  "module": "rust/libm/rem_pio2.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { combineWords }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..21"
+ },
+ {
+  "module": "rust/libm/rem_pio2.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "X1P24",
+  "message": "unknown name crate.combineWords at 14..41"
+ },
+ {
+  "module": "rust/libm/rem_pio2.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "X1P_24",
+  "message": "unknown name crate.combineWords at 23..50"
+ },
+ {
+  "module": "rust/libm/rem_pio2.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "remPio2Large",
+  "message": "let fw without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value at 446..450"
+ },
+ {
+  "module": "rust/libm/rem_pio2.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "TO_INT",
+  "message": "function value EPS: functions and namespaces are only portable when a function is called at 21..24"
+ },
+ {
+  "module": "rust/libm/rem_pio2.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "medium",
+  "message": "JSDoc type {[number, number, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..89"
+ },
+ {
+  "module": "rust/libm/rem_pio2.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "remPio2",
+  "message": "JSDoc type {[number, number, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..145"
+ },
+ {
+  "module": "rust/libm/trig.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { getHighWord }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..20"
+ },
+ {
+  "module": "rust/libm/trig.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { remPio2 }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..17"
+ },
+ {
+  "module": "rust/libm/trig.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "kSin",
+  "message": "function value S2: functions and namespaces are only portable when a function is called at 263..266"
+ },
+ {
+  "module": "rust/libm/trig.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "kCos",
+  "message": "function value C1: functions and namespaces are only portable when a function is called at 207..210"
+ },
+ {
+  "module": "rust/libm/trig.rs",
+  "term": "function_declaration",
+  "reason": "type",
+  "name": "zeroLowWord",
+  "message": "unknown name crate.withSetLowWord at 85..105"
+ },
+ {
+  "module": "rust/libm/trig.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "kTan",
+  "message": "bitwise &: bitwise operators are outside the portable core at 239..240"
+ },
+ {
+  "module": "rust/libm/trig.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "sin",
+  "message": "bitwise &: bitwise operators are outside the portable core at 143..144"
+ },
+ {
+  "module": "rust/libm/trig.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "cos",
+  "message": "bitwise &: bitwise operators are outside the portable core at 119..120"
+ },
+ {
+  "module": "rust/libm/trig.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "tan",
+  "message": "bitwise &: bitwise operators are outside the portable core at 119..120"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { err }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..13"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "signum",
+  "message": "Object.is: the JavaScript standard library is outside the portable core at 268..284"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "remEuclid",
+  "message": "typeof operator: outside the portable core at 415..421"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "IntType",
+  "message": "export \"class\": only function and const declarations are exported at 165..172"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "I8",
+  "message": "new expression: outside the portable core at 18..21"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "I16",
+  "message": "new expression: outside the portable core at 19..22"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "I32",
+  "message": "new expression: outside the portable core at 19..22"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "I64",
+  "message": "new expression: outside the portable core at 19..22"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "I128",
+  "message": "new expression: outside the portable core at 20..23"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "U8",
+  "message": "new expression: outside the portable core at 18..21"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "U16",
+  "message": "new expression: outside the portable core at 19..22"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "U32",
+  "message": "new expression: outside the portable core at 19..22"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "U64",
+  "message": "new expression: outside the portable core at 19..22"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "U128",
+  "message": "new expression: outside the portable core at 20..23"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "USIZE",
+  "message": "new expression: outside the portable core at 87..90"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "ISIZE",
+  "message": "new expression: outside the portable core at 21..24"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "INT_ERROR_MESSAGES",
+  "message": "namespace property Empty: namespaces hold methods, name(…) { … }, and nested namespaces only at 31..38"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "ParseIntError",
+  "message": "export \"class\": only function and const declarations are exported at 35..42"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "ParseFloatError",
+  "message": "export \"class\": only function and const declarations are exported at 37..44"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "FLOAT_LITERAL",
+  "message": "regular expression: outside the portable core at 22..23"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "FLOAT_SPECIAL",
+  "message": "regular expression: outside the portable core at 22..23"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "parseF64",
+  "message": "new expression: outside the portable core at 259..262"
+ },
+ {
+  "module": "rust/num.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "intToF64",
+  "message": "Number: the JavaScript standard library is outside the portable core at 151..164"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { Err }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..12"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "I64_MIN",
+  "message": "shift <<: bit shifts are outside the portable core at 21..23"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "I64_MAX",
+  "message": "shift <<: bit shifts are outside the portable core at 20..22"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "U64_MAX",
+  "message": "shift <<: bit shifts are outside the portable core at 20..22"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "I128_MIN",
+  "message": "shift <<: bit shifts are outside the portable core at 22..24"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "I128_MAX",
+  "message": "shift <<: bit shifts are outside the portable core at 21..23"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "U128_MAX",
+  "message": "shift <<: bit shifts are outside the portable core at 21..23"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "bigintToF64",
+  "message": "Number: the JavaScript standard library is outside the portable core at 235..244"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "bigintFromF64",
+  "message": "JSDoc type {bigint | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..183"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "bigintToI64",
+  "message": "JSDoc type {bigint | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..148"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "bigintToU64",
+  "message": "JSDoc type {bigint | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..123"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "bigintToI128",
+  "message": "JSDoc type {bigint | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..126"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "bigintToU128",
+  "message": "JSDoc type {bigint | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..125"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "bigintBits",
+  "message": "toString with a radix: only decimal text is portable at 214..227"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "bigintIsEven",
+  "message": "bitwise &: bitwise operators are outside the portable core at 168..169"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "bigintDiv",
+  "message": "function value DIVIDE_BY_ZERO: functions and namespaces are only portable when a function is called at 202..216"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "bigintRem",
+  "message": "function value DIVIDE_BY_ZERO: functions and namespaces are only portable when a function is called at 236..250"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "bigintDivRem",
+  "message": "JSDoc type {[bigint, bigint]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..121"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "bigintDivModFloor",
+  "message": "JSDoc type {[bigint, bigint]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..173"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "type",
+  "name": "bigintDivFloor",
+  "message": "unknown name crate.bigintDivModFloor at 144..167"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "type",
+  "name": "bigintModFloor",
+  "message": "unknown name crate.bigintDivModFloor at 180..203"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "type",
+  "name": "lcm",
+  "message": "unknown name crate.gcd at 285..294"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "bigintPow",
+  "message": "JSDoc type {number | bigint}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..200"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "ParseBigIntError",
+  "message": "export \"class\": only function and const declarations are exported at 94..101"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "lexical_declaration",
+  "reason": "syntax",
+  "name": "DECIMAL_DIGITS",
+  "message": "malformed number 9_ at 28..30"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "bigintFromStr",
+  "message": ".startsWith() with 2 arguments: search the whole string, with one argument at 357..376"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "reduced",
+  "message": "new expression: outside the portable core at 244..247"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "arith",
+  "message": "JSDoc type {Ratio | bigint}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..206"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "cmpBigint",
+  "message": "JSDoc type {-1 | 0 | 1}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..118"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "reverseIf",
+  "message": "JSDoc type {-1 | 0 | 1}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..120"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "Ratio",
+  "message": "export \"class\": only function and const declarations are exported at 310..317"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "ZERO",
+  "message": "new expression: outside the portable core at 13..16"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "ONE",
+  "message": "new expression: outside the portable core at 12..15"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "EXACT",
+  "message": "shift <<: bit shifts are outside the portable core at 17..19"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "view",
+  "message": "new expression: outside the portable core at 13..16"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "isNormal",
+  "message": "function value MIN_POSITIVE: functions and namespaces are only portable when a function is called at 119..131"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "ratioToF64",
+  "message": "Number: the JavaScript standard library is outside the portable core at 318..346"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "ldexp",
+  "message": "let currExp without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value at 365..369"
+ },
+ {
+  "module": "rust/ratio.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "setExponent",
+  "message": "bitwise &: bitwise operators are outside the portable core at 164..165"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { panic }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..14"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "WHITE_SPACE",
+  "message": "regular expression: outside the portable core at 20..21"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "ALPHABETIC",
+  "message": "regular expression: outside the portable core at 19..20"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "NUMERIC",
+  "message": "regular expression: outside the portable core at 16..17"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "LOWERCASE",
+  "message": "regular expression: outside the portable core at 18..19"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "UPPERCASE",
+  "message": "regular expression: outside the portable core at 18..19"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "ESCAPED_IN_DEBUG",
+  "message": "regular expression: outside the portable core at 231..232"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "LEADING_WHITE_SPACE",
+  "message": "regular expression: outside the portable core at 28..29"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "TRAILING_WHITE_SPACE",
+  "message": "regular expression: outside the portable core at 29..30"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "WHITE_SPACE_RUN",
+  "message": "regular expression: outside the portable core at 24..25"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "type",
+  "name": "isWhitespace",
+  "message": "unknown name crate.WHITE_SPACE.test at 122..141"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "type",
+  "name": "isAlphabetic",
+  "message": "unknown name crate.ALPHABETIC.test at 121..139"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "type",
+  "name": "isNumeric",
+  "message": "unknown name crate.NUMERIC.test at 133..148"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "type",
+  "name": "isAlphanumeric",
+  "message": "unknown name crate.isAlphabetic at 102..118"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "type",
+  "name": "isLowercase",
+  "message": "unknown name crate.LOWERCASE.test at 118..135"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "type",
+  "name": "isUppercase",
+  "message": "unknown name crate.UPPERCASE.test at 118..135"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "isAsciiDigit",
+  "message": "length of a string: String.prototype.length counts UTF-16 code units, which the portable string types do not keep at 99..107"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "isAsciiAlphabetic",
+  "message": "length of a string: String.prototype.length counts UTF-16 code units, which the portable string types do not keep at 109..117"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "isAsciiUppercase",
+  "message": "length of a string: String.prototype.length counts UTF-16 code units, which the portable string types do not keep at 107..115"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "isAsciiLowercase",
+  "message": "length of a string: String.prototype.length counts UTF-16 code units, which the portable string types do not keep at 107..115"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "type",
+  "name": "isAsciiAlphanumeric",
+  "message": "unknown name crate.isAsciiDigit at 113..129"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "toDigit",
+  "message": "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..147"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "isDigit",
+  "message": "null: outside the portable core at 149..153"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "fromDigit",
+  "message": "JSDoc type {string | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..145"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "toAsciiLowercase",
+  "message": "method call .replace(): methods of values are outside the portable core at 136..144"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "toAsciiUppercase",
+  "message": "method call .replace(): methods of values are outside the portable core at 136..144"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "eqIgnoreAsciiCase",
+  "message": "length of a string: String.prototype.length counts UTF-16 code units, which the portable string types do not keep at 133..141"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "type",
+  "name": "trim",
+  "message": "unknown name crate.trimEnd at 157..178"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "trimStart",
+  "message": "method call .replace(): methods of values are outside the portable core at 92..100"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "trimEnd",
+  "message": "method call .replace(): methods of values are outside the portable core at 88..96"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "charPredicate",
+  "message": "JSDoc type {((c: string) => boolean) | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..147"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "trimStartMatches",
+  "message": "null: outside the portable core at 207..211"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "trimEndMatches",
+  "message": "null: outside the portable core at 203..207"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "type",
+  "name": "trimMatches",
+  "message": "unknown type crate.Pattern at 0..107"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "stripPrefix",
+  "message": "JSDoc type {string | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..107"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "stripSuffix",
+  "message": "JSDoc type {string | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..107"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "startsWith",
+  "message": "null: outside the portable core at 174..178"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "endsWith",
+  "message": "null: outside the portable core at 170..174"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "find",
+  "message": "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..207"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "rfind",
+  "message": "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..155"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "contains",
+  "message": "null: outside the portable core at 162..166"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "matchRanges",
+  "message": "JSDoc type {[number, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..275"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "split",
+  "message": "for with const: declare the loop variables with let at 186..191"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "splitn",
+  "message": "for with const: declare the loop variables with let at 251..256"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "splitOnce",
+  "message": "JSDoc type {[string, string] | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..125"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "rsplitOnce",
+  "message": "JSDoc type {[string, string] | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..126"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "type",
+  "name": "countMatches",
+  "message": "unknown type crate.Pattern at 0..92"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "replace",
+  "message": "method call .join(): methods of values are outside the portable core at 290..295"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "splitWhitespace",
+  "message": "method call .split(): methods of values are outside the portable core at 127..133"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "lines",
+  "message": "method call .split(): methods of values are outside the portable core at 211..217"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "charCount",
+  "message": "method call .charCodeAt(): methods of values are outside the portable core at 172..183"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "type",
+  "name": "utf8Len",
+  "message": "unknown name crate.indexToByte at 107..131"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "indexToByte",
+  "message": "method call .codePointAt(): methods of values are outside the portable core at 254..266"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "boundaryIndex",
+  "message": "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..193"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "byteToIndex",
+  "message": "nullish coalescing: null and undefined are outside the portable core at 361..363"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "syntax",
+  "name": "sliceBytes",
+  "message": "@param needs a type and a name at 0..213"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "insideChar",
+  "message": "method call .codePointAt(): methods of values are outside the portable core at 239..251"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "charIndices",
+  "message": "JSDoc type {[number, string]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..120"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "lenUtf8",
+  "message": "method call .codePointAt(): methods of values are outside the portable core at 122..134"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "escapeDebug",
+  "message": "case test: the cases of a value switch are BigInt or boolean literals at 213..217"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "type",
+  "name": "debugStr",
+  "message": "one value is used as a string and as an array; declare the types of the function with JSDoc at 143..206"
+ },
+ {
+  "module": "rust/str.rs",
+  "term": "export_statement",
+  "reason": "type",
+  "name": "debugChar",
+  "message": "unknown name crate.escapeDebug at 123..134"
+ },
+ {
+  "module": "types/currency.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "types/currency.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { CalculatorError }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..25"
+ },
+ {
+  "module": "types/currency.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { err }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..13"
+ },
+ {
+  "module": "types/currency.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { fmtF64 }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..16"
+ },
+ {
+  "module": "types/currency.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { eqIgnoreAsciiCase }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..26"
+ },
+ {
+  "module": "types/currency.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { BUNDLED_LATEST_RATES }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..30"
+ },
+ {
+  "module": "types/currency.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "types/currency.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "types/currency.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "ExchangeRateInfo",
+  "message": "export \"class\": only function and const declarations are exported at 79..86"
+ },
+ {
+  "module": "types/currency.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "Currency",
+  "message": "export \"class\": only function and const declarations are exported at 57..64"
+ },
+ {
+  "module": "types/currency.rs",
+  "term": "function_declaration",
+  "reason": "syntax",
+  "name": "pairKey",
+  "message": "unsupported template escape \\u at 179..181"
+ },
+ {
+  "module": "types/currency.rs",
+  "term": "function_declaration",
+  "reason": "syntax",
+  "name": "tripleKey",
+  "message": "unsupported template escape \\u at 182..184"
+ },
+ {
+  "module": "types/currency.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "CurrencyDatabase",
+  "message": "export \"class\": only function and const declarations are exported at 65..72"
+ },
+ {
+  "module": "types/datetime.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "types/datetime.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { DateTime }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..20"
+ },
+ {
+  "module": "types/datetime.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { now }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..13"
+ },
+ {
+  "module": "types/datetime.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { err }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..12"
+ },
+ {
+  "module": "types/datetime.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { splitWhitespace }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..24"
+ },
+ {
+  "module": "types/datetime.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { CalculatorError }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..25"
+ },
+ {
+  "module": "types/datetime.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { extractTimezone }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..26"
+ },
+ {
+  "module": "types/datetime.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "types/datetime.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "DateTime",
+  "message": "export \"class\": only function and const declarations are exported at 68..75"
+ },
+ {
+  "module": "types/datetime.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "DateTimeResult",
+  "message": "export \"class\": only function and const declarations are exported at 70..77"
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { FixedOffset }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..20"
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { now }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..13"
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { ok }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..12"
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { I32 }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..12"
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { endsWith }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..19"
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "normalizeTzAbbreviation",
+  "message": "case test: the cases of a value switch are BigInt or boolean literals at 158..163"
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "translateMonthNames",
+  "message": "for with const: declare the loop variables with let at 4563..4568"
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "YEAR_MARKER",
+  "message": "regular expression: outside the portable core at 76..77"
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "stripYearMarker",
+  "message": "method call .replace(): methods of values are outside the portable core at 396..404"
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "PREPOSITIONS",
+  "message": "new expression: outside the portable core at 48..51"
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "ORDINAL_SUFFIX",
+  "message": "new expression: outside the portable core at 57..60"
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "preprocessNaturalDate",
+  "message": "null: outside the portable core at 634..638"
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "parseTzAbbreviation",
+  "message": "JSDoc type {FixedOffset | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..254"
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "normalizeMonthName",
+  "message": "method call .map(): methods of values are outside the portable core at 207..211"
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "parsePartialDate",
+  "message": "JSDoc type {NaiveDate | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..135"
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "parse12hTime",
+  "message": "JSDoc type {NaiveTime | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..124"
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "extractTimezone",
+  "message": "JSDoc type {[string, FixedOffset | null, string | null]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..215"
+ },
+ {
+  "module": "types/datetime_parse.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "parseOffset",
+  "message": "JSDoc type {FixedOffset | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..126"
+ },
+ {
+  "module": "types/decimal.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "types/decimal.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { RustDecimal }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..21"
+ },
+ {
+  "module": "types/decimal.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "Decimal",
+  "message": "export \"class\": only function and const declarations are exported at 131..138"
+ },
+ {
+  "module": "types/decimal.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "wrap",
+  "message": "JSDoc type {RustDecimal | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..97"
+ },
+ {
+  "module": "types/dimension.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "types/dimension.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { eq }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..12"
+ },
+ {
+  "module": "types/dimension.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "Dimension",
+  "message": "export \"class\": only function and const declarations are exported at 325..332"
+ },
+ {
+  "module": "types/physical.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "types/physical.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { eq }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..11"
+ },
+ {
+  "module": "types/physical.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { Dimension }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..19"
+ },
+ {
+  "module": "types/physical.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { Rational }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..18"
+ },
+ {
+  "module": "types/physical.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { lookupSymbol }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..21"
+ },
+ {
+  "module": "types/physical.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { DataSizeUnit }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..21"
+ },
+ {
+  "module": "types/physical.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "UnitTerm",
+  "message": "export \"class\": only function and const declarations are exported at 52..59"
+ },
+ {
+  "module": "types/physical.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "PhysicalUnit",
+  "message": "export \"class\": only function and const declarations are exported at 71..78"
+ },
+ {
+  "module": "types/physical.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "isBaseDimension",
+  "message": "method call .filter(): methods of values are outside the portable core at 130..137"
+ },
+ {
+  "module": "types/physical.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "massSymbol",
+  "message": "case test: the cases of a value switch are BigInt or boolean literals at 110..118"
+ },
+ {
+  "module": "types/physical.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "durationSymbol",
+  "message": "case test: the cases of a value switch are BigInt or boolean literals at 122..136"
+ },
+ {
+  "module": "types/physical.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "DATA_SIZE_SYMBOLS",
+  "message": "object without a $ tag: a portable object is an alternative of a @typedef data type at 78..488"
+ },
+ {
+  "module": "types/physical.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "dataSizeSymbol",
+  "message": "function value DATA_SIZE_SYMBOLS: functions and namespaces are only portable when a function is called at 100..117"
+ },
+ {
+  "module": "types/physical.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "legacyUnit",
+  "message": "JSDoc type {Unit | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..59"
+ },
+ {
+  "module": "types/rational.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "types/rational.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { Err }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..12"
+ },
+ {
+  "module": "types/rational.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { I128 }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..13"
+ },
+ {
+  "module": "types/rational.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { Ratio }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..16"
+ },
+ {
+  "module": "types/rational.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { splitOnce }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..18"
+ },
+ {
+  "module": "types/rational.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { Decimal }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..17"
+ },
+ {
+  "module": "types/rational.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "Rational",
+  "message": "export \"class\": only function and const declarations are exported at 393..400"
+ },
+ {
+  "module": "types/rational.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "serializeRatio",
+  "message": "JSDoc type {[string, string]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..126"
+ },
+ {
+  "module": "types/rational.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "deserializeRatio",
+  "message": "destructured parameter: name each parameter at 139..140"
+ },
+ {
+  "module": "types/rational.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "mapErr",
+  "message": "JSDoc type {() => T}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..97"
+ },
+ {
+  "module": "types/rational.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "RepeatingDecimal",
+  "message": "export \"class\": only function and const declarations are exported at 59..66"
+ },
+ {
+  "module": "types/rational.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "detectRepeatingDecimal",
+  "message": "JSDoc type {RepeatingDecimal | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..214"
+ },
+ {
+  "module": "types/unit.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "types/unit.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { contains }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..18"
+ },
+ {
+  "module": "types/unit.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { intToF64 }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..18"
+ },
+ {
+  "module": "types/unit.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { eq }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..12"
+ },
+ {
+  "module": "types/unit.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { PhysicalUnit }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..22"
+ },
+ {
+  "module": "types/unit.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "matchTable",
+  "message": "JSDoc type {[string[], T]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..225"
+ },
+ {
+  "module": "types/unit.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "Unit",
+  "message": "export \"class\": only function and const declarations are exported at 452..459"
+ },
+ {
+  "module": "types/unit.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "DurationUnit",
+  "message": "export \"class\": only function and const declarations are exported at 45..52"
+ },
+ {
+  "module": "types/unit.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "DataSizeUnit",
+  "message": "export \"class\": only function and const declarations are exported at 235..242"
+ },
+ {
+  "module": "types/unit.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "MassUnit",
+  "message": "export \"class\": only function and const declarations are exported at 26..33"
+ },
+ {
+  "module": "types/unit.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "DATA_SIZE_TABLE",
+  "message": "null: outside the portable core at 70..74"
+ },
+ {
+  "module": "types/unit.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "dataSizeTable",
+  "message": "assignment of DATA_SIZE_TABLE: only local variables declared with let, and parameters, are assignable at 71..91"
+ },
+ {
+  "module": "types/unit.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "MASS_TABLE",
+  "message": "null: outside the portable core at 61..65"
+ },
+ {
+  "module": "types/unit.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "massTable",
+  "message": "assignment of MASS_TABLE: only local variables declared with let, and parameters, are assignable at 63..78"
+ },
+ {
+  "module": "types/unit.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "DURATION_TABLE",
+  "message": "null: outside the portable core at 69..73"
+ },
+ {
+  "module": "types/unit.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "durationTable",
+  "message": "assignment of DURATION_TABLE: only local variables declared with let, and parameters, are assignable at 109..128"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { eq }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..11"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { I32 }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..13"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { bigintFromStr }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..23"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { isAlphabetic }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..23"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { UNITS_LINO }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..20"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { Dimension }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..19"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { Rational }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..18"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "SI_PREFIXES",
+  "message": "expected string but found float at 233..235"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "lexical_declaration",
+  "reason": "type",
+  "name": "BINARY_PREFIXES",
+  "message": "expected string but found float at 189..190"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "class_declaration",
+  "reason": "unsupported",
+  "name": "Prefixes",
+  "message": "top-level class statement: the top level prints with console.log, binds with const or let, assigns, branches with if, loops and asserts at 38..43"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "UnitDef",
+  "message": "export \"class\": only function and const declarations are exported at 30..37"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "ResolvedUnit",
+  "message": "export \"class\": only function and const declarations are exported at 69..76"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "UnitDatabase",
+  "message": "export \"class\": only function and const declarations are exported at 30..37"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "lexical_declaration",
+  "reason": "unsupported",
+  "name": "UNITS",
+  "message": "null: outside the portable core at 47..51"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "units",
+  "message": "assignment of UNITS: only local variables declared with let, and parameters, are assignable at 101..111"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "lookupUnit",
+  "message": "JSDoc type {ResolvedUnit | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..114"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "lookupSymbol",
+  "message": "JSDoc type {ResolvedUnit | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..204"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "namedUnitFor",
+  "message": "JSDoc type {string | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..137"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "isWordAlias",
+  "message": "method call .every(): methods of values are outside the portable core at 284..290"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "normalizePrefix",
+  "message": "case test: the cases of a value switch are BigInt or boolean literals at 119..122"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "tenPow",
+  "message": "method call .powI32(): methods of values are outside the portable core at 121..128"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "parseNumber",
+  "message": "JSDoc type {Rational | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types at 0..138"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "splitLink",
+  "message": "null: outside the portable core at 222..226"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "parsePrefixes",
+  "message": "case test: the cases of a value switch are BigInt or boolean literals at 138..144"
+ },
+ {
+  "module": "types/unit_db.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "parseDatabase",
+  "message": "arrow function: functions as values are outside the portable core at 484..485"
+ },
+ {
+  "module": "types/value/kind.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "types/value/kind.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "RatioFormat",
+  "message": "export \"class\": only function and const declarations are exported at 56..63"
+ },
+ {
+  "module": "types/value/kind.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "ValueKind",
+  "message": "export \"class\": only function and const declarations are exported at 160..167"
+ },
+ {
+  "module": "utils.rs",
+  "term": "comment",
+  "reason": "comment the target cannot hold",
+  "name": null,
+  "message": null
+ },
+ {
+  "module": "utils.rs",
+  "term": "import_statement",
+  "reason": "unsupported",
+  "name": null,
+  "message": "import { charIndices }: import the assertion module as a whole, e.g. import assert from 'node:assert/strict' at 0..20"
+ },
+ {
+  "module": "utils.rs",
+  "term": "export_statement",
+  "reason": "type",
+  "name": "generateIssueLink",
+  "message": "unknown name crate.truncate at 225..233"
+ },
+ {
+  "module": "utils.rs",
+  "term": "export_statement",
+  "reason": "unsupported",
+  "name": "truncate",
+  "message": "nullish coalescing: null and undefined are outside the portable core at 209..211"
+ },
+ {
+  "module": "utils.rs",
+  "term": "function_declaration",
+  "reason": "unsupported",
+  "name": "urlencodingEncode",
+  "message": "regular expression: outside the portable core at 107..108"
+ }
+]

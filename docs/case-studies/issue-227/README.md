@@ -39,7 +39,7 @@ their GitHub blockers are unchanged (37 edges, verified through the GraphQL
 
 | Sub-issue | Closed by | What changed for #227 |
 | --- | --- | --- |
-| #229 coverage gate | #248 | `Competitor Coverage` job in `release.yml` fails on any status regression; weekly `coverage-gap-report.yml` refreshes a tracking issue; process in [CONTRIBUTING.md](../../../CONTRIBUTING.md#competitor-coverage) |
+| #229 coverage gate | #248 | `Competitor Coverage` job in `release.yml` fails on any status regression; weekly `coverage-gap-report.yml` refreshes a status issue, which it never reopens since #258; process in [CONTRIBUTING.md](../../../CONTRIBUTING.md#competitor-coverage) |
 | #230 open-source suites | #249 | Pinned upstream revisions (`scripts/competitor-upstreams.json`), scheduled refresh PRs, four more engines (Insect, kalker, Hurmet, SpeedCrunch) |
 | #231 documentation corpus | #250 | 5187 attributed rows from Apple, Calca, Frink, Google, Numi, Parsify, Raycast, Soulver and Wolfram\|Alpha references |
 | #232 scientific-quote corpus | #251 | 1356 rows in 23 languages with 12 constructs each |

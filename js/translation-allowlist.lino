@@ -1,0 +1,2458 @@
+# Items of js/src that meta-language cannot translate to Rust yet (issue #254 R2).
+# `node js/scripts/translate-rust.mjs --write` adds and removes entries and keeps `upstream`
+# and `note`, which are edited by hand. --check fails on a carried item with no entry, on an
+# entry nothing carried matches (stale), on a construct that differs from the diagnostic,
+# and on an entry without an upstream issue URL or `drafted:<letter>` (an issue drafted in
+# experiments/issue-254/meta-language/README.md section 5.2, to be replaced by its URL once filed).
+#
+#   item <module> <name>       carried for `construct`, tracked by `upstream`
+#   cascade <module> <name>    carried only because it uses `needs`, itself carried or unbound
+#   comments <module>          `count` free-standing /** */ comments carried as source
+item clock.js fixedNow
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+cascade clock.js now
+  needs fixedNow
+item clock.js setFixedNow
+  construct "JSDoc type {DateTime | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+comments clock.js
+  count 2
+  upstream "drafted:A"
+item crypto_api.js "import:./clock.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item crypto_api.js coingeckoId
+  construct "JSDoc type {string | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item crypto_api.js CryptoApiError
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item crypto_api.js fetchCryptoPrice
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item crypto_api.js fetchCryptoPrices
+  construct "JSDoc type {Map<string, ExchangeRateInfo>}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item crypto_api.js fetchCoingeckoPrice
+  construct "JSDoc type {[number, string]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item crypto_api.js coingeckoPriceFromJson
+  construct "JSDoc type {unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item crypto_api.js get
+  construct "JSDoc type {unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item crypto_api.js asObject
+  construct "JSDoc type {unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item crypto_api.js asF64
+  construct "JSDoc type {unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item crypto_api.js debugJsValue
+  construct "JSDoc type {unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item crypto_api.js fetchJsonValue
+  construct "JSDoc type {unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+comments crypto_api.js
+  count 1
+  upstream "drafted:A"
+item currency_api.js "import:./clock.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item currency_api.js CurrencyApiResponse
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item currency_api.js CurrencyApiError
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item currency_api.js fetchCurrentRates
+  construct "JSDoc type {[string, Map<string, number>]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item currency_api.js fetchHistoricalRates
+  construct "JSDoc type {[string, Map<string, number>]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item currency_api.js fetchRatesFromUrl
+  construct "JSDoc type {[string, Map<string, number>]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item currency_api.js sendRequest
+  construct "let request without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item currency_api.js fetchJson
+  construct "JSDoc type {[string, Map<string, number>]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item currency_api.js parseFrankfurterJson
+  construct "JSDoc type {unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item currency_api.js ratesToExchangeInfo
+  construct "JSDoc type {Map<string, number>}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item currency_api.js fetchRate
+  construct "array destructuring: bind each element by its index, const a = xs[0]"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item currency_api.js fetchCbrRates
+  construct "JSDoc type {[string, Map<string, number>]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item currency_api.js parseCbrXml
+  construct "JSDoc type {[string, Map<string, number>]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item currency_api.js extractCbrDate
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item currency_api.js parseValuteBlock
+  construct "JSDoc type {[string, number] | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item currency_api.js extractXmlText
+  construct "JSDoc type {string | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+comments currency_api.js
+  count 1
+  upstream "drafted:A"
+item error.js CalculatorError
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item error.js ErrorInfo
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments error.js
+  count 2
+  upstream "drafted:A"
+item generated/bundled-rates.js BUNDLED_LATEST_RATES
+  construct "expected string but found float"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item grammar/arithmetic_words.js Meaning
+  construct "top-level class statement: the top level prints with console.log, binds with const or let, assigns, branches with if, loops and asserts"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/arithmetic_words.js VOCABULARY
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+cascade grammar/arithmetic_words.js vocabulary
+  needs VOCABULARY
+item grammar/arithmetic_words.js operatorKind
+  construct "JSDoc type {TokenKind | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/arithmetic_words.js parseVocabulary
+  construct "JSDoc type {Vocabulary | string}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:B"
+item grammar/arithmetic_words.js scan
+  construct "JSDoc type {WordToken[] | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/arithmetic_words.js portionHasPercent
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/arithmetic_words.js isCjk
+  construct "method call .codePointAt(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+cascade grammar/arithmetic_words.js wordEnd
+  needs isWordChar
+item grammar/arithmetic_words.js text
+  construct "method call .slice(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/208"
+item grammar/arithmetic_words.js isCurrencyCode
+  construct "method call .every(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/208"
+item grammar/arithmetic_words.js lookup
+  construct "JSDoc type {Word | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+cascade grammar/arithmetic_words.js skipWhitespace
+  needs isWhitespace
+item grammar/arithmetic_words.js scanPhrase
+  construct "JSDoc type {WordToken | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/arithmetic_words.js Composer
+  construct "top-level class statement: the top level prints with console.log, binds with const or let, assigns, branches with if, loops and asserts"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/arithmetic_words.js scanSpacedNumber
+  construct "JSDoc type {WordToken | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/arithmetic_words.js scanCjk
+  construct "JSDoc type {WordToken[] | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/arithmetic_words.js flushNumber
+  construct "JSDoc type {{ value: [number, number, Composer] | null }}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+comments grammar/arithmetic_words.js
+  count 4
+  upstream "drafted:A"
+item grammar/datetime_grammar.js DateTimeGrammar
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments grammar/datetime_grammar.js
+  count 1
+  upstream "drafted:A"
+item grammar/dimensional_functions.js kelvinResult
+  construct "JSDoc type {import(X).Expression}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:C"
+item grammar/dimensional_functions.js dimensionalPower
+  construct "JSDoc type {Value | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/dimensional_functions.js dimensionalFunction
+  construct "JSDoc type {Value | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/dimensional_functions.js trigonometric
+  construct "method call .toF64(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments grammar/dimensional_functions.js
+  count 1
+  upstream "drafted:A"
+item grammar/expression_parser.js "import:./expression_parser_locale.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item grammar/expression_parser.js "import:./expression_parser_timezone.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item grammar/expression_parser.js "import:./linear_equation.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item grammar/expression_parser.js "import:./polynomial_equation.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item grammar/expression_parser.js evaluatePower
+  construct "method call .isOpaqueCompound(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/expression_parser.js expressionContainsVariable
+  construct "case test: the cases of a value switch are BigInt or boolean literals"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item grammar/expression_parser.js solveEquation
+  construct "arrow function: functions as values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/207"
+item grammar/expression_parser.js durationSecondsForComparison
+  construct "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/expression_parser.js orderingSymbol
+  construct "one value is used as a Ordering and as a number; declare the types of the function with JSDoc"
+  upstream "https://github.com/link-foundation/meta-language/issues/213"
+item grammar/expression_parser.js pushRateSteps
+  construct "for with const: declare the loop variables with let"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item grammar/expression_parser.js ExpressionParser
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments grammar/expression_parser.js
+  count 4
+  upstream "drafted:A"
+item grammar/expression_parser_locale.js parse
+  construct "method call .parseTokenized(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/expression_parser_locale.js parseInterpretations
+  construct "method call .parseTokenized(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments grammar/expression_parser_locale.js
+  count 3
+  upstream "drafted:A"
+item grammar/expression_parser_timezone.js setLocalOffsetSeconds
+  construct "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/expression_parser_timezone.js localOffsetSeconds
+  construct "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/expression_parser_timezone.js currentNow
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/expression_parser_timezone.js currentDate
+  construct "case test: the cases of a value switch are BigInt or boolean literals"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+comments grammar/expression_parser_timezone.js
+  count 3
+  upstream "drafted:A"
+item grammar/index.js "export{}:./datetime_grammar.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item grammar/index.js "export{}:./expression_parser.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item grammar/index.js "export{}:./integral.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item grammar/index.js "export{}:./lexer.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item grammar/index.js "export{}:./math_functions.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item grammar/index.js "export{}:./number_grammar.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+comments grammar/index.js
+  count 1
+  upstream "drafted:A"
+item grammar/integral.js evaluateIndefiniteIntegral
+  construct "JSDoc type {import(X).Value}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:C"
+item grammar/integral.js trySymbolicIntegral
+  construct "JSDoc type {string | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+cascade grammar/integral.js symbolicResultToLatex
+  needs replace
+comments grammar/integral.js
+  count 1
+  upstream "drafted:A"
+item grammar/lexer.js "import:./arithmetic_words.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item grammar/lexer.js "import:./locale_numbers.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+cascade grammar/lexer.js isUnicodeMark
+  needs GeneralCategory
+item grammar/lexer.js GeneralCategory
+  construct "top-level class statement: the top level prints with console.log, binds with const or let, assigns, branches with if, loops and asserts"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+cascade grammar/lexer.js isWordChar
+  needs isAlphanumeric
+item grammar/lexer.js superscriptValue
+  construct "JSDoc type {string | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/lexer.js unicodeGeneralCategory
+  construct "method call .codePointAt(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item grammar/lexer.js TokenKind
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/lexer.js Token
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/lexer.js Lexer
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments grammar/lexer.js
+  count 1
+  upstream "drafted:A"
+item grammar/linear_equation.js LinearTerm
+  construct "top-level class statement: the top level prints with console.log, binds with const or let, assigns, branches with if, loops and asserts"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/linear_equation.js LinearForm
+  construct "top-level class statement: the top level prints with console.log, binds with const or let, assigns, branches with if, loops and asserts"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/linear_equation.js VariableMoveDetail
+  construct "top-level class statement: the top level prints with console.log, binds with const or let, assigns, branches with if, loops and asserts"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/linear_equation.js LinearEquationSolution
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/linear_equation.js solve
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/linear_equation.js collectVariableOrder
+  construct "method call .pushVariableOrder(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/linear_equation.js selectTargetVariable
+  construct "JSDoc type {string | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/linear_equation.js combinedTargetCoefficient
+  construct "method call .coefficientOf(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/linear_equation.js isolateRightSide
+  construct "method call .sub(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/linear_equation.js buildVariableMoveDetails
+  construct "method call .filter(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/208"
+comments grammar/linear_equation.js
+  count 2
+  upstream "drafted:A"
+item grammar/locale_numbers.js getIsSomeAnd
+  construct "JSDoc type {(ch: string) => boolean}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item grammar/locale_numbers.js takeWhileCount
+  construct "JSDoc type {(ch: string) => boolean}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item grammar/locale_numbers.js scan
+  construct "JSDoc type {[string, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item grammar/locale_numbers.js isThreeDigitGroup
+  construct "method call .slice(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/208"
+item grammar/locale_numbers.js normalize
+  construct "JSDoc type {string | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/locale_numbers.js validGroups
+  construct "arrow function: functions as values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/207"
+item grammar/locale_numbers.js scanRadix
+  construct "JSDoc type {[string, number] | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/locale_numbers.js scanRadixExponent
+  construct "JSDoc type {[boolean, number, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+comments grammar/locale_numbers.js
+  count 1
+  upstream "drafted:A"
+item grammar/math_functions.js "import:../rust/libm.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item grammar/math_functions.js evaluateFunction
+  construct "case test: the cases of a value switch are BigInt or boolean literals"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item grammar/math_functions.js MATH_FUNCTIONS
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+cascade grammar/math_functions.js isMathFunction
+  needs MATH_FUNCTIONS
+item grammar/math_functions.js evaluateFunctionValues
+  construct "method call .withUncertainty(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/math_functions.js evaluateExactFunction
+  construct "JSDoc type {Value | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/math_functions.js checkedDecimal
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/math_functions.js checkArgCount
+  construct "unknown type crate.Decimal"
+  upstream "drafted:B"
+item grammar/math_functions.js integrate
+  construct "JSDoc type {(x: number) => number}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+comments grammar/math_functions.js
+  count 1
+  upstream "drafted:A"
+item grammar/number_grammar.js "import:../crypto_api.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item grammar/number_grammar.js NumberGrammar
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/number_grammar.js WELL_KNOWN_FIAT
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments grammar/number_grammar.js
+  count 1
+  upstream "drafted:A"
+item grammar/polynomial_equation.js sortedTerms
+  construct "JSDoc type {Map<number, Rational>}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item grammar/polynomial_equation.js insertRational
+  construct "JSDoc type {Map<string, Rational>}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item grammar/polynomial_equation.js sortedRationals
+  construct "JSDoc type {Map<string, Rational>}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item grammar/polynomial_equation.js PolynomialForm
+  construct "top-level class statement: the top level prints with console.log, binds with const or let, assigns, branches with if, loops and asserts"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/polynomial_equation.js PolynomialEquationSolution
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/polynomial_equation.js solve
+  construct "method call .subtract(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/polynomial_equation.js mergeVariableNames
+  construct "JSDoc type {string | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/polynomial_equation.js findRealRationalRoots
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/polynomial_equation.js binomialPowerRoots
+  construct "JSDoc type {Rational[] | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/polynomial_equation.js quadraticRoots
+  construct "method call .coefficient(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/polynomial_equation.js rationalSquareRoot
+  construct "JSDoc type {Rational | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/polynomial_equation.js rationalNthRoot
+  construct "JSDoc type {Rational | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/polynomial_equation.js integerNthRoot
+  construct "JSDoc type {bigint | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/polynomial_equation.js checkedPowU128
+  construct "JSDoc type {bigint | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/polynomial_equation.js rationalRootCandidates
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/polynomial_equation.js rationalRootTheoremCandidates
+  construct "JSDoc type {Rational[] | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/polynomial_equation.js scaledIntegerCoefficient
+  construct "JSDoc type {bigint | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/polynomial_equation.js checkedLcm
+  construct "JSDoc type {bigint | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/polynomial_equation.js positiveDivisors
+  construct "JSDoc type {bigint[] | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/polynomial_equation.js formatSolutions
+  construct "method call .map(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/208"
+item grammar/polynomial_equation.js formatRootFactors
+  construct "method call .map(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/208"
+item grammar/polynomial_equation.js formatRootFactor
+  construct "method call .isZero(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/polynomial_equation.js joinSignedParts
+  construct "JSDoc type {[boolean, string]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+comments grammar/polynomial_equation.js
+  count 2
+  upstream "drafted:A"
+item grammar/token_parser.js "import:./math_functions.js"
+  construct "@typedef Token: a portable data type is a union of { $: X, … } object types"
+  upstream "https://github.com/link-foundation/meta-language/issues/206"
+item grammar/token_parser.js "import:./token_parser/comparison.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item grammar/token_parser.js "import:./token_parser/datetime.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item grammar/token_parser.js "import:./token_parser/integral.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item grammar/token_parser.js "import:./token_parser/numbers.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item grammar/token_parser.js "import:./token_parser/operators.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item grammar/token_parser.js "import:./token_parser/percentage.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item grammar/token_parser.js "import:./token_parser/quantities.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item grammar/token_parser.js "import:./token_parser/units.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item grammar/token_parser.js TokenParser
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser.js UNARY_MATH_FUNCTIONS
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments grammar/token_parser.js
+  count 3
+  upstream "drafted:A"
+item grammar/token_parser/comparison.js parseExpression
+  construct "method call .ratioWord(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/comparison.js parseComparison
+  construct "method call .tryParseDaySpan(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/comparison.js tryParseDaySpan
+  construct "JSDoc type {Expression | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/token_parser/comparison.js ORDERING_OPS
+  construct "namespace property DoubleEquals: namespaces hold methods, name(…) { … }, and nested namespaces only"
+  upstream "https://github.com/link-foundation/meta-language/issues/206"
+item grammar/token_parser/comparison.js matchOrderingOp
+  construct "JSDoc type {ComparisonOp | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/token_parser/comparison.js checkCompare
+  construct "method call .currentKind(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/comparison.js checkVs
+  construct "method call .currentKind(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments grammar/token_parser/comparison.js
+  count 2
+  upstream "drafted:A"
+item grammar/token_parser/datetime.js allAsciiDigits
+  construct "method call .every(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/208"
+item grammar/token_parser/datetime.js joinDatetimeParts
+  construct "method call .join(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/208"
+item grammar/token_parser/datetime.js tryParseUntilTarget
+  construct "method call .isAtEnd(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/datetime.js tryParseTimeStartingWithNumber
+  construct "method call .isAtEnd(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/datetime.js tryParseTimeWithAmpm
+  construct "method call .currentKind(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/datetime.js tryParseRussianTimeByTimezone
+  construct "method call .advance(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/datetime.js tryParseDatetimeFromTokens
+  construct "method call .isAtEnd(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments grammar/token_parser/datetime.js
+  count 3
+  upstream "drafted:A"
+item grammar/token_parser/integral.js parseNaturalIntegral
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/token_parser/integral.js parseIntegrandUntil
+  construct "method call .parseIntegrandExpression(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/integral.js parseIntegrandExpression
+  construct "method call .parseIntegrandAdditive(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/integral.js parseIntegrandAdditive
+  construct "method call .parseIntegrandMultiplicative(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/integral.js parseIntegrandMultiplicative
+  construct "method call .parseIntegrandPower(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/integral.js parseIntegrandPower
+  construct "method call .parseIntegrandUnary(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/integral.js parseIntegrandUnary
+  construct "method call .check(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/integral.js parseIntegrandPrimary
+  construct "method call .check(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments grammar/token_parser/integral.js
+  count 1
+  upstream "drafted:A"
+item grammar/token_parser/numbers.js consumeWordScale
+  construct "JSDoc type {Decimal | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+comments grammar/token_parser/numbers.js
+  count 2
+  upstream "drafted:A"
+item grammar/token_parser/operators.js percentStartsBinaryExpression
+  construct "method call .check(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/operators.js matchAdditiveOp
+  construct "JSDoc type {BinaryOp | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/token_parser/operators.js matchMultiplicativeOp
+  construct "JSDoc type {BinaryOp | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+comments grammar/token_parser/operators.js
+  count 1
+  upstream "drafted:A"
+item grammar/token_parser/percentage.js hasProportionQuestion
+  construct "array destructuring: bind each element by its index, const a = xs[0]"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+cascade grammar/token_parser/percentage.js ratioKeyword
+  needs toAsciiLowercase
+item grammar/token_parser/percentage.js ratioWord
+  construct "method call .currentKind(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/percentage.js expectRatioWord
+  construct "method call .ratioWord(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/percentage.js parsePercentPostfix
+  construct "method call .check(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+cascade grammar/token_parser/percentage.js combineRatioProduct
+  needs BinaryOp
+item grammar/token_parser/percentage.js parseRatioSuffix
+  construct "JSDoc type {Expression | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/token_parser/percentage.js consumeRatioFormat
+  construct "JSDoc type {string | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/token_parser/percentage.js finishRatioFormat
+  construct "let ratio without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+comments grammar/token_parser/percentage.js
+  count 2
+  upstream "drafted:A"
+item grammar/token_parser/quantities.js parseI32
+  construct "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/token_parser/quantities.js parseQuantityUnit
+  construct "JSDoc type {[Unit, Unit[]] | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/token_parser/quantities.js identifierIsDimensionalUnit
+  construct "arrow function: functions as values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/207"
+item grammar/token_parser/quantities.js parseCompoundQuantity
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/token_parser/quantities.js parsePhysicalConversionTarget
+  construct "JSDoc type {Unit | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/token_parser/quantities.js conversionTargetEnds
+  construct "method call .isAtEnd(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/quantities.js INCH_ENDS
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/quantities.js inchBeforeConversion
+  construct "JSDoc type {Unit | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/token_parser/quantities.js parseUnitTerms
+  construct "JSDoc type {Terms | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/token_parser/quantities.js parseUnitGroup
+  construct "JSDoc type {Terms | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/token_parser/quantities.js parseUnitFactor
+  construct "JSDoc type {Terms | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/token_parser/quantities.js parseUnitName
+  construct "JSDoc type {PhysicalUnit | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/token_parser/quantities.js parseUnitPower
+  construct "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/token_parser/quantities.js parseSignedInteger
+  construct "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item grammar/token_parser/quantities.js mergeTerms
+  construct "for with const: declare the loop variables with let"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+cascade grammar/token_parser/quantities.js divideIntoQuantity
+  needs BinaryOp
+comments grammar/token_parser/quantities.js
+  count 2
+  upstream "drafted:A"
+item grammar/token_parser/units.js parseUnitForConversion
+  construct "method call .currentKind(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/units.js resolveUnitAmbiguityForConversion
+  construct "method call .isSameCategory(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item grammar/token_parser/units.js NUMBER_CONVERSION_TARGETS
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+cascade grammar/token_parser/units.js isNumberConversionTarget
+  needs NUMBER_CONVERSION_TARGETS
+comments grammar/token_parser/units.js
+  count 2
+  upstream "drafted:A"
+item index.js "import:./clock.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item index.js "import:./crypto_api.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item index.js "import:./currency_api.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item index.js "import:./plan.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item index.js "export*:./clock.js"
+  construct "export *: only function and const declarations are exported"
+  upstream "drafted:G"
+item index.js "export*:./crypto_api.js"
+  construct "export *: only function and const declarations are exported"
+  upstream "drafted:G"
+item index.js "export*:./currency_api.js"
+  construct "export *: only function and const declarations are exported"
+  upstream "drafted:G"
+item index.js "export*:./error.js"
+  construct "export *: only function and const declarations are exported"
+  upstream "drafted:G"
+item index.js "export*:./grammar/index.js"
+  construct "export *: only function and const declarations are exported"
+  upstream "drafted:G"
+item index.js "export*:./lino/index.js"
+  construct "export *: only function and const declarations are exported"
+  upstream "drafted:G"
+item index.js "export*:./plan.js"
+  construct "export *: only function and const declarations are exported"
+  upstream "drafted:G"
+item index.js "export*:./types/index.js"
+  construct "export *: only function and const declarations are exported"
+  upstream "drafted:G"
+item index.js "export*:./utils.js"
+  construct "export *: only function and const declarations are exported"
+  upstream "drafted:G"
+item index.js "export{}:./plan.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item index.js "export{}:./utils.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item index.js PlotData
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item index.js CalculationStep
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item index.js RepeatingDecimalFormats
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item index.js RESULT_DEFAULTS
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item index.js CalculationResult
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item index.js parseRatesJson
+  construct "JSDoc type {Map<string, number> | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item index.js toJsonString
+  construct "JSDoc type {unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+cascade index.js unquoteSource
+  needs trim
+item index.js Calculator
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments index.js
+  count 5
+  upstream "drafted:A"
+item lino/index.js toLino
+  construct "JSDoc type {import(X).Expression}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:C"
+item lino/index.js Link
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item lino/index.js LinkRef
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item lino/index.js LinoParser
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments lino/index.js
+  count 1
+  upstream "drafted:A"
+item plan.js RateSource
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item plan.js CalculationPlan
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item plan.js primarySource
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item plan.js CBR_ONLY
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item plan.js CBR_FIAT
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item plan.js canAlsoServe
+  construct "case test: the cases of a value switch are BigInt or boolean literals"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item plan.js createPlan
+  construct "JSDoc type {import(X).Expression}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:C"
+item plan.js emptyPlan
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item plan.js errorPlan
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments plan.js
+  count 1
+  upstream "drafted:A"
+item rust/chrono.js "export{}:./chrono/delta.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item rust/chrono.js "export{}:./chrono/date.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item rust/chrono.js "export{}:./chrono/time.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item rust/chrono.js "export{}:./chrono/datetime.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item rust/chrono.js "export{}:./chrono/offset.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item rust/chrono.js "export{}:./chrono/parse.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item rust/chrono.js "export{}:./chrono/formatting.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item rust/chrono.js "export{}:./chrono/strftime.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+comments rust/chrono.js
+  count 1
+  upstream "drafted:A"
+item rust/chrono/date.js cycleToYo
+  construct "JSDoc type {[number, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/chrono/date.js isoWeeksIn
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/date.js NaiveDate
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments rust/chrono/date.js
+  count 1
+  upstream "drafted:A"
+item rust/chrono/datetime.js NaiveDateTime
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments rust/chrono/datetime.js
+  count 2
+  upstream "drafted:A"
+item rust/chrono/delta.js I64_MIN
+  construct "exponentiation: powers are outside the portable core; use recursion"
+  upstream "drafted:E"
+item rust/chrono/delta.js I64_MAX
+  construct "exponentiation: powers are outside the portable core; use recursion"
+  upstream "drafted:E"
+item rust/chrono/delta.js I32_MIN
+  construct "exponentiation: powers are outside the portable core; use recursion"
+  upstream "drafted:E"
+item rust/chrono/delta.js I32_MAX
+  construct "exponentiation: powers are outside the portable core; use recursion"
+  upstream "drafted:E"
+item rust/chrono/delta.js U32_MAX
+  construct "exponentiation: powers are outside the portable core; use recursion"
+  upstream "drafted:E"
+item rust/chrono/delta.js toI64
+  construct "JSDoc type {number | bigint}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:B"
+item rust/chrono/delta.js checkedMulI64
+  construct "JSDoc type {bigint | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/chrono/delta.js divModFloor
+  construct "JSDoc type {[bigint, bigint]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+cascade rust/chrono/delta.js MIN_SECS
+  needs I64_MAX
+cascade rust/chrono/delta.js MIN_NANOS
+  needs I64_MAX
+cascade rust/chrono/delta.js MAX_SECS
+  needs I64_MAX
+cascade rust/chrono/delta.js MAX_NANOS
+  needs I64_MAX
+item rust/chrono/delta.js TimeDelta
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+cascade rust/chrono/delta.js Duration
+  needs TimeDelta
+item rust/chrono/delta.js OutOfRangeError
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/delta.js StdDuration
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/delta.js Months
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/delta.js export{}
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+comments rust/chrono/delta.js
+  count 1
+  upstream "drafted:A"
+item rust/chrono/formatting.js SecondsFormat
+  construct "object without a $ tag: a portable object is an alternative of a @typedef data type"
+  upstream "https://github.com/link-foundation/meta-language/issues/206"
+item rust/chrono/formatting.js FmtError
+  construct "top-level class statement: the top level prints with console.log, binds with const or let, assigns, branches with if, loops and asserts"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/formatting.js fail
+  construct "throw new FmtError: throw an Error, RangeError or TypeError"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/formatting.js hundreds
+  construct "method call .padStart(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/chrono/formatting.js writeTwo
+  construct "let out without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item rust/chrono/formatting.js writeN
+  construct "method call .padStart(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+cascade rust/chrono/formatting.js writeYear
+  needs writeN
+item rust/chrono/formatting.js formatOffset
+  construct "JSDoc type {X | X | X}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:B"
+item rust/chrono/formatting.js writeRfc3339
+  construct "try statement: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item rust/chrono/formatting.js formatNumeric
+  construct "JSDoc type {NaiveDate | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/chrono/formatting.js formatFixed
+  construct "JSDoc type {NaiveDate | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/chrono/formatting.js tryFormat
+  construct "JSDoc type {NaiveDate | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/chrono/formatting.js formatToString
+  construct "JSDoc type {NaiveDate | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+comments rust/chrono/formatting.js
+  count 5
+  upstream "drafted:A"
+item rust/chrono/offset.js LocalResult
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/offset.js TimeZoneBase
+  construct "top-level class statement: the top level prints with console.log, binds with const or let, assigns, branches with if, loops and asserts"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/offset.js naiveFromTimestamp
+  construct "JSDoc type {NaiveDateTime | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/chrono/offset.js UtcZone
+  construct "top-level class statement: the top level prints with console.log, binds with const or let, assigns, branches with if, loops and asserts"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/offset.js Utc
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/offset.js FixedOffset
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/offset.js DateTime
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments rust/chrono/offset.js
+  count 4
+  upstream "drafted:A"
+item rust/chrono/parse.js I32_MIN
+  construct "exponentiation: powers are outside the portable core; use recursion"
+  upstream "drafted:E"
+item rust/chrono/parse.js I32_MAX
+  construct "exponentiation: powers are outside the portable core; use recursion"
+  upstream "drafted:E"
+item rust/chrono/parse.js MESSAGES
+  construct "object without a $ tag: a portable object is an alternative of a @typedef data type"
+  upstream "https://github.com/link-foundation/meta-language/issues/206"
+item rust/chrono/parse.js ParseError
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/parse.js OUT_OF_RANGE
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/parse.js IMPOSSIBLE
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/parse.js NOT_ENOUGH
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/parse.js INVALID
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/parse.js TOO_SHORT
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/parse.js TOO_LONG
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/parse.js BAD_FORMAT
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/parse.js scanNumber
+  construct "JSDoc type {[string, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/chrono/parse.js scanNanosecond
+  construct "JSDoc type {[string, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/chrono/parse.js scanNanosecondFixed
+  construct "JSDoc type {[string, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/chrono/parse.js lowerPrefix
+  construct "method call .charCodeAt(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/chrono/parse.js scanShortName
+  construct "JSDoc type {[string, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/chrono/parse.js scanShortOrLongName
+  construct "JSDoc type {[string, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+cascade rust/chrono/parse.js scanShortMonth0
+  needs scanShortName
+cascade rust/chrono/parse.js scanShortOrLongMonth0
+  needs scanShortOrLongName
+cascade rust/chrono/parse.js scanChar
+  needs TOO_SHORT
+item rust/chrono/parse.js colonOrSpace
+  construct "method call .slice(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/208"
+item rust/chrono/parse.js twoDigits
+  construct "method call .charCodeAt(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/chrono/parse.js scanTimezoneOffset
+  construct "JSDoc type {(s: string) => string}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/chrono/parse.js setIfConsistent
+  construct "JSDoc type {X | X | X | X | X | X | X | X | X | X | X | X | X | X}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:B"
+cascade rust/chrono/parse.js checkRange
+  needs OUT_OF_RANGE
+item rust/chrono/parse.js Parsed
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/parse.js unsupported
+  construct "unknown type crate.never"
+  upstream "drafted:C"
+item rust/chrono/parse.js NUMERIC
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/parse.js setNumeric
+  construct "case test: the cases of a value switch are BigInt or boolean literals"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item rust/chrono/parse.js parseFixed
+  construct "let scanned without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item rust/chrono/parse.js parse
+  construct "JSDoc type {Iterable<import(X).Item>}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:C"
+item rust/chrono/parse.js parseRfc3339
+  construct "JSDoc type {import(X).DateTime}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:C"
+comments rust/chrono/parse.js
+  count 2
+  upstream "drafted:A"
+item rust/chrono/strftime.js literal
+  construct "object without a $ tag: a portable object is an alternative of a @typedef data type"
+  upstream "https://github.com/link-foundation/meta-language/issues/206"
+item rust/chrono/strftime.js space
+  construct "object without a $ tag: a portable object is an alternative of a @typedef data type"
+  upstream "https://github.com/link-foundation/meta-language/issues/206"
+item rust/chrono/strftime.js num
+  construct "object without a $ tag: a portable object is an alternative of a @typedef data type"
+  upstream "https://github.com/link-foundation/meta-language/issues/206"
+item rust/chrono/strftime.js num0
+  construct "object without a $ tag: a portable object is an alternative of a @typedef data type"
+  upstream "https://github.com/link-foundation/meta-language/issues/206"
+item rust/chrono/strftime.js nums
+  construct "object without a $ tag: a portable object is an alternative of a @typedef data type"
+  upstream "https://github.com/link-foundation/meta-language/issues/206"
+item rust/chrono/strftime.js fixed
+  construct "object without a $ tag: a portable object is an alternative of a @typedef data type"
+  upstream "https://github.com/link-foundation/meta-language/issues/206"
+item rust/chrono/strftime.js ERROR
+  construct "object without a $ tag: a portable object is an alternative of a @typedef data type"
+  upstream "https://github.com/link-foundation/meta-language/issues/206"
+cascade rust/chrono/strftime.js D_FMT
+  needs num0
+cascade rust/chrono/strftime.js D_T_FMT
+  needs fixed
+cascade rust/chrono/strftime.js T_FMT
+  needs num0
+cascade rust/chrono/strftime.js T_FMT_AMPM
+  needs num0
+item rust/chrono/strftime.js SIMPLE
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/strftime.js QUEUED
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/strftime.js DOT_NANOS
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/strftime.js NO_DOT_NANOS
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/chrono/strftime.js firstChar
+  construct "method call .codePointAt(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/chrono/strftime.js findChar
+  construct "JSDoc type {(c: string) => boolean}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/chrono/strftime.js StrftimeItems
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments rust/chrono/strftime.js
+  count 2
+  upstream "drafted:A"
+item rust/chrono/time.js NaiveTime
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments rust/chrono/time.js
+  count 2
+  upstream "drafted:A"
+item rust/chrono/util.js U32_MAX
+  construct "exponentiation: powers are outside the portable core; use recursion"
+  upstream "drafted:E"
+item rust/chrono/util.js inRange
+  construct "JSDoc type {unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/chrono/util.js isU32
+  construct "JSDoc type {unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/chrono/util.js divModFloor
+  construct "JSDoc type {[number, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/chrono/util.js two
+  construct "method call .padStart(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/chrono/util.js autoSiFraction
+  construct "method call .padStart(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/chrono/util.js debugYear
+  construct "method call .padStart(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+comments rust/chrono/util.js
+  count 1
+  upstream "drafted:A"
+item rust/core.js Err
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/core.js Panic
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/core.js err
+  construct "JSDoc type {unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/core.js panic
+  construct "throw new Panic: throw an Error, RangeError or TypeError"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/core.js unreachable
+  construct "@param needs a type and a name"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/core.js tryResult
+  construct "JSDoc type {() => T}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/core.js ok
+  construct "JSDoc type {() => T}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/core.js isOk
+  construct "JSDoc type {() => unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/core.js unwrap
+  construct "JSDoc type {T | null | undefined}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/core.js expect
+  construct "JSDoc type {T | null | undefined}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/core.js debugError
+  construct "JSDoc type {unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/core.js unwrapResult
+  construct "JSDoc type {() => T}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/core.js expectResult
+  construct "JSDoc type {() => T}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/core.js eq
+  construct "JSDoc type {unknown}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/core.js clone
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/core.js cmp
+  construct "JSDoc type {any}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/core.js compareStrings
+  construct "JSDoc type {-1 | 0 | 1}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:B"
+comments rust/core.js
+  count 1
+  upstream "drafted:A"
+item rust/decimal.js lexical_declaration
+  construct "array destructuring: bind each element by its index, const a = xs[0]"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item rust/decimal.js lexical_declaration#2
+  construct "array destructuring: bind each element by its index, const a = xs[0]"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item rust/decimal.js POW10
+  construct "object without a $ tag: a portable object is an alternative of a @typedef data type"
+  upstream "https://github.com/link-foundation/meta-language/issues/206"
+item rust/decimal.js POWI10
+  construct "object without a $ tag: a portable object is an alternative of a @typedef data type"
+  upstream "https://github.com/link-foundation/meta-language/issues/206"
+item rust/decimal.js ERROR_TEXT
+  construct "namespace property ExceedsMaximumPossibleValue: namespaces hold methods, name(…) { … }, and nested namespaces only"
+  upstream "https://github.com/link-foundation/meta-language/issues/206"
+item rust/decimal.js DecimalError
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/decimal.js RustDecimal
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/decimal.js fromParts
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/decimal.js okOrNull
+  construct "JSDoc type {RustDecimal | string}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:B"
+item rust/decimal.js orPanic
+  construct "JSDoc type {RustDecimal | string}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:B"
+item rust/decimal.js rescaleBuf
+  construct "JSDoc type {{ value: bigint, scale: number } | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/decimal.js addSub
+  construct "JSDoc type {RustDecimal | string}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:B"
+item rust/decimal.js mul
+  construct "JSDoc type {RustDecimal | string}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:B"
+item rust/decimal.js POWER_OVERFLOW_VALUES
+  construct "method call .map(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/208"
+item rust/decimal.js findScale
+  construct "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/decimal.js unscaleFromOverflow
+  construct "JSDoc type {[bigint, number] | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/decimal.js div
+  construct "JSDoc type {RustDecimal | string}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:B"
+item rust/decimal.js rem
+  construct "JSDoc type {RustDecimal | string}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:B"
+item rust/decimal.js remFull
+  construct "shift >>: bit shifts are outside the portable core"
+  upstream "drafted:D"
+item rust/decimal.js partialDivide64
+  construct "bitwise |: bitwise operators are outside the portable core"
+  upstream "drafted:D"
+item rust/decimal.js partialDivide96
+  construct "bitwise |: bitwise operators are outside the portable core"
+  upstream "drafted:D"
+item rust/decimal.js rescale
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/decimal.js setScale
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/decimal.js parseU32
+  construct "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/decimal.js fromScientific
+  construct "method call .search(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/decimal.js UTF8
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+cascade rust/decimal.js parseError
+  needs DecimalError
+cascade rust/decimal.js tailInvalidDigit
+  needs parseError
+cascade rust/decimal.js handleData
+  needs parseError
+item rust/decimal.js maybeRound
+  construct "let digit without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item rust/decimal.js handleFull128
+  construct "BigInt: the JavaScript standard library is outside the portable core"
+  upstream "drafted:F"
+item rust/decimal.js parseStrRadix10
+  construct "JSDoc type {RustDecimal | DecimalError}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:B"
+item rust/decimal.js F64_VIEW
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/decimal.js fromF64
+  construct "JSDoc type {RustDecimal | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+comments rust/decimal.js
+  count 1
+  upstream "drafted:A"
+item rust/fmt.js shortestDigits
+  construct "JSDoc type {{ digits: string, exp: number }}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/fmt.js digitsToDecStr
+  construct "method call .repeat(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/fmt.js digitsToExpStr
+  construct "method call .slice(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/208"
+item rust/fmt.js formatF64
+  construct "JSDoc type {(digits: string, exp: number) => string}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/fmt.js fmtF64
+  construct "arrow function: functions as values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/207"
+item rust/fmt.js debugF64
+  construct "arrow function: functions as values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/207"
+item rust/fmt.js debugStruct
+  construct "JSDoc type {[string, string]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/fmt.js debugTuple
+  construct "method call .join(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/208"
+item rust/fmt.js debugList
+  construct "method call .join(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/208"
+item rust/fmt.js debugOption
+  construct "JSDoc type {T | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/fmt.js debugMap
+  construct "JSDoc type {[string, string]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+comments rust/fmt.js
+  count 1
+  upstream "drafted:A"
+item rust/libm.js "export{}:./libm/atrig.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item rust/libm.js "export{}:./libm/cbrt.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item rust/libm.js "export{}:./libm/exp.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item rust/libm.js "export{}:./libm/fma.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item rust/libm.js "export{}:./libm/log.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item rust/libm.js "export{}:./libm/pow.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item rust/libm.js "export{}:./libm/trig.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+cascade rust/libm/atrig.js X1P_120
+  needs fromBits
+item rust/libm/atrig.js asin
+  construct "bitwise &: bitwise operators are outside the portable core"
+  upstream "drafted:D"
+item rust/libm/atrig.js acos
+  construct "bitwise &: bitwise operators are outside the portable core"
+  upstream "drafted:D"
+cascade rust/libm/atrig.js ATAN_TINY
+  needs fromBits
+item rust/libm/atrig.js atan
+  construct "shift >>>: bit shifts are outside the portable core"
+  upstream "drafted:D"
+item rust/libm/atrig.js atan2
+  construct "bitwise |: bitwise operators are outside the portable core"
+  upstream "drafted:D"
+item rust/libm/bits.js F64
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/libm/bits.js U32
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/libm/bits.js U64
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/libm/bits.js LITTLE_ENDIAN
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+cascade rust/libm/bits.js HI
+  needs LITTLE_ENDIAN
+cascade rust/libm/bits.js LO
+  needs LITTLE_ENDIAN
+cascade rust/libm/bits.js getHighWord
+  needs F64
+cascade rust/libm/bits.js getLowWord
+  needs F64
+cascade rust/libm/bits.js withSetHighWord
+  needs F64
+cascade rust/libm/bits.js withSetLowWord
+  needs F64
+cascade rust/libm/bits.js combineWords
+  needs U32
+cascade rust/libm/bits.js toBits
+  needs F64
+cascade rust/libm/bits.js fromBits
+  needs U64
+item rust/libm/bits.js hf64
+  construct "malformed number 9a"
+  upstream "https://github.com/link-foundation/meta-language/issues/211"
+cascade rust/libm/bits.js F_EXP_MAX
+  needs combineWords
+cascade rust/libm/bits.js F_EXP_MIN_TIMES_POW_SUBNORM
+  needs combineWords
+cascade rust/libm/bits.js scalbn
+  needs F_EXP_MAX
+cascade rust/libm/cbrt.js ESCALE
+  needs hf64
+cascade rust/libm/cbrt.js C
+  needs hf64
+cascade rust/libm/cbrt.js U0
+  needs hf64
+cascade rust/libm/cbrt.js U1
+  needs hf64
+cascade rust/libm/cbrt.js OFF
+  needs hf64
+cascade rust/libm/cbrt.js P2M52
+  needs hf64
+cascade rust/libm/cbrt.js P2M60
+  needs hf64
+cascade rust/libm/cbrt.js P2M75
+  needs hf64
+cascade rust/libm/cbrt.js P2M98
+  needs hf64
+cascade rust/libm/cbrt.js AZZ_A
+  needs hf64
+cascade rust/libm/cbrt.js Y1_A
+  needs hf64
+cascade rust/libm/cbrt.js AZZ_B
+  needs hf64
+cascade rust/libm/cbrt.js Y1_B
+  needs hf64
+item rust/libm/cbrt.js clz64
+  construct "toString with a radix: only decimal text is portable"
+  upstream "drafted:F"
+item rust/libm/cbrt.js cbrt
+  construct "bitwise &: bitwise operators are outside the portable core"
+  upstream "drafted:D"
+cascade rust/libm/exp.js X1P1023
+  needs fromBits
+item rust/libm/exp.js exp
+  construct "let hi without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item rust/libm/exp.js expm1
+  construct "let hi without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+cascade rust/libm/exp.js K_LN2
+  needs fromBits
+item rust/libm/exp.js EXPO2_SCALE
+  construct "shift <<: bit shifts are outside the portable core"
+  upstream "drafted:D"
+cascade rust/libm/exp.js kExpo2
+  needs K_LN2
+item rust/libm/exp.js clearSign
+  construct "bitwise &: bitwise operators are outside the portable core"
+  upstream "drafted:D"
+item rust/libm/exp.js sinh
+  construct "shift >>>: bit shifts are outside the portable core"
+  upstream "drafted:D"
+item rust/libm/exp.js cosh
+  construct "shift <<: bit shifts are outside the portable core"
+  upstream "drafted:D"
+item rust/libm/exp.js tanh
+  construct "let t without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item rust/libm/fma.js SCALE_F
+  construct "BigInt: the JavaScript standard library is outside the portable core"
+  upstream "drafted:F"
+item rust/libm/fma.js C_MAX_POW
+  construct "BigInt: the JavaScript standard library is outside the portable core"
+  upstream "drafted:F"
+cascade rust/libm/fma.js MIN_POSITIVE_NORMAL
+  needs fromBits
+item rust/libm/fma.js clz64
+  construct "shift >>: bit shifts are outside the portable core"
+  upstream "drafted:D"
+item rust/libm/fma.js shl
+  construct "shift <<: bit shifts are outside the portable core"
+  upstream "drafted:D"
+item rust/libm/fma.js shr
+  construct "shift >>: bit shifts are outside the portable core"
+  upstream "drafted:D"
+item rust/libm/fma.js norm
+  construct "shift >>: bit shifts are outside the portable core"
+  upstream "drafted:D"
+item rust/libm/fma.js fma
+  construct "let zhi without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+comments rust/libm/fma.js
+  count 1
+  upstream "drafted:A"
+cascade rust/libm/log.js X1P54
+  needs fromBits
+item rust/libm/log.js reduce
+  construct "shift >>>: bit shifts are outside the portable core"
+  upstream "drafted:D"
+cascade rust/libm/log.js log
+  needs reduce
+cascade rust/libm/log.js log10
+  needs reduce
+cascade rust/libm/log.js log2
+  needs reduce
+comments rust/libm/log.js
+  count 1
+  upstream "drafted:A"
+item rust/libm/pow.js pow
+  construct "let t1 without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+cascade rust/libm/rem_pio2.js X1P24
+  needs combineWords
+cascade rust/libm/rem_pio2.js X1P_24
+  needs combineWords
+item rust/libm/rem_pio2.js remPio2Large
+  construct "let fw without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item rust/libm/rem_pio2.js medium
+  construct "JSDoc type {[number, number, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/libm/rem_pio2.js remPio2
+  construct "JSDoc type {[number, number, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+cascade rust/libm/trig.js zeroLowWord
+  needs withSetLowWord
+item rust/libm/trig.js kTan
+  construct "bitwise &: bitwise operators are outside the portable core"
+  upstream "drafted:D"
+item rust/libm/trig.js sin
+  construct "bitwise &: bitwise operators are outside the portable core"
+  upstream "drafted:D"
+item rust/libm/trig.js cos
+  construct "bitwise &: bitwise operators are outside the portable core"
+  upstream "drafted:D"
+item rust/libm/trig.js tan
+  construct "bitwise &: bitwise operators are outside the portable core"
+  upstream "drafted:D"
+item rust/num.js signum
+  construct "Object.is: the JavaScript standard library is outside the portable core"
+  upstream "drafted:F"
+item rust/num.js remEuclid
+  construct "typeof operator: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item rust/num.js IntType
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/num.js I8
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/num.js I16
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/num.js I32
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/num.js I64
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/num.js I128
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/num.js U8
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/num.js U16
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/num.js U32
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/num.js U64
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/num.js U128
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/num.js USIZE
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/num.js ISIZE
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/num.js INT_ERROR_MESSAGES
+  construct "namespace property Empty: namespaces hold methods, name(…) { … }, and nested namespaces only"
+  upstream "https://github.com/link-foundation/meta-language/issues/206"
+item rust/num.js ParseIntError
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/num.js ParseFloatError
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/num.js FLOAT_LITERAL
+  construct "regular expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/211"
+item rust/num.js FLOAT_SPECIAL
+  construct "regular expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/211"
+item rust/num.js parseF64
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/num.js intToF64
+  construct "Number: the JavaScript standard library is outside the portable core"
+  upstream "drafted:F"
+comments rust/num.js
+  count 1
+  upstream "drafted:A"
+item rust/ratio.js I64_MIN
+  construct "shift <<: bit shifts are outside the portable core"
+  upstream "drafted:D"
+item rust/ratio.js I64_MAX
+  construct "shift <<: bit shifts are outside the portable core"
+  upstream "drafted:D"
+item rust/ratio.js U64_MAX
+  construct "shift <<: bit shifts are outside the portable core"
+  upstream "drafted:D"
+item rust/ratio.js I128_MIN
+  construct "shift <<: bit shifts are outside the portable core"
+  upstream "drafted:D"
+item rust/ratio.js I128_MAX
+  construct "shift <<: bit shifts are outside the portable core"
+  upstream "drafted:D"
+item rust/ratio.js U128_MAX
+  construct "shift <<: bit shifts are outside the portable core"
+  upstream "drafted:D"
+item rust/ratio.js bigintToF64
+  construct "Number: the JavaScript standard library is outside the portable core"
+  upstream "drafted:F"
+item rust/ratio.js bigintFromF64
+  construct "JSDoc type {bigint | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/ratio.js bigintToI64
+  construct "JSDoc type {bigint | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/ratio.js bigintToU64
+  construct "JSDoc type {bigint | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/ratio.js bigintToI128
+  construct "JSDoc type {bigint | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/ratio.js bigintToU128
+  construct "JSDoc type {bigint | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/ratio.js bigintBits
+  construct "toString with a radix: only decimal text is portable"
+  upstream "drafted:F"
+item rust/ratio.js bigintIsEven
+  construct "bitwise &: bitwise operators are outside the portable core"
+  upstream "drafted:D"
+cascade rust/ratio.js bigintDiv
+  needs panic
+cascade rust/ratio.js bigintRem
+  needs panic
+item rust/ratio.js bigintDivRem
+  construct "JSDoc type {[bigint, bigint]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/ratio.js bigintDivModFloor
+  construct "JSDoc type {[bigint, bigint]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+cascade rust/ratio.js bigintDivFloor
+  needs bigintDivModFloor
+cascade rust/ratio.js bigintModFloor
+  needs bigintDivModFloor
+item rust/ratio.js bigintPow
+  construct "JSDoc type {number | bigint}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:B"
+item rust/ratio.js ParseBigIntError
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/ratio.js DECIMAL_DIGITS
+  construct "malformed number 9_"
+  upstream "https://github.com/link-foundation/meta-language/issues/211"
+item rust/ratio.js bigintFromStr
+  construct ".startsWith() with 2 arguments: search the whole string, with one argument"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/ratio.js reduced
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/ratio.js arith
+  construct "JSDoc type {Ratio | bigint}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:B"
+item rust/ratio.js cmpBigint
+  construct "JSDoc type {-1 | 0 | 1}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:B"
+item rust/ratio.js reverseIf
+  construct "JSDoc type {-1 | 0 | 1}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:B"
+item rust/ratio.js Ratio
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/ratio.js ZERO
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/ratio.js ONE
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/ratio.js EXACT
+  construct "shift <<: bit shifts are outside the portable core"
+  upstream "drafted:D"
+item rust/ratio.js view
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item rust/ratio.js ratioToF64
+  construct "Number: the JavaScript standard library is outside the portable core"
+  upstream "drafted:F"
+item rust/ratio.js ldexp
+  construct "let currExp without a value: an uninitialised let holds undefined, which is not a portable value; give it an initial value"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item rust/ratio.js setExponent
+  construct "bitwise &: bitwise operators are outside the portable core"
+  upstream "drafted:D"
+comments rust/ratio.js
+  count 1
+  upstream "drafted:A"
+item rust/str.js WHITE_SPACE
+  construct "regular expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/211"
+item rust/str.js ALPHABETIC
+  construct "regular expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/211"
+item rust/str.js NUMERIC
+  construct "regular expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/211"
+item rust/str.js LOWERCASE
+  construct "regular expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/211"
+item rust/str.js UPPERCASE
+  construct "regular expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/211"
+item rust/str.js ESCAPED_IN_DEBUG
+  construct "regular expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/211"
+item rust/str.js LEADING_WHITE_SPACE
+  construct "regular expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/211"
+item rust/str.js TRAILING_WHITE_SPACE
+  construct "regular expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/211"
+item rust/str.js WHITE_SPACE_RUN
+  construct "regular expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/211"
+cascade rust/str.js isWhitespace
+  needs WHITE_SPACE
+cascade rust/str.js isAlphabetic
+  needs ALPHABETIC
+cascade rust/str.js isNumeric
+  needs NUMERIC
+cascade rust/str.js isAlphanumeric
+  needs isAlphabetic
+cascade rust/str.js isLowercase
+  needs LOWERCASE
+cascade rust/str.js isUppercase
+  needs UPPERCASE
+item rust/str.js isAsciiDigit
+  construct "length of a string: String.prototype.length counts UTF-16 code units, which the portable string types do not keep"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/str.js isAsciiAlphabetic
+  construct "length of a string: String.prototype.length counts UTF-16 code units, which the portable string types do not keep"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/str.js isAsciiUppercase
+  construct "length of a string: String.prototype.length counts UTF-16 code units, which the portable string types do not keep"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/str.js isAsciiLowercase
+  construct "length of a string: String.prototype.length counts UTF-16 code units, which the portable string types do not keep"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+cascade rust/str.js isAsciiAlphanumeric
+  needs isAsciiDigit
+item rust/str.js toDigit
+  construct "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/str.js isDigit
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/str.js fromDigit
+  construct "JSDoc type {string | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/str.js toAsciiLowercase
+  construct "method call .replace(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/str.js toAsciiUppercase
+  construct "method call .replace(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/str.js eqIgnoreAsciiCase
+  construct "length of a string: String.prototype.length counts UTF-16 code units, which the portable string types do not keep"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+cascade rust/str.js trim
+  needs trimEnd
+item rust/str.js trimStart
+  construct "method call .replace(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/str.js trimEnd
+  construct "method call .replace(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/str.js charPredicate
+  construct "JSDoc type {((c: string) => boolean) | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/str.js trimStartMatches
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/str.js trimEndMatches
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/str.js trimMatches
+  construct "unknown type crate.Pattern"
+  upstream "drafted:B"
+item rust/str.js stripPrefix
+  construct "JSDoc type {string | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/str.js stripSuffix
+  construct "JSDoc type {string | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/str.js startsWith
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/str.js endsWith
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/str.js find
+  construct "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/str.js rfind
+  construct "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/str.js contains
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/str.js matchRanges
+  construct "JSDoc type {[number, number]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/str.js split
+  construct "for with const: declare the loop variables with let"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item rust/str.js splitn
+  construct "for with const: declare the loop variables with let"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item rust/str.js splitOnce
+  construct "JSDoc type {[string, string] | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/str.js rsplitOnce
+  construct "JSDoc type {[string, string] | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/str.js countMatches
+  construct "unknown type crate.Pattern"
+  upstream "drafted:B"
+item rust/str.js replace
+  construct "method call .join(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/208"
+item rust/str.js splitWhitespace
+  construct "method call .split(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/str.js lines
+  construct "method call .split(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/str.js charCount
+  construct "method call .charCodeAt(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+cascade rust/str.js utf8Len
+  needs indexToByte
+item rust/str.js indexToByte
+  construct "method call .codePointAt(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/str.js boundaryIndex
+  construct "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/str.js byteToIndex
+  construct "nullish coalescing: null and undefined are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item rust/str.js sliceBytes
+  construct "@param needs a type and a name"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/str.js insideChar
+  construct "method call .codePointAt(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/str.js charIndices
+  construct "JSDoc type {[number, string]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item rust/str.js lenUtf8
+  construct "method call .codePointAt(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item rust/str.js escapeDebug
+  construct "case test: the cases of a value switch are BigInt or boolean literals"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item rust/str.js debugStr
+  construct "one value is used as a string and as an array; declare the types of the function with JSDoc"
+  upstream "https://github.com/link-foundation/meta-language/issues/213"
+cascade rust/str.js debugChar
+  needs escapeDebug
+comments rust/str.js
+  count 2
+  upstream "drafted:A"
+item substitution.js substituteVariable
+  construct "arrow function: functions as values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/207"
+comments substitution.js
+  count 1
+  upstream "drafted:A"
+item types/currency.js ExchangeRateInfo
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/currency.js Currency
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/currency.js pairKey
+  construct "unsupported template escape \\u"
+  upstream "https://github.com/link-foundation/meta-language/issues/211"
+item types/currency.js tripleKey
+  construct "unsupported template escape \\u"
+  upstream "https://github.com/link-foundation/meta-language/issues/211"
+item types/currency.js CurrencyDatabase
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments types/currency.js
+  count 3
+  upstream "drafted:A"
+item types/datetime.js DateTime
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/datetime.js DateTimeResult
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments types/datetime.js
+  count 2
+  upstream "drafted:A"
+item types/datetime_parse.js normalizeTzAbbreviation
+  construct "case test: the cases of a value switch are BigInt or boolean literals"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item types/datetime_parse.js translateMonthNames
+  construct "for with const: declare the loop variables with let"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item types/datetime_parse.js YEAR_MARKER
+  construct "regular expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/211"
+item types/datetime_parse.js stripYearMarker
+  construct "method call .replace(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/209"
+item types/datetime_parse.js PREPOSITIONS
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/datetime_parse.js ORDINAL_SUFFIX
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/datetime_parse.js preprocessNaturalDate
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/datetime_parse.js parseTzAbbreviation
+  construct "JSDoc type {FixedOffset | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/datetime_parse.js normalizeMonthName
+  construct "method call .map(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/208"
+item types/datetime_parse.js parsePartialDate
+  construct "JSDoc type {NaiveDate | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/datetime_parse.js parse12hTime
+  construct "JSDoc type {NaiveTime | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/datetime_parse.js extractTimezone
+  construct "JSDoc type {[string, FixedOffset | null, string | null]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/datetime_parse.js parseOffset
+  construct "JSDoc type {FixedOffset | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+comments types/datetime_parse.js
+  count 1
+  upstream "drafted:A"
+item types/decimal.js Decimal
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/decimal.js wrap
+  construct "JSDoc type {RustDecimal | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+comments types/decimal.js
+  count 1
+  upstream "drafted:A"
+item types/dimension.js Dimension
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments types/dimension.js
+  count 1
+  upstream "drafted:A"
+item types/expression.js BinaryOp
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/expression.js ComparisonOp
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/expression.js LATEX_NAMED_FUNCTIONS
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/expression.js Expression
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments types/expression.js
+  count 1
+  upstream "drafted:A"
+item types/index.js "export{}:./currency.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item types/index.js "export{}:./datetime.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item types/index.js "export{}:./decimal.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item types/index.js "export{}:./dimension.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item types/index.js "export{}:./expression.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item types/index.js "export{}:./physical.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item types/index.js "export{}:./rational.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item types/index.js "export{}:./unit.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item types/index.js "export{}:./value/index.js"
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+comments types/index.js
+  count 1
+  upstream "drafted:A"
+item types/physical.js UnitTerm
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/physical.js PhysicalUnit
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/physical.js isBaseDimension
+  construct "method call .filter(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/208"
+item types/physical.js massSymbol
+  construct "case test: the cases of a value switch are BigInt or boolean literals"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item types/physical.js durationSymbol
+  construct "case test: the cases of a value switch are BigInt or boolean literals"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item types/physical.js DATA_SIZE_SYMBOLS
+  construct "object without a $ tag: a portable object is an alternative of a @typedef data type"
+  upstream "https://github.com/link-foundation/meta-language/issues/206"
+cascade types/physical.js dataSizeSymbol
+  needs DATA_SIZE_SYMBOLS
+item types/physical.js legacyUnit
+  construct "JSDoc type {Unit | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+comments types/physical.js
+  count 1
+  upstream "drafted:A"
+item types/rational.js Rational
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/rational.js serializeRatio
+  construct "JSDoc type {[string, string]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item types/rational.js deserializeRatio
+  construct "destructured parameter: name each parameter"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item types/rational.js mapErr
+  construct "JSDoc type {() => T}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item types/rational.js RepeatingDecimal
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/rational.js detectRepeatingDecimal
+  construct "JSDoc type {RepeatingDecimal | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+comments types/rational.js
+  count 1
+  upstream "drafted:A"
+item types/unit.js matchTable
+  construct "JSDoc type {[string[], T]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item types/unit.js Unit
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/unit.js DurationUnit
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/unit.js DataSizeUnit
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/unit.js MassUnit
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/unit.js DATA_SIZE_TABLE
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/unit.js dataSizeTable
+  construct "assignment of DATA_SIZE_TABLE: only local variables declared with let, and parameters, are assignable"
+  upstream "drafted:H"
+item types/unit.js MASS_TABLE
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/unit.js massTable
+  construct "assignment of MASS_TABLE: only local variables declared with let, and parameters, are assignable"
+  upstream "drafted:H"
+item types/unit.js DURATION_TABLE
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/unit.js durationTable
+  construct "assignment of DURATION_TABLE: only local variables declared with let, and parameters, are assignable"
+  upstream "drafted:H"
+comments types/unit.js
+  count 1
+  upstream "drafted:A"
+item types/unit_db.js SI_PREFIXES
+  construct "expected string but found float"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item types/unit_db.js BINARY_PREFIXES
+  construct "expected string but found float"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item types/unit_db.js Prefixes
+  construct "top-level class statement: the top level prints with console.log, binds with const or let, assigns, branches with if, loops and asserts"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/unit_db.js UnitDef
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/unit_db.js ResolvedUnit
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/unit_db.js UnitDatabase
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/unit_db.js UNITS
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/unit_db.js units
+  construct "assignment of UNITS: only local variables declared with let, and parameters, are assignable"
+  upstream "drafted:H"
+item types/unit_db.js lookupUnit
+  construct "JSDoc type {ResolvedUnit | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/unit_db.js lookupSymbol
+  construct "JSDoc type {ResolvedUnit | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/unit_db.js namedUnitFor
+  construct "JSDoc type {string | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/unit_db.js isWordAlias
+  construct "method call .every(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/208"
+item types/unit_db.js normalizePrefix
+  construct "case test: the cases of a value switch are BigInt or boolean literals"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item types/unit_db.js tenPow
+  construct "method call .powI32(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/unit_db.js parseNumber
+  construct "JSDoc type {Rational | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/unit_db.js splitLink
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/unit_db.js parsePrefixes
+  construct "case test: the cases of a value switch are BigInt or boolean literals"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item types/unit_db.js parseDatabase
+  construct "arrow function: functions as values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/207"
+comments types/unit_db.js
+  count 3
+  upstream "drafted:A"
+item types/value/display.js toDisplayString
+  construct "JSDoc type {import(X).Value}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:C"
+comments types/value/display.js
+  count 1
+  upstream "drafted:A"
+item types/value/duration.js bareYearDatetime
+  construct "JSDoc type {DateTime | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/value/duration.js formatDuration
+  construct "method call .push(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/208"
+item types/value/duration.js divideDurationUnits
+  construct "JSDoc type {Value | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/value/duration.js durationSecondsToUnit
+  construct "method call .div(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+cascade types/value/duration.js durationSecondsToDays
+  needs DurationUnit
+item types/value/duration.js divideRawDuration
+  construct "method call .toRational(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/value/duration.js convertRawDuration
+  construct "case test: the cases of a value switch are BigInt or boolean literals"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item types/value/duration.js applyDurationUnit
+  construct "method call .toRational(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/value/duration.js addCalendarMonthsOrDuration
+  construct "case test: the cases of a value switch are BigInt or boolean literals"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item types/value/duration.js durationUnitSeconds
+  construct "case test: the cases of a value switch are BigInt or boolean literals"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+comments types/value/duration.js
+  count 1
+  upstream "drafted:A"
+item types/value/formatting.js typeName
+  construct "JSDoc type {import(X).Value}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:C"
+item types/value/formatting.js isNumber
+  construct "JSDoc type {import(X).Value}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:C"
+item types/value/formatting.js ratioLike
+  construct "JSDoc type {import(X).Value}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:C"
+item types/value/formatting.js asNumber
+  construct "JSDoc type {import(X).Value}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:C"
+item types/value/formatting.js asRational
+  construct "JSDoc type {import(X).Value}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:C"
+item types/value/formatting.js toRational
+  construct "JSDoc type {import(X).Value}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:C"
+item types/value/formatting.js toFractionString
+  construct "JSDoc type {import(X).Value}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:C"
+comments types/value/formatting.js
+  count 1
+  upstream "drafted:A"
+item types/value/index.js export{}
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+item types/value/index.js convertCurrency
+  construct "JSDoc type {DateTime | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+cascade types/value/index.js productUnit
+  needs Unit
+item types/value/index.js noneCustomPair
+  construct "unknown type crate.Unit"
+  upstream "drafted:B"
+item types/value/index.js requireDecimal
+  construct "method call .asDecimal(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/value/index.js Value
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments types/value/index.js
+  count 2
+  upstream "drafted:A"
+item types/value/kind.js RatioFormat
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/value/kind.js ValueKind
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments types/value/kind.js
+  count 1
+  upstream "drafted:A"
+item types/value/physical.js isDimensional
+  construct "unknown type crate.Unit"
+  upstream "drafted:B"
+item types/value/physical.js affineUnit
+  construct "JSDoc type {PhysicalUnit | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/value/physical.js affineError
+  construct "method call .toDisplayString(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/value/physical.js physicalParts
+  construct "JSDoc type {[Rational, PhysicalUnit] | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/value/physical.js physicalBase
+  construct "JSDoc type {[Rational, import(X).Dimension] | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "drafted:C"
+item types/value/physical.js fromPhysical
+  construct "array destructuring: bind each element by its index, const a = xs[0]"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item types/value/physical.js rejectAffine
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/value/physical.js usesPhysicalAlgebra
+  construct "arrow function: functions as values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/207"
+item types/value/physical.js physicalProduct
+  construct "JSDoc type {Value | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/value/physical.js physicalSum
+  construct "JSDoc type {Value | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/value/physical.js physicalSumUnchecked
+  construct "array destructuring: bind each element by its index, const a = xs[0]"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item types/value/physical.js metresInTimeContext
+  construct "JSDoc type {[Value, Value] | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/value/physical.js physicalPower
+  construct "JSDoc type {Value | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/value/physical.js physicalRoot
+  construct "JSDoc type {Value | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/value/physical.js physicalRootUnchecked
+  construct "array destructuring: bind each element by its index, const a = xs[0]"
+  upstream "https://github.com/link-foundation/meta-language/issues/212"
+item types/value/physical.js physicalEq
+  construct "JSDoc type {boolean | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/value/physical.js physicalConversion
+  construct "JSDoc type {Value | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/value/physical.js normalizeAffine
+  construct "JSDoc type {[Rational, Unit]}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item types/value/physical.js toBase
+  construct "method call .affineOffset(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/value/physical.js isMetre
+  construct "method call .terms(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/value/physical.js exactRoot
+  construct "JSDoc type {Rational | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+comments types/value/physical.js
+  count 1
+  upstream "drafted:A"
+item types/value/ratio.js percent
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/value/ratio.js ratio
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/value/ratio.js isPercent
+  construct "unknown type crate.Value"
+  upstream "drafted:B"
+item types/value/ratio.js hasRatioDisplay
+  construct "unknown type crate.Value"
+  upstream "drafted:B"
+item types/value/ratio.js scalar
+  construct "method call .toRational(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/value/ratio.js additiveRatio
+  construct "JSDoc type {Value | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item types/value/ratio.js evaluateRatioFunction
+  construct "JSDoc type {Value | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+comments types/value/ratio.js
+  count 1
+  upstream "drafted:A"
+item types/value/uncertainty.js withUncertainty
+  construct "method call .toRational(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item types/value/uncertainty.js negateUncertainty
+  construct "new expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+comments types/value/uncertainty.js
+  count 1
+  upstream "drafted:A"
+cascade utils.js generateIssueLink
+  needs truncate
+item utils.js truncate
+  construct "nullish coalescing: null and undefined are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item utils.js urlencodingEncode
+  construct "regular expression: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/211"
+comments utils.js
+  count 1
+  upstream "drafted:A"
+item wasm.js "import:./crypto_api.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item wasm.js "import:./currency_api.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item wasm.js "import:./clock.js"
+  construct "namespace import: import the items of a module by name, as in import { f } from X, or the assertion module as a whole, as in import assert from X"
+  upstream "drafted:J"
+item wasm.js init
+  construct "export default: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item wasm.js initSync
+  construct "@param needs a type and a name"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item wasm.js ExchangeRatesResponse
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item wasm.js CryptoRatesResponse
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item wasm.js ratesToJson
+  construct "JSDoc type {Map<string, number>}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/205"
+item wasm.js ratesResponse
+  construct "JSDoc type {() => Promise<[string, Map<string, number>]>}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/223"
+item wasm.js fetchExchangeRates
+  construct "JSDoc type {Promise<string>}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/223"
+item wasm.js fetchHistoricalRates
+  construct "JSDoc type {Promise<string>}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/223"
+item wasm.js fetchCbrRates
+  construct "JSDoc type {Promise<string>}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/223"
+cascade wasm.js unquoteSource
+  needs trim
+item wasm.js parseF64Ok
+  construct "JSDoc type {number | null}: portable types are number, bigint, boolean, string, arrays T[] of them and @typedef data types"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item wasm.js parseLinoRate
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item wasm.js parseConsolidatedLinoRates
+  construct "null: outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/204"
+item wasm.js fetchCryptoRates
+  construct "method call .format(): methods of values are outside the portable core"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item wasm.js Calculator
+  construct "export class: only function and const declarations are exported"
+  upstream "https://github.com/link-foundation/meta-language/issues/210"
+item wasm.js export{}
+  construct "export {: only function and const declarations are exported"
+  upstream "drafted:G"
+comments wasm.js
+  count 1
+  upstream "drafted:A"

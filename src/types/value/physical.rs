@@ -251,7 +251,7 @@ impl Value {
             return Err(CalculatorError::domain("even root of a negative quantity"));
         }
         let root = exact_root(&amount, n).unwrap_or_else(|| {
-            let magnitude = amount.abs().to_f64().powf(1.0 / f64::from(n));
+            let magnitude = libm::pow(amount.abs().to_f64(), 1.0 / f64::from(n));
             let signed = if amount.is_negative() {
                 -magnitude
             } else {
@@ -354,7 +354,7 @@ fn is_metre(unit: &PhysicalUnit) -> bool {
 fn exact_root(value: &Rational, n: i32) -> Option<Rational> {
     let root_of = |x: i128| -> Option<i128> {
         let magnitude = x.unsigned_abs() as f64;
-        let guess = magnitude.powf(1.0 / f64::from(n)).round() as i128;
+        let guess = libm::pow(magnitude, 1.0 / f64::from(n)).round() as i128;
         let exponent = u32::try_from(n).ok()?;
         (guess - 1..=guess + 1)
             .filter(|candidate| *candidate >= 0)

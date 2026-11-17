@@ -31,6 +31,7 @@
 #![allow(clippy::cast_possible_wrap)]
 #![allow(clippy::match_same_arms)]
 
+pub mod clock;
 pub mod crypto_api;
 pub mod currency_api;
 pub mod error;
@@ -505,7 +506,7 @@ impl Calculator {
         };
 
         let base_upper = base.to_uppercase();
-        let timestamp = chrono::Utc::now().to_rfc3339();
+        let timestamp = crate::clock::now().to_rfc3339();
         let mut count = 0;
 
         for (target, rate) in rates {
@@ -545,7 +546,7 @@ impl Calculator {
             Err(_) => return 0,
         };
 
-        let timestamp = chrono::Utc::now().to_rfc3339();
+        let timestamp = crate::clock::now().to_rfc3339();
         let mut count = 0;
 
         for (currency, rub_per_unit) in rates {
@@ -589,7 +590,7 @@ impl Calculator {
         };
 
         let base_upper = base.to_uppercase();
-        let timestamp = chrono::Utc::now().to_rfc3339();
+        let timestamp = crate::clock::now().to_rfc3339();
         let mut count = 0;
 
         for (ticker, price) in rates {

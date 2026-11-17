@@ -1,0 +1,17 @@
+# Does `f64::mul_add` on wasm32 inherit libm's generic-fma sticky-bit bug?
+# wasm32 has no fma instruction, so LLVM calls the `fma` symbol, which
+# compiler-builtins provides from libm's generic code.
+#
+#   node scripts/bounded-cargo.mjs build --release --target wasm32-unknown-unknown \
+#     --manifest-path experiments/issue-254/fma-wasm/Cargo.toml
+#   node experiments/issue-254/fma-wasm/run.mjs
+[package]
+name = "fma-wasm"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[workspace]

@@ -1,0 +1,18 @@
+229	closed	Run the competitor coverage checker in CI and fail on regressions
+230	closed	Keep the imported open-source calculator test suites current and add the missing engines
+231	closed	Complete the closed-source calculator documentation corpus
+232	closed	Grow the multilingual scientific-quote corpus beyond the 13 seeded languages
+233	closed	Thousands separators and locale decimal commas give silently wrong answers
+234	closed	Percent arithmetic differs from every competitor
+235	closed	General dimensional unit algebra: length, temperature, electrical and compound units
+236	open	Scientific notation as written in papers: superscripts, SI prefixes, ± uncertainty, scale words after digits
+237	open	English noun-phrase operators: squared, cubed, sum of, half of, dozen, rounded, log base
+238	open	Multilingual phrase operators, spelled numbers and CJK tokenization
+239	open	Number bases, bitwise operators, repeating decimals and display formats (fraction, roman, words, eng, hex)
+240	open	Complex numbers, vectors and matrices, infinity/NaN and the missing special functions
+241	open	Symbolic algebra: variables in expressions, non-polynomial equations, calculus and simplification
+242	open	Notepad state: variables, line references, totals, booleans, strings, comments and conditionals
+243	open	Date and time parity: sign of clock differences, natural display, IANA/city zones, relative dates, workdays, timecode
+244	open	Finance, statistics and rate phrases: VAT, interest, mortgages, mean/median, per-unit rates
+245	open	Accept LaTeX, MathML and Unicode math notation copied from papers
+246	open	Milestone: every competitor and scientific-quote corpus row is supported or has a documented difference

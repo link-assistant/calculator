@@ -26,13 +26,22 @@ import { fileURLToPath } from 'node:url';
 export const REQUIREMENTS = {
   'README.md': ['Features', 'Development Setup', 'Contributing', 'License'],
   // #competitor-coverage: docs/competitor-corpus.md, scripts/update-coverage-gap-issue.mjs
+  // #closing-issues: scripts/check-closing-references.mjs
+  // #rust-build-load: .cargo/config.toml, scripts/bounded-cargo.mjs
+  // #multi-agent-work: AGENTS.md, CLAUDE.md
   'CONTRIBUTING.md': [
     'Development Setup',
+    'Rust Build Load',
+    'Multi-Agent Work',
     'Pull Request Process',
+    'Closing Issues',
     'Competitor Coverage',
     'Changelog Management',
     'Release Process',
   ],
+  // Read by coding agents; CLAUDE.md and CONTRIBUTING.md#multi-agent-work link it.
+  'AGENTS.md': ['Push Gate', 'Local Checks', 'Pull Requests'],
+  'CLAUDE.md': [],
   'CHANGELOG.md': [],
   // Named by check-changelog-fragment.mjs and check-version-modification.mjs errors.
   'changelog.d/README.md': [],

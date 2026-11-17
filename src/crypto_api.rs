@@ -102,7 +102,7 @@ pub async fn fetch_crypto_price(
 
     let (price, date) = fetch_coingecko_price(&url, coin_id, &vs).await?;
 
-    let timestamp = chrono::Utc::now().to_rfc3339();
+    let timestamp = crate::clock::now().to_rfc3339();
     Ok(ExchangeRateInfo::new(price, COINGECKO_SOURCE, &date).with_fetched_at(timestamp))
 }
 
@@ -143,8 +143,8 @@ pub async fn fetch_crypto_prices(
 
     let json = fetch_json_value(&url).await?;
 
-    let timestamp = chrono::Utc::now().to_rfc3339();
-    let today = chrono::Utc::now().format("%Y-%m-%d").to_string();
+    let timestamp = crate::clock::now().to_rfc3339();
+    let today = crate::clock::now().format("%Y-%m-%d").to_string();
 
     let mut result = HashMap::new();
 
@@ -171,7 +171,7 @@ async fn fetch_coingecko_price(
     vs_currency: &str,
 ) -> Result<(f64, String), CryptoApiError> {
     let json = fetch_json_value(url).await?;
-    let today = chrono::Utc::now().format("%Y-%m-%d").to_string();
+    let today = crate::clock::now().format("%Y-%m-%d").to_string();
 
     let price = json
         .get(coin_id)

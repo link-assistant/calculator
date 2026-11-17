@@ -14,6 +14,9 @@
 /** The three independent rate sources the calculator supports. */
 export type RateSource = 'ecb' | 'cbr' | 'crypto';
 
+/** Every rate source; requests name sources only by membership in this list. */
+const RATE_SOURCES: readonly RateSource[] = ['ecb', 'cbr', 'crypto'];
+
 // ---------------------------------------------------------------------------
 // Rate source state management
 // ---------------------------------------------------------------------------
@@ -186,7 +189,8 @@ export function createRateCoordination(): RateCoordination {
   const resolvers: Partial<Record<RateSource, () => void>> = {};
 
   // Fetcher functions registered by the worker for each source.
-  const fetchers: Partial<Record<RateSource, () => Promise<void>>> = {};
+  // A Map, so a source name never reaches Object.prototype.
+  const fetchers = new Map<RateSource, () => Promise<void>>();
 
   function getOrCreatePromise(source: RateSource): Promise<void> {
     if (states[source] === 'loaded') {
@@ -219,7 +223,7 @@ export function createRateCoordination(): RateCoordination {
   }
 
   function registerFetcher(source: RateSource, fetcher: () => Promise<void>): void {
-    fetchers[source] = fetcher;
+    fetchers.set(source, fetcher);
   }
 
   /**
@@ -233,14 +237,16 @@ export function createRateCoordination(): RateCoordination {
 
     const waitFor: Promise<void>[] = [];
 
-    for (const source of needed) {
-      if (states[source] === 'loaded') {
+    // Iterate the known sources, not the request: a name from a message
+    // never selects a fetcher, and an unknown name is ignored.
+    for (const source of RATE_SOURCES) {
+      if (!needed.has(source) || states[source] === 'loaded') {
         continue; // Already available — no delay
       }
 
       if (states[source] === 'idle') {
         // Not yet started — trigger the fetch
-        const fetcher = fetchers[source];
+        const fetcher = fetchers.get(source);
         if (fetcher) {
           markLoading(source);
           fetcher(); // Fire and forget — markLoaded is called in the finally block

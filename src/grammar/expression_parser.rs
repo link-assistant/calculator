@@ -69,7 +69,7 @@ pub fn evaluate_power(base_val: &Value, exp_val: &Value) -> Result<Value, Calcul
 
     let base_f64 = base_dec.to_f64();
     let exp_f64 = exp_dec.to_f64();
-    let result = base_f64.powf(exp_f64);
+    let result = libm::pow(base_f64, exp_f64);
 
     if result.is_nan() {
         return Err(CalculatorError::domain("power result is undefined"));

@@ -16,7 +16,7 @@ Link Calculator is a Rust WebAssembly calculator with a React/TypeScript fronten
 │                                                          │
 │  ┌────────────────── Web Worker ──────────────────────┐  │
 │  │  worker.ts                                         │  │
-│  │  ├── WASM Calculator (Rust → WebAssembly)          │  │
+│  │  ├── JS Calculator (js/, link-calculator/wasm API) │  │
 │  │  ├── Rate Coordination (worker-rate-coordination)  │  │
 │  │  └── Rate Fetchers (ECB, CBR, CoinGecko)          │  │
 │  └────────────────────────────────────────────────────┘  │
@@ -174,7 +174,7 @@ enum Unit {
 
 ### Worker (`worker.ts`)
 
-Runs in a Web Worker to avoid blocking the UI thread. Hosts the WASM calculator instance and manages rate fetching.
+Runs in a Web Worker to avoid blocking the UI thread. Hosts the calculator instance of the JavaScript engine (`link-calculator/wasm`, the same API as the Rust WASM bindings) and manages rate fetching.
 
 **Messages sent to worker:**
 - `{ type: 'calculate', expression }` — Run plan→fetch→execute pipeline
@@ -183,7 +183,7 @@ Runs in a Web Worker to avoid blocking the UI thread. Hosts the WASM calculator 
 - `{ type: 'getRatesStatus' }` — Query current rates state
 
 **Messages sent from worker:**
-- `{ type: 'ready', data: { version } }` — WASM initialized
+- `{ type: 'ready', data: { version } }` — calculator initialized
 - `{ type: 'plan', data: CalculationPlan }` — Plan ready (instant, before rates)
 - `{ type: 'result', data: CalculationResult }` — Calculation complete
 - `{ type: 'error', data: { error } }` — Calculation or initialization error
@@ -234,8 +234,8 @@ cargo test --all-features        # All Rust tests
 cargo clippy --all-targets       # Linting
 cargo fmt --check                # Formatting
 
-# WASM
-wasm-pack build --target web --out-dir web/public/pkg
+# JavaScript engine (used by web/)
+cd js && npm ci && npm test && npm run parity && cd ..
 
 # Web
 cd web
@@ -269,7 +269,7 @@ npm run test:e2e                 # Playwright E2E tests
 │   │   ├── App.tsx          # Main React app
 │   │   └── types.ts         # TypeScript type definitions
 │   ├── e2e/                 # Playwright E2E tests
-│   └── public/              # Static assets + WASM pkg
+│   └── public/              # Static assets
 ├── data/currency/           # Historical rate .lino files
 ├── changelog.d/             # Changelog fragments
 ├── scripts/                 # Build/release automation

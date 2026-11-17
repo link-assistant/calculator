@@ -1,0 +1,22 @@
+# Minimal reproduction for the upstream libm report (issue #254): the generic
+# `fma` (used on wasm32, on x86_64 CPUs without FMA, and with the `arch`
+# feature off) drops the sticky bit when `z` is 64..128 bits above `x * y`.
+#
+#   node scripts/bounded-cargo.mjs run --bin libm-fma-sticky --manifest-path experiments/issue-254/libm-fma-sticky/Cargo.toml
+#
+# `--release --bin fuzz` compares libm::fma with glibc's fma on a million
+# random inputs and a million inputs on a rounding tie (277634 differ with
+# libm 0.2.16, none once the sticky bit is taken from the old `rlo`).
+# experiments/issue-254/fma-wasm shows that `f64::mul_add` on wasm32 has the
+# same bug, because compiler-builtins provides `fma` from this code there.
+[package]
+name = "libm-fma-sticky"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[workspace]
+
+[dependencies]
+# `arch` off: the generic implementation on every target.
+libm = { version = "=0.2.16", default-features = false }

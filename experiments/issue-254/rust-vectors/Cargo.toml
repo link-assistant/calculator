@@ -1,0 +1,41 @@
+# Test-vector generator for the JavaScript runtime emulation in js/src/rust/
+# (issue #254). Each binary prints JSON vectors computed by the exact crate
+# versions the calculator links (see the root Cargo.lock); the JavaScript
+# unit tests read the committed copies in js/test/vectors/.
+#
+#   node scripts/bounded-cargo.mjs run --release \
+#     --manifest-path experiments/issue-254/rust-vectors/Cargo.toml \
+#     --bin decimal > js/test/vectors/decimal.json
+[package]
+name = "rust-vectors"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[workspace]
+
+[dependencies]
+rust_decimal = { version = "=1.43.0", features = ["serde"] }
+chrono = { version = "=0.4.45", default-features = false, features = ["alloc", "std", "clock"] }
+num-rational = { version = "=0.4.2", default-features = false, features = ["std"] }
+num-bigint = "=0.5.1"
+num-integer = "=0.1.47"
+num-traits = "=0.2.19"
+serde_json = "=1.0.154"
+# The rational bin includes src/types/{decimal,rational}.rs, which derive serde.
+serde = { version = "1.0", features = ["derive"] }
+libm = "=0.2.16"
+# The lexer bin tokenizes with the calculator itself; optional, so the other
+# bins do not build the whole crate.
+link-calculator = { path = "../../..", optional = true }
+
+[features]
+calculator = ["dep:link-calculator"]
+
+[[bin]]
+name = "lexer"
+required-features = ["calculator"]
+
+[[bin]]
+name = "expression_parser"
+required-features = ["calculator"]

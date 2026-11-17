@@ -279,6 +279,7 @@ dependencies = [
  "console_error_panic_hook",
  "js-sys",
  "lazy_static",
+ "libm",
  "num-bigint 0.5.1",
  "num-integer",
  "num-rational",

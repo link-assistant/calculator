@@ -65,6 +65,11 @@ num-rational = { version = "0.4", default-features = false, features = ["std"] }
 num-bigint = "0.5"
 num-integer = "0.1"
 num-traits = "0.2"
+# Transcendental functions: `x.sin()` and friends call the platform's libm,
+# which differs between glibc, macOS, Windows and wasm32. The libm crate is
+# the same everywhere and js/src/rust/libm.js ports it bit for bit. Bumping
+# it means re-porting the changed functions (see js/PORTING.md).
+libm = "0.2.16"
 serde-wasm-bindgen = "0.6"
 
 [dev-dependencies]
