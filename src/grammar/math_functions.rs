@@ -7,6 +7,8 @@ use crate::error::CalculatorError;
 use crate::types::{Decimal, Rational, Value};
 use num_bigint::BigInt;
 
+use super::named_constants;
+
 /// Largest `n` for which `n!` is computed exactly (35 660 digits); larger
 /// arguments report overflow instead of allocating unbounded memory.
 const MAX_EXACT_FACTORIAL: u32 = 10_000;
@@ -45,23 +47,21 @@ const INTEGRATION_SUBDIVISIONS: usize = 1000;
 /// - `factorial(n)` - Factorial (n must be non-negative integer)
 ///
 /// ## Constants
-/// - `pi()` - π ≈ 3.14159...
-/// - `e()` - Euler's number ≈ 2.71828...
+/// - `pi()`, `tau()`, `e()`, `golden_ratio()`, `silver_ratio()`, `euler_mascheroni()`
+///
+/// Use [`evaluate_function_values`] for constants with physical units.
 ///
 pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, CalculatorError> {
+    if let Some(constant) = named_constants::by_name(name) {
+        check_arg_count(constant.name, args, 0)?;
+        if constant.is_scalar() {
+            return Ok(constant.amount());
+        }
+        return Err(CalculatorError::invalid_args(name, "constant has units"));
+    }
+
     let name_lower = name.to_lowercase();
-
     match name_lower.as_str() {
-        // Constants
-        "pi" => {
-            check_arg_count(&name_lower, args, 0)?;
-            checked_decimal(std::f64::consts::PI)
-        }
-        "e" => {
-            check_arg_count(&name_lower, args, 0)?;
-            checked_decimal(std::f64::consts::E)
-        }
-
         // Trigonometric functions
         "sin" => {
             check_arg_count(&name_lower, args, 1)?;
@@ -317,6 +317,9 @@ pub fn evaluate_function(name: &str, args: &[Decimal]) -> Result<Decimal, Calcul
 /// Returns true if the given name is a known math function.
 #[must_use]
 pub fn is_math_function(name: &str) -> bool {
+    if named_constants::by_name(name).is_some() {
+        return true;
+    }
     let name_lower = name.to_lowercase();
     matches!(
         name_lower.as_str(),
@@ -352,8 +355,6 @@ pub fn is_math_function(name: &str) -> bool {
             | "mod"
             | "modulo"
             | "uncertainty"
-            | "pi"
-            | "e"
             | "deg"
             | "degrees"
             | "rad"
@@ -374,6 +375,10 @@ pub fn is_math_function(name: &str) -> bool {
 /// precision (e.g. `30!` = `265252859812191058636308480000000`); everything
 /// else goes through [`evaluate_function`] on `Decimal` arguments.
 pub fn evaluate_function_values(name: &str, args: &[Value]) -> Result<Value, CalculatorError> {
+    if let Some(constant) = named_constants::by_name(name) {
+        check_arg_count(constant.name, args, 0)?;
+        return Ok(Value::number_with_unit(constant.amount(), constant.unit()));
+    }
     if name.eq_ignore_ascii_case("uncertainty") {
         if args.len() != 2 {
             return Err(CalculatorError::invalid_args(name, "expected 2 arguments"));
@@ -438,11 +443,7 @@ fn checked_decimal(value: f64) -> Result<Decimal, CalculatorError> {
 }
 
 /// Checks that the function received the expected number of arguments.
-fn check_arg_count(
-    func_name: &str,
-    args: &[Decimal],
-    expected: usize,
-) -> Result<(), CalculatorError> {
+fn check_arg_count<T>(func_name: &str, args: &[T], expected: usize) -> Result<(), CalculatorError> {
     if args.len() != expected {
         return Err(CalculatorError::invalid_args(
             func_name,

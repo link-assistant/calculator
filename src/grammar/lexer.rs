@@ -2,7 +2,7 @@
 
 use std::collections::VecDeque;
 
-use super::{arithmetic_words, is_math_function, locale_numbers, DateTimeGrammar};
+use super::{arithmetic_words, is_math_function, locale_numbers, named_constants, DateTimeGrammar};
 use crate::error::CalculatorError;
 
 /// Checks if a character is a Unicode combining mark (General Category M).
@@ -46,6 +46,10 @@ enum GeneralCategory {
 /// Characters that continue a word: alphanumerics, `_` and combining marks.
 pub(super) fn is_word_char(ch: char) -> bool {
     ch.is_alphanumeric() || ch == '_' || is_unicode_mark(ch)
+}
+
+pub(super) fn is_identifier_continue(ch: char) -> bool {
+    is_word_char(ch) && superscript_value(ch).is_none()
 }
 
 fn superscript_value(ch: char) -> Option<char> {
@@ -491,10 +495,10 @@ impl Lexer {
                     ch.to_string(),
                 )
             }
-            _ if ch.is_alphabetic() => match self.scan_words() {
-                Some(token) => token,
-                None => self.scan_identifier(),
-            },
+            _ if ch.is_alphabetic() => self
+                .scan_constant()
+                .or_else(|| self.scan_words())
+                .unwrap_or_else(|| self.scan_identifier()),
             // Degree signs, `℃`/`℉`, and the foot/inch primes of `6'2"` are
             // unit symbols (issue #235); `°C` and `°F` stay one identifier.
             '°' | '℃' | '℉' | '\'' | '′' | '"' | '″' => self.scan_unit_symbol(),
@@ -519,6 +523,18 @@ impl Lexer {
         };
 
         Ok(token)
+    }
+
+    fn scan_constant(&mut self) -> Option<Token> {
+        let start = self.pos;
+        let (constant, end) = named_constants::scan(&self.input, start)?;
+        self.pos = end;
+        Some(Token::new(
+            TokenKind::Identifier(constant.name.to_owned()),
+            start,
+            end,
+            self.input[start..end].iter().collect(),
+        ))
     }
 
     /// Number words and operator phrases from `data/words` (issue #222).
@@ -736,9 +752,7 @@ impl Lexer {
             // virama (्, U+094D) and dependent vowels (ा, ि, etc.) are part of words
             // but not classified as alphabetic.
             // Superscripts end a word so that `m²` is `m` squared.
-            if (ch.is_alphanumeric() || ch == '_' || is_unicode_mark(ch))
-                && superscript_value(ch).is_none()
-            {
+            if is_identifier_continue(ch) {
                 text.push(ch);
                 self.advance();
             } else {

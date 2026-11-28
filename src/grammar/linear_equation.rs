@@ -3,6 +3,8 @@
 use crate::error::CalculatorError;
 use crate::types::{BinaryOp, Expression, Rational, Unit, Value};
 
+use super::named_constants;
+
 #[derive(Debug, Clone)]
 struct LinearTerm {
     variable: String,
@@ -90,6 +92,12 @@ impl LinearForm {
                     && args.len() == 1 =>
             {
                 Self::from_expression(&args[0])
+            }
+            Expression::FunctionCall { name, args } if args.is_empty() => {
+                named_constants::by_name(name)
+                    .filter(|constant| constant.is_scalar())
+                    .map(|constant| Self::constant(Rational::from_decimal(constant.amount())))
+                    .ok_or_else(Self::unsupported_equation)
             }
             Expression::Negate(inner) => Ok(Self::from_expression(inner)?.negate()),
             Expression::Group(inner) => Self::from_expression(inner),

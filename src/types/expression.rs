@@ -858,6 +858,12 @@ impl Expression {
                     }
                     "pi" => "\\pi".to_string(),
                     "e" => "e".to_string(),
+                    "tau" if args.is_empty() => "\\tau".to_string(),
+                    "golden_ratio" if args.is_empty() => "\\varphi".to_string(),
+                    "silver_ratio" if args.is_empty() => "\\delta_{S}".to_string(),
+                    "euler_mascheroni" if args.is_empty() => "\\gamma".to_string(),
+                    "speed_of_light" if args.is_empty() => "c".to_string(),
+                    "avogadro_constant" if args.is_empty() => "N_{\\mathrm{A}}".to_string(),
                     "integrate" => {
                         if args.len() == 4 {
                             format!(

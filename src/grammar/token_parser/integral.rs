@@ -163,9 +163,6 @@ impl TokenParser<'_> {
                 return self.parse_function_call(&id);
             }
 
-            if Self::is_math_constant(&id) {
-                return Ok(Expression::function_call(id, vec![]));
-            }
             if Self::is_unary_math_function(&id) && self.pos < boundary {
                 let argument = self.parse_integrand_unary(boundary)?;
                 return Ok(Expression::function_call(id, vec![argument]));

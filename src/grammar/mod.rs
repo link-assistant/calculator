@@ -9,6 +9,7 @@ mod lexer;
 mod linear_equation;
 mod locale_numbers;
 mod math_functions;
+mod named_constants;
 mod number_grammar;
 mod polynomial_equation;
 mod token_parser;

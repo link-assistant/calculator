@@ -74,6 +74,13 @@ test('matches documented compact large-number displays without confusing units',
   assert.equal(resultsMatch('1 kg', '1000 g'), false);
 });
 
+test('matches equivalent reciprocal unit displays', () => {
+  assert.equal(resultsMatch('602214076000000000000000 mol^-1', '6.02214076e23 1/mol'), true);
+  assert.equal(resultsMatch('3 1/s', '3 s^-1'), true);
+  assert.equal(resultsMatch('3 s^-1', '3 1/mol'), false);
+  assert.equal(resultsMatch('3 s', '3 1/s'), false);
+});
+
 test('compares equivalent radix and decimal displays numerically', () => {
   assert.equal(resultsMatch('16', '0x10'), true);
   assert.equal(resultsMatch('4.125', '0b100.001'), true);
