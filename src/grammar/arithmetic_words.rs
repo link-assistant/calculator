@@ -12,6 +12,7 @@ use std::collections::HashMap;
 use std::sync::OnceLock;
 
 use super::lexer::{is_word_char, TokenKind};
+use super::named_constants;
 use crate::types::CurrencyDatabase;
 
 /// The bundled vocabulary.
@@ -190,8 +191,23 @@ fn portion_has_percent(input: &[char], start: usize) -> bool {
     false
 }
 
-fn is_cjk(ch: char) -> bool {
+pub(super) fn is_cjk(ch: char) -> bool {
     matches!(ch as u32, 0x3400..=0x4DBF | 0x4E00..=0x9FFF | 0xF900..=0xFAFF)
+}
+
+pub(super) fn starts_cjk_operator(input: &[char], start: usize) -> bool {
+    let end = input[start..]
+        .iter()
+        .take(vocabulary().longest_word)
+        .take_while(|&&ch| is_cjk(ch))
+        .count()
+        + start;
+    (start + 1..=end).any(|end| {
+        matches!(
+            lookup(input, start, end).map(|word| &word.meaning),
+            Some(Meaning::Operator(_))
+        )
+    })
 }
 
 /// End of the word that starts at `pos`.
@@ -419,9 +435,15 @@ fn scan_cjk(input: &[char], pos: usize) -> Option<Vec<WordToken>> {
     let mut start = pos;
     while start < run_end {
         let longest = vocabulary().longest_word.min(run_end - start);
-        let (end, word) = (1..=longest)
+        let segment = (1..=longest)
             .rev()
-            .find_map(|len| lookup(input, start, start + len).map(|word| (start + len, word)))?;
+            .find_map(|len| lookup(input, start, start + len).map(|word| (start + len, word)));
+        let Some((end, word)) = segment else {
+            if !segments.is_empty() && named_constants::scan(input, start).is_some() {
+                break;
+            }
+            return None;
+        };
         segments.push((start, end, word));
         start = end;
     }

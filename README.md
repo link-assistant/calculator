@@ -34,6 +34,12 @@ A grammar-based expression calculator with DateTime and Currency support, built 
 - Scientific and readable numbers: `1.5e-6`, `1_000_000`
 - Powers and roots: `2^10`, `2**10`, `2¹⁰`, `√81`, `square root of 625`
 - Conventional implicit products and functions: `2π`, `2x`, `2(3 + 4)`, `sqrt 16`
+- Named constants in the 23 [scientific corpus languages](docs/case-studies/issue-227/natural-language-corpus.md).
+  Use names or symbols in arithmetic, for example `0.65 - (1 / Golden ratio)`,
+  `2 × 黄金比例`, or `τ / π`. Supported names include the golden ratio, silver ratio (1 + √2),
+  pi, tau, Euler's number, the Euler–Mascheroni constant, the speed of light
+  and the Avogadro constant. The last two retain their SI units. See
+  [the alias vocabulary](data/words/named-constants.lino) for accepted spellings.
 - Natural operators: `plus`, `minus`, `times`, `divided by`, `mod`, `power`
 - Spelled numbers and operator words in English, Russian, Hindi, Chinese and
   Spanish: `twenty-one times two`, `шесть умножить на семь`, `दस बटा दो`,

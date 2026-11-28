@@ -190,7 +190,10 @@ function splitNumber(text) {
   if (!match) {
     return null;
   }
-  return { number: Number.parseFloat(match[1]), literal: match[1], rest: match[2].trim().replace(/^\(dimensionless\)$/, '') };
+  const rest = match[2].trim()
+    .replace(/^\(dimensionless\)$/, '')
+    .replace(/^1\/(\p{L}[\p{L}\p{N}_]*)$/u, '$1^-1');
+  return { number: Number.parseFloat(match[1]), literal: match[1], rest };
 }
 
 /** Expand attached large-number suffixes while preserving unit text and case. */

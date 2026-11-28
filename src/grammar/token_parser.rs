@@ -404,9 +404,6 @@ impl<'a> TokenParser<'a> {
                 return self.try_parse_datetime_from_tokens(&id);
             }
 
-            if Self::is_math_constant(&id) {
-                return Ok(Expression::function_call(id, vec![]));
-            }
             if Self::is_unary_math_function(&id) && !self.is_at_end() {
                 let argument = self.parse_unary()?;
                 return Ok(Expression::function_call(id, vec![argument]));
@@ -869,10 +866,6 @@ impl<'a> TokenParser<'a> {
             .next()
             .is_some_and(|character| character.is_ascii_alphabetic())
             && chars.next().is_none()
-    }
-
-    fn is_math_constant(id: &str) -> bool {
-        matches!(id.to_ascii_lowercase().as_str(), "pi" | "e")
     }
 
     fn is_unary_math_function(id: &str) -> bool {
